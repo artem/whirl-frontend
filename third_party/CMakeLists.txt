@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.14)
+
+include(FetchContent)
+
+# Offline mode
+# set(FETCHCONTENT_FULLY_DISCONNECTED ON)
+
+# --------------------------------------------------------------------
+
+FetchContent_Declare(
+        await
+        GIT_REPOSITORY https://gitlab.com/Lipovsky/await.git
+        GIT_TAG master
+)
+
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(await)
+
+# --------------------------------------------------------------------
+
+FetchContent_Declare(
+        wheels
+        GIT_REPOSITORY https://gitlab.com/Lipovsky/wheels.git
+        GIT_TAG master
+)
+
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(wheels)
+
+# --------------------------------------------------------------------
+
+FetchContent_Declare(
+        cereal
+        GIT_REPOSITORY https://github.com/USCiLab/cereal.git
+        GIT_TAG master
+)
+
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(cereal)
+
+# --------------------------------------------------------------------
