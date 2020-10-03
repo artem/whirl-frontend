@@ -58,6 +58,13 @@ class TRPCServer {
   TRPCServer(IRPCServerImplPtr server) : impl_(server) {
   }
 
+  // Non-copyable
+  TRPCServer(const TRPCServer& that) = delete;
+  TRPCServer& operator=(const TRPCServer& that) = delete;
+
+  TRPCServer(TRPCServer&& that) = default;
+  TRPCServer& operator=(TRPCServer&& that) = default;
+
   template <typename F>
   void RegisterMethod(const std::string& method, F f) {
     // Deduce method arguments and return type
