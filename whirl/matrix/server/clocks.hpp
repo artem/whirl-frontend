@@ -1,0 +1,60 @@
+#pragma once
+
+#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/dice.hpp>
+
+namespace whirl {
+
+//////////////////////////////////////////////////////////////////////
+
+class LocalWallTimeClock {
+ public:
+  LocalWallTimeClock()
+    : offset_(InitLocalClockOffset()) {
+  }
+
+  void Adjust() {
+    // TODO: Timers?
+  }
+
+  TimePoint Now() const {
+    return GlobalNow() + offset_;
+  }
+
+  Duration ShapeDuration(Duration d) {
+    return d;
+  }
+
+ private:
+  Duration offset_{0};
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class LocalMonotonicClock {
+ public:
+  LocalMonotonicClock() {
+    Reset();
+  }
+
+  void Reset() {
+    start_ = GlobalNow();
+    init_ = ResetMonotonicClock();
+  }
+
+  TimePoint Now() const {
+    // TODO: drift
+    return ElapsedSinceLastReset() + init_;
+  }
+
+ private:
+  bool ElapsedSinceLastReset() const {
+    return GlobalNow() - start_;
+  }
+
+ private:
+  TimePoint start_;
+  Duration init_;
+};
+
+}  // namespace whirl

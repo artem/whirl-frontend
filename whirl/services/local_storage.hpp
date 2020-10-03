@@ -19,6 +19,10 @@ class LocalKVStorage {
       : impl_(kv), namespace_(MakeNamespace(name)) {
   }
 
+  // Non-copyable
+  LocalKVStorage(const LocalKVStorage& that) = delete;
+  LocalKVStorage& operator=(const LocalKVStorage& that) = delete;
+
   void Set(const Bytes& key, const V& value) {
     auto value_bytes = Serialize(value);
     impl_->Set(WithNamespace(key), value_bytes);
@@ -59,6 +63,13 @@ class LocalStorage {
  public:
   LocalStorage(ILocalStorageEnginePtr impl) : impl_(impl) {
   }
+
+  // Non-copyable
+  LocalStorage(const LocalStorage& that) = delete;
+  LocalStorage& operator=(const LocalStorage& that) = delete;
+
+  LocalStorage(LocalStorage&& that) = default;
+  LocalStorage& operator=(LocalStorage&& that) = default;
 
   // TODO: remove
   LocalStorage() = default;
