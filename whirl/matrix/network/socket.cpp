@@ -26,6 +26,10 @@ NetSocket::~NetSocket() {
   Close();
 }
 
+NetSocket NetSocket::Invalid() {
+  return NetSocket{nullptr, 0, 0};
+}
+
 void NetSocket::Close() {
   if (IsValid()) {
     net_->DisconnectClient(self_);

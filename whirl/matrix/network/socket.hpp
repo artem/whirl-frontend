@@ -21,9 +21,7 @@ struct NetSocket {
   NetSocket(Network* net, NetEndpointId self, NetEndpointId peer);
   ~NetSocket();
 
-  static NetSocket Invalid() {
-    return NetSocket{nullptr, 0, 0};
-  }
+  static NetSocket Invalid();
 
   // Non-copyable
   NetSocket(const NetSocket& that) = delete;
