@@ -221,13 +221,11 @@ class KVClient final: public ClientBase {
 //////////////////////////////////////////////////////////////////////
 
 int main() {
-  World world{17};
+  World world{/*seed=*/17};
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
-  world.AddServer(node);
-  world.AddServer(node);
-  world.AddServer(node);
+  world.AddServers(3, node);
 
   // Clients
   auto client = MakeNode<KVClient>();

@@ -40,6 +40,12 @@ class World {
     AddActor(&cluster_.back());
   }
 
+  void AddServers(size_t count, INodeFactoryPtr node) {
+    for (size_t i = 0; i < count; ++i) {
+      AddServer(node);
+    }
+  }
+
   void AddClient(INodeFactoryPtr node) {
     WorldGuard g(this);
 
