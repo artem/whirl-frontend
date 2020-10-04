@@ -10,8 +10,7 @@ namespace whirl::adversary {
 
 class Executor : public IExecutor {
  public:
-  Executor(EventQueue& events)
-      : events_(events) {
+  Executor(EventQueue& events) : events_(events) {
   }
 
   void Execute(Task&& task) override {

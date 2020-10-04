@@ -11,7 +11,7 @@ namespace whirl {
 
 class EventQueueExecutor : public IExecutor {
  public:
-  EventQueueExecutor(EventQueue& events): events_(events) {
+  EventQueueExecutor(EventQueue& events) : events_(events) {
   }
 
   void Execute(Task&& task) override {

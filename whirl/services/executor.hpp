@@ -6,8 +6,8 @@ namespace whirl {
 
 // Execution
 
-using await::executors::Task;
 using await::executors::IExecutor;
 using await::executors::IExecutorPtr;
+using await::executors::Task;
 
 }  // namespace whirl

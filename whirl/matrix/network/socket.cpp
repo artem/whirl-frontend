@@ -8,8 +8,9 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-LightNetSocket::LightNetSocket(Network* net, NetEndpointId self, NetEndpointId peer)
-  : self_(self), peer_(peer), net_(net) {
+LightNetSocket::LightNetSocket(Network* net, NetEndpointId self,
+                               NetEndpointId peer)
+    : self_(self), peer_(peer), net_(net) {
 }
 
 void LightNetSocket::Send(const Message& message) {

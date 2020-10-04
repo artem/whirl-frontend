@@ -27,4 +27,4 @@ inline bool DuplicateNetPacket() {
   return GlobalRandomNumber(3) == 0;
 }
 
-}  // namespace params
+}  // namespace whirl

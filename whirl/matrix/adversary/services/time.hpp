@@ -12,8 +12,7 @@ using namespace await::futures;
 
 class TimeService : public ITimeService {
  public:
-  TimeService(EventQueue& events)
-      : events_(events) {
+  TimeService(EventQueue& events) : events_(events) {
   }
 
   // Adversary has access to global time

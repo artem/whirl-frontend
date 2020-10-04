@@ -123,11 +123,13 @@ class Network : public IActor {
   // Send
 
   // Context: Server
-  void SendMessage(NetEndpointId from, const Message& message, NetEndpointId to) {
+  void SendMessage(NetEndpointId from, const Message& message,
+                   NetEndpointId to) {
     GlobalHeapScope guard;
 
     auto message_copy = MakeCopy(message);
-    WHIRL_LOG("Send message <" << message_copy << "> from " << from << " to " << to);
+    WHIRL_LOG("Send message <" << message_copy << "> from " << from << " to "
+                               << to);
     Send({EPacketType::Data, from, message_copy, to});
   }
 
@@ -167,8 +169,8 @@ class Network : public IActor {
     if (packet.type == EPacketType::Data) {
       WHIRL_LOG("Deliver message <" << packet.message << "> to endpoint "
                                     << packet.to);
-      endpoint.handler->HandleMessage(packet.message,
-                                      LightNetSocket(this, packet.to, packet.from));
+      endpoint.handler->HandleMessage(
+          packet.message, LightNetSocket(this, packet.to, packet.from));
     } else {
       WHIRL_LOG("Deliver reset message to endpoint " << packet.to);
       endpoint.handler->HandlePeerLost();
@@ -201,8 +203,7 @@ class Network : public IActor {
   }
 
   void DoSend(NetPacket packet) {
-    packets_.Insert(
-        PacketEvent({packet, ChooseDeliveryTime()}));
+    packets_.Insert(PacketEvent({packet, ChooseDeliveryTime()}));
   }
 
   NetEndpointId NewEndpointId() {

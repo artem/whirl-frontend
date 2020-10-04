@@ -39,8 +39,7 @@ using namespace await::fibers;
 
 class Server : public IActor {
  public:
-  Server(Network& network, NodeConfig config,
-         INodeFactoryPtr factory)
+  Server(Network& network, NodeConfig config, INodeFactoryPtr factory)
       : config_(config),
         node_factory_(std::move(factory)),
         name_(MakeName(config)),
@@ -143,7 +142,7 @@ class Server : public IActor {
 
     auto executor = std::make_shared<EventQueueExecutor>(events_);
     auto time_service = std::make_shared<TimeService>(
-        local_clock_, local_monotonic_clock_, events_);
+        local_wall_time_clock_, local_monotonic_clock_, events_);
 
     services.threads = ThreadsRuntime{executor, time_service};
     services.time_service = time_service;
@@ -200,7 +199,7 @@ class Server : public IActor {
   ProcessNetwork network_;
   std::vector<ServerAddress> peers_;
 
-  LocalWallTimeClock local_clock_;
+  LocalWallTimeClock local_wall_time_clock_;
   LocalMonotonicClock local_monotonic_clock_;
   LocalBytesStorage local_storage_;
 

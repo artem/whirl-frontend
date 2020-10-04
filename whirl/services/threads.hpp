@@ -16,7 +16,7 @@ using await::fibers::ThreadLike;
 class ThreadsRuntime {
  public:
   ThreadsRuntime(IExecutorPtr e, ITimeServicePtr t)
-    : executor_(std::move(e)), time_service_(std::move(t)) {
+      : executor_(std::move(e)), time_service_(std::move(t)) {
   }
 
   // TODO: Remove

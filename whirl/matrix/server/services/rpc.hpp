@@ -68,7 +68,8 @@ struct RPCResponseMessage {
   std::string result;
   RPCError error;
 
-  SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(method), CEREAL_NVP(result), CEREAL_NVP(error))
+  SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(method), CEREAL_NVP(result),
+            CEREAL_NVP(error))
 
   bool IsOk() const {
     return error.IsOk();
@@ -137,7 +138,8 @@ class RPCChannel : public IRPCChannelImpl, public INetSocketHandler {
   // INetSocketHandler
 
   // Context: global
-  void HandleMessage(const Message& message, LightNetSocket /*socket*/) override {
+  void HandleMessage(const Message& message,
+                     LightNetSocket /*socket*/) override {
     auto g = heap_.Use();
 
     WHIRL_LOG("Message received");
