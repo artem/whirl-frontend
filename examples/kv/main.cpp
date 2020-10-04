@@ -128,12 +128,15 @@ class KVNode final: public NodeBase {
   // Внутренние команды репликам
 
   void Write(Key k, StampedValue v) {
-    if (!kv_.Has(k)) {
+    std::optional<StampedValue> local = kv_.TryGet(k);
+
+    if (!local.has_value()) {
+      // Раньше не видели данный ключ
       kv_.Set(k, v);
     } else {
-      // Локальный таймстемп записи
-      Timestamp local_ts = kv_.Get(k).ts;
-      if (v.ts > local_ts) {
+      // Если временная метка записи больше, чем локальная,
+      // то обновляем значение в локальном хранилище
+      if (v.ts > local->ts) {
         kv_.Set(k, v);
       }
     }
@@ -181,11 +184,11 @@ class KVClient final: public ClientBase {
   }
 
  protected:
-  void Write(Key k, Value v) {
+  void Set(Key k, Value v) {
     Await(Channel().Call("Set", k, v).As<void>()).ExpectOk();
   }
 
-  Value Read(Key k) {
+  Value Get(Key k) {
     return Await(Channel().Call("Get", k).As<Value>()).Value();
   }
 
@@ -195,13 +198,13 @@ class KVClient final: public ClientBase {
       WHIRL_LOG("Local wall time: " << WallTimeNow());
 
       WHIRL_LOG("Execute Set(" << "test" << ", " << i << ")");
-      Write("test", i);
+      Set("test", i);
       WHIRL_LOG("Set completed");
 
       Threads().SleepFor(RandomNumber(1, 100));
 
       WHIRL_LOG("Execute Get(test)");
-      Value result = Read("test");
+      Value result = Get("test");
 
       WHIRL_LOG("Get(test) -> " << result << ", expected: " << i);
     }
