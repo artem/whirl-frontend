@@ -45,6 +45,8 @@ struct NetSocket {
 
 //////////////////////////////////////////////////////////////////////
 
+// Server socket
+
 class NetServerSocket {
  public:
   NetServerSocket(Network* net, ServerAddress self);

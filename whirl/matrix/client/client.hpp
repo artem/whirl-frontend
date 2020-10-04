@@ -84,6 +84,10 @@ class ClientBase : public INode {
     return services_.threads;
   }
 
+  const INodeLoggerPtr& NodeLogger() {
+    return services_.logger;
+  }
+
  protected:
   // Override this methods
 

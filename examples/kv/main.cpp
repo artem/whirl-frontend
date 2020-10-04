@@ -1,4 +1,5 @@
 #include <whirl/node/node_base.hpp>
+#include <whirl/node/logging.hpp>
 #include <whirl/matrix/client/client.hpp>
 
 // Simulation
@@ -82,7 +83,7 @@ class KVNode final: public NodeBase {
         [this](Key k) { return Get(k); });
 
     rpc_server.RegisterMethod("Write",
-        [this](Key k, StampedValue v) { return Write(k, v); });
+        [this](Key k, StampedValue v) { Write(k, v); });
 
     rpc_server.RegisterMethod("Read",
         [this](Key k) { return Read(k); });
@@ -94,7 +95,7 @@ class KVNode final: public NodeBase {
 
   void Set(Key k, Value v) {
     Timestamp write_ts = ChooseWriteTimestamp();
-    WHIRL_FMT_LOG("Write timestamp: {}", write_ts);
+    NODE_LOG("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
@@ -121,7 +122,7 @@ class KVNode final: public NodeBase {
     auto values = Await(Quorum(std::move(reads), Majority())).Value();
 
     for (size_t i = 0; i < values.size(); ++i) {
-      WHIRL_FMT_LOG("{}-th value in read quorum: {}", i + 1, values[i]);
+      NODE_LOG("{}-th value in read quorum: {}", i + 1, values[i]);
     }
 
     auto winner = FindNewestValue(values);
@@ -146,7 +147,7 @@ class KVNode final: public NodeBase {
   }
 
   void Update(Key k, StampedValue v) {
-    WHIRL_FMT_LOG("Write '{}' -> {}", k, v);
+    NODE_LOG("Write '{}' -> {}", k, v);
     kv_.Set(k, v);
   }
 
@@ -203,19 +204,19 @@ class KVClient final: public ClientBase {
   void MainThread() override {
     for (size_t i = 1; ; ++i) {
       // Печатаем текущее системное время
-      WHIRL_FMT_LOG("Local wall time: {}", WallTimeNow());
+      NODE_LOG("Local wall time: {}", WallTimeNow());
 
-      WHIRL_FMT_LOG("Execute Set({})", i);
+      NODE_LOG("Execute Set({})", i);
 
       Set("test", i);
-      WHIRL_FMT_LOG("Set completed");
+      NODE_LOG("Set completed");
 
       Threads().SleepFor(RandomNumber(1, 100));
 
-      WHIRL_FMT_LOG("Execute Get(test)");
+      NODE_LOG("Execute Get(test)");
       Value result = Get("test");
 
-      WHIRL_FMT_LOG("Get(test) -> {}, expected: {}", result, i);
+      NODE_LOG("Get(test) -> {}, expected: {}", result, i);
     }
   }
 };

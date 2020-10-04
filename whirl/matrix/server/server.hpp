@@ -20,6 +20,7 @@
 #include <whirl/matrix/server/services/uid.hpp>
 #include <whirl/matrix/server/services/random.hpp>
 #include <whirl/services/rpc.hpp>
+#include <whirl/matrix/server/services/logger.hpp>
 
 #include <whirl/matrix/log/log.hpp>
 
@@ -159,6 +160,8 @@ class Server : public IActor {
     services.random = std::make_shared<RandomService>();
     services.uids_ = std::make_shared<UidGenerator>();
     services.true_time = std::make_shared<TrueTimeService>();
+
+    services.logger = std::make_shared<LoggerProxy>();
 
     return services;
   }

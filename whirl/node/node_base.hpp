@@ -3,9 +3,6 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
-// TODO!
-#include <whirl/matrix/log/log.hpp>
-
 #include <whirl/helpers/copy.hpp>
 
 #include <wheels/support/assert.hpp>
@@ -106,8 +103,12 @@ class NodeBase : public INode {
     return services_.true_time;
   }
 
-  ILocalStorageEnginePtr& StorageEngine() {
+  const ILocalStorageEnginePtr& StorageEngine() {
     return services_.storage_engine;
+  }
+
+  const INodeLoggerPtr& NodeLogger() {
+    return services_.logger;
   }
 
  protected:
@@ -133,9 +134,6 @@ class NodeBase : public INode {
 
   std::vector<std::string> peers_;
   std::vector<TRPCChannel> channels_;
-
- protected:
-  Logger logger_{"Node"};
 };
 
 }  // namespace whirl
