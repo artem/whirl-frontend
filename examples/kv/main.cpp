@@ -19,6 +19,7 @@
 #include <whirl/helpers/serialize.hpp>
 
 #include <cereal/types/string.hpp>
+#include <fmt/ostream.h>
 
 #include <chrono>
 #include <cstdlib>
@@ -47,10 +48,6 @@ struct StampedValue {
   Value value;
   Timestamp ts;
 
-  std::string ToString() const {
-    return wheels::StringBuilder() << "{" << value << ", ts = " << ts << "}";
-  }
-
   static StampedValue NoValue() {
     return {0, 0};
   }
@@ -58,6 +55,12 @@ struct StampedValue {
   // Сериализация для локального хранилища и передачи по сети
   SERIALIZE(value, ts)
 };
+
+// Для логирования
+std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
+  out << "{" << v.value << ", " << v.ts << "}";
+  return out;
+}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -118,7 +121,7 @@ class KVNode final: public NodeBase {
     auto values = Await(Quorum(std::move(reads), Majority())).Value();
 
     for (size_t i = 0; i < values.size(); ++i) {
-      WHIRL_LOG((i + 1) << "-th value in Read quorum: " << values[i].ToString());
+      WHIRL_FMT_LOG("{}-th value in read quorum: {}", i + 1, values[i]);
     }
 
     auto winner = FindNewestValue(values);
@@ -143,7 +146,7 @@ class KVNode final: public NodeBase {
   }
 
   void Update(Key k, StampedValue v) {
-    WHIRL_FMT_LOG("Write '{}' -> ({}, {})", k, v.value, v.ts);
+    WHIRL_FMT_LOG("Write '{}' -> {}", k, v);
     kv_.Set(k, v);
   }
 
