@@ -86,6 +86,10 @@ class Server : public IActor {
     paused_ = false;
   }
 
+  void AdjustWallTime() {
+    local_wall_time_clock_.AdjustOffset();
+  }
+
   void SetCluster(std::vector<ServerAddress> peers) {
     peers_ = std::move(peers);
   }

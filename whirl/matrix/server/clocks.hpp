@@ -12,8 +12,10 @@ class LocalWallTimeClock {
   LocalWallTimeClock() : offset_(InitLocalClockOffset()) {
   }
 
-  void Adjust() {
-    // TODO: Timers?
+  void AdjustOffset() {
+    offset_ = InitLocalClockOffset();
+    // This action does not affect active timers:
+    // they rely on monotonic clock
   }
 
   TimePoint Now() const {
