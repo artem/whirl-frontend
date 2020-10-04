@@ -115,7 +115,7 @@ class KVNode final: public NodeBase {
     }
 
     // Собираем кворум большинства
-    auto values = *Await(Quorum(std::move(reads), Majority()));
+    auto values = Await(Quorum(std::move(reads), Majority())).Value();
 
     for (size_t i = 0; i < values.size(); ++i) {
       WHIRL_LOG((i + 1) << "-th value in Read quorum: " << values[i].ToString());
