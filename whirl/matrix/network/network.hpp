@@ -171,7 +171,7 @@ class Network : public IActor {
                                       LightNetSocket(this, packet.to, packet.from));
     } else {
       WHIRL_LOG("Deliver reset message to endpoint " << packet.to);
-      endpoint.handler->HandleLost();
+      endpoint.handler->HandlePeerLost();
       endpoints_.erase(packet.to);
     }
   }

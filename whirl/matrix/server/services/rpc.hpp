@@ -162,7 +162,7 @@ class RPCChannel : public IRPCChannelImpl, public INetSocketHandler {
   }
 
   // Context: global
-  void HandleLost() override {
+  void HandlePeerLost() override {
     auto g = heap_.Use();
 
     WHIRL_LOG("Socket lost, fail all pending requests");
@@ -260,7 +260,7 @@ class RPCServer : public INetSocketHandler, public IRPCServerImpl {
   }
 
   // Context: global
-  void HandleLost() override {
+  void HandlePeerLost() override {
     auto g = heap_.Use();
     // Some client lost
   }

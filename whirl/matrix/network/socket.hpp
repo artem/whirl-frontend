@@ -10,9 +10,11 @@ namespace whirl {
 
 class Network;
 
+// Sockets
+
 //////////////////////////////////////////////////////////////////////
 
-// Sockets
+// Client socket
 
 struct NetSocket {
  public:
@@ -85,7 +87,7 @@ struct INetSocketHandler {
   virtual void HandleMessage(const Message& message, LightNetSocket back) = 0;
 
   // Peer disconnected
-  virtual void HandleLost() = 0;
+  virtual void HandlePeerLost() = 0;
 };
 
 }  // namespace whirl
