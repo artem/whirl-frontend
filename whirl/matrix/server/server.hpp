@@ -123,7 +123,7 @@ class Server : public IActor {
     return events_.NextEventTime();
   }
 
-  void MakeStep() override {
+  void Step() override {
     auto g = heap_.Use();
     auto event = events_.TakeNext();
     event();

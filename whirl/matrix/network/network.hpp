@@ -150,7 +150,7 @@ class Network : public IActor {
     return packets_.Smallest().time;
   }
 
-  void MakeStep() override {
+  void Step() override {
     NetPacket packet = packets_.Extract().packet;
 
     if (endpoints_.count(packet.to) == 0) {

@@ -90,7 +90,7 @@ class World {
     WHIRL_LOG("World started");
   }
 
-  bool MakeStep() {
+  bool Step() {
     WorldGuard g(this);
 
     IActor* actor = FindNextActor();
@@ -101,20 +101,14 @@ class World {
     ++step_count_;
 
     clock_.MoveForwardTo(actor->NextStepTime());
-
-    /*
-    WHIRL_LLOG("step = " << step_count_ << ", time = " << clock_.Now()
-                         << ", actor = " << actor->Name());
-    */
-
-    Scope(actor)->MakeStep();
+    Scope(actor)->Step();
 
     return true;
   }
 
   void MakeSteps(size_t steps) {
     for (size_t i = 0; i < steps; ++i) {
-      if (!MakeStep()) {
+      if (!Step()) {
         break;
       }
     }
@@ -122,7 +116,7 @@ class World {
 
   void RunFor(Duration d) {
     while (Now() < d) {
-      if (!MakeStep()) {
+      if (!Step()) {
         break;
       }
     }
