@@ -10,7 +10,7 @@ file(GLOB_RECURSE LIB_HEADERS ${LIB_PATH}/*.hpp)
 
 add_library(whirl STATIC ${LIB_CXX_SOURCES} ${LIB_HEADERS})
 target_include_directories(whirl PUBLIC ${LIB_INCLUDE_PATH})
-target_link_libraries(whirl PUBLIC wheels await cereal)
+target_link_libraries(whirl PUBLIC wheels await cereal fmt)
 
 # --------------------------------------------------------------------
 

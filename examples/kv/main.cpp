@@ -91,7 +91,7 @@ class KVNode final: public NodeBase {
 
   void Set(Key k, Value v) {
     Timestamp write_ts = ChooseWriteTimestamp();
-    WHIRL_LOG("Write timestamp: " << write_ts);
+    WHIRL_FMT_LOG("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
@@ -132,14 +132,19 @@ class KVNode final: public NodeBase {
 
     if (!local.has_value()) {
       // Раньше не видели данный ключ
-      kv_.Set(k, v);
+      Update(k, v);
     } else {
       // Если временная метка записи больше, чем локальная,
       // то обновляем значение в локальном хранилище
       if (v.ts > local->ts) {
-        kv_.Set(k, v);
+        Update(k, v);
       }
     }
+  }
+
+  void Update(Key k, StampedValue v) {
+    WHIRL_FMT_LOG("Write '{}' -> ({}, {})", k, v.value, v.ts);
+    kv_.Set(k, v);
   }
 
   StampedValue Read(Key k) {
@@ -195,18 +200,19 @@ class KVClient final: public ClientBase {
   void MainThread() override {
     for (size_t i = 1; ; ++i) {
       // Печатаем текущее системное время
-      WHIRL_LOG("Local wall time: " << WallTimeNow());
+      WHIRL_FMT_LOG("Local wall time: {}", WallTimeNow());
 
-      WHIRL_LOG("Execute Set(" << "test" << ", " << i << ")");
+      WHIRL_FMT_LOG("Execute Set({})", i);
+
       Set("test", i);
-      WHIRL_LOG("Set completed");
+      WHIRL_FMT_LOG("Set completed");
 
       Threads().SleepFor(RandomNumber(1, 100));
 
-      WHIRL_LOG("Execute Get(test)");
+      WHIRL_FMT_LOG("Execute Get(test)");
       Value result = Get("test");
 
-      WHIRL_LOG("Get(test) -> " << result << ", expected: " << i);
+      WHIRL_FMT_LOG("Get(test) -> {}, expected: {}", result, i);
     }
   }
 };

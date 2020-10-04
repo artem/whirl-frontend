@@ -39,3 +39,12 @@ set(FETCHCONTENT_QUIET OFF)
 FetchContent_MakeAvailable(cereal)
 
 # --------------------------------------------------------------------
+
+FetchContent_Declare(
+        fmtlib
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG master
+)
+
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(fmtlib)
