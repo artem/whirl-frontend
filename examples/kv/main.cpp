@@ -10,7 +10,7 @@
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/thread_like.hpp>
 
-#include <await/futures/combine.hpp>
+#include <await/futures/combine/quorum.hpp>
 
 #include <wheels/support/random.hpp>
 #include <wheels/support/string_builder.hpp>
@@ -61,16 +61,6 @@ struct StampedValue {
 
 //////////////////////////////////////////////////////////////////////
 
-// Сетевой протокол
-
-// Workaround для комбинаторов из-за void
-struct WriteAck {
-  int _ = 0;
-  SERIALIZE(_)
-};
-
-//////////////////////////////////////////////////////////////////////
-
 // KV storage node
 
 class KVNode final: public NodeBase {
@@ -103,15 +93,15 @@ class KVNode final: public NodeBase {
     Timestamp write_ts = ChooseWriteTimestamp();
     WHIRL_LOG("Write timestamp: " << write_ts);
 
-    std::vector<Future<WriteAck>> writes;
+    std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
           PeerChannel(i).Call(
-              "Write", k, StampedValue{v, write_ts}).As<WriteAck>());
+              "Write", k, StampedValue{v, write_ts}).As<void>());
     }
 
-    auto write_acks = Await(Quorum(std::move(writes), Majority()));
-    write_acks.ThrowIfError();
+    // Синхронно дожидаемся большинства подтверждений
+    Await(Quorum(std::move(writes), Majority())).ExpectOk();
   }
 
   Value Get(Key k) {
@@ -137,7 +127,7 @@ class KVNode final: public NodeBase {
 
   // Внутренние команды репликам
 
-  WriteAck Write(Key k, StampedValue v) {
+  void Write(Key k, StampedValue v) {
     if (!kv_.Has(k)) {
       kv_.Set(k, v);
     } else {
@@ -147,9 +137,6 @@ class KVNode final: public NodeBase {
         kv_.Set(k, v);
       }
     }
-
-    // Посылаем подтверждение
-    return {};
   }
 
   StampedValue Read(Key k) {
