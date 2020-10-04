@@ -36,7 +36,7 @@ class Network : public IActor {
     Message message;
     NetEndpointId to;
 
-    bool IsDataMessage() const {
+    bool IsData() const {
       return type == EPacketType::Data;
     }
   };
@@ -156,7 +156,7 @@ class Network : public IActor {
     if (endpoints_.count(packet.to) == 0) {
       WHIRL_LOG("Cannot deliver message <" << packet.message << ">: endpoint "
                                            << packet.to << " disconnected");
-      if (packet.IsDataMessage()) {
+      if (packet.IsData()) {
         SendResetPacket(packet.from);
       }
       return;
