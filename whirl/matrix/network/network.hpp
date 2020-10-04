@@ -16,6 +16,8 @@
 
 #include <whirl/matrix/log/log.hpp>
 
+#include <whirl/helpers/copy.hpp>
+
 #include <whirl/helpers/id.hpp>
 
 #include <map>
@@ -108,7 +110,7 @@ class Network : public IActor {
     WHIRL_LOG("Create client endpoint: " << client_id);
     endpoints_[client_id] = {handler};
 
-    return NetSocket(this, client_id, server_id, /*client=*/true);
+    return NetSocket(this, client_id, server_id);
   }
 
   // Called from client socket dtor
@@ -120,10 +122,13 @@ class Network : public IActor {
 
   // Send
 
-  void SendMessage(NetEndpointId from, Message message, NetEndpointId to) {
-    WHIRL_LOG("Send message <" << message << "> from " << from << " to "
-                               << to);
-    Send({EPacketType::Data, from, message, to});
+  // Context: Server
+  void SendMessage(NetEndpointId from, const Message& message, NetEndpointId to) {
+    GlobalHeapScope guard;
+
+    auto message_copy = MakeCopy(message);
+    WHIRL_LOG("Send message <" << message_copy << "> from " << from << " to " << to);
+    Send({EPacketType::Data, from, message_copy, to});
   }
 
   // IActor
@@ -163,7 +168,7 @@ class Network : public IActor {
       WHIRL_LOG("Deliver message <" << packet.message << "> to endpoint "
                                     << packet.to);
       endpoint.handler->HandleMessage(packet.message,
-                                      NetSocket(this, packet.to, packet.from));
+                                      LightNetSocket(this, packet.to, packet.from));
     } else {
       WHIRL_LOG("Deliver reset message to endpoint " << packet.to);
       endpoint.handler->HandleLost();

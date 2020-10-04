@@ -8,16 +8,15 @@ namespace whirl {
 
 // TODO: socket = 2 uni-directional socket channels
 
-//////////////////////////////////////////////////////////////////////
-
 class Network;
+
+//////////////////////////////////////////////////////////////////////
 
 // Sockets
 
 struct NetSocket {
  public:
-  NetSocket(Network* net, NetEndpointId self, NetEndpointId peer,
-            bool client = false);
+  NetSocket(Network* net, NetEndpointId self, NetEndpointId peer);
   ~NetSocket();
 
   static NetSocket Invalid() {
@@ -42,8 +41,9 @@ struct NetSocket {
   NetEndpointId self_;
   NetEndpointId peer_;
   Network* net_;
-  bool client_;
 };
+
+//////////////////////////////////////////////////////////////////////
 
 class NetServerSocket {
  public:
@@ -63,10 +63,26 @@ class NetServerSocket {
 
 //////////////////////////////////////////////////////////////////////
 
+// Just throws messages to network, does not own net endpoint
+
+class LightNetSocket {
+ public:
+  LightNetSocket(Network* net, NetEndpointId self, NetEndpointId peer);
+
+  void Send(const Message& message);
+
+ private:
+  NetEndpointId self_;
+  NetEndpointId peer_;
+  Network* net_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 struct INetSocketHandler {
   virtual ~INetSocketHandler() = default;
 
-  virtual void HandleMessage(const Message& message, NetSocket back) = 0;
+  virtual void HandleMessage(const Message& message, LightNetSocket back) = 0;
 
   // Peer disconnected
   virtual void HandleLost() = 0;

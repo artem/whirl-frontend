@@ -137,7 +137,7 @@ class RPCChannel : public IRPCChannelImpl, public INetSocketHandler {
   // INetSocketHandler
 
   // Context: global
-  void HandleMessage(const Message& message, NetSocket /*socket*/) override {
+  void HandleMessage(const Message& message, LightNetSocket /*socket*/) override {
     auto g = heap_.Use();
 
     WHIRL_LOG("Message received");
@@ -248,7 +248,7 @@ class RPCServer : public INetSocketHandler, public IRPCServerImpl {
   // INetSocketHandler
 
   // Context: global
-  void HandleMessage(const Message& message, NetSocket back) override {
+  void HandleMessage(const Message& message, LightNetSocket back) override {
     auto g = heap_.Use();
 
     // Process request
@@ -266,7 +266,7 @@ class RPCServer : public INetSocketHandler, public IRPCServerImpl {
   }
 
  private:
-  void ProcessRequest(const Message& message, NetSocket back) {
+  void ProcessRequest(const Message& message, LightNetSocket back) {
     auto request = Deserialize<RPCRequestMessage>(message);
 
     WHIRL_LOG("Processing request");
@@ -285,12 +285,12 @@ class RPCServer : public INetSocketHandler, public IRPCServerImpl {
     SendResponse({request.id, request.method, result, RPCError::Ok()}, back);
   }
 
-  void ResponseWithError(const RPCRequestMessage& request, NetSocket& back,
+  void ResponseWithError(const RPCRequestMessage& request, LightNetSocket& back,
                          RPCError error) {
     SendResponse({request.id, request.method, "", error}, back);
   }
 
-  void SendResponse(RPCResponseMessage response, NetSocket& back) {
+  void SendResponse(RPCResponseMessage response, LightNetSocket& back) {
     back.Send(Serialize(response));
   }
 

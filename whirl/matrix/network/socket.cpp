@@ -6,9 +6,20 @@
 
 namespace whirl {
 
-NetSocket::NetSocket(Network* net, NetEndpointId self, NetEndpointId peer,
-                     bool client)
-    : self_(self), peer_(peer), net_(net), client_(client) {
+//////////////////////////////////////////////////////////////////////
+
+LightNetSocket::LightNetSocket(Network* net, NetEndpointId self, NetEndpointId peer)
+  : self_(self), peer_(peer), net_(net) {
+}
+
+void LightNetSocket::Send(const Message& message) {
+  net_->SendMessage(self_, message, peer_);
+}
+
+//////////////////////////////////////////////////////////////////////
+
+NetSocket::NetSocket(Network* net, NetEndpointId self, NetEndpointId peer)
+    : self_(self), peer_(peer), net_(net) {
 }
 
 NetSocket::~NetSocket() {
@@ -16,16 +27,14 @@ NetSocket::~NetSocket() {
 }
 
 void NetSocket::Close() {
-  if (IsValid() && client_) {
+  if (IsValid()) {
     net_->DisconnectClient(self_);
     Invalidate();
   }
 }
 
 void NetSocket::Send(const Message& message) {
-  GlobalHeapScope guard;
-  Message copied(message);
-  net_->SendMessage(self_, std::move(copied), peer_);
+  net_->SendMessage(self_, message, peer_);
 }
 
 bool NetSocket::IsValid() const {
@@ -44,6 +53,8 @@ void NetSocket::Invalidate() {
   net_ = nullptr;
   self_ = peer_ = 0;
 }
+
+//////////////////////////////////////////////////////////////////////
 
 NetServerSocket::NetServerSocket(Network* net, ServerAddress self)
     : self_(self), net_(net) {
