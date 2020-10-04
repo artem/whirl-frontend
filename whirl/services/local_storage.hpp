@@ -4,6 +4,8 @@
 
 #include <whirl/helpers/serialize.hpp>
 
+#include <optional>
+
 namespace whirl {
 
 // Typed local storages
@@ -35,6 +37,22 @@ class LocalKVStorage {
   V Get(const Bytes& key) {
     auto value_bytes = impl_->Get(WithNamespace(key));
     return Deserialize<V>(value_bytes);
+  }
+
+  std::optional<V> TryGet(const Bytes& key) {
+    if (Has(key)) {
+      return Get(key);
+    } else {
+      return std::nullopt;
+    }
+  }
+
+  V GetOr(const Bytes& key, V default_value) {
+    if (Has(key)) {
+      return Get(key);
+    } else {
+      return default_value;
+    }
   }
 
  private:
