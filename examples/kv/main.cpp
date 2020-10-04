@@ -140,11 +140,7 @@ class KVNode final: public NodeBase {
   }
 
   StampedValue Read(Key k) {
-    if (kv_.Has(k)) {
-      return kv_.Get(k);
-    } else {
-      return StampedValue::NoValue();
-    }
+    return kv_.GetOr(k, StampedValue::NoValue());
   }
 
   Timestamp ChooseWriteTimestamp() {
