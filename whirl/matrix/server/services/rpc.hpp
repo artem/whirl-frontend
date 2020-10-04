@@ -268,8 +268,14 @@ class RPCServer : public INetSocketHandler, public IRPCServerImpl {
   }
 
  private:
+  std::string MakeRequestThreadName(const RPCRequestMessage& request) {
+    return wheels::StringBuilder() << "rpc-" << request.id;
+  }
+
   void ProcessRequest(const Message& message, LightNetSocket back) {
     auto request = Deserialize<RPCRequestMessage>(message);
+
+    //await::fibers::SetName(MakeRequestThreadName(request));
 
     WHIRL_LOG("Processing request");
 

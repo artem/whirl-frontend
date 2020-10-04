@@ -96,6 +96,7 @@ class ClientBase : public INode {
 
  private:
   void Main() {
+    await::fibers::SetName("main");
     ConnectToClusterNodes();
     MainThread();
   }

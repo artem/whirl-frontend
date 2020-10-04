@@ -122,6 +122,7 @@ class NodeBase : public INode {
 
  private:
   void Main() {
+    await::fibers::SetName("main");
     RegisterRPCMethods(services_.rpc_server);
     ConnectToPeers();
     MainThread();
