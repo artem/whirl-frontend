@@ -1,7 +1,8 @@
 #include <whirl/node/node_base.hpp>
-#include <whirl/matrix/client/client.hpp>
+#include <whirl/node/logging.hpp>
 
 // Simulation
+#include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/world/world.hpp>
 #include <whirl/matrix/world/global.hpp>
@@ -46,7 +47,7 @@ class EchoServerNode final: public NodeBase {
   // RPC method handlers
 
   std::string Echo(std::string data) {
-    WHIRL_LOG("Echo request: '" << data << "'");
+    NODE_LOG("Echo request: '{}'", data);
     return data ;
   }
 };

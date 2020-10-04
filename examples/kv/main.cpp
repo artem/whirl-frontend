@@ -1,16 +1,13 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/node/logging.hpp>
-#include <whirl/matrix/client/client.hpp>
 
 // Simulation
-#include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/client/client.hpp>
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/thread_like.hpp>
-
 #include <await/futures/combine/quorum.hpp>
 
 #include <wheels/support/random.hpp>
