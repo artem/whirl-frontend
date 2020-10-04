@@ -189,7 +189,7 @@ class World {
   }
 
   IActor* CurrentActor() const {
-    return current_.Get();
+    return active_.Get();
   }
 
  private:
@@ -198,7 +198,7 @@ class World {
   }
 
   ActorContext::ScopeGuard Scope(IActor* actor) {
-    return current_.Scope(actor);
+    return active_.Scope(actor);
   }
 
   void AddActor(IActor* actor) {
@@ -240,7 +240,7 @@ class World {
   // Theatre
 
   std::vector<IActor*> actors_;
-  ActorContext current_;
+  ActorContext active_;
   size_t step_count_{0};
 
   Logger logger_{"World"};
