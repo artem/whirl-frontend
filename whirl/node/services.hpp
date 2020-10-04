@@ -24,7 +24,7 @@ struct NodeServices {
   ILocalStorageEnginePtr storage_engine;
 
   IRandomServicePtr random;
-  IUidGeneratorPtr uids_;
+  IUidGeneratorPtr uids;
   ITrueTimeServicePtr true_time;
 
   INodeLoggerPtr logger;

@@ -82,7 +82,7 @@ class NodeBase : public INode {
   }
 
   Uid GenerateUid() {
-    return services_.uids_->Generate();
+    return services_.uids->Generate();
   }
 
   // Local services

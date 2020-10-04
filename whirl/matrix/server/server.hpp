@@ -158,7 +158,7 @@ class Server : public IActor {
         TRPCClient(std::make_shared<RPCClient>(heap_, network_));
 
     services.random = std::make_shared<RandomService>();
-    services.uids_ = std::make_shared<UidGenerator>();
+    services.uids = std::make_shared<UidGenerator>();
     services.true_time = std::make_shared<TrueTimeService>();
 
     services.logger = std::make_shared<LoggerProxy>();
