@@ -72,7 +72,7 @@ class KVNode final: public NodeBase {
   }
 
  protected:
-  void RegisterRPCMethods(TRPCServer& rpc_server) override {
+  void RegisterRPCMethods(rpc::TRPCServer& rpc_server) override {
     rpc_server.RegisterMethod("Set",
         [this](Key k, Value v) { Set(k, v); });
 

@@ -1,4 +1,5 @@
 #include <whirl/node/node_base.hpp>
+#include <whirl/node/logging.hpp>
 
 // Simulation
 #include <whirl/matrix/server/server.hpp>
@@ -28,9 +29,9 @@ using wheels::Status;
 
 //////////////////////////////////////////////////////////////////////
 
-class TestNode final: public NodeBase {
+class ChattyNode final: public NodeBase {
  public:
-  TestNode(NodeServices services, NodeConfig config)
+  ChattyNode(NodeServices services, NodeConfig config)
       : NodeBase(std::move(services), config) {
   }
 
@@ -41,31 +42,31 @@ class TestNode final: public NodeBase {
   }
 
   void Hello(std::string who) {
-    WHIRL_LOG("Hello from " << who);
+    NODE_LOG("Hello from {}", who);
   }
 
   void MainThread() override {
-    if (LocalStorage().Has("progress")) {
-      WHIRL_LOG("Start progress: " << LocalStorage().Load<int>("progress"));
+    if (LocalStorage().Has("step")) {
+      NODE_LOG("Start step: {}", LocalStorage().Load<int>("step"));
     }
 
     for (size_t i = 0; ; ++i) {
-      WHIRL_LOG("Server " << Id() << " makes step " << i + 1);
+      NODE_LOG("Server {} makes step {}", Id(), i + 1);
 
       size_t peer_id = RandomNumber() % PeerCount();
 
       auto peer = PeerName(peer_id);
-      WHIRL_LOG("Try to send Hello to " << peer);
+      NODE_LOG("Try to send Hello to {}", peer);
 
       auto status = Await(PeerChannel(peer_id).Call("Hello", MyName()).As<void>());
       if (status.IsOk()) {
-        WHIRL_LOG("Peer " << peer << " responded with ack");
+        NODE_LOG("Peer {} responded with ack", peer);
       } else {
-        WHIRL_LOG("Peer " << peer << ": RPC error");
+        NODE_LOG("Peer {}: RPC error", peer);
       }
 
       LocalStorage().Store<int>("progress", i);
-      WHIRL_LOG("Save progress to " << i);
+      NODE_LOG("Save step: {}", i);
 
       Yield();
     }
@@ -97,28 +98,36 @@ class TestAdversary {
     Server& target = world_.servers[index];
 
     for (size_t i = 0; ; ++i) {
-      // Pause server
 
+      if (GlobalNow() > 400) {
+        runtime_.SleepFor(17);
+        continue;
+      }
+
+      // Pause server
       if (whirl::GlobalRandomNumber() % 17 == 0) {
-        WHIRL_LOG("FAULT: Pause " << target.Name());
+        WHIRL_FMT_LOG("FAULT: Pause {}", target.Name());
         target.Pause();
         runtime_.SleepFor(whirl::GlobalRandomNumber() % 20);
-        WHIRL_LOG("FAULT: Resume " << target.Name());
+        WHIRL_FMT_LOG("FAULT: Resume {}", target.Name());
         target.Resume();
         continue;
       }
 
       // Restart server
       if (whirl::GlobalRandomNumber() % 13 == 0) {
-        WHIRL_LOG("FAULT: Reboot " << target.Name());
+        WHIRL_FMT_LOG("FAULT: Reboot {}", target.Name());
         target.Reboot();
       }
 
-      // Adjust server clock?
-      // TODO
+      // Adjust wall time clock
+      if (whirl::GlobalRandomNumber() % 100 == 0) {
+        WHIRL_FMT_LOG("FAULT: Adjust wall time at {}", target.Name());
+        target.AdjustWallTime();
+      }
 
       // Just wait some time
-      runtime_.SleepFor(1);
+      runtime_.SleepFor(5);
     }
   }
 
@@ -140,7 +149,7 @@ void RunAdversary(ThreadsRuntime& runtime, WorldView world) {
 
 int main() {
   World world;
-  auto node = MakeNode<TestNode>();
+  auto node = MakeNode<ChattyNode>();
 
   world.AddServer(node);
   world.AddServer(node);
@@ -150,7 +159,7 @@ int main() {
 
   wheels::StopWatch stop_watch;
 
-  world.MakeSteps(256);
+  world.RunFor(1300);
 
   auto elapsed = stop_watch.Elapsed();
 
