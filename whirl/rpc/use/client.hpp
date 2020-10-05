@@ -55,7 +55,7 @@ class TRPCResult {
 
 class TRPCChannel {
  public:
-  TRPCChannel(IRPCChannelPtr impl) : impl_(impl) {
+  TRPCChannel(IRPCChannelPtr impl = nullptr) : impl_(impl) {
   }
 
   // Non-copyable
@@ -63,6 +63,7 @@ class TRPCChannel {
   TRPCChannel& operator=(TRPCChannel& that) = delete;
 
   TRPCChannel(TRPCChannel&& that) = default;
+  TRPCChannel& operator=(TRPCChannel&& that) = default;
 
   template <typename... Arguments>
   detail::TRPCResult Call(const std::string& method, Arguments&&... arguments) {
@@ -95,6 +96,8 @@ class TRPCClient {
   TRPCClient(ITransportPtr t, IExecutorPtr e)
       : transport_(std::move(t)), executor_(std::move(e)) {
   }
+
+  IRPCChannelPtr MakeChannel(const std::string& peer);
 
   TRPCChannel Dial(const std::string& peer);
 

@@ -3,6 +3,8 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
+#include <whirl/matrix/client/random_channel.hpp>
+
 // TODO!
 #include <whirl/matrix/log/log.hpp>
 
@@ -32,9 +34,11 @@ class ClientBase : public INode {
   }
 
   void ConnectToClusterNodes() {
+    std::vector<rpc::IRPCChannelPtr> channels;
     for (const auto& node : nodes_) {
-      channels_.push_back(services_.rpc_client.Dial(node));
+      channels.push_back(services_.rpc_client.MakeChannel(node));
     }
+    channel_ = TRPCChannel(MakeRandomChannel(std::move(channels)));
   }
 
  protected:
@@ -56,8 +60,7 @@ class ClientBase : public INode {
   }
 
   TRPCChannel& Channel() {
-    size_t random_node = RandomNumber(nodes_.size());
-    return channels_.at(random_node);
+    return channel_;
   }
 
   // Shortcuts for common functions
@@ -113,7 +116,7 @@ class ClientBase : public INode {
   NodeConfig config_;
 
   std::vector<std::string> nodes_;
-  std::vector<TRPCChannel> channels_;
+  TRPCChannel channel_;
 
  protected:
   Logger logger_{"Client"};
