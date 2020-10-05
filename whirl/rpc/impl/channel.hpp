@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/raw.hpp>
+#include <whirl/rpc/impl/raw_value.hpp>
 
 #include <await/futures/future.hpp>
 

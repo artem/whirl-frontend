@@ -12,6 +12,7 @@ enum class RPCErrorCode {
   TransportError = 2,
   ExecutionError = 3,
   MethodNotFound = 4,
+  BadRequest = 5,
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -53,6 +54,8 @@ class RPCErrorCategory : public std::error_category {
         return "Execution error";
       case RPCErrorCode::MethodNotFound:
         return "Method not found";
+      case RPCErrorCode::BadRequest:
+        return "Bad request";
       default:
         return "?";
     }
