@@ -3,7 +3,7 @@
 #include <whirl/rpc/impl/raw.hpp>
 #include <whirl/rpc/impl/protocol.hpp>
 
-#include <whirl/services/net_transport.hpp>
+#include <whirl/rpc/impl/net_transport.hpp>
 
 #include <await/executors/executor.hpp>
 #include <await/fibers/core/api.hpp>
