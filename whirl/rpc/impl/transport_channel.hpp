@@ -7,6 +7,10 @@
 #include <whirl/services/net_transport.hpp>
 
 #include <await/executors/executor.hpp>
+#include <await/executors/strand.hpp>
+
+#include <await/fibers/sync/teleport.hpp>
+
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>
 
@@ -34,9 +38,13 @@ class RPCTransportChannel
     RequestPromise promise;
   };
 
+  using Requests = std::map<RPCId, Request>;
+
  public:
   RPCTransportChannel(ITransportPtr t, IExecutorPtr e, std::string peer)
-      : transport_(std::move(t)), executor_(std::move(e)), peer_(peer) {
+      : transport_(std::move(t)),
+        strand_(await::executors::MakeStrand(std::move(e))),
+        peer_(peer) {
   }
 
   ~RPCTransportChannel() {
@@ -51,7 +59,10 @@ class RPCTransportChannel
 
   Future<RPCBytes> Call(const std::string& method,
                         const RPCBytes& input) override {
-    WHIRL_LOG("Request method '" << method << "' on peer " << peer_);
+
+    await::fibers::TeleportGuard t(strand_);
+
+    WHIRL_FMT_LOG("Request method '{}' on peer {}", method, peer_);
 
     ITransportSocketPtr& socket = GetTransportSocket();
 
@@ -84,8 +95,22 @@ class RPCTransportChannel
 
   void HandleMessage(const TransportMessage& message,
                      ITransportSocketPtr /*back*/) override {
-    // TODO: switch to executor?
 
+    strand_->Execute([self = shared_from_this(), message]() {
+      self->HandleResponse(message);
+    });
+  }
+
+  void HandleLostPeer() override {
+    strand_->Execute([self = shared_from_this()]() {
+      self->LostPeer();
+    });
+  }
+
+ private:
+  // Inside strand
+
+  void HandleResponse(const TransportMessage& message) {
     WHIRL_LOG("Message received");
 
     auto response = Deserialize<RPCResponseMessage>(message);
@@ -107,40 +132,43 @@ class RPCTransportChannel
     }
   }
 
-  void HandleLostPeer() override {
-    // TODO: switch to executor?
+  void LostPeer() {
+    auto requests = std::move(requests_);
+    requests_.clear();
 
-    WHIRL_FMT_LOG("Transport connection to {} lost, fail all pending requests", peer_);
-    for (auto& [id, request] : requests_) {
+    WHIRL_FMT_LOG("Transport connection to peer {} lost, fail {} pending request(s)", peer_, requests.size());
+
+    socket_.reset();
+
+    for (auto& [id, request] : requests) {
       Fail(request, std::errc::connection_reset);
     }
-    requests_.clear();
-    socket_.reset();
   }
 
  private:
   ITransportSocketPtr& GetTransportSocket() {
-    if (socket_ && socket_->IsConnected()) {
+    if (socket_) {
       return socket_;
     }
-    WHIRL_LOG("Reconnect to " << peer_);
+    WHIRL_FMT_LOG("Reconnect to {}", peer_);
     socket_ = transport_->ConnectTo(peer_, shared_from_this());
     return socket_;
   }
 
   void Fail(Request& request, std::errc e) {
+    WHIRL_FMT_LOG("Fail request with id = {}", request.id);
     std::move(request.promise).SetError(std::make_error_code(e));
   }
 
  private:
   ITransportPtr transport_;
-  IExecutorPtr executor_;
+  IExecutorPtr strand_;
 
-  std::string peer_;
+  const std::string peer_;
 
   ITransportSocketPtr socket_{nullptr};
 
-  std::map<RPCId, Request> requests_;
+  Requests requests_;
 
   Logger logger_{"RPC channel"};
 };
