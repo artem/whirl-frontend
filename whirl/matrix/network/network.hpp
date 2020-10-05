@@ -86,8 +86,8 @@ class Network : public IActor {
   // Called from server socket dtor
   void CloseServerSocket(const ServerAddress& address) {
     GlobalHeapScope guard;
-    WHIRL_LOG("Stop serve address " << address);
     auto server_id = servers_[address];
+    WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address, server_id);
     servers_.erase(address);
     endpoints_.erase(server_id);
   }
@@ -128,8 +128,7 @@ class Network : public IActor {
     GlobalHeapScope guard;
 
     auto message_copy = MakeCopy(message);
-    WHIRL_LOG("Send message <" << message_copy << "> from " << from << " to "
-                               << to);
+    WHIRL_FMT_LOG("Send {} -> {} message <{}>", from, to, message_copy);
     Send({EPacketType::Data, from, message_copy, to});
   }
 
@@ -155,7 +154,9 @@ class Network : public IActor {
   void Step() override {
     NetPacket packet = packets_.Extract().packet;
 
-    if (endpoints_.count(packet.to) == 0) {
+    auto to_endpoint_it = endpoints_.find(packet.to);
+
+    if (to_endpoint_it == endpoints_.end()) {
       WHIRL_LOG("Cannot deliver message <" << packet.message << ">: endpoint "
                                            << packet.to << " disconnected");
       if (packet.IsData()) {
@@ -164,17 +165,17 @@ class Network : public IActor {
       return;
     }
 
-    auto& endpoint = endpoints_[packet.to];
+    auto& endpoint = to_endpoint_it->second;
 
     if (packet.type == EPacketType::Data) {
-      WHIRL_LOG("Deliver message <" << packet.message << "> to endpoint "
-                                    << packet.to);
+      WHIRL_FMT_LOG("Deliver message to endpoint {}: <{}>", packet.to, packet.message);
       endpoint.handler->HandleMessage(
           packet.message, LightNetSocket(this, packet.to, packet.from));
     } else {
-      WHIRL_LOG("Deliver reset message to endpoint " << packet.to);
+      WHIRL_FMT_LOG("Deliver reset message to endpoint {}", packet.to);
       endpoint.handler->HandlePeerLost();
-      endpoints_.erase(packet.to);
+
+      //endpoints_.erase(packet.to);
     }
   }
 
