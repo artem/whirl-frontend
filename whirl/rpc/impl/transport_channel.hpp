@@ -129,7 +129,7 @@ class RPCTransportChannel
       std::move(request.promise).SetValue(response.result);
     } else {
       // TODO: better error
-      Fail(request, std::errc::io_error);
+      Fail(request, make_error_code(response.error));
     }
   }
 
@@ -145,7 +145,7 @@ class RPCTransportChannel
     socket_.reset();
 
     for (auto& [id, request] : requests) {
-      Fail(request, std::errc::connection_reset);
+      Fail(request, make_error_code(RPCErrorCode::TransportError));
     }
   }
 
@@ -159,9 +159,9 @@ class RPCTransportChannel
     return socket_;
   }
 
-  void Fail(Request& request, std::errc e) {
+  void Fail(Request& request, std::error_code e) {
     WHIRL_FMT_LOG("Fail request with id = {}", request.id);
-    std::move(request.promise).SetError(std::make_error_code(e));
+    std::move(request.promise).SetError(wheels::Error(e));
   }
 
  private:

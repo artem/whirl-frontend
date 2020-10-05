@@ -83,20 +83,21 @@ class RPCTransportServer
 
     if (methods_.count(request.method) == 0) {
       // Requested method not found
-      ResponseWithError(request, back, {1, "Method not found"});
+      ResponseWithError(request, back, RPCErrorCode::ExecError);
     }
+
     RPCBytes result;
     auto invoker = methods_[request.method];
     try {
       result = invoker(request.input);
     } catch (...) {
-      ResponseWithError(request, back, {1, wheels::CurrentExceptionMessage()});
+      ResponseWithError(request, back, RPCErrorCode::ExecError);
     }
-    SendResponse({request.id, request.method, result, RPCError::Ok()}, back);
+    SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
   }
 
   void ResponseWithError(const RPCRequestMessage& request,
-                         const ITransportSocketPtr& back, RPCError error) {
+                         const ITransportSocketPtr& back, RPCErrorCode error) {
     SendResponse({request.id, request.method, "", error}, back);
   }
 

@@ -3,6 +3,7 @@
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/raw.hpp>
 #include <whirl/rpc/impl/trace.hpp>
+#include <whirl/rpc/impl/errors.hpp>
 
 #include <whirl/helpers/serialize.hpp>
 
@@ -33,32 +34,17 @@ struct RPCRequestMessage {
 
 // Response
 
-struct RPCError {
-  int code;
-  std::string message;
-
-  bool IsOk() const {
-    return code == 0;
-  }
-
-  static RPCError Ok() {
-    return {0, ""};
-  }
-
-  SERIALIZE(CEREAL_NVP(code), CEREAL_NVP(message))
-};
-
 struct RPCResponseMessage {
   RPCId request_id;
   std::string method;  // For debugging
   RPCBytes result;
-  RPCError error;
+  RPCErrorCode error;
 
   SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(method), CEREAL_NVP(result),
             CEREAL_NVP(error))
 
   bool IsOk() const {
-    return error.IsOk();
+    return error == RPCErrorCode::Ok;
   }
 };
 
