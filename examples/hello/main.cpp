@@ -159,7 +159,7 @@ int main() {
 
   wheels::StopWatch stop_watch;
 
-  world.RunFor(1300);
+  world.MakeSteps(100000);
 
   auto elapsed = stop_watch.Elapsed();
 
