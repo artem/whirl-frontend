@@ -68,7 +68,7 @@ class KVNode final: public NodeBase {
  public:
   KVNode(NodeServices services, NodeConfig config)
       : NodeBase(std::move(services), config),
-        kv_(StorageEngine(), "test") {
+        kv_(StorageBackend(), "test") {
   }
 
  protected:
