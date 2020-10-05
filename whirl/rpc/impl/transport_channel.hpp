@@ -33,6 +33,7 @@ class RPCTransportChannel
     : public std::enable_shared_from_this<RPCTransportChannel>,
       public IRPCChannel,
       public ITransportHandler {
+ private:
   using RequestPromise = Promise<BytesValue>;
 
   struct Request {
@@ -70,7 +71,7 @@ class RPCTransportChannel
     if (!socket->IsConnected()) {
       // Fail RPC immediately
       return await::futures::MakeError(
-          std::make_error_code(std::errc::connection_refused));
+          make_error_code(RPCErrorCode::TransportError));
     }
 
     Request request;
@@ -119,6 +120,7 @@ class RPCTransportChannel
     auto request_it = requests_.find(response.request_id);
 
     if (request_it == requests_.end()) {
+      WHIRL_FMT_LOG("Request with id {} not found", response.request_id);
       return;  // Probably duplicated response message from transport layer?
     }
 
@@ -126,6 +128,7 @@ class RPCTransportChannel
     requests_.erase(request_it);
 
     if (response.IsOk()) {
+      WHIRL_FMT_LOG("Request with id {} completed", response.request_id);
       std::move(request.promise).SetValue(response.result);
     } else {
       // TODO: better error

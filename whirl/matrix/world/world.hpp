@@ -192,6 +192,12 @@ class World {
     return active_.Get();
   }
 
+  // Statistics
+
+  size_t PacketsSent() const {
+    return network_.PacketsSent();
+  }
+
  private:
   ActorContext::ScopeGuard Scope(IActor& actor) {
     return Scope(&actor);

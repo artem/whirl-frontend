@@ -187,6 +187,12 @@ class Network : public IActor {
     endpoints_.clear();
   }
 
+  // Statistics
+
+  size_t PacketsSent() const {
+    return packets_sent_;
+  }
+
  private:
   void SendResetPacket(NetEndpointId to) {
     WHIRL_LOG("Send reset packet to endpoint " << to);
@@ -207,6 +213,7 @@ class Network : public IActor {
 
   void DoSend(NetPacket packet) {
     packets_.Insert(PacketEvent({packet, ChooseDeliveryTime()}));
+    ++packets_sent_;
   }
 
   NetEndpointId NewEndpointId() {
@@ -214,12 +221,17 @@ class Network : public IActor {
   }
 
  private:
-  IdGenerator next_endpoint_id_;
-  PacketQueue packets_;
+  // State
   Endpoints endpoints_;
   Servers servers_;
+  PacketQueue packets_;
 
   bool duplicates_{true};
+
+  IdGenerator next_endpoint_id_;
+
+  // Statistics
+  size_t packets_sent_{0};
 
   Logger logger_{"Network"};
 };

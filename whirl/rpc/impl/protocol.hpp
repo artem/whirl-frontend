@@ -22,11 +22,11 @@ namespace whirl::rpc {
 struct RPCRequestMessage {
   RPCId id;
   TraceId trace_id;
-  std::string target;  // For debugging
+  std::string to;  // For debugging
   std::string method;
   BytesValue input;
 
-  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(target),
+  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(to),
             CEREAL_NVP(method), CEREAL_NVP(input))
 };
 
