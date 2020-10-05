@@ -217,7 +217,7 @@ class Network : public IActor {
   }
 
   NetEndpointId NewEndpointId() {
-    return next_endpoint_id_.NextId();
+    return endpoint_ids_.NextId();
   }
 
  private:
@@ -228,7 +228,7 @@ class Network : public IActor {
 
   bool duplicates_{true};
 
-  IdGenerator next_endpoint_id_;
+  IdGenerator endpoint_ids_;
 
   // Statistics
   size_t packets_sent_{0};
