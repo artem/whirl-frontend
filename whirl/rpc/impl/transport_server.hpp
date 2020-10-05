@@ -61,8 +61,8 @@ class RPCTransportServer
                      ITransportSocketPtr back) override {
     // Process request
     await::fibers::Spawn(
-        [this, message, back = std::move(back)]() mutable {
-          ProcessRequest(message, std::move(back));
+        [self = shared_from_this(), message, back = std::move(back)]() mutable {
+          self->ProcessRequest(message, back);
         },
         executor_);
   }
@@ -74,10 +74,10 @@ class RPCTransportServer
  private:
   // In separate fiber
   void ProcessRequest(const TransportMessage& message,
-                      ITransportSocketPtr back) {
+                      const ITransportSocketPtr& back) {
     auto request = Deserialize<RPCRequestMessage>(message);
 
-    WHIRL_LOG("Processing request");
+    WHIRL_FMT_LOG("Process method '{}' request with id = {}", request.method, request.id);
 
     if (methods_.count(request.method) == 0) {
       // Requested method not found
@@ -94,11 +94,11 @@ class RPCTransportServer
   }
 
   void ResponseWithError(const RPCRequestMessage& request,
-                         ITransportSocketPtr& back, RPCError error) {
+                         const ITransportSocketPtr& back, RPCError error) {
     SendResponse({request.id, request.method, "", error}, back);
   }
 
-  void SendResponse(RPCResponseMessage response, ITransportSocketPtr& back) {
+  void SendResponse(RPCResponseMessage response, const ITransportSocketPtr& back) {
     back->Send(Serialize(response));
   }
 
