@@ -82,7 +82,9 @@ class RPCTransportChannel
   }
 
   void Close() override {
-    if (socket_) {
+    await::fibers::TeleportGuard t(strand_);
+
+    if (socket_ && socket_->IsConnected()) {
       socket_->Close();
     }
   }
@@ -108,10 +110,10 @@ class RPCTransportChannel
   }
 
  private:
-  // Inside strand
+  // Inside strand executor
 
   void HandleResponse(const TransportMessage& message) {
-    WHIRL_LOG("Message received");
+    WHIRL_FMT_LOG("Process response message from {}", peer_);
 
     auto response = Deserialize<RPCResponseMessage>(message);
 
@@ -138,6 +140,7 @@ class RPCTransportChannel
 
     WHIRL_FMT_LOG("Transport connection to peer {} lost, fail {} pending request(s)", peer_, requests.size());
 
+    // Next Call triggers reconnect
     socket_.reset();
 
     for (auto& [id, request] : requests) {
