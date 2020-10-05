@@ -33,8 +33,8 @@ class RPCTransportServer
     : public std::enable_shared_from_this<RPCTransportServer>,
       public ITransportHandler {
  public:
-  RPCTransportServer(ITransportPtr transport, IExecutorPtr executor)
-      : transport_(transport), executor_(executor) {
+  RPCTransportServer(ITransportPtr t, IExecutorPtr e)
+      : transport_(t), executor_(e) {
   }
 
   void Start() {

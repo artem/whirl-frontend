@@ -6,4 +6,4 @@ namespace whirl {
 
 using rpc::ITransportPtr;
 
-}  // namespace whirl;
+}  // namespace whirl

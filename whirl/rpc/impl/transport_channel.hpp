@@ -55,12 +55,11 @@ class RPCTransportChannel
   // IRPCChannel
 
   void Start() override {
-    //GetTransportSocket();
+    // GetTransportSocket();
   }
 
   Future<RPCBytes> Call(const std::string& method,
                         const RPCBytes& input) override {
-
     await::fibers::TeleportGuard t(strand_);
 
     WHIRL_FMT_LOG("Request method '{}' on peer {}", method, peer_);
@@ -98,16 +97,13 @@ class RPCTransportChannel
 
   void HandleMessage(const TransportMessage& message,
                      ITransportSocketPtr /*back*/) override {
-
     strand_->Execute([self = shared_from_this(), message]() {
       self->HandleResponse(message);
     });
   }
 
   void HandleLostPeer() override {
-    strand_->Execute([self = shared_from_this()]() {
-      self->LostPeer();
-    });
+    strand_->Execute([self = shared_from_this()]() { self->LostPeer(); });
   }
 
  private:
@@ -139,7 +135,9 @@ class RPCTransportChannel
     auto requests = std::move(requests_);
     requests_.clear();
 
-    WHIRL_FMT_LOG("Transport connection to peer {} lost, fail {} pending request(s)", peer_, requests.size());
+    WHIRL_FMT_LOG(
+        "Transport connection to peer {} lost, fail {} pending request(s)",
+        peer_, requests.size());
 
     // Next Call triggers reconnect
     socket_.reset();

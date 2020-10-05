@@ -93,7 +93,7 @@ class TRPCClient {
   }
 
   TRPCClient(ITransportPtr t, IExecutorPtr e)
-    : transport_(std::move(t)), executor_(std::move(e)) {
+      : transport_(std::move(t)), executor_(std::move(e)) {
   }
 
   TRPCChannel Dial(const std::string& peer);
