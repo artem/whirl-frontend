@@ -5,6 +5,7 @@
 #include <whirl/matrix/world/global.hpp>
 
 #include <await/fibers/core/api.hpp>
+#include <whirl/rpc/impl/trace.hpp>
 
 #include <wheels/support/string_builder.hpp>
 
@@ -52,13 +53,24 @@ void Logger::Log(const std::string& message) {
     actor = actor + " /" + ThisFiberName();
   }
 
+  std::stringstream event_out;
+
   auto safe_message = message;
-  std::cout << "[T " << GlobalNow() << " | " << WorldStepNumber() << "]"
+  event_out << "[T " << GlobalNow() << " | " << WorldStepNumber() << "]"
             << "\t"
             << "[" << ToWidth(actor, 15) << "]"
             << "\t"
-            << "[" << ToWidth(component_, 12) << "]"
-            << "\t" << safe_message << std::endl;
+            << "[" << ToWidth(component_, 12) << "]";
+
+  if (await::fibers::AmIFiber()) {
+    if (auto trace_id = rpc::GetCurrentTraceId()) {
+      event_out << "\t" << "[" << ToWidth(trace_id.value(), 5) << "]";
+    }
+  }
+
+  event_out << "\t" << safe_message;
+
+  std::cout << event_out.str() << std::endl;
 }
 
 }  // namespace whirl

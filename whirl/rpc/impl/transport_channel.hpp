@@ -3,6 +3,7 @@
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/protocol.hpp>
 #include <whirl/rpc/impl/channel.hpp>
+#include <whirl/rpc/impl/trace.hpp>
 
 #include <whirl/rpc/impl/net_transport.hpp>
 
@@ -74,10 +75,11 @@ class RPCTransportChannel
 
     Request request;
     request.id = GenerateRequestId();
+    auto trace_id = GetOrGenerateNewTraceId(request.id);
     auto future = request.promise.MakeFuture();
     requests_.emplace(request.id, std::move(request));
     socket->Send(
-        Serialize<RPCRequestMessage>({request.id, peer_, method, input}));
+        Serialize<RPCRequestMessage>({request.id, trace_id, peer_, method, input}));
     return future;
   }
 

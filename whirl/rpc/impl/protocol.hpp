@@ -2,6 +2,7 @@
 
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/raw.hpp>
+#include <whirl/rpc/impl/trace.hpp>
 
 #include <whirl/helpers/serialize.hpp>
 
@@ -19,11 +20,12 @@ namespace whirl::rpc {
 
 struct RPCRequestMessage {
   RPCId id;
+  TraceId trace_id;
   std::string target;  // For debugging
   std::string method;
   RPCBytes input;
 
-  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(target), CEREAL_NVP(method),
+  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(target), CEREAL_NVP(method),
             CEREAL_NVP(input))
 };
 

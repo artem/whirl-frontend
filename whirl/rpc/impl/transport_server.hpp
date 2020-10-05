@@ -2,8 +2,8 @@
 
 #include <whirl/rpc/impl/raw.hpp>
 #include <whirl/rpc/impl/protocol.hpp>
-
 #include <whirl/rpc/impl/net_transport.hpp>
+#include <whirl/rpc/impl/trace.hpp>
 
 #include <await/executors/executor.hpp>
 #include <await/fibers/core/api.hpp>
@@ -76,6 +76,8 @@ class RPCTransportServer
   void ProcessRequest(const TransportMessage& message,
                       const ITransportSocketPtr& back) {
     auto request = Deserialize<RPCRequestMessage>(message);
+
+    SetThisHandlerTraceId(request.trace_id);
 
     WHIRL_FMT_LOG("Process method '{}' request with id = {}", request.method, request.id);
 
