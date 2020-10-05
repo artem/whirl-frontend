@@ -32,7 +32,7 @@ using IRPCChannelPtr = std::shared_ptr<IRPCChannel>;
 struct IRPCClient {
   virtual ~IRPCClient() = default;
 
-  virtual IRPCChannelPtr Dial(std::string peer) = 0;
+  virtual IRPCChannelPtr MakeChannel(std::string peer) = 0;
 };
 
 using IRPCClientPtr = std::shared_ptr<IRPCClient>;

@@ -59,7 +59,7 @@ class TRPCServer {
   TRPCServer& operator=(TRPCServer&& that) = default;
 
   template <typename F>
-  void RegisterMethod(const std::string& method, F f) {
+  void RegisterMethod(const std::string& method, F&& f) {
     // Deduce method arguments and return type
 
     using ArgumentsTupleType = typename FunctionTraits<F>::ArgumentsTuple;
