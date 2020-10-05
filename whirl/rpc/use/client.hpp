@@ -1,11 +1,19 @@
 #pragma once
 
 #include <whirl/rpc/impl/channel.hpp>
-#include <whirl/rpc/impl/transport_channel.hpp>
+
+#include <whirl/services/net_transport.hpp>
+
+#include <whirl/helpers/serialize.hpp>
+
+#include <await/executors/executor.hpp>
+#include <await/futures/helpers.hpp>
 
 #include <cereal/types/tuple.hpp>
 
 namespace whirl::rpc {
+
+using await::executors::IExecutorPtr;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -42,6 +50,10 @@ class TRPCResult {
 
 //////////////////////////////////////////////////////////////////////
 
+// Usage:
+// 1) Future<std::string> f = channel.Call("Echo", data);
+// 2) auto f = channel.Call("Echo", data).As<std::string>();
+
 class TRPCChannel {
  public:
   TRPCChannel(IRPCChannelPtr impl) : impl_(impl) {
@@ -52,10 +64,6 @@ class TRPCChannel {
   TRPCChannel& operator=(TRPCChannel& that) = delete;
 
   TRPCChannel(TRPCChannel&& that) = default;
-
-  // Usage:
-  // 1) Future<std::string> f = channel.Call("Echo", data);
-  // 2) auto f = channel.Call("Echo", data).As<std::string>();
 
   template <typename... Arguments>
   detail::TRPCResult Call(const std::string& method, Arguments&&... arguments) {
@@ -85,17 +93,15 @@ class TRPCClient {
   TRPCClient() {
   }
 
-  TRPCClient(ITransportPtr t) : transport_(t) {
+  TRPCClient(ITransportPtr t, IExecutorPtr e)
+    : transport_(std::move(t)), executor_(std::move(e)) {
   }
 
-  TRPCChannel Dial(const std::string& peer) {
-    auto impl = std::make_shared<RPCTransportChannel>(transport_, peer);
-    impl->Start();
-    return TRPCChannel(impl);
-  }
+  TRPCChannel Dial(const std::string& peer);
 
  private:
   ITransportPtr transport_;
+  IExecutorPtr executor_;
 };
 
 }  // namespace whirl::rpc

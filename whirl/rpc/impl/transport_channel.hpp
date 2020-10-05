@@ -6,6 +6,7 @@
 
 #include <whirl/services/net_transport.hpp>
 
+#include <await/executors/executor.hpp>
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>
 
@@ -15,11 +16,12 @@
 
 namespace whirl::rpc {
 
+using await::executors::IExecutorPtr;
 using await::futures::Promise;
 
 //////////////////////////////////////////////////////////////////////
 
-// Channel
+// Fair-loss channel
 
 class RPCTransportChannel
     : public std::enable_shared_from_this<RPCTransportChannel>,
@@ -33,8 +35,8 @@ class RPCTransportChannel
   };
 
  public:
-  RPCTransportChannel(ITransportPtr transport, std::string peer)
-      : transport_(std::move(transport)), peer_(peer) {
+  RPCTransportChannel(ITransportPtr t, IExecutorPtr e, std::string peer)
+      : transport_(std::move(t)), executor_(std::move(e)), peer_(peer) {
   }
 
   ~RPCTransportChannel() {
@@ -132,6 +134,8 @@ class RPCTransportChannel
 
  private:
   ITransportPtr transport_;
+  IExecutorPtr executor_;
+
   std::string peer_;
 
   ITransportSocketPtr socket_{nullptr};

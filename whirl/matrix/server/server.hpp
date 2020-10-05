@@ -157,7 +157,7 @@ class Server : public IActor {
     auto net_transport = std::make_shared<NetTransport>(heap_, network_);
 
     services.rpc_server = rpc::TRPCServer(net_transport, executor);
-    services.rpc_client = rpc::TRPCClient(net_transport);
+    services.rpc_client = rpc::TRPCClient(net_transport, executor);
 
     services.random = std::make_shared<RandomService>();
     services.uids = std::make_shared<UidGenerator>();
