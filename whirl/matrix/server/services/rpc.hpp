@@ -275,7 +275,7 @@ class RPCServer : public INetSocketHandler, public IRPCServerImpl {
   void ProcessRequest(const Message& message, LightNetSocket back) {
     auto request = Deserialize<RPCRequestMessage>(message);
 
-    //await::fibers::SetName(MakeRequestThreadName(request));
+    // await::fibers::SetName(MakeRequestThreadName(request));
 
     WHIRL_LOG("Processing request");
 

@@ -78,8 +78,8 @@ class RPCTransportChannel
     auto trace_id = GetOrGenerateNewTraceId(request.id);
     auto future = request.promise.MakeFuture();
     requests_.emplace(request.id, std::move(request));
-    socket->Send(
-        Serialize<RPCRequestMessage>({request.id, trace_id, peer_, method, input}));
+    socket->Send(Serialize<RPCRequestMessage>(
+        {request.id, trace_id, peer_, method, input}));
     return future;
   }
 

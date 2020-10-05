@@ -26,8 +26,8 @@ struct RPCRequestMessage {
   std::string method;
   RPCBytes input;
 
-  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(target), CEREAL_NVP(method),
-            CEREAL_NVP(input))
+  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(target),
+            CEREAL_NVP(method), CEREAL_NVP(input))
 };
 
 //////////////////////////////////////////////////////////////////////

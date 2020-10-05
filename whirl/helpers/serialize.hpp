@@ -57,7 +57,7 @@ T Deserialize(const std::string& bytes) {
   std::stringstream input(bytes);
   {
     Archives::InputArchive iarchive(input);
-    iarchive(object);                          // Read the data from the archive
+    iarchive(object);  // Read the data from the archive
   }
 
   return std::move(object);

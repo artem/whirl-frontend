@@ -79,11 +79,11 @@ class RPCTransportServer
 
     SetThisHandlerTraceId(request.trace_id);
 
-    WHIRL_FMT_LOG("Process method '{}' request with id = {}", request.method, request.id);
+    WHIRL_FMT_LOG("Process method '{}' request with id = {}", request.method,
+                  request.id);
 
     if (methods_.count(request.method) == 0) {
-      // Requested method not found
-      ResponseWithError(request, back, RPCErrorCode::ExecError);
+      ResponseWithError(request, back, RPCErrorCode::MethodNotFound);
     }
 
     RPCBytes result;
@@ -91,7 +91,9 @@ class RPCTransportServer
     try {
       result = invoker(request.input);
     } catch (...) {
-      ResponseWithError(request, back, RPCErrorCode::ExecError);
+      WHIRL_FMT_LOG("Exception in method '{}': {}", request.method,
+                    wheels::CurrentExceptionMessage());
+      ResponseWithError(request, back, RPCErrorCode::ExecutionError);
     }
     SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
   }
@@ -101,7 +103,8 @@ class RPCTransportServer
     SendResponse({request.id, request.method, "", error}, back);
   }
 
-  void SendResponse(RPCResponseMessage response, const ITransportSocketPtr& back) {
+  void SendResponse(RPCResponseMessage response,
+                    const ITransportSocketPtr& back) {
     back->Send(Serialize(response));
   }
 

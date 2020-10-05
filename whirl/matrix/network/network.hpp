@@ -87,7 +87,8 @@ class Network : public IActor {
   void CloseServerSocket(const ServerAddress& address) {
     GlobalHeapScope guard;
     auto server_id = servers_[address];
-    WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address, server_id);
+    WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address,
+                  server_id);
     servers_.erase(address);
     endpoints_.erase(server_id);
   }
@@ -168,14 +169,15 @@ class Network : public IActor {
     auto& endpoint = to_endpoint_it->second;
 
     if (packet.type == EPacketType::Data) {
-      WHIRL_FMT_LOG("Deliver message to endpoint {}: <{}>", packet.to, packet.message);
+      WHIRL_FMT_LOG("Deliver message to endpoint {}: <{}>", packet.to,
+                    packet.message);
       endpoint.handler->HandleMessage(
           packet.message, LightNetSocket(this, packet.to, packet.from));
     } else {
       WHIRL_FMT_LOG("Deliver reset message to endpoint {}", packet.to);
       endpoint.handler->HandlePeerLost();
 
-      //endpoints_.erase(packet.to);
+      // endpoints_.erase(packet.to);
     }
   }
 

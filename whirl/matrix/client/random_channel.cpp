@@ -10,8 +10,7 @@ using ChannelVector = std::vector<IRPCChannelPtr>;
 
 class RandomChannel : public rpc::IRPCChannel {
  public:
-  RandomChannel(ChannelVector channels)
-    : channels_(std::move(channels)) {
+  RandomChannel(ChannelVector channels) : channels_(std::move(channels)) {
   }
 
   ~RandomChannel() {
@@ -22,7 +21,8 @@ class RandomChannel : public rpc::IRPCChannel {
     // Nop
   }
 
-  Future<RPCBytes> Call(const std::string& method, const RPCBytes& input) override {
+  Future<RPCBytes> Call(const std::string& method,
+                        const RPCBytes& input) override {
     size_t index = GlobalRandomNumber(channels_.size());
     return channels_[index]->Call(method, input);
   }
