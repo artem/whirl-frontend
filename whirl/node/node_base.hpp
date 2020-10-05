@@ -9,6 +9,10 @@
 
 namespace whirl {
 
+using rpc::TRPCChannel;
+using rpc::TRPCClient;
+using rpc::TRPCServer;
+
 class NodeBase : public INode {
  public:
   NodeBase(NodeServices services, NodeConfig config)
@@ -24,6 +28,10 @@ class NodeBase : public INode {
   }
 
  private:
+  void StartServe() {
+    services_.rpc_server.Start();
+  }
+
   void ConnectToPeers() {
     for (const auto& peer : peers_) {
       channels_.push_back(services_.rpc_client.Dial(peer));
@@ -123,6 +131,8 @@ class NodeBase : public INode {
  private:
   void Main() {
     await::fibers::SetName("main");
+
+    StartServe();
     RegisterRPCMethods(services_.rpc_server);
     ConnectToPeers();
     MainThread();

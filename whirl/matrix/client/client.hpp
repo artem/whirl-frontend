@@ -27,6 +27,10 @@ class ClientBase : public INode {
   }
 
  private:
+  void RandomPause() {
+    Threads().SleepFor(RandomNumber(50));
+  }
+
   void ConnectToClusterNodes() {
     for (const auto& node : nodes_) {
       channels_.push_back(services_.rpc_client.Dial(node));
@@ -97,6 +101,8 @@ class ClientBase : public INode {
  private:
   void Main() {
     await::fibers::SetName("main");
+
+    RandomPause();
     ConnectToClusterNodes();
     MainThread();
   }

@@ -16,10 +16,9 @@
 #include <whirl/matrix/server/services/time.hpp>
 #include <whirl/matrix/server/services/local_storage.hpp>
 #include <whirl/matrix/server/services/true_time.hpp>
-#include <whirl/matrix/server/services/rpc.hpp>
 #include <whirl/matrix/server/services/uid.hpp>
 #include <whirl/matrix/server/services/random.hpp>
-#include <whirl/services/rpc.hpp>
+#include <whirl/matrix/server/services/net_transport.hpp>
 #include <whirl/matrix/server/services/logger.hpp>
 
 #include <whirl/matrix/log/log.hpp>
@@ -155,10 +154,10 @@ class Server : public IActor {
         std::make_shared<LocalStorageEngine>(local_storage_);
     services.local_storage = LocalStorage(services.storage_engine);
 
-    services.rpc_server =
-        TRPCServer(std::make_shared<RPCServer>(heap_, network_, executor));
-    services.rpc_client =
-        TRPCClient(std::make_shared<RPCClient>(heap_, network_));
+    auto net_transport = std::make_shared<NetTransport>(heap_, network_);
+
+    services.rpc_server = rpc::TRPCServer(net_transport, executor);
+    services.rpc_client = rpc::TRPCClient(net_transport, executor);
 
     services.random = std::make_shared<RandomService>();
     services.uids = std::make_shared<UidGenerator>();

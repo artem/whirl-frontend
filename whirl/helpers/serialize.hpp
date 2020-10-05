@@ -14,6 +14,24 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
+#ifndef NDEBUG
+
+struct Archives {
+  using OutputArchive = cereal::JSONOutputArchive;
+  using InputArchive = cereal::JSONInputArchive;
+};
+
+#else
+
+struct Archives {
+  using OutputArchive = cereal::BinaryOutputArchive;
+  using InputArchive = cereal::BinaryInputArchive;
+};
+
+#endif
+
+//////////////////////////////////////////////////////////////////////
+
 static const auto kJsonOutputOptions =
     cereal::JSONOutputArchive::Options().Default();
 
@@ -23,7 +41,7 @@ std::string Serialize(const T& object) {
 
   std::stringstream output;
   {
-    cereal::JSONOutputArchive oarchive(output, kJsonOutputOptions);
+    Archives::OutputArchive oarchive(output);
     oarchive(object);
   }  // archive goes out of scope, ensuring all contents are flushed
 
@@ -38,7 +56,7 @@ T Deserialize(const std::string& bytes) {
 
   std::stringstream input(bytes);
   {
-    cereal::JSONInputArchive iarchive(input);  // Create an input archive
+    Archives::InputArchive iarchive(input);
     iarchive(object);                          // Read the data from the archive
   }
 
