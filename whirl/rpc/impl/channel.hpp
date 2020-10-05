@@ -18,8 +18,10 @@ struct IRPCChannel {
   virtual ~IRPCChannel() = default;
 
   virtual void Start() = 0;
-  virtual Future<RPCBytes> Call(const std::string& method,
-                                const RPCBytes& input) = 0;
+
+  virtual Future<BytesValue> Call(const std::string& method,
+                                  const BytesValue& input) = 0;
+
   virtual void Close() = 0;
 
   virtual const std::string& Peer() const = 0;

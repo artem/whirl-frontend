@@ -25,7 +25,7 @@ using await::executors::IExecutorPtr;
 
 //////////////////////////////////////////////////////////////////////
 
-using RPCMethodInvoker = std::function<RPCBytes(const RPCBytes)>;
+using RPCMethodInvoker = std::function<BytesValue(const BytesValue)>;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -86,7 +86,7 @@ class RPCTransportServer
       ResponseWithError(request, back, RPCErrorCode::MethodNotFound);
     }
 
-    RPCBytes result;
+    BytesValue result;
     auto invoker = methods_[request.method];
     try {
       result = invoker(request.input);

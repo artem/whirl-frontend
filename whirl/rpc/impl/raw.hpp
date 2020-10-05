@@ -5,6 +5,6 @@
 namespace whirl::rpc {
 
 // Decoded input/output data
-using RPCBytes = std::string;
+using BytesValue = std::string;
 
 }  // namespace whirl::rpc

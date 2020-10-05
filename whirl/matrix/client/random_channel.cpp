@@ -21,8 +21,8 @@ class RandomChannel : public rpc::IRPCChannel {
     // Nop
   }
 
-  Future<RPCBytes> Call(const std::string& method,
-                        const RPCBytes& input) override {
+  Future<BytesValue> Call(const std::string& method,
+                          const BytesValue& input) override {
     size_t index = GlobalRandomNumber(channels_.size());
     return channels_[index]->Call(method, input);
   }

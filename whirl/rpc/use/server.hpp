@@ -17,7 +17,7 @@ namespace detail {
 template <typename Result, typename PackedArguments>
 struct TypedMethod {
   template <typename M>
-  static RPCBytes Invoke(M f, const RPCBytes& input) {
+  static BytesValue Invoke(M f, const BytesValue& input) {
     auto packed_arguments = Deserialize<PackedArguments>(input);
     Result result = std::apply(std::move(f),
                                std::forward<PackedArguments>(packed_arguments));
@@ -28,7 +28,7 @@ struct TypedMethod {
 template <typename PackedArguments>
 struct TypedMethod<void, PackedArguments> {
   template <typename M>
-  static RPCBytes Invoke(M f, const RPCBytes& input) {
+  static BytesValue Invoke(M f, const BytesValue& input) {
     auto packed_arguments = Deserialize<PackedArguments>(input);
     std::apply(std::move(f), std::forward<PackedArguments>(packed_arguments));
     return "";
@@ -69,7 +69,7 @@ class TRPCServer {
         typename detail::TypedMethod<RetType, ArgumentsTupleType>;
 
     auto invoker =
-        [f = std::move(f)](const RPCBytes& input) mutable -> RPCBytes {
+        [f = std::move(f)](const BytesValue& input) mutable -> BytesValue {
       return TypedInvoker::Invoke(std::move(f), input);
     };
 

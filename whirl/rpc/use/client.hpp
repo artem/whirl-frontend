@@ -20,7 +20,7 @@ namespace detail {
 
 class TRPCResult {
  public:
-  explicit TRPCResult(Future<RPCBytes>&& raw_result)
+  explicit TRPCResult(Future<BytesValue>&& raw_result)
       : raw_result_(std::move(raw_result)) {
   }
 
@@ -42,7 +42,7 @@ class TRPCResult {
   }
 
  private:
-  Future<RPCBytes> raw_result_;
+  Future<BytesValue> raw_result_;
 };
 
 }  // namespace detail

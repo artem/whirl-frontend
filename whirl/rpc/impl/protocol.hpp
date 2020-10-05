@@ -24,7 +24,7 @@ struct RPCRequestMessage {
   TraceId trace_id;
   std::string target;  // For debugging
   std::string method;
-  RPCBytes input;
+  BytesValue input;
 
   SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(target),
             CEREAL_NVP(method), CEREAL_NVP(input))
@@ -37,7 +37,7 @@ struct RPCRequestMessage {
 struct RPCResponseMessage {
   RPCId request_id;
   std::string method;  // For debugging
-  RPCBytes result;
+  BytesValue result;
   RPCErrorCode error;
 
   SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(method), CEREAL_NVP(result),

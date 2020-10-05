@@ -33,7 +33,7 @@ class RPCTransportChannel
     : public std::enable_shared_from_this<RPCTransportChannel>,
       public IRPCChannel,
       public ITransportHandler {
-  using RequestPromise = Promise<RPCBytes>;
+  using RequestPromise = Promise<BytesValue>;
 
   struct Request {
     RPCId id;
@@ -59,8 +59,8 @@ class RPCTransportChannel
     // GetTransportSocket();
   }
 
-  Future<RPCBytes> Call(const std::string& method,
-                        const RPCBytes& input) override {
+  Future<BytesValue> Call(const std::string& method,
+                          const BytesValue& input) override {
     await::fibers::TeleportGuard t(strand_);
 
     WHIRL_FMT_LOG("Request method '{}' on peer {}", method, peer_);
