@@ -3,7 +3,7 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
-#include <whirl/matrix/client/random_channel.hpp>
+#include <whirl/matrix/channels/random.hpp>
 
 // TODO!
 #include <whirl/matrix/log/log.hpp>

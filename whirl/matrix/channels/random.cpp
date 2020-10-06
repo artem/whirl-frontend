@@ -1,4 +1,4 @@
-#include <whirl/matrix/client/random_channel.hpp>
+#include <whirl/matrix/channels/random.hpp>
 
 #include <whirl/matrix/world/global.hpp>
 
