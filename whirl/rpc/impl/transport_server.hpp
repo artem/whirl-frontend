@@ -77,7 +77,7 @@ class RPCTransportServer
                       const ITransportSocketPtr& back) {
     auto request = Deserialize<RPCRequestMessage>(message);
 
-    SetThisHandlerTraceId(request.trace_id);
+    SetThisFiberTraceId(request.trace_id);
 
     WHIRL_FMT_LOG("Process method '{}' request with id = {}", request.method,
                   request.id);

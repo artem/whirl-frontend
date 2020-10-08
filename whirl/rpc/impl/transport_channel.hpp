@@ -115,6 +115,8 @@ class RPCTransportChannel
   }
 
   void SendRequest(Request request) {
+    TLTraceGuard tg{request.trace_id};
+
     WHIRL_FMT_LOG("Request method '{}' on peer {}", request.method, peer_);
 
     ITransportSocketPtr& socket = GetTransportSocket();
@@ -148,6 +150,8 @@ class RPCTransportChannel
     Request request = std::move(request_it->second);
     requests_.erase(request_it);
 
+    TLTraceGuard tg{request.trace_id};
+
     if (response.IsOk()) {
       WHIRL_FMT_LOG("Request with id {} completed", response.request_id);
       std::move(request.promise).SetValue(response.result);
@@ -169,6 +173,7 @@ class RPCTransportChannel
     socket_.reset();
 
     for (auto& [id, request] : requests) {
+      TLTraceGuard tg{request.trace_id};
       Fail(request, make_error_code(RPCErrorCode::TransportError));
     }
   }

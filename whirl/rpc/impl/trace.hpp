@@ -9,7 +9,22 @@ namespace whirl::rpc {
 
 using TraceId = std::string;
 
-void SetThisHandlerTraceId(TraceId id);
+//////////////////////////////////////////////////////////////////////
+
+// Fiber context
+
+void SetThisFiberTraceId(TraceId id);
+
+//////////////////////////////////////////////////////////////////////
+
+// Thread context
+
+struct TLTraceGuard {
+  TLTraceGuard(TraceId id);
+  ~TLTraceGuard();
+};
+
+//////////////////////////////////////////////////////////////////////
 
 std::optional<TraceId> GetCurrentTraceId();
 TraceId GetOrGenerateNewTraceId(RPCId id);

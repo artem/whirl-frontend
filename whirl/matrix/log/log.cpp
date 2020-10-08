@@ -62,11 +62,8 @@ void Logger::Log(const std::string& message) {
             << "\t"
             << "[" << ToWidth(component_, 12) << "]";
 
-  if (await::fibers::AmIFiber()) {
-    if (auto trace_id = rpc::GetCurrentTraceId()) {
-      event_out << "\t"
-                << "[" << ToWidth(trace_id.value(), 5) << "]";
-    }
+  if (auto trace_id = rpc::GetCurrentTraceId()) {
+    event_out << "\t" << "[" << ToWidth(trace_id.value(), 5) << "]";
   }
 
   event_out << "\t" << safe_message;
