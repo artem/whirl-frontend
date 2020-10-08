@@ -1,5 +1,6 @@
 #include <whirl/rpc/impl/trace.hpp>
 
+#include <await/fibers/core/api.hpp>
 #include <await/fibers/core/fls.hpp>
 
 #include <fmt/core.h>
@@ -11,6 +12,9 @@ void SetThisHandlerTraceId(TraceId id) {
 }
 
 std::optional<TraceId> GetCurrentTraceId() {
+  if (!await::fibers::AmIFiber()) {
+    return std::nullopt;
+  }
   return await::fibers::GetLocal("rpc_trace_id");
 }
 
