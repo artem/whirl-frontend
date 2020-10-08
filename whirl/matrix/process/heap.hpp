@@ -7,20 +7,20 @@ namespace whirl {
 
 class ProcessHeap {
  public:
-  HeapScope Use() {
-    return HeapScope(&heap_);
+  HeapScopeGuard Use() {
+    return HeapScopeGuard(&impl_);
   }
 
   size_t BytesAllocated() const {
-    return heap_.BytesAllocated();
+    return impl_.BytesAllocated();
   }
 
   void Reset() {
-    heap_.Reset();
+    impl_.Reset();
   }
 
  private:
-  Heap heap_;
+  Heap impl_;
 };
 
 }  // namespace whirl

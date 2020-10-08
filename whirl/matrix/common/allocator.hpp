@@ -9,14 +9,14 @@ whirl::Heap* GetHeap();
 
 //////////////////////////////////////////////////////////////////////
 
-class HeapScope {
+class HeapScopeGuard {
  public:
-  HeapScope(whirl::Heap* h) {
+  HeapScopeGuard(whirl::Heap* h) {
     saved_ = GetHeap();
     SetHeap(h);
   }
 
-  ~HeapScope() {
+  ~HeapScopeGuard() {
     SetHeap(saved_);
   }
 
@@ -26,8 +26,8 @@ class HeapScope {
 
 //////////////////////////////////////////////////////////////////////
 
-class GlobalHeapScope : public HeapScope {
+class GlobalHeapScope : public HeapScopeGuard {
  public:
-  GlobalHeapScope() : HeapScope(nullptr) {
+  GlobalHeapScope() : HeapScopeGuard(nullptr) {
   }
 };
