@@ -62,8 +62,10 @@ class RPCErrorCategory : public std::error_category {
   }
 };
 
+static const RPCErrorCategory RPCErrorCategory_instance;
+
 }  // namespace detail
 
 inline std::error_code make_error_code(RPCErrorCode e) {
-  return {static_cast<int>(e), detail::RPCErrorCategory()};
+  return {static_cast<int>(e), detail::RPCErrorCategory_instance};
 }
