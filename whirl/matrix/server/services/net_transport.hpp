@@ -80,7 +80,7 @@ class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
                      LightNetSocket /*back*/) override {
     auto g = heap_.Use();
 
-    handler_->HandleMessage(MakeCopy(message), nullptr);
+    handler_->HandleMessage(message, nullptr);
   }
 
   void HandlePeerLost() override {
@@ -115,7 +115,7 @@ class NetTransportServer : public ITransportServer, public INetSocketHandler {
   void HandleMessage(const Message& message, LightNetSocket back) override {
     auto g = heap_.Use();
 
-    handler_->HandleMessage(MakeCopy(message),
+    handler_->HandleMessage(message,
                             std::make_shared<LightTransportSocket>(back, "?"));
   }
 
