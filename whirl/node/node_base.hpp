@@ -7,6 +7,9 @@
 
 #include <wheels/support/assert.hpp>
 
+#include <whirl/matrix/channels/logging.hpp>
+#include <whirl/matrix/channels/retries.hpp>
+
 namespace whirl {
 
 using rpc::TRPCChannel;
@@ -34,7 +37,10 @@ class NodeBase : public INode {
 
   void ConnectToPeers() {
     for (const auto& peer : peers_) {
-      channels_.push_back(services_.rpc_client.Dial(peer));
+      channels_.push_back(
+          WithRetries(
+              MakeLoggingChannel(
+                  services_.rpc_client.MakeChannel(peer)), TimeService()));
     }
   }
 

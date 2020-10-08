@@ -34,11 +34,12 @@ class RPCTransportChannel
       public IRPCChannel,
       public ITransportHandler {
  private:
-  using RequestPromise = Promise<BytesValue>;
-
   struct Request {
     RPCId id;
-    RequestPromise promise;
+    TraceId trace_id;
+    std::string method;
+    BytesValue input;
+    Promise<BytesValue> promise;
   };
 
   using Requests = std::map<RPCId, Request>;
@@ -62,25 +63,15 @@ class RPCTransportChannel
 
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override {
-    await::fibers::TeleportGuard t(strand_);
 
-    WHIRL_FMT_LOG("Request method '{}' on peer {}", method, peer_);
+    auto request = MakeRequest(method, input);
 
-    ITransportSocketPtr& socket = GetTransportSocket();
-
-    if (!socket->IsConnected()) {
-      // Fail RPC immediately
-      return await::futures::MakeError(
-          make_error_code(RPCErrorCode::TransportError));
-    }
-
-    Request request;
-    request.id = GenerateRequestId();
-    auto trace_id = GetOrGenerateNewTraceId(request.id);
     auto future = request.promise.MakeFuture();
-    requests_.emplace(request.id, std::move(request));
-    socket->Send(Serialize<RPCRequestMessage>(
-        {request.id, trace_id, peer_, method, input}));
+
+    strand_->Execute([self = shared_from_this(), request = std::move(request)]() mutable {
+      self->SendRequest(std::move(request));
+    });
+
     return future;
   }
 
@@ -111,6 +102,36 @@ class RPCTransportChannel
 
  private:
   // Inside strand executor
+
+  Request MakeRequest(const std::string& method, const BytesValue& input) {
+    Request request;
+
+    request.id = GenerateRequestId();
+    request.trace_id = GetOrGenerateNewTraceId(request.id);
+    request.method = method;
+    request.input = input;
+
+    return request;
+  }
+
+  void SendRequest(Request request) {
+    WHIRL_FMT_LOG("Request method '{}' on peer {}", request.method, peer_);
+
+    ITransportSocketPtr& socket = GetTransportSocket();
+
+    if (!socket->IsConnected()) {
+      // Fail RPC immediately
+      Fail(request, make_error_code(RPCErrorCode::TransportError));
+      return;
+    }
+
+    auto id = request.id;
+
+    socket->Send(Serialize<RPCRequestMessage>(
+        {request.id, request.trace_id, peer_, request.method, request.input}));
+
+    requests_.emplace(id, std::move(request));
+  }
 
   void HandleResponse(const TransportMessage& message) {
     WHIRL_FMT_LOG("Process response message from {}", peer_);
