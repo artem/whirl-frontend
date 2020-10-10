@@ -76,6 +76,7 @@ class RPCTransportChannel
   }
 
   void Close() override {
+    // TODO: fiber-oblivious
     await::fibers::TeleportGuard t(strand_);
 
     if (socket_ && socket_->IsConnected()) {
@@ -138,7 +139,7 @@ class RPCTransportChannel
   void ProcessResponse(const TransportMessage& message) {
     WHIRL_FMT_LOG("Process response message from {}", peer_);
 
-    auto response = Deserialize<RPCResponseMessage>(message);
+    auto response = ParseResponse(message);
 
     auto request_it = requests_.find(response.request_id);
 
@@ -159,6 +160,10 @@ class RPCTransportChannel
       // TODO: better error
       Fail(request, make_error_code(response.error));
     }
+  }
+
+  RPCResponseMessage ParseResponse(const TransportMessage& message) {
+    return Deserialize<RPCResponseMessage>(message);
   }
 
   void LostPeer() {
