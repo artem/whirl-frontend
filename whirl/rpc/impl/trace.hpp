@@ -2,12 +2,20 @@
 
 #include <whirl/rpc/impl/id.hpp>
 
+#include <await/executors/executor.hpp>
+
 #include <string>
 #include <optional>
 
 namespace whirl::rpc {
 
+using await::executors::IExecutorPtr;
+
 using TraceId = std::string;
+
+//////////////////////////////////////////////////////////////////////
+
+IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id);
 
 //////////////////////////////////////////////////////////////////////
 
@@ -19,9 +27,9 @@ void SetThisFiberTraceId(TraceId id);
 
 // Thread context
 
-struct TLTraceGuard {
-  TLTraceGuard(TraceId id);
-  ~TLTraceGuard();
+struct TLTraceContext {
+  TLTraceContext(TraceId id);
+  ~TLTraceContext();
 };
 
 //////////////////////////////////////////////////////////////////////

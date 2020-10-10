@@ -47,6 +47,7 @@ class RPCTransportChannel
  public:
   RPCTransportChannel(ITransportPtr t, IExecutorPtr e, std::string peer)
       : transport_(std::move(t)),
+        executor_(e),
         strand_(await::executors::MakeStrand(std::move(e))),
         peer_(peer) {
   }
@@ -65,6 +66,7 @@ class RPCTransportChannel
                           const BytesValue& input) override {
 
     auto request = MakeRequest(method, input);
+    auto trace_id = request.trace_id;
 
     auto future = request.promise.MakeFuture();
 
@@ -72,7 +74,8 @@ class RPCTransportChannel
       self->SendRequest(std::move(request));
     });
 
-    return future;
+    auto e = MakeTracingExecutor(executor_, trace_id);
+    return std::move(future).Via(std::move(e));
   }
 
   void Close() override {
@@ -116,7 +119,7 @@ class RPCTransportChannel
   }
 
   void SendRequest(Request request) {
-    TLTraceGuard tg{request.trace_id};
+    TLTraceContext tg{request.trace_id};
 
     WHIRL_FMT_LOG("Request method '{}' on peer {}", request.method, peer_);
 
@@ -151,7 +154,7 @@ class RPCTransportChannel
     Request request = std::move(request_it->second);
     requests_.erase(request_it);
 
-    TLTraceGuard tg{request.trace_id};
+    TLTraceContext tg{request.trace_id};
 
     if (response.IsOk()) {
       WHIRL_FMT_LOG("Request with id {} completed", response.request_id);
@@ -178,7 +181,7 @@ class RPCTransportChannel
     socket_.reset();
 
     for (auto& [id, request] : requests) {
-      TLTraceGuard tg{request.trace_id};
+      TLTraceContext tg{request.trace_id};
       Fail(request, make_error_code(RPCErrorCode::TransportError));
     }
   }
@@ -200,6 +203,7 @@ class RPCTransportChannel
 
  private:
   ITransportPtr transport_;
+  IExecutorPtr executor_;  // For callbacks
   IExecutorPtr strand_;
 
   const std::string peer_;

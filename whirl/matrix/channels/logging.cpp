@@ -36,6 +36,8 @@ class LoggingChannel : public rpc::IRPCChannel {
   Future<BytesValue> Call(const std::string& method, const BytesValue& input) override {
     auto f = impl_->Call(method, input);
 
+    auto e = f.GetExecutor();
+
     auto [_f, _p] = await::futures::MakeContract<BytesValue>();
 
     auto log = [_p = std::move(_p), method, peer = Peer()](Result<BytesValue> result) mutable {
@@ -48,7 +50,7 @@ class LoggingChannel : public rpc::IRPCChannel {
     };
 
     std::move(f).Subscribe(std::move(log));
-    return std::move(_f);
+    return std::move(_f).Via(e);
   }
 
  private:
