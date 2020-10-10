@@ -9,6 +9,8 @@
 
 namespace whirl {
 
+using namespace rpc;
+
 //////////////////////////////////////////////////////////////////////
 
 class LightTransportSocket : public ITransportSocket {
