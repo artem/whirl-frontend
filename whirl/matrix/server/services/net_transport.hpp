@@ -83,11 +83,11 @@ class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
     handler_->HandleMessage(message, nullptr);
   }
 
-  void HandlePeerLost() override {
+  void HandleDisconnect() override {
     auto g = heap_.Use();
 
     socket_.Close();
-    handler_->HandleLostPeer();
+    handler_->HandleDisconnect();
   }
 
  private:
@@ -119,10 +119,10 @@ class NetTransportServer : public ITransportServer, public INetSocketHandler {
                             std::make_shared<LightTransportSocket>(back, "?"));
   }
 
-  void HandlePeerLost() override {
+  void HandleDisconnect() override {
     auto g = heap_.Use();
 
-    handler_->HandleLostPeer();
+    handler_->HandleDisconnect();
   }
 
  private:

@@ -92,11 +92,11 @@ class RPCTransportChannel
   void HandleMessage(const TransportMessage& message,
                      ITransportSocketPtr /*back*/) override {
     strand_->Execute([self = shared_from_this(), message]() {
-      self->HandleResponse(message);
+      self->ProcessResponse(message);
     });
   }
 
-  void HandleLostPeer() override {
+  void HandleDisconnect() override {
     strand_->Execute([self = shared_from_this()]() { self->LostPeer(); });
   }
 
@@ -135,7 +135,7 @@ class RPCTransportChannel
     requests_.emplace(id, std::move(request));
   }
 
-  void HandleResponse(const TransportMessage& message) {
+  void ProcessResponse(const TransportMessage& message) {
     WHIRL_FMT_LOG("Process response message from {}", peer_);
 
     auto response = Deserialize<RPCResponseMessage>(message);

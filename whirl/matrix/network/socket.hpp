@@ -86,8 +86,7 @@ struct INetSocketHandler {
 
   virtual void HandleMessage(const Message& message, LightNetSocket back) = 0;
 
-  // Peer disconnected
-  virtual void HandlePeerLost() = 0;
+  virtual void HandleDisconnect() = 0;
 };
 
 }  // namespace whirl

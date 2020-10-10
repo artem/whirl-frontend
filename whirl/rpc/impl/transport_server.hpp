@@ -67,7 +67,7 @@ class RPCTransportServer
         executor_);
   }
 
-  void HandleLostPeer() override {
+  void HandleDisconnect() override {
     // Some client lost
   }
 

@@ -31,7 +31,7 @@ struct ITransportHandler {
 
   virtual void HandleMessage(const TransportMessage& message,
                              ITransportSocketPtr back) = 0;
-  virtual void HandleLostPeer() = 0;
+  virtual void HandleDisconnect() = 0;
 };
 
 using ITransportHandlerPtr = std::shared_ptr<ITransportHandler>;

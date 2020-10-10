@@ -175,7 +175,7 @@ class Network : public IActor {
           packet.message, LightNetSocket(this, packet.to, packet.from));
     } else {
       WHIRL_FMT_LOG("Deliver reset message to endpoint {}", packet.to);
-      endpoint.handler->HandlePeerLost();
+      endpoint.handler->HandleDisconnect();
 
       // endpoints_.erase(packet.to);
     }
