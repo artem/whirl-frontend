@@ -86,7 +86,7 @@ class Server : public IActor {
   }
 
   void AdjustWallTime() {
-    local_wall_time_clock_.AdjustOffset();
+    wall_time_clock_.AdjustOffset();
   }
 
   void SetCluster(std::vector<ServerAddress> peers) {
@@ -145,13 +145,13 @@ class Server : public IActor {
 
     auto executor = std::make_shared<EventQueueExecutor>(events_);
     auto time_service = std::make_shared<TimeService>(
-        local_wall_time_clock_, local_monotonic_clock_, events_);
+        wall_time_clock_, monotonic_clock_, events_);
 
     services.threads = ThreadsRuntime{executor, time_service};
     services.time_service = time_service;
 
     services.storage_engine =
-        std::make_shared<LocalStorageEngine>(local_storage_);
+        std::make_shared<LocalStorageEngine>(storage_);
     services.local_storage = LocalStorage(services.storage_engine);
 
     auto net_transport = std::make_shared<NetTransport>(heap_, network_);
@@ -169,7 +169,7 @@ class Server : public IActor {
   }
 
   void Create() {
-    local_monotonic_clock_.Reset();
+    monotonic_clock_.Reset();
 
     auto g = heap_.Use();
     auto services = CreateNodeServices();
@@ -202,9 +202,9 @@ class Server : public IActor {
   ProcessNetwork network_;
   std::vector<ServerAddress> peers_;
 
-  LocalWallTimeClock local_wall_time_clock_;
-  LocalMonotonicClock local_monotonic_clock_;
-  LocalBytesStorage local_storage_;
+  LocalWallTimeClock wall_time_clock_;
+  LocalMonotonicClock monotonic_clock_;
+  LocalBytesStorage storage_;
 
   // Node process
 
