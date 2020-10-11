@@ -5,8 +5,6 @@
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/network.hpp>
 
-#include <whirl/helpers/copy.hpp>
-
 namespace whirl {
 
 using namespace rpc;

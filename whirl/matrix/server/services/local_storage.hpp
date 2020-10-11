@@ -2,7 +2,7 @@
 
 #include <whirl/services/local_storage_impl.hpp>
 
-#include <whirl/helpers/copy.hpp>
+#include <whirl/matrix/common/copy.hpp>
 
 namespace whirl {
 

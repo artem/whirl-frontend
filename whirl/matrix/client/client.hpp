@@ -8,7 +8,7 @@
 // TODO!
 #include <whirl/matrix/log/log.hpp>
 
-#include <whirl/helpers/copy.hpp>
+#include <whirl/matrix/common/copy.hpp>
 
 #include <wheels/support/assert.hpp>
 

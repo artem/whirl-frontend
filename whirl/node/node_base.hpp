@@ -3,7 +3,7 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
-#include <whirl/helpers/copy.hpp>
+#include <whirl/matrix/common/copy.hpp>
 
 #include <wheels/support/assert.hpp>
 
