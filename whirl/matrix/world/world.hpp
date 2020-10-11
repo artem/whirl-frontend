@@ -8,7 +8,7 @@
 #include <whirl/matrix/world/actor_ctx.hpp>
 #include <whirl/matrix/adversary/adversary.hpp>
 #include <whirl/matrix/world/random_source.hpp>
-#include <whirl/matrix/history/all.hpp>
+#include <whirl/matrix/history/recorder.hpp>
 
 #include <whirl/matrix/log/log.hpp>
 
@@ -162,7 +162,7 @@ class World {
 
     actors_.clear();
 
-    history_recorder_.Complete();
+    history_recorder_.Stop();
 
     WHIRL_LOG("World stopped");
   }
@@ -183,7 +183,7 @@ class World {
     return step_count_;
   }
 
-  history::HistoryRecorder& HistoryRecorder() {
+  history::Recorder& HistoryRecorder() {
     return history_recorder_;
   }
 
@@ -260,7 +260,7 @@ class World {
   ActorContext active_;
   size_t step_count_{0};
 
-  history::HistoryRecorder history_recorder_;
+  history::Recorder history_recorder_;
 
   Logger logger_{"World"};
 };

@@ -3,13 +3,13 @@
 #include <whirl/rpc/impl/channel.hpp>
 
 #include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/history/all.hpp>
+#include <whirl/matrix/history/recorder.hpp>
 
 #include <await/futures/promise.hpp>
 
 namespace whirl {
 
-static history::HistoryRecorder& AccessHistoryRecorder() {
+static history::Recorder& AccessHistoryRecorder() {
   return World::Access()->HistoryRecorder();
 }
 

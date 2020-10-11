@@ -1,5 +1,9 @@
 #pragma once
 
+#include <whirl/matrix/history/history.hpp>
+
+#include <string>
+
 namespace whirl::history {
 
 //////////////////////////////////////////////////////////////////////
@@ -28,9 +32,9 @@ void Print(History history) {
 
   std::set<TimePoint> tps;
   for (auto& call : history) {
-    tps.insert(call.started);
+    tps.insert(call.start_time);
     if (call.IsCompleted()) {
-      tps.insert(call.completed);
+      tps.insert(call.end_time);
     }
   }
 
@@ -45,11 +49,11 @@ void Print(History history) {
   size_t max_tp = ctp + 1;
 
   for (auto& call : history) {
-    TimePoint start_ts = compact_tps[call.started];
+    TimePoint start_ts = compact_tps[call.start_time];
 
     TimePoint end_ts;
     if (call.IsCompleted()) {
-      end_ts = compact_tps[call.completed];
+      end_ts = compact_tps[call.end_time];
     } else {
       end_ts = max_tp;
     }

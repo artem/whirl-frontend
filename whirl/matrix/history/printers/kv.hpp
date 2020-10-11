@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/history/all.hpp>
+#include <whirl/matrix/history/history.hpp>
 #include <whirl/matrix/history/printers/print.hpp>
 
 #include <sstream>
