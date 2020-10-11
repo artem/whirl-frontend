@@ -13,6 +13,7 @@ class ActorContext {
   class ScopeGuard {
    public:
     ScopeGuard(Ctx* ctx, IActor* actor) : ctx_(ctx), actor_(actor) {
+      WHEELS_VERIFY(ctx->NotSet(), "Current actor already set");
       ctx_->current_ = actor;
     }
 
@@ -35,6 +36,11 @@ class ActorContext {
 
   IActor* Get() const {
     return current_;
+  }
+
+ private:
+  bool NotSet() const {
+    return current_ == nullptr;
   }
 
  private:
