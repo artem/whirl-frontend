@@ -43,8 +43,7 @@ class ClientBase : public INode {
     }
     // History -> Retries -> Random -> Peers
     return MakeHistoryChannel(
-        WithRetries(
-            MakeRandomChannel(std::move(channels)), TimeService()));
+        WithRetries(MakeRandomChannel(std::move(channels)), TimeService()));
   }
 
   void ConnectToClusterNodes() {

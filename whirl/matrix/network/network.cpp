@@ -3,7 +3,7 @@
 namespace whirl {
 
 NetServerSocket Network::Serve(const ServerAddress& address,
-                      INetSocketHandler* handler) {
+                               INetSocketHandler* handler) {
   {
     GlobalHeapScope guard;
     WHEELS_VERIFY(servers_.count(address) == 0, "Address already in use");
@@ -21,7 +21,8 @@ void Network::DisconnectServer(const ServerAddress& address) {
   GlobalHeapScope guard;
 
   auto id = servers_[address];
-  WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address, id);
+  WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address,
+                id);
   servers_.erase(address);
   RemoveEndpoint(id);
 }
@@ -30,7 +31,7 @@ void Network::DisconnectServer(const ServerAddress& address) {
 
 // Called from actor fibers
 NetSocket Network::ConnectTo(const ServerAddress& address,
-                    INetSocketHandler* handler) {
+                             INetSocketHandler* handler) {
   GlobalHeapScope guard;
 
   auto server_it = servers_.find(address);
@@ -52,10 +53,9 @@ void Network::DisconnectClient(NetEndpointId id) {
   RemoveEndpoint(id);
 }
 
-
 // Context: Server
 void Network::SendMessage(NetEndpointId from, const Message& message,
-                 NetEndpointId to) {
+                          NetEndpointId to) {
   GlobalHeapScope guard;
 
   WHIRL_FMT_LOG("Send {} -> {} message <{}>", from, to, message);

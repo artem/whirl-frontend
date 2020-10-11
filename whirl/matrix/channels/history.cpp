@@ -15,8 +15,7 @@ static history::Recorder& AccessHistoryRecorder() {
 
 class HistoryChannel : public rpc::IRPCChannel {
  public:
-  HistoryChannel(IRPCChannelPtr impl)
-      : impl_(std::move(impl)) {
+  HistoryChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
   }
 
   void Start() override {
@@ -31,7 +30,8 @@ class HistoryChannel : public rpc::IRPCChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method, const BytesValue& input) override {
+  Future<BytesValue> Call(const std::string& method,
+                          const BytesValue& input) override {
     size_t call_id = AccessHistoryRecorder().StartCall(method, input);
 
     auto f = impl_->Call(method, input);
@@ -40,7 +40,8 @@ class HistoryChannel : public rpc::IRPCChannel {
 
     auto [_f, _p] = await::futures::MakeContract<BytesValue>();
 
-    auto record = [_p = std::move(_p), call_id](Result<BytesValue> result) mutable {
+    auto record = [_p = std::move(_p),
+                   call_id](Result<BytesValue> result) mutable {
       AccessHistoryRecorder().CompleteCall(call_id, result.Value());
       std::move(_p).Set(std::move(result));
     };
@@ -52,7 +53,6 @@ class HistoryChannel : public rpc::IRPCChannel {
  private:
   rpc::IRPCChannelPtr impl_;
 };
-
 
 rpc::IRPCChannelPtr MakeHistoryChannel(rpc::IRPCChannelPtr channel) {
   return std::make_shared<HistoryChannel>(std::move(channel));

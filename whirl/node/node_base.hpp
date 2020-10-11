@@ -37,10 +37,9 @@ class NodeBase : public INode {
 
   void ConnectToPeers() {
     for (const auto& peer : peers_) {
-      channels_.push_back(
-          WithRetries(
-              MakeLoggingChannel(
-                  services_.rpc_client.MakeChannel(peer)), TimeService()));
+      channels_.push_back(WithRetries(
+          MakeLoggingChannel(services_.rpc_client.MakeChannel(peer)),
+          TimeService()));
     }
   }
 

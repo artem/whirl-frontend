@@ -64,15 +64,15 @@ class RPCTransportChannel
 
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override {
-
     auto request = MakeRequest(method, input);
     auto trace_id = request.trace_id;
 
     auto future = request.promise.MakeFuture();
 
-    strand_->Execute([self = shared_from_this(), request = std::move(request)]() mutable {
-      self->SendRequest(std::move(request));
-    });
+    strand_->Execute(
+        [self = shared_from_this(), request = std::move(request)]() mutable {
+          self->SendRequest(std::move(request));
+        });
 
     auto e = MakeTracingExecutor(executor_, trace_id);
     return std::move(future).Via(std::move(e));

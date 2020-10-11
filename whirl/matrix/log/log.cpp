@@ -66,7 +66,8 @@ void Logger::Log(const std::string& message) {
             << "[" << ToWidth(component_, 12) << "]";
 
   if (auto rpc_trace_id = rpc::TryGetCurrentTraceId()) {
-    event_out << "\t" << "[" << ToWidth(rpc_trace_id.value(), 6) << "]";
+    event_out << "\t"
+              << "[" << ToWidth(rpc_trace_id.value(), 6) << "]";
   }
 
   event_out << "\t" << message;

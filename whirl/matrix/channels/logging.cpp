@@ -17,8 +17,7 @@ using wheels::Result;
 
 class LoggingChannel : public rpc::IRPCChannel {
  public:
-  LoggingChannel(IRPCChannelPtr impl)
-    : impl_(std::move(impl)) {
+  LoggingChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
   }
 
   void Start() override {
@@ -33,18 +32,21 @@ class LoggingChannel : public rpc::IRPCChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method, const BytesValue& input) override {
+  Future<BytesValue> Call(const std::string& method,
+                          const BytesValue& input) override {
     auto f = impl_->Call(method, input);
 
     auto e = f.GetExecutor();
 
     auto [_f, _p] = await::futures::MakeContract<BytesValue>();
 
-    auto log = [_p = std::move(_p), method, peer = Peer()](Result<BytesValue> result) mutable {
+    auto log = [_p = std::move(_p), method,
+                peer = Peer()](Result<BytesValue> result) mutable {
       if (result.IsOk()) {
         WHIRL_FMT_LOG("Method {}.'{}' completed: Ok", peer, method);
       } else {
-        WHIRL_FMT_LOG("Method {}.'{}' failed: {}", peer, method, result.GetErrorCode().message());
+        WHIRL_FMT_LOG("Method {}.'{}' failed: {}", peer, method,
+                      result.GetErrorCode().message());
       }
       std::move(_p).Set(std::move(result));
     };

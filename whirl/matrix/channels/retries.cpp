@@ -20,8 +20,8 @@ using namespace rpc;
 using wheels::Result;
 using namespace await::futures;
 
-class RetriesChannel
- : public std::enable_shared_from_this<RetriesChannel>, public rpc::IRPCChannel {
+class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
+                       public rpc::IRPCChannel {
  public:
   RetriesChannel(IRPCChannelPtr impl, ITimeServicePtr time)
       : impl_(std::move(impl)), time_(std::move(time)) {
@@ -39,19 +39,19 @@ class RetriesChannel
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method, const BytesValue& input) override {
+  Future<BytesValue> Call(const std::string& method,
+                          const BytesValue& input) override {
     auto f = impl_->Call(method, input);
 
     auto self = this->shared_from_this();
 
-    auto retry = [self, method, input]() {
-      return self->Call(method, input);
-    };
+    auto retry = [self, method, input]() { return self->Call(method, input); };
 
-    auto fallback = [time = time_, retry = std::move(retry)](const Error& e) mutable {
+    auto fallback = [time = time_,
+                     retry = std::move(retry)](const Error& e) mutable {
       if (e.GetErrorCode() == RPCErrorCode::TransportError) {
-        //auto after = time_service->After(10);
-        //std::move(after).Then(retry);
+        // auto after = time_service->After(10);
+        // std::move(after).Then(retry);
         return retry();
       } else {
         return await::futures::MakeError(Error(e)).As<BytesValue>();
@@ -66,7 +66,8 @@ class RetriesChannel
   ITimeServicePtr time_;
 };
 
-rpc::IRPCChannelPtr WithRetries(rpc::IRPCChannelPtr channel, ITimeServicePtr time) {
+rpc::IRPCChannelPtr WithRetries(rpc::IRPCChannelPtr channel,
+                                ITimeServicePtr time) {
   return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
 }
 

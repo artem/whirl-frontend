@@ -65,8 +65,7 @@ class Network : public IActor {
   // Client
 
   // Called from actor fibers
-  NetSocket ConnectTo(const ServerAddress& address,
-                      INetSocketHandler* handler);
+  NetSocket ConnectTo(const ServerAddress& address, INetSocketHandler* handler);
 
   // Called from NetSocket dtor
   void DisconnectClient(NetEndpointId id);

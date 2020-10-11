@@ -28,8 +28,10 @@ std::optional<TraceId> TryGetThisFiberTraceId() {
 static thread_local std::optional<TraceId> rpc_trace_id;
 
 TLTraceContext::TLTraceContext(TraceId id) {
-  WHEELS_VERIFY(!await::fibers::AmIFiber(), "Thread-local trace guard used in fiber context");
-  WHEELS_VERIFY(!rpc_trace_id.has_value(), "Cannot overwrite already set thread-local trace id");
+  WHEELS_VERIFY(!await::fibers::AmIFiber(),
+                "Thread-local trace guard used in fiber context");
+  WHEELS_VERIFY(!rpc_trace_id.has_value(),
+                "Cannot overwrite already set thread-local trace id");
 
   rpc_trace_id.emplace(id);
 }
@@ -44,8 +46,8 @@ std::optional<TraceId> TLTraceContext::TryGet() {
 
 //////////////////////////////////////////////////////////////////////
 
-using await::executors::Task;
 using await::executors::IExecutor;
+using await::executors::Task;
 
 class TracingExecutor : public IExecutor {
  public:
