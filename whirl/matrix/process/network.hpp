@@ -110,15 +110,15 @@ class ProcessNetwork {
   }
 
   // Context: Server
-  void Send(SocketFd socket, const Message& message) {
+  void Send(SocketFd fd, const Message& message) {
     GlobalHeapScope g;
-    FindClient(socket).Send(message);
+    GetClientSocket(fd).Send(message);
   }
 
   // Context: Server
-  void CloseClient(SocketFd socket) {
+  void CloseClient(SocketFd fd) {
     GlobalHeapScope g;
-    clients_.erase(socket);
+    clients_.erase(fd);
   }
 
   // Context: Server
@@ -132,9 +132,9 @@ class ProcessNetwork {
   }
 
   // Context: Server
-  void CloseServer(SocketFd socket) {
+  void CloseServer(SocketFd fd) {
     GlobalHeapScope g;
-    servers_.erase(socket);
+    servers_.erase(fd);
   }
 
  private:
@@ -143,11 +143,11 @@ class ProcessNetwork {
   }
 
  private:
-  NetSocket& FindClient(SocketFd fd) {
-    auto found = clients_.find(fd);
-    WHEELS_VERIFY(found != clients_.end(),
+  NetSocket& GetClientSocket(SocketFd fd) {
+    auto socket_it = clients_.find(fd);
+    WHEELS_VERIFY(socket_it != clients_.end(),
                   "Client socket with fd " << fd << " not found");
-    return found->second;
+    return socket_it->second;
   }
 
  private:
