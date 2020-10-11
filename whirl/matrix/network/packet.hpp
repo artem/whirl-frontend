@@ -5,7 +5,7 @@
 
 namespace whirl {
 
-enum EPacketType { Data, Reset };
+enum class EPacketType { Data, Reset };
 
 struct NetPacket {
   EPacketType type;
