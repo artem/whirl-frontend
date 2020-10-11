@@ -6,13 +6,12 @@
 #include <whirl/matrix/network/socket.hpp>
 #include <whirl/matrix/network/packet.hpp>
 
+#include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/world/global.hpp>
 #include <whirl/matrix/world/dice.hpp>
 
-#include <whirl/matrix/network/message.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
-#include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/common/allocator.hpp>
 
 #include <whirl/matrix/log/log.hpp>
@@ -29,8 +28,6 @@ namespace whirl {
 //////////////////////////////////////////////////////////////////////
 
 class Network : public IActor {
-
-
   struct PacketEvent {
     NetPacket packet;
     TimePoint time;
@@ -116,9 +113,8 @@ class Network : public IActor {
                    NetEndpointId to) {
     GlobalHeapScope guard;
 
-    auto message_copy = MakeCopy(message);
-    WHIRL_FMT_LOG("Send {} -> {} message <{}>", from, to, message_copy);
-    Send({EPacketType::Data, from, message_copy, to});
+    WHIRL_FMT_LOG("Send {} -> {} message <{}>", from, to, message);
+    Send({EPacketType::Data, from, MakeCopy(message), to});
   }
 
   // IActor
@@ -182,6 +178,10 @@ class Network : public IActor {
   }
 
  private:
+  NetEndpointId NewEndpointId() {
+    return endpoint_ids_.NextId();
+  }
+
   NetEndpointId CreateNewEndpoint(INetSocketHandler* handler) {
     auto id = NewEndpointId();
     endpoints_.emplace(id, Endpoint{handler});
@@ -212,10 +212,6 @@ class Network : public IActor {
   void DoSend(NetPacket packet) {
     packets_.Insert(PacketEvent({packet, ChooseDeliveryTime()}));
     ++packets_sent_;
-  }
-
-  NetEndpointId NewEndpointId() {
-    return endpoint_ids_.NextId();
   }
 
  private:
