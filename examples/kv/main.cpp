@@ -8,12 +8,7 @@
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
-#include <await/fibers/sync/thread_like.hpp>
 #include <await/futures/combine/quorum.hpp>
-
-#include <wheels/support/random.hpp>
-#include <wheels/support/string_builder.hpp>
-#include <wheels/support/time.hpp>
 
 #include <whirl/helpers/serialize.hpp>
 
@@ -225,7 +220,7 @@ class KVClient final: public ClientBase {
 //////////////////////////////////////////////////////////////////////
 
 int main() {
-  World world{/*seed=*/7};
+  World world{/*seed=*/18};
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
@@ -233,6 +228,7 @@ int main() {
 
   // Clients
   auto client = MakeNode<KVClient>();
+  world.AddClient(client);
   world.AddClient(client);
   world.AddClient(client);
 
