@@ -4,6 +4,7 @@
 #include <whirl/matrix/network/endpoint_id.hpp>
 #include <whirl/matrix/network/message.hpp>
 #include <whirl/matrix/network/socket.hpp>
+#include <whirl/matrix/network/packet.hpp>
 
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/world/global.hpp>
@@ -28,18 +29,7 @@ namespace whirl {
 //////////////////////////////////////////////////////////////////////
 
 class Network : public IActor {
-  enum EPacketType { Data, Reset };
 
-  struct NetPacket {
-    EPacketType type;
-    NetEndpointId from;
-    Message message;
-    NetEndpointId to;
-
-    bool IsData() const {
-      return type == EPacketType::Data;
-    }
-  };
 
   struct PacketEvent {
     NetPacket packet;
@@ -74,9 +64,9 @@ class Network : public IActor {
     {
       GlobalHeapScope guard;
       WHEELS_VERIFY(servers_.count(address) == 0, "Address already in use");
-      auto id = NewEndpointId();
-      endpoints_[id] = {handler};
-      servers_[address] = id;
+
+      auto id = CreateNewEndpoint(handler);
+      servers_.emplace(address, id);
 
       WHIRL_LOG("Serve address " << address << ", endpoint " << id);
     }
@@ -84,13 +74,13 @@ class Network : public IActor {
   }
 
   // Called from server socket dtor
-  void CloseServerSocket(const ServerAddress& address) {
+  void DisconnectServer(const ServerAddress& address) {
     GlobalHeapScope guard;
-    auto server_id = servers_[address];
-    WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address,
-                  server_id);
+
+    auto id = servers_[address];
+    WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address, id);
     servers_.erase(address);
-    endpoints_.erase(server_id);
+    RemoveEndpoint(id);
   }
 
   // Client
@@ -100,25 +90,23 @@ class Network : public IActor {
                       INetSocketHandler* handler) {
     GlobalHeapScope guard;
 
-    if (servers_.count(address) == 0) {
+    auto server_it = servers_.find(address);
+
+    if (server_it == servers_.end()) {
       return NetSocket::Invalid();
     }
 
-    WHEELS_VERIFY(servers_.count(address) == 1, "Cannot connect");
-    NetEndpointId server_id = servers_[address];
+    NetEndpointId server_id = server_it->second;
+    NetEndpointId client_id = CreateNewEndpoint(handler);
 
-    auto client_id = NewEndpointId();
-    WHIRL_LOG("Create client endpoint: " << client_id);
-    endpoints_[client_id] = {handler};
-
-    return NetSocket(this, client_id, server_id);
+    return NetSocket{this, client_id, server_id};
   }
 
   // Called from client socket dtor
-  void DisconnectClient(NetEndpointId client_id) {
-    WHIRL_LOG("Disconnect client endpoint: " << client_id);
+  void DisconnectClient(NetEndpointId id) {
+    WHIRL_FMT_LOG("Disconnect client endpoint: {}", id);
     GlobalHeapScope guard;
-    endpoints_.erase(client_id);
+    RemoveEndpoint(id);
   }
 
   // Send
@@ -155,26 +143,26 @@ class Network : public IActor {
   void Step() override {
     NetPacket packet = packets_.Extract().packet;
 
-    auto to_endpoint_it = endpoints_.find(packet.to);
+    auto dest_endpoint_it = endpoints_.find(packet.dest);
 
-    if (to_endpoint_it == endpoints_.end()) {
+    if (dest_endpoint_it == endpoints_.end()) {
       WHIRL_LOG("Cannot deliver message <" << packet.message << ">: endpoint "
-                                           << packet.to << " disconnected");
+                                           << packet.dest << " disconnected");
       if (packet.IsData()) {
-        SendResetPacket(packet.from);
+        SendResetPacket(packet.source);
       }
       return;
     }
 
-    auto& endpoint = to_endpoint_it->second;
+    auto& endpoint = dest_endpoint_it->second;
 
-    if (packet.type == EPacketType::Data) {
-      WHIRL_FMT_LOG("Deliver message to endpoint {}: <{}>", packet.to,
+    if (packet.IsData()) {
+      WHIRL_FMT_LOG("Deliver message to endpoint {}: <{}>", packet.dest,
                     packet.message);
       endpoint.handler->HandleMessage(
-          packet.message, LightNetSocket(this, packet.to, packet.from));
+          packet.message, LightNetSocket(this, packet.dest, packet.source));
     } else {
-      WHIRL_FMT_LOG("Deliver reset message to endpoint {}", packet.to);
+      WHIRL_FMT_LOG("Deliver reset message to endpoint {}", packet.dest);
       endpoint.handler->HandleDisconnect();
 
       // endpoints_.erase(packet.to);
@@ -194,6 +182,16 @@ class Network : public IActor {
   }
 
  private:
+  NetEndpointId CreateNewEndpoint(INetSocketHandler* handler) {
+    auto id = NewEndpointId();
+    endpoints_.emplace(id, Endpoint{handler});
+    return id;
+  }
+
+  void RemoveEndpoint(NetEndpointId id) {
+    endpoints_.erase(id);
+  }
+
   void SendResetPacket(NetEndpointId to) {
     WHIRL_LOG("Send reset packet to endpoint " << to);
     Send({EPacketType::Reset, 0, "", to});

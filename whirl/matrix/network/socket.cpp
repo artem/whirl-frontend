@@ -73,7 +73,7 @@ NetServerSocket::NetServerSocket(NetServerSocket&& that) {
 
 NetServerSocket::~NetServerSocket() {
   if (net_) {
-    net_->CloseServerSocket(self_);
+    net_->DisconnectServer(self_);
   }
 }
 
