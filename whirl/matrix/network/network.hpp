@@ -137,7 +137,7 @@ class Network : public IActor {
   }
 
   void Step() override {
-    NetPacket packet = packets_.Extract().packet;
+    NetPacket packet = ExtractNextPacket();
 
     auto dest_endpoint_it = endpoints_.find(packet.dest);
 
@@ -190,6 +190,10 @@ class Network : public IActor {
 
   void RemoveEndpoint(NetEndpointId id) {
     endpoints_.erase(id);
+  }
+
+  NetPacket ExtractNextPacket() {
+    return packets_.Extract().packet;
   }
 
   void SendResetPacket(NetEndpointId to) {

@@ -4,6 +4,7 @@
 
 namespace whirl {
 
+// Connection endpoint id
 using NetEndpointId = size_t;
 
 }  // namespace whirl
