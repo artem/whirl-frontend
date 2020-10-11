@@ -44,7 +44,7 @@ class ActorContext {
   }
 
  private:
-  IActor* current_;
+  IActor* current_{nullptr};
 };
 
 }  // namespace whirl

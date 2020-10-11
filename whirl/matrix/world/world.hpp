@@ -8,6 +8,7 @@
 #include <whirl/matrix/world/actor_ctx.hpp>
 #include <whirl/matrix/adversary/adversary.hpp>
 #include <whirl/matrix/world/random_source.hpp>
+#include <whirl/matrix/history/all.hpp>
 
 #include <whirl/matrix/log/log.hpp>
 
@@ -161,6 +162,8 @@ class World {
 
     actors_.clear();
 
+    history_recorder_.Complete();
+
     WHIRL_LOG("World stopped");
   }
 
@@ -178,6 +181,14 @@ class World {
 
   size_t CurrentStep() const {
     return step_count_;
+  }
+
+  history::HistoryRecorder& HistoryRecorder() {
+    return history_recorder_;
+  }
+
+  history::History History() const {
+    return history_recorder_.GetHistory();
   }
 
   TimePoint Now() const {
@@ -248,6 +259,8 @@ class World {
   std::vector<IActor*> actors_;
   ActorContext active_;
   size_t step_count_{0};
+
+  history::HistoryRecorder history_recorder_;
 
   Logger logger_{"World"};
 };

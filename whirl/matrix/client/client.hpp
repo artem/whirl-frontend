@@ -4,6 +4,8 @@
 #include <whirl/node/services.hpp>
 
 #include <whirl/matrix/channels/random.hpp>
+#include <whirl/matrix/channels/retries.hpp>
+#include <whirl/matrix/channels/history.hpp>
 
 // TODO!
 #include <whirl/matrix/log/log.hpp>
@@ -33,12 +35,20 @@ class ClientBase : public INode {
     Threads().SleepFor(RandomNumber(50));
   }
 
-  void ConnectToClusterNodes() {
+  rpc::IRPCChannelPtr MakeClientChannel() {
+    // Peer channels
     std::vector<rpc::IRPCChannelPtr> channels;
     for (const auto& node : nodes_) {
       channels.push_back(services_.rpc_client.MakeChannel(node));
     }
-    channel_ = TRPCChannel(MakeRandomChannel(std::move(channels)));
+    // History -> Retries -> Random -> Peers
+    return MakeHistoryChannel(
+        WithRetries(
+            MakeRandomChannel(std::move(channels)), TimeService()));
+  }
+
+  void ConnectToClusterNodes() {
+    channel_ = TRPCChannel(MakeClientChannel());
   }
 
  protected:
@@ -89,6 +99,10 @@ class ClientBase : public INode {
 
   ThreadsRuntime& Threads() {
     return services_.threads;
+  }
+
+  const ITimeServicePtr& TimeService() {
+    return services_.time_service;
   }
 
   const INodeLoggerPtr& NodeLogger() {
