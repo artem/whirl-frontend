@@ -9,13 +9,7 @@
 
 namespace whirl::rpc {
 
-using await::executors::IExecutorPtr;
-
 using TraceId = std::string;
-
-//////////////////////////////////////////////////////////////////////
-
-IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id);
 
 //////////////////////////////////////////////////////////////////////
 
@@ -30,11 +24,22 @@ void SetThisFiberTraceId(TraceId id);
 struct TLTraceContext {
   TLTraceContext(TraceId id);
   ~TLTraceContext();
+
+  static std::optional<TraceId> TryGet();
 };
 
 //////////////////////////////////////////////////////////////////////
 
-std::optional<TraceId> GetCurrentTraceId();
+using await::executors::IExecutorPtr;
+
+IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id);
+
+//////////////////////////////////////////////////////////////////////
+
+// Get current callback/fiber thread trace id
+std::optional<TraceId> TryGetCurrentTraceId();
+
+// Get current trace id or generate new based on request id
 TraceId GetOrGenerateNewTraceId(RPCId id);
 
 }  // namespace whirl::rpc
