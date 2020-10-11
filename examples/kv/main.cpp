@@ -4,6 +4,7 @@
 // Simulation
 #include <whirl/matrix/world/world.hpp>
 #include <whirl/matrix/client/client.hpp>
+#include <whirl/matrix/history/printers/kv.hpp>
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
@@ -98,7 +99,7 @@ class KVNode final: public NodeBase {
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
           PeerChannel(i).Call(
-              "Write", k, StampedValue{v, write_ts}).As<void>());
+              "Write", k, StampedValue{v, write_ts}));
     }
 
     // Синхронно дожидаемся большинства подтверждений
@@ -111,8 +112,7 @@ class KVNode final: public NodeBase {
     // Отправляем пирам команду Read(k)
     for (size_t i = 0; i < PeerCount(); ++i) {
       reads.push_back(
-          PeerChannel(i).Call(
-              "Read", k).As<StampedValue>());
+          PeerChannel(i).Call("Read", k));
     }
 
     // Собираем кворум большинства
@@ -203,25 +203,31 @@ class KVClient final: public ClientBase {
       // Печатаем текущее системное время
       NODE_LOG("Local wall time: {}", WallTimeNow());
 
-      NODE_LOG("Execute Set({})", i);
-
-      Set("test", i);
-      NODE_LOG("Set completed");
+      // Подкинем монетку
+      if (RandomNumber() % 2 == 0) {
+        // Запись случайного значения
+        Value value = RandomNumber(1, 100);
+        NODE_LOG("Execute Set({})", value);
+        Set("test", value);
+        NODE_LOG("Set completed");
+      } else {
+        // Чтение
+        NODE_LOG("Execute Get(test)");
+        Value result = Get("test");
+        NODE_LOG("Get(test) -> {}", result);
+      }
 
       Threads().SleepFor(RandomNumber(1, 100));
-
-      NODE_LOG("Execute Get(test)");
-      Value result = Get("test");
-
-      NODE_LOG("Get(test) -> {}, expected: {}", result, i);
     }
   }
 };
 
 //////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////
+
 int main() {
-  World world{/*seed=*/17};
+  World world{/*seed=*/7};
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
@@ -233,8 +239,12 @@ int main() {
   world.AddClient(client);
 
   world.Start();
-  world.MakeSteps(256);
+  world.MakeSteps(500);
   world.Stop();
+
+  std::cout << std::endl << "History: " << std::endl;
+  history::PrintKVHistory<Key, Value>(world.History());
 
   return 0;
 }
+
