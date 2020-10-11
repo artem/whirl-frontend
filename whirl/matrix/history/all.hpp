@@ -26,7 +26,7 @@ class Value {
   }
 
   template <typename T>
-  T As() {
+  T As() const {
     return Deserialize<T>(bytes_);
   }
 
@@ -47,7 +47,7 @@ class Arguments {
   }
 
   template <typename ... Args>
-  auto As() {
+  auto As() const {
     return Deserialize<std::tuple<Args...>>(bytes_);
   }
 
