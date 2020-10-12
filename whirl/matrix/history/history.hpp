@@ -30,7 +30,7 @@ class Value {
     return Deserialize<T>(bytes_);
   }
 
-  bool operator==(const Value& that) {
+  bool operator==(const Value& that) const {
     return bytes_ == that.bytes_;
   }
 
