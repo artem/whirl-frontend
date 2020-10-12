@@ -11,6 +11,11 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
+wheels::MmapAllocation AllocateHeapMemory();
+void ReleaseHeapMemory(wheels::MmapAllocation heap);
+
+//////////////////////////////////////////////////////////////////////
+
 class Block {
  public:
   char* UserAddr() const {
@@ -42,12 +47,14 @@ class Block {
 // Currently: naive bump-pointer allocator
 
 class Heap {
-  static const size_t kDefaultHeapPages = 1024 * 1024;
-
  public:
-  Heap(size_t pages = kDefaultHeapPages)
-      : heap_(wheels::MmapAllocation::AllocatePages(pages)),
+  Heap()
+      : heap_(AllocateHeapMemory()),
         next_(heap_.Start()) {
+  }
+
+  ~Heap() {
+    ReleaseHeapMemory(std::move(heap_));
   }
 
   char* Allocate(size_t bytes) {
