@@ -5,6 +5,7 @@
 #include <whirl/matrix/world/world.hpp>
 #include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/history/printers/kv.hpp>
+#include <whirl/matrix/history/checker/check.hpp>
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
@@ -211,8 +212,12 @@ class KVClient final: public ClientBase {
 
 //////////////////////////////////////////////////////////////////////
 
-int main() {
-  World world{/*seed=*/18};
+using KVStoreModel = histories::KVStoreModel<Key, Value>;
+
+//////////////////////////////////////////////////////////////////////
+
+void RunSimulation(size_t seed) {
+  World world{/*seed=*/seed};
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
@@ -230,8 +235,21 @@ int main() {
 
   const auto history = world.History();
 
-  std::cout << std::endl << "History: " << std::endl;
+  std::cout << std::endl;
+  std::cout << "History:" << std::endl;
   histories::PrintKVHistory<Key, Value>(history);
 
+  const bool linearizable = histories::LinCheck<KVStoreModel>(history);
+
+  if (linearizable) {
+    std::cout << "History is linearizable" << std::endl;
+  } else {
+    std::cerr << "History is NOT LINEARIZABLE!" << std::endl;
+    std::exit(1);
+  }
+}
+
+int main() {
+  RunSimulation(/*seed=*/42);
   return 0;
 }
