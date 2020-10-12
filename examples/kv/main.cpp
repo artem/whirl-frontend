@@ -15,16 +15,8 @@
 #include <cereal/types/string.hpp>
 #include <fmt/ostream.h>
 
-#include <chrono>
-#include <cstdlib>
-
-using namespace std::chrono_literals;
-
 using namespace await::fibers;
 using namespace whirl;
-
-using wheels::Result;
-using wheels::Status;
 
 //////////////////////////////////////////////////////////////////////
 
