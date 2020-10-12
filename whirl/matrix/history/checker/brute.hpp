@@ -1,6 +1,7 @@
 #pragma once
 
 #include <whirl/matrix/history/history.hpp>
+#include <whirl/matrix/history/checker/real_time_order.hpp>
 
 namespace whirl::histories {
 
@@ -31,7 +32,7 @@ class LinChecker {
       bool candidate = true;
 
       for (size_t j = 0; j < count_; ++j) {
-        if (calls_[j] < calls_[i]) {
+        if (PrecedesInRealTime(calls_[j], calls_[i])) {
           candidate = false;
           break;
         }

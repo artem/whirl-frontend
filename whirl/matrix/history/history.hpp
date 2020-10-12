@@ -72,10 +72,6 @@ struct Call {
   bool IsCompleted() const {
     return is_completed;
   }
-
-  bool operator < (const Call& that) const {
-    return IsCompleted() && end_time < that.start_time;
-  }
 };
 
 //////////////////////////////////////////////////////////////////////
