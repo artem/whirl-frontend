@@ -156,7 +156,7 @@ class Network : public IActor {
   Servers servers_;
   PacketQueue packets_;
 
-  bool duplicates_{true};
+  bool duplicates_{false};
 
   IdGenerator endpoint_ids_;
 
