@@ -36,7 +36,7 @@ FetchContent_Declare(
 )
 
 set(FETCHCONTENT_QUIET OFF)
-FetchContent_MakeAvailable(cereal)
+# FetchContent_MakeAvailable(cereal)
 
 # --------------------------------------------------------------------
 

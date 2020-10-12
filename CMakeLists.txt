@@ -11,6 +11,8 @@ add_compile_options(-Wall -Wextra -Wpedantic -g -fno-omit-frame-pointer)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
 
+option(WHIRL_DEVELOPER "Whirl development mode" OFF)
+
 add_subdirectory(third_party)
 
 add_subdirectory(whirl)
