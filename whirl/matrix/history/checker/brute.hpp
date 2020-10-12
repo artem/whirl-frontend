@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/history/models/kv.hpp>
+#include <whirl/matrix/history/history.hpp>
 
 namespace whirl::histories {
 
