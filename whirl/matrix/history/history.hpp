@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace whirl::history {
+namespace whirl::histories {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -20,9 +20,18 @@ class Value {
     return Value{""};
   }
 
+  template <typename T>
+  static Value Make(const T& value) {
+    return Value(Serialize<T>(value));
+  }
+
   template<typename T>
   T As() const {
     return Deserialize<T>(bytes_);
+  }
+
+  bool operator==(const Value& that) {
+    return bytes_ == that.bytes_;
   }
 
  private:
@@ -37,7 +46,7 @@ class Arguments {
       : bytes_(std::move(bytes)) {
   }
 
-  static Arguments Empty() {
+  static Arguments EmptyList() {
     return Arguments{""};
   }
 
@@ -52,7 +61,7 @@ class Arguments {
 
 //////////////////////////////////////////////////////////////////////
 
-struct MethodCall {
+struct Call {
   std::string method;
   Arguments arguments;
   Value result;
@@ -63,12 +72,16 @@ struct MethodCall {
   bool IsCompleted() const {
     return is_completed;
   }
+
+  bool operator < (const Call& that) const {
+    return IsCompleted() && end_time < that.start_time;
+  }
 };
 
 //////////////////////////////////////////////////////////////////////
 
-using History = std::vector<MethodCall>;
+using History = std::vector<Call>;
 
 //////////////////////////////////////////////////////////////////////
 
-}  // namespace whirl::history
+}  // namespace whirl::histories

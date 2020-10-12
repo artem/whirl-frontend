@@ -7,20 +7,20 @@
 #include <map>
 #include <vector>
 
-namespace whirl::history {
+namespace whirl::histories {
 
 struct RunningCall {
   std::string method;
   Arguments arguments;
   TimePoint start_time;
 
-  MethodCall CompleteWith(Value result) {
-    return MethodCall{
+  Call CompleteWith(Value result) {
+    return Call{
         method, arguments, result, start_time, GlobalNow(), true};
   }
 
-  MethodCall NeverComplete() {
-    return MethodCall{
+  Call NeverComplete() {
+    return Call{
         method, arguments, Value::Void(), start_time, 0, false};
   }
 };
@@ -59,9 +59,9 @@ class Recorder {
   }
 
  private:
-  std::vector<MethodCall> completed_calls_;
+  std::vector<Call> completed_calls_;
   size_t call_id_{0};
   std::map<size_t, RunningCall> running_calls_;
 };
 
-}  // namespace whirl::history
+}  // namespace whirl::histories

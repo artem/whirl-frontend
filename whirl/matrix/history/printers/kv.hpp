@@ -5,13 +5,13 @@
 
 #include <sstream>
 
-namespace whirl::history {
+namespace whirl::histories {
 
 //////////////////////////////////////////////////////////////////////
 
 template <typename K, typename V>
 struct KVCallPrinter {
-  static std::string Print(const MethodCall& call) {
+  static std::string Print(const Call& call) {
     std::stringstream out;
 
     if (call.method == "Set") {
@@ -23,7 +23,7 @@ struct KVCallPrinter {
     return out.str();
   }
 
-  static void PrintSet(const MethodCall& call, std::ostream& out) {
+  static void PrintSet(const Call& call, std::ostream& out) {
     // Name
     out << call.method;
 
@@ -39,7 +39,7 @@ struct KVCallPrinter {
     }
   }
 
-  static void PrintGet(const MethodCall& call, std::ostream& out) {
+  static void PrintGet(const Call& call, std::ostream& out) {
     out << call.method;
 
     // Arguments
@@ -50,7 +50,7 @@ struct KVCallPrinter {
     if (call.IsCompleted()) {
       out << ": " << call.result.As<V>();
     } else {
-      out << ": ?";
+      out << "?";
     }
   }
 };

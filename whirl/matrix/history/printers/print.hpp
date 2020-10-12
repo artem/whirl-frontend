@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace whirl::history {
+namespace whirl::histories {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -16,9 +16,9 @@ inline std::string MakeSpace(TimePoint start_ts) {
 
 inline std::string MakeCallSegment(TimePoint start, TimePoint end, bool completed) {
   std::string call((end - start) * kUnitLength, '-');
-  call[0] = '|';
+  call[0] = '[';
   if (completed) {
-    call[call.length() - 1] = '|';
+    call[call.length() - 1] = ']';
   }
   return call;
 }
@@ -48,7 +48,9 @@ void Print(History history) {
   }
   size_t max_tp = ctp + 1;
 
-  for (auto& call : history) {
+  for (size_t i = 0; i < history.size(); ++i) {
+    auto& call = history[i];
+
     TimePoint start_ts = compact_tps[call.start_time];
 
     TimePoint end_ts;
@@ -60,7 +62,7 @@ void Print(History history) {
 
     std::cout
         << MakeSpace(start_ts)
-        << CallPrinter::Print(call)
+        << (i + 1) << ". " << CallPrinter::Print(call)
         << std::endl;
 
     std::cout

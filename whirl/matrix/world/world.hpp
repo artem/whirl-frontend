@@ -183,11 +183,11 @@ class World {
     return step_count_;
   }
 
-  history::Recorder& HistoryRecorder() {
+  histories::Recorder& HistoryRecorder() {
     return history_recorder_;
   }
 
-  history::History History() const {
+  const histories::History& History() const {
     return history_recorder_.GetHistory();
   }
 
@@ -260,7 +260,7 @@ class World {
   ActorContext active_;
   size_t step_count_{0};
 
-  history::Recorder history_recorder_;
+  histories::Recorder history_recorder_;
 
   Logger logger_{"World"};
 };

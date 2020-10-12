@@ -9,7 +9,7 @@
 
 namespace whirl {
 
-static history::Recorder& AccessHistoryRecorder() {
+static histories::Recorder& AccessHistoryRecorder() {
   return World::Access()->HistoryRecorder();
 }
 
