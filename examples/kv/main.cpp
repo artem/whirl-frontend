@@ -236,9 +236,10 @@ int main() {
   world.MakeSteps(500);
   world.Stop();
 
+  const auto history = world.History();
+
   std::cout << std::endl << "History: " << std::endl;
-  history::PrintKVHistory<Key, Value>(world.History());
+  histories::PrintKVHistory<Key, Value>(history);
 
   return 0;
 }
-
