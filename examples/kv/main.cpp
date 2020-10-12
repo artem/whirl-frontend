@@ -218,7 +218,7 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 //////////////////////////////////////////////////////////////////////
 
 void RunSimulation(size_t seed) {
-  World world{/*seed=*/seed};
+  World world{seed};
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
@@ -235,22 +235,24 @@ void RunSimulation(size_t seed) {
   world.Stop();
 
   const auto history = world.History();
-
-  std::cout << std::endl;
-  std::cout << "History:" << std::endl;
-  histories::PrintKVHistory<Key, Value>(history);
-
   const bool linearizable = histories::LinCheck<KVStoreModel>(history);
 
-  if (linearizable) {
-    std::cout << "History is linearizable" << std::endl;
-  } else {
-    std::cerr << "History is NOT LINEARIZABLE!" << std::endl;
+  if (!linearizable) {
+    fmt::print("History (seed = {}) is NOT LINEARIZABLE\n", seed);
+    histories::PrintKVHistory<Key, Value>(history);
     std::exit(1);
   }
 }
 
 int main() {
-  RunSimulation(/*seed=*/42);
+  static const size_t kIterations = 12345;
+
+  std::mt19937 seeds{42};
+
+  for (size_t i = 1; i <= kIterations; ++i) {
+    RunSimulation(seeds());
+    std::cout << "Progress: " << i << std::endl;
+  }
+
   return 0;
 }
