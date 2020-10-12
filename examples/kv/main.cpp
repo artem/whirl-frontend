@@ -6,6 +6,7 @@
 #include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/history/printers/kv.hpp>
 #include <whirl/matrix/history/checker/check.hpp>
+#include <whirl/matrix/history/models/kv.hpp>
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
