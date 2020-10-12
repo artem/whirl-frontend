@@ -49,7 +49,7 @@ class LocalMonotonicClock {
   }
 
  private:
-  bool ElapsedSinceLastReset() const {
+  Duration ElapsedSinceLastReset() const {
     return GlobalNow() - start_;
   }
 
