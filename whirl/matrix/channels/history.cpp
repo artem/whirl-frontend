@@ -1,6 +1,7 @@
 #include <whirl/matrix/channels/history.hpp>
 
 #include <whirl/rpc/impl/channel.hpp>
+#include <whirl/rpc/impl/errors.hpp>
 
 #include <whirl/matrix/world/world.hpp>
 #include <whirl/matrix/history/recorder.hpp>
@@ -32,7 +33,7 @@ class HistoryChannel : public rpc::IRPCChannel {
 
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override {
-    size_t call_id = AccessHistoryRecorder().StartCall(method, input);
+    size_t call_id = AccessHistoryRecorder().CallStarted(method, input);
 
     auto f = impl_->Call(method, input);
 
@@ -42,12 +43,32 @@ class HistoryChannel : public rpc::IRPCChannel {
 
     auto record = [_p = std::move(_p),
                    call_id](Result<BytesValue> result) mutable {
-      AccessHistoryRecorder().CompleteCall(call_id, result.Value());
+      HandleCallResult(call_id, result);
       std::move(_p).Set(std::move(result));
     };
 
     std::move(f).Subscribe(std::move(record));
     return std::move(_f).Via(e);
+  }
+
+ private:
+  static void HandleCallResult(size_t call_id, const Result<BytesValue>& result) {
+    auto& recorder = AccessHistoryRecorder();
+
+    if (result.IsOk()) {
+      recorder.CallCompleted(call_id, result.ValueUnsafe());
+    } else {
+      if (MaybeCompleted(result.GetErrorCode())) {
+        recorder.CallMaybeCompleted(call_id);
+      } else {
+        recorder.Remove(call_id);
+      }
+    }
+  }
+
+  static bool MaybeCompleted(const std::error_code e) {
+    return e == RPCErrorCode::TransportError ||
+           e == RPCErrorCode::ExecutionError;
   }
 
  private:

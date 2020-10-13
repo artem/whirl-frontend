@@ -19,7 +19,7 @@ struct RunningCall {
         method, arguments, result, start_time, GlobalNow()};
   }
 
-  Call NeverComplete() {
+  Call MaybeCompleted() {
     return Call{
         method, arguments, Value::Void(), start_time, std::nullopt};
   }
@@ -28,7 +28,7 @@ struct RunningCall {
 class Recorder {
  public:
   // Context: Server
-  size_t StartCall(const std::string& method, const std::string& input) {
+  size_t CallStarted(const std::string& method, const std::string& input) {
     GlobalHeapScope g;
 
     size_t id = ++call_id_;
@@ -37,7 +37,7 @@ class Recorder {
   }
 
   // Context: Server
-  void CompleteCall(size_t id, const std::string& output) {
+  void CallCompleted(size_t id, const std::string& output) {
     GlobalHeapScope g;
 
     auto it = running_calls_.find(id);
@@ -48,9 +48,26 @@ class Recorder {
     completed_calls_.push_back(pending_call.CompleteWith(output));
   }
 
+  void CallMaybeCompleted(size_t id) {
+    GlobalHeapScope g;
+
+    auto it = running_calls_.find(id);
+
+    auto pending_call = std::move(it->second);
+    running_calls_.erase(it);
+
+    completed_calls_.push_back(pending_call.MaybeCompleted());
+  }
+
+  void Remove(size_t id) {
+    GlobalHeapScope g;
+
+    running_calls_.erase(id);
+  }
+
   void Stop() {
     for (auto& [_, call] : running_calls_) {
-      completed_calls_.push_back(call.NeverComplete());
+      completed_calls_.push_back(call.MaybeCompleted());
     }
   }
 

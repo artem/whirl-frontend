@@ -41,9 +41,11 @@ class ClientBase : public INode {
     for (const auto& node : nodes_) {
       channels.push_back(services_.rpc_client.MakeChannel(node));
     }
-    // History -> Retries -> Random -> Peers
-    return MakeHistoryChannel(
-        WithRetries(MakeRandomChannel(std::move(channels)), TimeService()));
+    // Retries -> History -> Random -> Peers
+    return WithRetries(
+        MakeHistoryChannel(
+            MakeRandomChannel(std::move(channels))),
+        TimeService());
   }
 
   void ConnectToClusterNodes() {
