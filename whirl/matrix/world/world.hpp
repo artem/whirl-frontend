@@ -66,6 +66,8 @@ class World {
   void Start() {
     WorldGuard g(this);
 
+    SetStartTime();
+
     // Start network:
     AddActor(&network_);
     Scope(network_)->Start();
@@ -210,6 +212,10 @@ class World {
   }
 
  private:
+  void SetStartTime() {
+    clock_.MoveForwardTo(GlobalStartTime());
+  }
+
   ActorContext::ScopeGuard Scope(IActor& actor) {
     return Scope(&actor);
   }

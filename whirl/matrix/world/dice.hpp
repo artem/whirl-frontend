@@ -9,6 +9,10 @@ namespace whirl {
 
 // Clocks
 
+inline TimePoint GlobalStartTime() {
+  return GlobalRandomNumber(1000);
+}
+
 inline TimePoint ResetMonotonicClock() {
   return GlobalRandomNumber(1, 100);
 }
