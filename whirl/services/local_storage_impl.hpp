@@ -15,7 +15,7 @@ struct ILocalStorageEngine {
   virtual ~ILocalStorageEngine() = default;
 
   virtual void Set(const Bytes& key, const Bytes& value) = 0;
-  virtual bool Has(const Bytes& key) = 0;
+  virtual bool Has(const Bytes& key) const = 0;
   virtual Bytes Get(const Bytes& key) = 0;
 };
 

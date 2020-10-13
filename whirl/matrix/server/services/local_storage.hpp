@@ -52,7 +52,7 @@ class LocalStorageEngine : public ILocalStorageEngine {
     return impl_.Get(key);
   }
 
-  bool Has(const Bytes& key) {
+  bool Has(const Bytes& key) const {
     return impl_.Has(key);
   }
 
