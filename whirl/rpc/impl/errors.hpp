@@ -60,12 +60,16 @@ class RPCErrorCategory : public std::error_category {
         return "?";
     }
   }
+
+  static const RPCErrorCategory& Get() {
+    static const RPCErrorCategory instance;
+    return instance;
+  }
 };
 
-static const RPCErrorCategory RPCErrorCategory_instance;
 
 }  // namespace detail
 
 inline std::error_code make_error_code(RPCErrorCode e) {
-  return {static_cast<int>(e), detail::RPCErrorCategory_instance};
+  return {static_cast<int>(e), detail::RPCErrorCategory::Get()};
 }
