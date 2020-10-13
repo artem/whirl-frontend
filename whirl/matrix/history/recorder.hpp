@@ -16,12 +16,12 @@ struct RunningCall {
 
   Call CompleteWith(Value result) {
     return Call{
-        method, arguments, result, start_time, GlobalNow(), true};
+        method, arguments, result, start_time, GlobalNow()};
   }
 
   Call NeverComplete() {
     return Call{
-        method, arguments, Value::Void(), start_time, 0, false};
+        method, arguments, Value::Void(), start_time, std::nullopt};
   }
 };
 

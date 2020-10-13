@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <optional>
 
 namespace whirl::histories {
 
@@ -66,11 +67,10 @@ struct Call {
   Arguments arguments;
   Value result;
   TimePoint start_time;
-  TimePoint end_time;
-  bool is_completed;
+  std::optional<TimePoint> end_time;
 
   bool IsCompleted() const {
-    return is_completed;
+    return end_time.has_value();
   }
 };
 

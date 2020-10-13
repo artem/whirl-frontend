@@ -34,7 +34,7 @@ void Print(History history) {
   for (auto& call : history) {
     tps.insert(call.start_time);
     if (call.IsCompleted()) {
-      tps.insert(call.end_time);
+      tps.insert(*call.end_time);
     }
   }
 
@@ -55,7 +55,7 @@ void Print(History history) {
 
     TimePoint end_ts;
     if (call.IsCompleted()) {
-      end_ts = compact_tps[call.end_time];
+      end_ts = compact_tps[*call.end_time];
     } else {
       end_ts = max_tp;
     }
@@ -67,7 +67,7 @@ void Print(History history) {
 
     std::cout
         << MakeSpace(start_ts)
-        << MakeCallSegment(start_ts, end_ts, call.is_completed)
+        << MakeCallSegment(start_ts, end_ts, call.IsCompleted())
         << std::endl;
   }
 }
