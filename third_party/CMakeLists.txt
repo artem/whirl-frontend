@@ -36,7 +36,10 @@ FetchContent_Declare(
 )
 
 set(FETCHCONTENT_QUIET OFF)
+
 # FetchContent_MakeAvailable(cereal)
+FetchContent_Populate("cereal")
+set(cereal_INCLUDE_DIR "${cereal_SOURCE_DIR}/include" PARENT_SCOPE)
 
 # --------------------------------------------------------------------
 
