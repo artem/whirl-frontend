@@ -25,35 +25,40 @@ int KVDefaultValue<int>() {
 //////////////////////////////////////////////////////////////////////
 
 template <typename K, typename V>
-class KVStoreModel : public std::map<K, V> {
-  using Model = KVStoreModel<K, V>;
+class KVStoreModel {
  public:
+  using State = std::map<K, V>;
+
   struct Result {
     bool ok;
     Value value;
-    Model next;
-
-    bool IsOk() const {
-      return ok;
-    }
+    State next;
   };
 
-  KVStoreModel() {
-    // Nop
-  }
+  static Result Apply(const State& state, const std::string& method, const Arguments& arguments) {
+    if (method == "Set") {
+      // Set
 
-  std::string Print() {
-    std::stringstream out;
-    out << "{";
-    for (auto& [k, v] : *this) {
-      out << k << " -> " << v << ", ";
+      auto [k, v] = arguments.As<K, V>();
+
+      State next = state;
+      next.insert_or_assign(k, v);
+      return {true, Value::Void(), next};
+
+    } else if (method == "Get") {
+      // Get
+
+      auto [k] = arguments.As<K>();
+
+      auto k_it = state.find(k);
+      if (k_it == state.end()) {
+        return {true, Value::Make(KVDefaultValue<V>()), state};
+      } else {
+        return {true, Value::Make(k_it->second), state};
+      }
     }
-    out << "}";
-    return out.str();
-  }
 
-  static std::string Print(const Call& call) {
-    return KVCallPrinter<K,V>::Print(call);
+    WHEELS_UNREACHABLE();
   }
 
   static bool IsMutation(const std::string& method) {
@@ -64,30 +69,18 @@ class KVStoreModel : public std::map<K, V> {
     return method == "Get";
   }
 
-  Result Apply(const std::string& method, const Arguments& arguments) {
-    if (method == "Set") {
-      // Set
-
-      auto [k, v] = arguments.As<K, V>();
-
-      Model next = *this;
-      next.insert_or_assign(k, v);
-      return {true, Value::Void(), next};
-
-    } else if (method == "Get") {
-      // Get
-
-      auto [k] = arguments.As<K>();
-
-      auto k_it = this->find(k);
-      if (k_it == this->end()) {
-        return {true, Value::Make(KVDefaultValue<V>()), *this};
-      } else {
-        return {true, Value::Make(k_it->second), *this};
-      }
+  static std::string Print(State state) {
+    std::stringstream out;
+    out << "{";
+    for (auto& [k, v] : state) {
+      out << k << " -> " << v << ", ";
     }
+    out << "}";
+    return out.str();
+  }
 
-    WHEELS_UNREACHABLE();
+  static std::string PrintCall(const Call& call) {
+    return KVCallPrinter<K,V>::Print(call);
   }
 };
 

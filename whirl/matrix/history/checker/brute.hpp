@@ -7,8 +7,9 @@ namespace whirl::histories {
 
 //////////////////////////////////////////////////////////////////////
 
-template <typename State>
+template <typename Model>
 class LinChecker {
+  using State = typename Model::State;
  public:
   LinChecker(History history)
     : calls_(history), count_(history.size()) {
@@ -48,9 +49,9 @@ class LinChecker {
         }
       }
 
-      auto result = s.Apply(calls_[i].method, calls_[i].arguments);
+      auto result = Model::Apply(s, calls_[i].method, calls_[i].arguments);
 
-      if (result.IsOk()) {
+      if (result.ok) {
         if (!calls_[i].IsCompleted() || result.value == calls_[i].result) {
           if (StepInto(i, result.next)) {
             return true;
@@ -65,10 +66,10 @@ class LinChecker {
   void PrintSearchState(const State& state) {
     std::cout << "Current progress: " << linear_.size() << " calls" << std::endl;
     for (size_t i = 0; i < linear_.size(); ++i) {
-      std::cout << State::Print(linear_[i]) << " -> ";
+      std::cout << Model::PrintCall(linear_[i]) << " -> ";
     }
     std::cout << std::endl;
-    std::cout << "State: " << state.Print() << std::endl;
+    std::cout << "State: " << Model::Print(state) << std::endl;
   }
 
  private:
