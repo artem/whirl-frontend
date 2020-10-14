@@ -2,6 +2,7 @@
 
 #include <whirl/matrix/world/time.hpp>
 #include <whirl/matrix/world/clock.hpp>
+#include <whirl/matrix/world/behaviour.hpp>
 
 #include <cstdlib>
 
@@ -25,6 +26,12 @@ RandomUInt GlobalRandomNumber(size_t lo, size_t hi);
 // Time
 
 TimePoint GlobalNow();
+
+//////////////////////////////////////////////////////////////////////
+
+// Behaviour
+
+IWorldBehaviourPtr GetWorldBehaviour();
 
 //////////////////////////////////////////////////////////////////////
 

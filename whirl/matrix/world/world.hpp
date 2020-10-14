@@ -8,6 +8,7 @@
 #include <whirl/matrix/world/actor_ctx.hpp>
 #include <whirl/matrix/adversary/adversary.hpp>
 #include <whirl/matrix/world/random_source.hpp>
+#include <whirl/matrix/world/behaviour.hpp>
 #include <whirl/matrix/history/recorder.hpp>
 
 #include <whirl/matrix/log/log.hpp>
@@ -30,7 +31,8 @@ class World {
   static const size_t kDefaultSeed = 42;
 
  public:
-  World(size_t seed = kDefaultSeed) : random_source_(seed) {
+  World(size_t seed = kDefaultSeed)
+    : random_source_(seed), behaviour_(DefaultBehaviour()) {
   }
 
   void AddServer(INodeFactoryPtr node) {
@@ -61,6 +63,10 @@ class World {
     WHEELS_VERIFY(!adversary_.has_value(), "Adversary already set");
     adversary_.emplace(std::move(strategy));
     AddActor(&adversary_.value());
+  }
+
+  void SetBehaviour(IWorldBehaviourPtr behaviour) {
+    behaviour_ = std::move(behaviour);
   }
 
   void Start() {
@@ -201,6 +207,10 @@ class World {
     return random_source_.Next();
   }
 
+  const IWorldBehaviourPtr& Behaviour() const {
+    return behaviour_;
+  }
+
   IActor* CurrentActor() const {
     return active_.Get();
   }
@@ -250,6 +260,8 @@ class World {
   RandomSource random_source_;
 
   wheels::support::IdGenerator ids_;
+
+  IWorldBehaviourPtr behaviour_;
 
   // Actors
 

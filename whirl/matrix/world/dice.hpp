@@ -10,28 +10,25 @@ namespace whirl {
 // Clocks
 
 inline TimePoint GlobalStartTime() {
-  return GlobalRandomNumber(1000);
+  return GetWorldBehaviour()->GlobalStartTime();
 }
 
 inline TimePoint ResetMonotonicClock() {
-  return GlobalRandomNumber(1, 100);
+  return GetWorldBehaviour()->ResetMonotonicClock();
 }
 
 inline TimePoint InitLocalClockOffset() {
-  return GlobalRandomNumber(1000);
+  return GetWorldBehaviour()->InitLocalClockOffset();
 }
 
 inline Duration TrueTimeUncertainty() {
-  return GlobalRandomNumber(5, 500);
+  return GetWorldBehaviour()->TrueTimeUncertainty();
 }
 
 // Network
 
 inline TimePoint NetPacketDeliveryTime() {
-  if (GlobalRandomNumber() % 5 == 0) {
-    return GlobalRandomNumber(10, 1000);
-  }
-  return GlobalRandomNumber(30, 60);
+  return GetWorldBehaviour()->NetPacketDeliveryTime();
 }
 
 inline bool DuplicateNetPacket() {

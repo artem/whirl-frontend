@@ -28,6 +28,14 @@ TimePoint GlobalNow() {
 
 //////////////////////////////////////////////////////////////////////
 
+// Behaviour
+
+IWorldBehaviourPtr GetWorldBehaviour() {
+  return World::Access()->Behaviour();
+}
+
+//////////////////////////////////////////////////////////////////////
+
 size_t WorldStepNumber() {
   return World::Access()->CurrentStep();
 }
