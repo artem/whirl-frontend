@@ -1,4 +1,5 @@
 #include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/event.hpp>
 
 #include <whirl/matrix/common/allocator.hpp>
 
@@ -51,28 +52,44 @@ static std::string DescribeThisActor() {
 
 //////////////////////////////////////////////////////////////////////
 
+LogEvent Logger::MakeEvent(const std::string& message) const {
+  LogEvent event;
+
+  event.time = GlobalNow();
+  event.step = WorldStepNumber();
+  event.actor = DescribeThisActor();
+  event.component = component_;
+  event.trace_id = rpc::TryGetCurrentTraceId();
+  event.message = message;
+
+  return event;
+}
+
+void Logger::Write(const LogEvent& event) {
+  std::stringstream event_out;
+
+  event_out << "[T " << event.time << " | " << event.step << "]"
+            << "\t"
+            << "[" << ToWidth(event.actor, 15) << "]"
+            << "\t"
+            << "[" << ToWidth(component_, 12) << "]";
+
+  if (event.trace_id.has_value()) {
+    event_out << "\t"
+              << "[" << ToWidth(event.trace_id.value(), 6) << "]";
+  }
+
+  event_out << "\t" << event.message;
+
+  std::cout << event_out.str() << std::endl;
+}
+
 Logger::Logger(const std::string& component) : component_(component) {
 }
 
 void Logger::Log(const std::string& message) {
   GlobalHeapScope guard;
-
-  std::stringstream event_out;
-
-  event_out << "[T " << GlobalNow() << " | " << WorldStepNumber() << "]"
-            << "\t"
-            << "[" << ToWidth(DescribeThisActor(), 15) << "]"
-            << "\t"
-            << "[" << ToWidth(component_, 12) << "]";
-
-  if (auto rpc_trace_id = rpc::TryGetCurrentTraceId()) {
-    event_out << "\t"
-              << "[" << ToWidth(rpc_trace_id.value(), 6) << "]";
-  }
-
-  event_out << "\t" << message;
-
-  std::cout << event_out.str() << std::endl;
+  Write(MakeEvent(message));
 }
 
 }  // namespace whirl

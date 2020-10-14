@@ -1,8 +1,6 @@
 #pragma once
 
-#include <string>
-
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/log/event.hpp>
 
 #include <wheels/support/string_builder.hpp>
 
@@ -17,6 +15,10 @@ class Logger {
   Logger(const std::string& component);
 
   void Log(const std::string& message);
+
+ private:
+  LogEvent MakeEvent(const std::string& message) const;
+  void Write(const LogEvent& event);
 
  private:
   std::string component_;
