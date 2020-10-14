@@ -8,6 +8,8 @@ namespace whirl {
 // Asynchronous world
 
 class CrazyWorldBehaviour : public IWorldBehaviour {
+  // Time
+
   TimePoint GlobalStartTime() override {
     return GlobalRandomNumber(1000);
   }
@@ -24,7 +26,7 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
     return GlobalRandomNumber(5, 500);
   }
 
-// Network
+  // Network
 
   TimePoint NetPacketDeliveryTime() override {
     if (GlobalRandomNumber() % 5 == 0) {
