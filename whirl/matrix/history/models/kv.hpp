@@ -35,26 +35,26 @@ class KVStoreModel {
     State next;
   };
 
-  static Result Apply(const State& state, const std::string& method, const Arguments& arguments) {
+  static Result Apply(const State& current, const std::string& method, const Arguments& arguments) {
     if (method == "Set") {
       // Set
 
       auto [k, v] = arguments.As<K, V>();
 
-      State next = state;
+      State next = current;
       next.insert_or_assign(k, v);
-      return {true, Value::Void(), next};
+      return {true, Value::Void(), std::move(next)};
 
     } else if (method == "Get") {
       // Get
 
       auto [k] = arguments.As<K>();
 
-      auto k_it = state.find(k);
-      if (k_it == state.end()) {
-        return {true, Value::Make(KVDefaultValue<V>()), state};
+      auto k_it = current.find(k);
+      if (k_it == current.end()) {
+        return {true, Value::Make(KVDefaultValue<V>()), current};
       } else {
-        return {true, Value::Make(k_it->second), state};
+        return {true, Value::Make(k_it->second), current};
       }
     }
 
