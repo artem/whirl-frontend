@@ -22,11 +22,11 @@ class ThreadsRuntime {
   // TODO: Remove
   ThreadsRuntime() = default;
 
-  void Spawn(await::fibers::FiberRoutine routine) {
+  void Spawn(ThreadRoutine routine) {
     await::fibers::Spawn(std::move(routine), executor_);
   }
 
-  ThreadLike Thread(ThreadRoutine& routine) {
+  ThreadLike Thread(ThreadRoutine routine) {
     return ThreadLike{executor_, std::move(routine)};
   }
 
