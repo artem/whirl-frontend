@@ -11,35 +11,6 @@ using namespace rpc;
 
 //////////////////////////////////////////////////////////////////////
 
-class LightTransportSocket : public ITransportSocket {
- public:
-  LightTransportSocket(LightNetSocket socket, const std::string& peer)
-      : socket_(std::move(socket)), peer_(peer) {
-  }
-
-  void Send(const std::string& message) override {
-    socket_.Send(message);
-  }
-
-  const std::string& Peer() const override {
-    return peer_;
-  }
-
-  bool IsConnected() const override {
-    return true;
-  }
-
-  void Close() override {
-    // Nop
-  }
-
- private:
-  LightNetSocket socket_;
-  std::string peer_;
-};
-
-//////////////////////////////////////////////////////////////////////
-
 class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
  public:
   NetTransportSocket(ProcessHeap& heap, ProcessNetwork& net, std::string peer,
@@ -112,12 +83,8 @@ class NetTransportServer : public ITransportServer, public INetSocketHandler {
     // TODO
   }
 
-  void HandleMessage(const Message& message, LightNetSocket back) override {
-    auto g = heap_.Use();
+  void HandleMessage(const Message& message, LightNetSocket back) override;
 
-    handler_->HandleMessage(message,
-                            std::make_shared<LightTransportSocket>(back, "?"));
-  }
 
   void HandleDisconnect() override {
     auto g = heap_.Use();
