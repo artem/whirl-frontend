@@ -64,7 +64,7 @@ class NodeBase : public INode {
     return peers_;
   }
 
-  const std::string& PeerName(const size_t index) const {
+  const std::string& PeerName(size_t index) const {
     return peers_.at(index);
   }
 
@@ -104,20 +104,20 @@ class NodeBase : public INode {
     return services_.threads;
   }
 
-  LocalStorage& LocalStorage() {
-    return services_.local_storage;
-  }
-
   const ITimeServicePtr& TimeService() {
     return services_.time_service;
   }
 
-  const ITrueTimeServicePtr& TrueTime() {
-    return services_.true_time;
+  LocalStorage& LocalStorage() {
+    return services_.local_storage;
   }
 
   const ILocalStorageBackendPtr& StorageBackend() {
     return services_.storage_engine;
+  }
+
+  const ITrueTimeServicePtr& TrueTime() {
+    return services_.true_time;
   }
 
   const INodeLoggerPtr& NodeLogger() {
