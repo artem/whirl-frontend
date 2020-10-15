@@ -112,7 +112,7 @@ class NodeBase : public INode {
     return services_.time_service;
   }
 
-  const ITrueTimeServicePtr TrueTime() {
+  const ITrueTimeServicePtr& TrueTime() {
     return services_.true_time;
   }
 
