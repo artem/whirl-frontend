@@ -11,6 +11,7 @@
 namespace whirl {
 
 using namespace rpc;
+using wheels::Result;
 
 static histories::Recorder& AccessHistoryRecorder() {
   return World::Access()->HistoryRecorder();
