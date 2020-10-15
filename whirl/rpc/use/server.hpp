@@ -65,15 +65,15 @@ class TRPCServer {
     using ArgumentsTupleType = typename FunctionTraits<F>::ArgumentsTuple;
     using RetType = typename FunctionTraits<F>::ResultType;
 
-    using TypedInvoker =
+    using TypedMethod =
         typename detail::TypedMethod<RetType, ArgumentsTupleType>;
 
     auto invoker =
         [f = std::move(f)](const BytesValue& input) mutable -> BytesValue {
-      return TypedInvoker::Invoke(std::move(f), input);
+      return TypedMethod::Invoke(std::move(f), input);
     };
 
-    impl_->RegisterMethod(method, invoker);
+    impl_->RegisterMethod(method, std::move(invoker));
   }
 
  private:
