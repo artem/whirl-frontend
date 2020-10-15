@@ -2,8 +2,6 @@
 
 #include <whirl/matrix/history/history.hpp>
 
-#include <whirl/matrix/common/allocator.hpp>
-
 #include <map>
 #include <vector>
 
@@ -14,62 +12,26 @@ struct RunningCall {
   Arguments arguments;
   TimePoint start_time;
 
-  Call CompleteWith(Value result) {
-    return Call{
-        method, arguments, result, start_time, GlobalNow()};
-  }
-
-  Call MaybeCompleted() {
-    return Call{
-        method, arguments, Value::Void(), start_time, std::nullopt};
-  }
+  Call CompleteWith(Value result);
+  Call MaybeCompleted();
 };
 
 class Recorder {
  public:
   // Context: Server
-  size_t CallStarted(const std::string& method, const std::string& input) {
-    GlobalHeapScope g;
-
-    size_t id = ++call_id_;
-    running_calls_.emplace(id, RunningCall{method, Arguments{input}, GlobalNow()});
-    return id;
-  }
+  size_t CallStarted(const std::string& method, const std::string& input);
 
   // Context: Server
-  void CallCompleted(size_t id, const std::string& output) {
-    GlobalHeapScope g;
+  void CallCompleted(size_t id, const std::string& output);
 
-    auto it = running_calls_.find(id);
+  // Context: Server
+  void CallMaybeCompleted(size_t id);
 
-    auto pending_call = std::move(it->second);
-    running_calls_.erase(it);
+  // Context: Server
+  void Remove(size_t id);
 
-    completed_calls_.push_back(pending_call.CompleteWith(output));
-  }
-
-  void CallMaybeCompleted(size_t id) {
-    GlobalHeapScope g;
-
-    auto it = running_calls_.find(id);
-
-    auto pending_call = std::move(it->second);
-    running_calls_.erase(it);
-
-    completed_calls_.push_back(pending_call.MaybeCompleted());
-  }
-
-  void Remove(size_t id) {
-    GlobalHeapScope g;
-
-    running_calls_.erase(id);
-  }
-
-  void Stop() {
-    for (auto& [_, call] : running_calls_) {
-      completed_calls_.push_back(call.MaybeCompleted());
-    }
-  }
+  // Context: World
+  void Stop();
 
   const History& GetHistory() const {
     return completed_calls_;
