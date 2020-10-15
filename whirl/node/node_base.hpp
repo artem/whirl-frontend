@@ -31,7 +31,7 @@ class NodeBase : public INode {
   }
 
  private:
-  void StartServe() {
+  void StartRPCServer() {
     services_.rpc_server.Start();
   }
 
@@ -137,7 +137,7 @@ class NodeBase : public INode {
   void Main() {
     await::fibers::SetName("main");
 
-    StartServe();
+    StartRPCServer();
     RegisterRPCMethods(services_.rpc_server);
     ConnectToPeers();
     MainThread();
