@@ -10,6 +10,8 @@
 
 namespace whirl {
 
+using namespace rpc;
+
 static histories::Recorder& AccessHistoryRecorder() {
   return World::Access()->HistoryRecorder();
 }
