@@ -33,7 +33,7 @@ struct KVCallPrinter {
 
     // Return value
     if (call.IsCompleted()) {
-      //out << ": void";
+      // out << ": void";
     } else {
       out << "?";
     }
@@ -62,4 +62,4 @@ void PrintKVHistory(History h) {
   Print<KVCallPrinter<K, V>>(h);
 }
 
-}  // namespace whirl::history
+}  // namespace whirl::histories

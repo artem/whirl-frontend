@@ -67,7 +67,6 @@ class RPCErrorCategory : public std::error_category {
   }
 };
 
-
 }  // namespace detail
 
 inline std::error_code make_error_code(RPCErrorCode e) {

@@ -55,7 +55,8 @@ class HistoryChannel : public rpc::IRPCChannel {
   }
 
  private:
-  static void HandleCallResult(size_t call_id, const Result<BytesValue>& result) {
+  static void HandleCallResult(size_t call_id,
+                               const Result<BytesValue>& result) {
     auto& recorder = AccessHistoryRecorder();
 
     if (result.IsOk()) {

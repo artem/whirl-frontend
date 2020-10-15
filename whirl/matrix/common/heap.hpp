@@ -48,9 +48,7 @@ class Block {
 
 class Heap {
  public:
-  Heap()
-      : heap_(AllocateHeapMemory()),
-        next_(heap_.Start()) {
+  Heap() : heap_(AllocateHeapMemory()), next_(heap_.Start()) {
   }
 
   ~Heap() {

@@ -13,8 +13,7 @@ namespace whirl::histories {
 
 class Value {
  public:
-  Value(std::string bytes)
-      : bytes_(std::move(bytes)) {
+  Value(std::string bytes) : bytes_(std::move(bytes)) {
   }
 
   static Value Void() {
@@ -26,7 +25,7 @@ class Value {
     return Value(Serialize<T>(value));
   }
 
-  template<typename T>
+  template <typename T>
   T As() const {
     return Deserialize<T>(bytes_);
   }
@@ -43,17 +42,16 @@ class Value {
 
 class Arguments {
  public:
-  Arguments(std::string bytes)
-      : bytes_(std::move(bytes)) {
+  Arguments(std::string bytes) : bytes_(std::move(bytes)) {
   }
 
   static Arguments EmptyList() {
     return Arguments{""};
   }
 
-  template<typename ... Args>
+  template <typename... Args>
   auto As() const {
-    return Deserialize < std::tuple < Args...>>(bytes_);
+    return Deserialize<std::tuple<Args...>>(bytes_);
   }
 
  private:

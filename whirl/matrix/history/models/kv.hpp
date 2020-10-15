@@ -35,7 +35,8 @@ class KVStoreModel {
     State next;
   };
 
-  static Result Apply(const State& current, const std::string& method, const Arguments& arguments) {
+  static Result Apply(const State& current, const std::string& method,
+                      const Arguments& arguments) {
     if (method == "Set") {
       // Set
 
@@ -80,7 +81,7 @@ class KVStoreModel {
   }
 
   static std::string PrintCall(const Call& call) {
-    return KVCallPrinter<K,V>::Print(call);
+    return KVCallPrinter<K, V>::Print(call);
   }
 };
 

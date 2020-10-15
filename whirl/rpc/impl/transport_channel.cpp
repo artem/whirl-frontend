@@ -3,22 +3,23 @@
 namespace whirl::rpc {
 
 Future<BytesValue> RPCTransportChannel::Call(const std::string& method,
-                        const BytesValue& input) {
+                                             const BytesValue& input) {
   auto request = MakeRequest(method, input);
   auto trace_id = request.trace_id;
 
   auto future = request.promise.MakeFuture();
 
   strand_->Execute(
-  [self = shared_from_this(), request = std::move(request)]() mutable {
-    self->SendRequest(std::move(request));
-  });
+      [self = shared_from_this(), request = std::move(request)]() mutable {
+        self->SendRequest(std::move(request));
+      });
 
   auto e = MakeTracingExecutor(executor_, trace_id);
   return std::move(future).Via(std::move(e));
 }
 
-RPCTransportChannel::Request RPCTransportChannel::MakeRequest(const std::string& method, const BytesValue& input) {
+RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
+    const std::string& method, const BytesValue& input) {
   Request request;
 
   request.id = GenerateRequestId();
@@ -76,7 +77,8 @@ void RPCTransportChannel::ProcessResponse(const TransportMessage& message) {
   }
 }
 
-RPCResponseMessage RPCTransportChannel::ParseResponse(const TransportMessage& message) {
+RPCResponseMessage RPCTransportChannel::ParseResponse(
+    const TransportMessage& message) {
   return Deserialize<RPCResponseMessage>(message);
 }
 
@@ -85,8 +87,8 @@ void RPCTransportChannel::LostPeer() {
   requests_.clear();
 
   WHIRL_FMT_LOG(
-      "Transport connection to peer {} lost, fail {} pending request(s)",
-      peer_, requests.size());
+      "Transport connection to peer {} lost, fail {} pending request(s)", peer_,
+      requests.size());
 
   // Next Call triggers reconnect
   socket_.reset();

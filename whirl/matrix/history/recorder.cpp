@@ -9,22 +9,22 @@ namespace whirl::histories {
 //////////////////////////////////////////////////////////////////////
 
 Call RunningCall::CompleteWith(Value result) {
-  return Call{
-      method, arguments, result, start_time, GlobalNow()};
+  return Call{method, arguments, result, start_time, GlobalNow()};
 }
 
 Call RunningCall::MaybeCompleted() {
-  return Call{
-      method, arguments, Value::Void(), start_time, std::nullopt};
+  return Call{method, arguments, Value::Void(), start_time, std::nullopt};
 }
 
 //////////////////////////////////////////////////////////////////////
 
-size_t Recorder::CallStarted(const std::string& method, const std::string& input) {
+size_t Recorder::CallStarted(const std::string& method,
+                             const std::string& input) {
   GlobalHeapScope g;
 
   size_t id = ++call_id_;
-  running_calls_.emplace(id, RunningCall{method, Arguments{input}, GlobalNow()});
+  running_calls_.emplace(id,
+                         RunningCall{method, Arguments{input}, GlobalNow()});
   return id;
 }
 

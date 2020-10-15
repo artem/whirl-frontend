@@ -14,7 +14,8 @@ inline std::string MakeSpace(TimePoint start_ts) {
   return std::string(start_ts * kUnitLength, ' ');
 };
 
-inline std::string MakeCallSegment(TimePoint start, TimePoint end, bool completed) {
+inline std::string MakeCallSegment(TimePoint start, TimePoint end,
+                                   bool completed) {
   std::string call((end - start) * kUnitLength, '-');
   call[0] = '[';
   if (completed) {
@@ -27,7 +28,6 @@ inline std::string MakeCallSegment(TimePoint start, TimePoint end, bool complete
 
 template <typename CallPrinter>
 void Print(History history) {
-
   // Collect time points
 
   std::set<TimePoint> tps;
@@ -60,16 +60,13 @@ void Print(History history) {
       end_ts = max_tp;
     }
 
-    std::cout
-        << MakeSpace(start_ts)
-        << (i + 1) << ". " << CallPrinter::Print(call)
-        << std::endl;
+    std::cout << MakeSpace(start_ts) << (i + 1) << ". "
+              << CallPrinter::Print(call) << std::endl;
 
-    std::cout
-        << MakeSpace(start_ts)
-        << MakeCallSegment(start_ts, end_ts, call.IsCompleted())
-        << std::endl;
+    std::cout << MakeSpace(start_ts)
+              << MakeCallSegment(start_ts, end_ts, call.IsCompleted())
+              << std::endl;
   }
 }
 
-}  // namespace whirl::history
+}  // namespace whirl::histories

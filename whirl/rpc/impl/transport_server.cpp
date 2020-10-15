@@ -12,7 +12,8 @@ void RPCTransportServer::Start() {
   server_ = transport_->Serve(shared_from_this());
 }
 
-void RPCTransportServer::RegisterMethod(const std::string& method, RPCMethodInvoker invoker) {
+void RPCTransportServer::RegisterMethod(const std::string& method,
+                                        RPCMethodInvoker invoker) {
   if (methods_.find(method) != methods_.end()) {
     WHEELS_PANIC("RPC method '" << method << "' already registered");
   }
@@ -29,7 +30,7 @@ void RPCTransportServer::Shutdown() {
 // ITransportHandler
 
 void RPCTransportServer::HandleMessage(const TransportMessage& message,
-                   ITransportSocketPtr back) {
+                                       ITransportSocketPtr back) {
   // Process request
   await::fibers::Spawn(
       [self = shared_from_this(), message, back = std::move(back)]() mutable {
@@ -42,9 +43,8 @@ void RPCTransportServer::HandleDisconnect() {
   // Some client lost
 }
 
-
 void RPCTransportServer::ProcessRequest(const TransportMessage& message,
-                    const ITransportSocketPtr& back) {
+                                        const ITransportSocketPtr& back) {
   auto request = Deserialize<RPCRequestMessage>(message);
 
   SetThisFiberTraceId(request.trace_id);
@@ -69,12 +69,13 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
 }
 
 void RPCTransportServer::ResponseWithError(const RPCRequestMessage& request,
-                       const ITransportSocketPtr& back, RPCErrorCode error) {
+                                           const ITransportSocketPtr& back,
+                                           RPCErrorCode error) {
   SendResponse({request.id, request.method, "", error}, back);
 }
 
 void RPCTransportServer::SendResponse(RPCResponseMessage response,
-                  const ITransportSocketPtr& back) {
+                                      const ITransportSocketPtr& back) {
   back->Send(Serialize(response));
 }
 

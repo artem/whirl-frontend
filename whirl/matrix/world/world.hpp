@@ -32,7 +32,7 @@ class World {
 
  public:
   World(size_t seed = kDefaultSeed)
-    : random_source_(seed), behaviour_(DefaultBehaviour()) {
+      : random_source_(seed), behaviour_(DefaultBehaviour()) {
   }
 
   void AddServer(INodeFactoryPtr node) {

@@ -43,8 +43,7 @@ class ClientBase : public INode {
     }
     // Retries -> History -> Random -> Peers
     return WithRetries(
-        MakeHistoryChannel(
-            MakeRandomChannel(std::move(channels))),
+        MakeHistoryChannel(MakeRandomChannel(std::move(channels))),
         TimeService());
   }
 

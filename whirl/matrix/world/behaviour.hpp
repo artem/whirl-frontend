@@ -21,7 +21,7 @@ struct IWorldBehaviour {
 
   virtual Duration TrueTimeUncertainty() = 0;
 
-// Network
+  // Network
 
   virtual Duration NetPacketDeliveryTime() = 0;
 };
