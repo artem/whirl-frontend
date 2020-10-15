@@ -116,7 +116,7 @@ class NodeBase : public INode {
     return services_.true_time;
   }
 
-  const ILocalStorageEnginePtr& StorageBackend() {
+  const ILocalStorageBackendPtr& StorageBackend() {
     return services_.storage_engine;
   }
 

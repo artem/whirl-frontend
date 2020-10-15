@@ -23,7 +23,7 @@ struct NodeServices {
 
   LocalStorage local_storage;
   // Use to create typed local storages
-  ILocalStorageEnginePtr storage_engine;
+  ILocalStorageBackendPtr storage_engine;
 
   IRandomServicePtr random;
   IUidGeneratorPtr uids;

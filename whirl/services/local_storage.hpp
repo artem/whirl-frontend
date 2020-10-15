@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/local_storage_impl.hpp>
+#include <whirl/services/local_storage_backend.hpp>
 
 #include <whirl/helpers/serialize.hpp>
 
@@ -17,7 +17,7 @@ namespace whirl {
 template <typename V>
 class LocalKVStorage {
  public:
-  LocalKVStorage(ILocalStorageEnginePtr kv, const std::string& name)
+  LocalKVStorage(ILocalStorageBackendPtr kv, const std::string& name)
       : impl_(kv), namespace_(MakeNamespace(name)) {
   }
 
@@ -30,7 +30,7 @@ class LocalKVStorage {
     impl_->Set(WithNamespace(key), value_bytes);
   }
 
-  bool Has(const Bytes& key) {
+  bool Has(const Bytes& key) const {
     return impl_->Has(WithNamespace(key));
   }
 
@@ -65,7 +65,7 @@ class LocalKVStorage {
   }
 
  private:
-  ILocalStorageEnginePtr impl_;
+  ILocalStorageBackendPtr impl_;
   std::string namespace_;
 };
 
@@ -79,7 +79,7 @@ class LocalKVStorage {
 
 class LocalStorage {
  public:
-  LocalStorage(ILocalStorageEnginePtr impl) : impl_(impl) {
+  LocalStorage(ILocalStorageBackendPtr impl) : impl_(impl) {
   }
 
   // Non-copyable
@@ -92,7 +92,7 @@ class LocalStorage {
   // TODO: remove
   LocalStorage() = default;
 
-  bool Has(const Bytes& key) {
+  bool Has(const Bytes& key) const {
     return impl_->Has(WithNamespace(key));
   }
 
@@ -109,13 +109,13 @@ class LocalStorage {
   }
 
  private:
-  Bytes WithNamespace(const Bytes& user_key) {
+  Bytes WithNamespace(const Bytes& user_key) const {
     static const std::string kNamespace = "local:";
     return kNamespace + user_key;
   }
 
  private:
-  ILocalStorageEnginePtr impl_;
+  ILocalStorageBackendPtr impl_;
 };
 
 }  // namespace whirl

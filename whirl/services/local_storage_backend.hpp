@@ -11,14 +11,14 @@ using Bytes = std::string;
 
 //////////////////////////////////////////////////////////////////////
 
-struct ILocalStorageEngine {
-  virtual ~ILocalStorageEngine() = default;
+struct ILocalStorageBackend {
+  virtual ~ILocalStorageBackend() = default;
 
   virtual void Set(const Bytes& key, const Bytes& value) = 0;
   virtual bool Has(const Bytes& key) const = 0;
   virtual Bytes Get(const Bytes& key) = 0;
 };
 
-using ILocalStorageEnginePtr = std::shared_ptr<ILocalStorageEngine>;
+using ILocalStorageBackendPtr = std::shared_ptr<ILocalStorageBackend>;
 
 }  // namespace whirl

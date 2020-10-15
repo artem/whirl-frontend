@@ -23,7 +23,7 @@ NodeServices Server::CreateNodeServices() {
   services.threads = ThreadsRuntime{executor, time_service};
   services.time_service = time_service;
 
-  services.storage_engine = std::make_shared<LocalStorageEngine>(storage_);
+  services.storage_engine = std::make_shared<LocalStorageBackend>(storage_);
   services.local_storage = LocalStorage(services.storage_engine);
 
   auto net_transport = std::make_shared<NetTransport>(heap_, network_);

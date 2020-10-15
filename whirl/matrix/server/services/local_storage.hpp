@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/local_storage_impl.hpp>
+#include <whirl/services/local_storage_backend.hpp>
 
 #include <whirl/matrix/common/copy.hpp>
 
@@ -43,9 +43,9 @@ class LocalBytesStorage {
 
 //////////////////////////////////////////////////////////////////////
 
-class LocalStorageEngine : public ILocalStorageEngine {
+class LocalStorageBackend : public ILocalStorageBackend {
  public:
-  LocalStorageEngine(LocalBytesStorage& impl) : impl_(impl) {
+  LocalStorageBackend(LocalBytesStorage& impl) : impl_(impl) {
   }
 
   Bytes Get(const Bytes& key) {
