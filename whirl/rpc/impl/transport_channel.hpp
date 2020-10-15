@@ -63,20 +63,7 @@ class RPCTransportChannel
   }
 
   Future<BytesValue> Call(const std::string& method,
-                          const BytesValue& input) override {
-    auto request = MakeRequest(method, input);
-    auto trace_id = request.trace_id;
-
-    auto future = request.promise.MakeFuture();
-
-    strand_->Execute(
-        [self = shared_from_this(), request = std::move(request)]() mutable {
-          self->SendRequest(std::move(request));
-        });
-
-    auto e = MakeTracingExecutor(executor_, trace_id);
-    return std::move(future).Via(std::move(e));
-  }
+                          const BytesValue& input) override;
 
   void Close() override {
     // TODO: fiber-oblivious
@@ -105,96 +92,17 @@ class RPCTransportChannel
   }
 
  private:
+  Request MakeRequest(const std::string& method, const BytesValue& input);
+
   // Inside strand executor
+  void SendRequest(Request request);
+  void ProcessResponse(const TransportMessage& message);
+  void LostPeer();
 
-  Request MakeRequest(const std::string& method, const BytesValue& input) {
-    Request request;
-
-    request.id = GenerateRequestId();
-    request.trace_id = GetOrGenerateNewTraceId(request.id);
-    request.method = method;
-    request.input = input;
-
-    return request;
-  }
-
-  void SendRequest(Request request) {
-    TLTraceContext tg{request.trace_id};
-
-    WHIRL_FMT_LOG("Request method '{}' on peer {}", request.method, peer_);
-
-    ITransportSocketPtr& socket = GetTransportSocket();
-
-    if (!socket->IsConnected()) {
-      // Fail RPC immediately
-      Fail(request, make_error_code(RPCErrorCode::TransportError));
-      return;
-    }
-
-    auto id = request.id;
-
-    socket->Send(Serialize<RPCRequestMessage>(
-        {request.id, request.trace_id, peer_, request.method, request.input}));
-
-    requests_.emplace(id, std::move(request));
-  }
-
-  void ProcessResponse(const TransportMessage& message) {
-    WHIRL_FMT_LOG("Process response message from {}", peer_);
-
-    auto response = ParseResponse(message);
-
-    auto request_it = requests_.find(response.request_id);
-
-    if (request_it == requests_.end()) {
-      WHIRL_FMT_LOG("Request with id {} not found", response.request_id);
-      return;  // Probably duplicated response message from transport layer?
-    }
-
-    Request request = std::move(request_it->second);
-    requests_.erase(request_it);
-
-    TLTraceContext tg{request.trace_id};
-
-    if (response.IsOk()) {
-      WHIRL_FMT_LOG("Request with id {} completed", response.request_id);
-      std::move(request.promise).SetValue(response.result);
-    } else {
-      // TODO: better error
-      Fail(request, make_error_code(response.error));
-    }
-  }
-
-  RPCResponseMessage ParseResponse(const TransportMessage& message) {
-    return Deserialize<RPCResponseMessage>(message);
-  }
-
-  void LostPeer() {
-    auto requests = std::move(requests_);
-    requests_.clear();
-
-    WHIRL_FMT_LOG(
-        "Transport connection to peer {} lost, fail {} pending request(s)",
-        peer_, requests.size());
-
-    // Next Call triggers reconnect
-    socket_.reset();
-
-    for (auto& [id, request] : requests) {
-      TLTraceContext tg{request.trace_id};
-      Fail(request, make_error_code(RPCErrorCode::TransportError));
-    }
-  }
+  RPCResponseMessage ParseResponse(const TransportMessage& message);
 
  private:
-  ITransportSocketPtr& GetTransportSocket() {
-    if (socket_) {
-      return socket_;
-    }
-    WHIRL_FMT_LOG("Reconnect to {}", peer_);
-    socket_ = transport_->ConnectTo(peer_, shared_from_this());
-    return socket_;
-  }
+  ITransportSocketPtr& GetTransportSocket();
 
   void Fail(Request& request, std::error_code e) {
     WHIRL_FMT_LOG("Fail request with id = {}", request.id);
