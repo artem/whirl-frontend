@@ -18,7 +18,7 @@
 
 #include <whirl/matrix/common/copy.hpp>
 
-#include <whirl/helpers/id.hpp>
+#include <wheels/support/id.hpp>
 
 #include <map>
 #include <vector>
@@ -158,7 +158,7 @@ class Network : public IActor {
 
   bool duplicates_{false};
 
-  IdGenerator endpoint_ids_;
+  wheels::support::IdGenerator endpoint_ids_;
 
   // Statistics
   size_t packets_sent_{0};
