@@ -31,7 +31,7 @@ class ThreadsRuntime {
   }
 
   void Yield() {
-    await::fibers::Yield();
+    await::fibers::self::Yield();
   }
 
   void SleepFor(Duration d) {

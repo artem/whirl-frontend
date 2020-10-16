@@ -14,11 +14,11 @@ namespace whirl::rpc {
 // Fiber context
 
 void SetThisFiberTraceId(TraceId id) {
-  await::fibers::SetLocal("rpc_trace_id", id);
+  await::fibers::self::SetLocal("rpc_trace_id", id);
 }
 
 std::optional<TraceId> TryGetThisFiberTraceId() {
-  return await::fibers::GetLocal("rpc_trace_id");
+  return await::fibers::self::GetLocal("rpc_trace_id");
 }
 
 //////////////////////////////////////////////////////////////////////

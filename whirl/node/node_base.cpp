@@ -15,7 +15,7 @@ rpc::IRPCChannelPtr NodeBase::MakeChannelTo(const std::string& peer) {
 
 // Main fiber routine
 void NodeBase::Main() {
-  await::fibers::SetName("main");
+  await::fibers::self::SetName("main");
 
   StartRPCServer();
   RegisterRPCMethods(services_.rpc_server);

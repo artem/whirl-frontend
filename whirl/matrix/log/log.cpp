@@ -26,11 +26,11 @@ static std::string ToWidth(const std::string& s, size_t width) {
 //////////////////////////////////////////////////////////////////////
 
 static std::string ThisFiberName() {
-  auto name = await::fibers::GetName();
+  auto name = await::fibers::self::GetName();
   if (name.has_value()) {
     return *name;
   } else {
-    return wheels::StringBuilder() << "T" << await::fibers::GetId();
+    return wheels::StringBuilder() << "T" << await::fibers::self::GetId();
   }
 }
 

@@ -101,7 +101,7 @@ class ClientBase : public INode {
 
  private:
   void Main() {
-    await::fibers::SetName("main");
+    await::fibers::self::SetName("main");
 
     RandomPause();
     ConnectToClusterNodes();
