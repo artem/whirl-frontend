@@ -64,16 +64,16 @@ class KVNode final: public NodeBase {
  protected:
   void RegisterRPCMethods(rpc::TRPCServer& rpc_server) override {
     rpc_server.RegisterMethod("Set",
-        [this](Key k, Value v) { Set(k, v); });
+                              [this](Key k, Value v) { Set(k, v); });
 
     rpc_server.RegisterMethod("Get",
-        [this](Key k) { return Get(k); });
+                              [this](Key k) { return Get(k); });
 
     rpc_server.RegisterMethod("Write",
-        [this](Key k, StampedValue v) { Write(k, v); });
+                              [this](Key k, StampedValue v) { Write(k, v); });
 
     rpc_server.RegisterMethod("Read",
-        [this](Key k) { return Read(k); });
+                              [this](Key k) { return Read(k); });
   }
 
   // RPC method handlers
@@ -172,6 +172,26 @@ class KVNode final: public NodeBase {
 
 //////////////////////////////////////////////////////////////////////
 
+class KVStub {
+ public:
+  KVStub(rpc::TRPCChannel& channel)
+      : channel_(channel) {
+  }
+
+  void Set(Key k, Value v) {
+    Await(channel_.Call("Set", k, v).As<void>()).ExpectOk();
+  }
+
+  Value Get(Key k) {
+    return Await(channel_.Call("Get", k).As<Value>()).Value();
+  }
+
+ private:
+  rpc::TRPCChannel& channel_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class KVClient final: public ClientBase {
  public:
   KVClient(NodeServices services, NodeConfig config)
@@ -179,15 +199,9 @@ class KVClient final: public ClientBase {
   }
 
  protected:
-  void Set(Key k, Value v) {
-    Await(Channel().Call("Set", k, v).As<void>()).ExpectOk();
-  }
-
-  Value Get(Key k) {
-    return Await(Channel().Call("Get", k).As<Value>()).Value();
-  }
-
   void MainThread() override {
+    KVStub kv(Channel());
+
     for (size_t i = 1; ; ++i) {
       // Печатаем текущее системное время
       NODE_LOG("Local wall time: {}", WallTimeNow());
@@ -197,12 +211,12 @@ class KVClient final: public ClientBase {
         // Запись случайного значения
         Value value = RandomNumber(1, 100);
         NODE_LOG("Execute Set({})", value);
-        Set("test", value);
+        kv.Set("test", value);
         NODE_LOG("Set completed");
       } else {
         // Чтение
         NODE_LOG("Execute Get(test)");
-        Value result = Get("test");
+        Value result = kv.Get("test");
         NODE_LOG("Get(test) -> {}", result);
       }
 
@@ -219,6 +233,8 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 void RunSimulation(size_t seed) {
   World world{seed};
+
+  //world.SetAdversary(RunAdversary);
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
@@ -244,15 +260,17 @@ void RunSimulation(size_t seed) {
   }
 }
 
-int main() {
-  static const size_t kIterations = 12345;
-
+void RunSimulations(size_t count) {
   std::mt19937 seeds{42};
 
-  for (size_t i = 1; i <= kIterations; ++i) {
+  for (size_t i = 1; i <= count; ++i) {
     RunSimulation(seeds());
     std::cout << "Progress: " << i << std::endl;
   }
+}
+
+int main() {
+  RunSimulations(1234);
 
   return 0;
 }
