@@ -42,6 +42,12 @@ histories::Recorder& GetHistoryRecorder() {
 
 //////////////////////////////////////////////////////////////////////
 
+std::vector<std::string> GetClusterAddresses() {
+  return World::Access()->ClusterAddresses();
+}
+
+//////////////////////////////////////////////////////////////////////
+
 size_t WorldStepNumber() {
   return World::Access()->CurrentStep();
 }
