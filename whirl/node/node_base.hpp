@@ -26,7 +26,7 @@ class NodeBase : public INode {
     services_.rpc_server.Start();
   }
 
-  rpc::IRPCChannelPtr MakeChannelTo(const std::string& peer);
+  rpc::IRPCChannelPtr MakeChannelTo(const std::string& peer_addr);
 
   void DiscoverCluster() {
     cluster_ = services_.discovery->GetCluster();

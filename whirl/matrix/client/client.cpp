@@ -9,8 +9,8 @@ namespace whirl {
 rpc::IRPCChannelPtr ClientBase::MakeClientChannel() {
   // Peer channels
   std::vector<rpc::IRPCChannelPtr> channels;
-  for (const auto& node : cluster_) {
-    channels.push_back(services_.rpc_client.MakeChannel(node));
+  for (const auto& addr : cluster_) {
+    channels.push_back(services_.rpc_client.MakeChannel(addr));
   }
 
   // Retries -> History -> Random -> Peers
@@ -20,6 +20,15 @@ rpc::IRPCChannelPtr ClientBase::MakeClientChannel() {
   auto retries = WithRetries(std::move(history), TimeService());
 
   return retries;
+}
+
+void ClientBase::Main() {
+  await::fibers::self::SetName("main");
+
+  RandomPause();
+  DiscoverCluster();
+  ConnectToClusterNodes();
+  MainThread();
 }
 
 }  // namespace whirl

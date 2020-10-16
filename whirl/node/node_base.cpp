@@ -6,8 +6,8 @@
 
 namespace whirl {
 
-rpc::IRPCChannelPtr NodeBase::MakeChannelTo(const std::string& peer) {
-  auto transport = services_.rpc_client.MakeChannel(peer);
+rpc::IRPCChannelPtr NodeBase::MakeChannelTo(const std::string& peer_addr) {
+  auto transport = services_.rpc_client.MakeChannel(peer_addr);
   auto log = MakeLoggingChannel(std::move(transport));
   auto retries = WithRetries(std::move(log), TimeService());
   return retries;
