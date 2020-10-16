@@ -36,6 +36,12 @@ IWorldBehaviourPtr GetWorldBehaviour() {
 
 //////////////////////////////////////////////////////////////////////
 
+histories::Recorder& GetHistoryRecorder() {
+  return World::Access()->HistoryRecorder();
+}
+
+//////////////////////////////////////////////////////////////////////
+
 size_t WorldStepNumber() {
   return World::Access()->CurrentStep();
 }

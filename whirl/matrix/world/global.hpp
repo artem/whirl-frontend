@@ -3,10 +3,13 @@
 #include <whirl/time.hpp>
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/world/behaviour.hpp>
+#include <whirl/matrix/history/recorder.hpp>
 
 #include <cstdlib>
 
 namespace whirl {
+
+// Global world services used by different components of simulation
 
 //////////////////////////////////////////////////////////////////////
 
@@ -23,15 +26,19 @@ RandomUInt GlobalRandomNumber(size_t lo, size_t hi);
 
 //////////////////////////////////////////////////////////////////////
 
-// Time
+// Global time
 
 TimePoint GlobalNow();
 
 //////////////////////////////////////////////////////////////////////
 
-// Behaviour
+// World behaviour
 
 IWorldBehaviourPtr GetWorldBehaviour();
+
+//////////////////////////////////////////////////////////////////////
+
+histories::Recorder& GetHistoryRecorder();
 
 //////////////////////////////////////////////////////////////////////
 

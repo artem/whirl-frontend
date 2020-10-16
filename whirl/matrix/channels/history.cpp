@@ -3,8 +3,7 @@
 #include <whirl/rpc/impl/channel.hpp>
 #include <whirl/rpc/impl/errors.hpp>
 
-#include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/history/recorder.hpp>
+#include <whirl/matrix/world/global.hpp>
 
 #include <await/futures/promise.hpp>
 
@@ -12,10 +11,6 @@ namespace whirl {
 
 using namespace rpc;
 using wheels::Result;
-
-static histories::Recorder& AccessHistoryRecorder() {
-  return World::Access()->HistoryRecorder();
-}
 
 class HistoryChannel : public rpc::IRPCChannel {
  public:
@@ -36,7 +31,7 @@ class HistoryChannel : public rpc::IRPCChannel {
 
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override {
-    size_t call_id = AccessHistoryRecorder().CallStarted(method, input);
+    size_t call_id = GetHistoryRecorder().CallStarted(method, input);
 
     auto f = impl_->Call(method, input);
 
@@ -57,7 +52,7 @@ class HistoryChannel : public rpc::IRPCChannel {
  private:
   static void HandleCallResult(size_t call_id,
                                const Result<BytesValue>& result) {
-    auto& recorder = AccessHistoryRecorder();
+    auto& recorder = GetHistoryRecorder();
 
     if (result.IsOk()) {
       recorder.CallCompleted(call_id, result.ValueUnsafe());
