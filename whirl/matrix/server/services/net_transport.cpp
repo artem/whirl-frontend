@@ -33,11 +33,12 @@ class LightTransportSocket : public ITransportSocket {
 
 //////////////////////////////////////////////////////////////////////
 
-void NetTransportServer::HandleMessage(const Message& message, LightNetSocket back) {
+void NetTransportServer::HandleMessage(const Message& message,
+                                       LightNetSocket back) {
   auto g = heap_.Use();
 
   handler_->HandleMessage(message,
-      std::make_shared<LightTransportSocket>(back, "?"));
+                          std::make_shared<LightTransportSocket>(back, "?"));
 }
 
 }  // namespace whirl

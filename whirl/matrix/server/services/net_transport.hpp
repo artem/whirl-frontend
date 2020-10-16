@@ -85,7 +85,6 @@ class NetTransportServer : public ITransportServer, public INetSocketHandler {
 
   void HandleMessage(const Message& message, LightNetSocket back) override;
 
-
   void HandleDisconnect() override {
     auto g = heap_.Use();
 
