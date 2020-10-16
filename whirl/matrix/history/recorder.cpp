@@ -18,17 +18,17 @@ Call RunningCall::MaybeCompleted() {
 
 //////////////////////////////////////////////////////////////////////
 
-size_t Recorder::CallStarted(const std::string& method,
+Recorder::Cookie Recorder::CallStarted(const std::string& method,
                              const std::string& input) {
   GlobalHeapScope g;
 
-  size_t id = ++call_id_;
+  Cookie id = ++next_cookie;
   running_calls_.emplace(id,
                          RunningCall{method, Arguments{input}, GlobalNow()});
   return id;
 }
 
-void Recorder::CallCompleted(size_t id, const std::string& output) {
+void Recorder::CallCompleted(Cookie id, const std::string& output) {
   GlobalHeapScope g;
 
   auto it = running_calls_.find(id);
@@ -39,7 +39,7 @@ void Recorder::CallCompleted(size_t id, const std::string& output) {
   completed_calls_.push_back(pending_call.CompleteWith(output));
 }
 
-void Recorder::CallMaybeCompleted(size_t id) {
+void Recorder::CallMaybeCompleted(Cookie id) {
   GlobalHeapScope g;
 
   auto it = running_calls_.find(id);
@@ -50,7 +50,7 @@ void Recorder::CallMaybeCompleted(size_t id) {
   completed_calls_.push_back(pending_call.MaybeCompleted());
 }
 
-void Recorder::Remove(size_t id) {
+void Recorder::Remove(Cookie id) {
   GlobalHeapScope g;
 
   running_calls_.erase(id);

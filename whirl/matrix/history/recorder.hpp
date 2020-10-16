@@ -18,17 +18,19 @@ struct RunningCall {
 
 class Recorder {
  public:
-  // Context: Server
-  size_t CallStarted(const std::string& method, const std::string& input);
+  using Cookie = size_t;
 
   // Context: Server
-  void CallCompleted(size_t id, const std::string& output);
+  Cookie CallStarted(const std::string& method, const std::string& input);
 
   // Context: Server
-  void CallMaybeCompleted(size_t id);
+  void CallCompleted(Cookie id, const std::string& output);
 
   // Context: Server
-  void Remove(size_t id);
+  void CallMaybeCompleted(Cookie id);
+
+  // Context: Server
+  void Remove(Cookie id);
 
   // Context: World
   void Stop();
@@ -39,8 +41,8 @@ class Recorder {
 
  private:
   std::vector<Call> completed_calls_;
-  size_t call_id_{0};
-  std::map<size_t, RunningCall> running_calls_;
+  Cookie next_cookie{0};
+  std::map<Cookie, RunningCall> running_calls_;
 };
 
 }  // namespace whirl::histories

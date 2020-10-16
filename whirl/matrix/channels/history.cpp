@@ -13,6 +13,8 @@ namespace whirl {
 using namespace rpc;
 using wheels::Result;
 
+using Cookie = histories::Recorder::Cookie;
+
 class HistoryChannel : public rpc::IRPCChannel {
  public:
   HistoryChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
@@ -32,29 +34,29 @@ class HistoryChannel : public rpc::IRPCChannel {
 
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override {
-    size_t call_id = GetHistoryRecorder().CallStarted(method, input);
+    size_t cookie = GetHistoryRecorder().CallStarted(method, input);
 
     auto f = impl_->Call(method, input);
 
-    auto record = [call_id](const Result<BytesValue>& result) mutable {
-      HandleCallResult(call_id, result);
+    auto record = [cookie](const Result<BytesValue>& result) mutable {
+      HandleCallResult(cookie, result);
     };
 
     return await::futures::SubscribeConst(std::move(f), std::move(record));
   }
 
  private:
-  static void HandleCallResult(size_t call_id,
+  static void HandleCallResult(Cookie cookie,
                                const Result<BytesValue>& result) {
     auto& recorder = GetHistoryRecorder();
 
     if (result.IsOk()) {
-      recorder.CallCompleted(call_id, result.ValueUnsafe());
+      recorder.CallCompleted(cookie, result.ValueUnsafe());
     } else {
       if (MaybeCompleted(result.GetErrorCode())) {
-        recorder.CallMaybeCompleted(call_id);
+        recorder.CallMaybeCompleted(cookie);
       } else {
-        recorder.Remove(call_id);
+        recorder.Remove(cookie);
       }
     }
   }
