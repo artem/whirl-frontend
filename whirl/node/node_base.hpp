@@ -3,8 +3,6 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
-#include <wheels/support/assert.hpp>
-
 namespace whirl {
 
 using rpc::TRPCChannel;
@@ -17,26 +15,13 @@ class NodeBase : public INode {
       : services_(std::move(services)), config_(std::move(config)) {
   }
 
-  void Start() override {
-    Threads().Spawn([this]() { Main(); });
-  }
+  void Start() override;
 
  private:
-  void StartRPCServer() {
-    services_.rpc_server.Start();
-  }
-
-  rpc::IRPCChannelPtr MakeChannelTo(const std::string& peer_addr);
-
-  void DiscoverCluster() {
-    cluster_ = services_.discovery->GetCluster();
-  }
-
-  void ConnectToPeers() {
-    for (const auto& peer : cluster_) {
-      channels_.push_back(MakeChannelTo(peer));
-    }
-  }
+  void StartRPCServer();
+  void DiscoverCluster();
+  rpc::IRPCChannelPtr MakeChannel(const std::string& peer_addr);
+  void ConnectToPeers();
 
  protected:
   // Me
@@ -134,8 +119,7 @@ class NodeBase : public INode {
 
  private:
   NodeServices services_;
-
-  NodeConfig config_;
+  const NodeConfig config_;
 
   std::vector<std::string> cluster_;
   std::vector<TRPCChannel> channels_;

@@ -104,8 +104,7 @@ class ClientBase : public INode {
 
  private:
   NodeServices services_;
-
-  NodeConfig config_;
+  const NodeConfig config_;
 
   std::vector<std::string> cluster_;
   rpc::TRPCChannel channel_;
