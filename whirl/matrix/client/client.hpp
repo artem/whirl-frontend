@@ -6,8 +6,6 @@
 // TODO!
 #include <whirl/matrix/log/log.hpp>
 
-#include <whirl/matrix/common/copy.hpp>
-
 #include <wheels/support/assert.hpp>
 
 namespace whirl {
@@ -45,8 +43,8 @@ class ClientBase : public INode {
   }
 
   // Context: Server
-  std::string MyName() const {
-    return MakeCopy(config_.name);
+  const std::string& MyName() const {
+    return config_.name;
   }
 
   // Cluster

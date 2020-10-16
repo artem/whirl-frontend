@@ -9,6 +9,7 @@
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/network.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/common/copy.hpp>
 
 #include <whirl/matrix/server/services/local_storage.hpp>
 
@@ -131,7 +132,7 @@ class Server : public IActor {
 
     auto g = heap_.Use();
     auto services = CreateNodeServices();
-    node_ = node_factory_->CreateNode(std::move(services), config_);
+    node_ = node_factory_->CreateNode(std::move(services), MakeCopy(config_));
   }
 
   void Crash() {

@@ -3,8 +3,6 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
-#include <whirl/matrix/common/copy.hpp>
-
 #include <wheels/support/assert.hpp>
 
 namespace whirl {
@@ -47,8 +45,8 @@ class NodeBase : public INode {
     return config_.id;
   }
 
-  std::string MyName() const {
-    return MakeCopy(config_.name);
+  const std::string& MyName() const {
+    return config_.name;
   }
 
   // Cluster
