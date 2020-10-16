@@ -7,9 +7,6 @@
 
 #include <wheels/support/assert.hpp>
 
-#include <whirl/matrix/channels/logging.hpp>
-#include <whirl/matrix/channels/retries.hpp>
-
 namespace whirl {
 
 using rpc::TRPCChannel;
@@ -27,7 +24,7 @@ class NodeBase : public INode {
   }
 
   void Start() override {
-    services_.threads.Spawn([this]() { Main(); });
+    Threads().Spawn([this]() { Main(); });
   }
 
  private:
@@ -35,11 +32,11 @@ class NodeBase : public INode {
     services_.rpc_server.Start();
   }
 
+  rpc::IRPCChannelPtr MakeChannelTo(const std::string& peer);
+
   void ConnectToPeers() {
     for (const auto& peer : peers_) {
-      channels_.push_back(WithRetries(
-          MakeLoggingChannel(services_.rpc_client.MakeChannel(peer)),
-          TimeService()));
+      channels_.push_back(MakeChannelTo(peer));
     }
   }
 
@@ -134,14 +131,8 @@ class NodeBase : public INode {
   }
 
  private:
-  void Main() {
-    await::fibers::SetName("main");
-
-    StartRPCServer();
-    RegisterRPCMethods(services_.rpc_server);
-    ConnectToPeers();
-    MainThread();
-  }
+  // Main fiber routine
+  void Main();
 
  private:
   NodeServices services_;

@@ -3,10 +3,6 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
-#include <whirl/matrix/channels/random.hpp>
-#include <whirl/matrix/channels/retries.hpp>
-#include <whirl/matrix/channels/history.hpp>
-
 // TODO!
 #include <whirl/matrix/log/log.hpp>
 
@@ -35,20 +31,10 @@ class ClientBase : public INode {
     Threads().SleepFor(RandomNumber(50));
   }
 
-  rpc::IRPCChannelPtr MakeClientChannel() {
-    // Peer channels
-    std::vector<rpc::IRPCChannelPtr> channels;
-    for (const auto& node : nodes_) {
-      channels.push_back(services_.rpc_client.MakeChannel(node));
-    }
-    // Retries -> History -> Random -> Peers
-    return WithRetries(
-        MakeHistoryChannel(MakeRandomChannel(std::move(channels))),
-        TimeService());
-  }
+  rpc::IRPCChannelPtr MakeClientChannel();
 
   void ConnectToClusterNodes() {
-    channel_ = TRPCChannel(MakeClientChannel());
+    channel_ = rpc::TRPCChannel(MakeClientChannel());
   }
 
  protected:
@@ -69,7 +55,7 @@ class ClientBase : public INode {
     return nodes_.size();
   }
 
-  TRPCChannel& Channel() {
+  rpc::TRPCChannel& Channel() {
     return channel_;
   }
 
@@ -130,7 +116,7 @@ class ClientBase : public INode {
   NodeConfig config_;
 
   std::vector<std::string> nodes_;
-  TRPCChannel channel_;
+  rpc::TRPCChannel channel_;
 
  protected:
   Logger logger_{"Client"};
