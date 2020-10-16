@@ -6,6 +6,7 @@
 #include <whirl/matrix/world/global.hpp>
 
 #include <await/futures/promise.hpp>
+#include <await/futures/helpers.hpp>
 
 namespace whirl {
 
@@ -35,18 +36,11 @@ class HistoryChannel : public rpc::IRPCChannel {
 
     auto f = impl_->Call(method, input);
 
-    auto e = f.GetExecutor();
-
-    auto [_f, _p] = await::futures::MakeContract<BytesValue>();
-
-    auto record = [_p = std::move(_p),
-                   call_id](Result<BytesValue> result) mutable {
+    auto record = [call_id](const Result<BytesValue>& result) mutable {
       HandleCallResult(call_id, result);
-      std::move(_p).Set(std::move(result));
     };
 
-    std::move(f).Subscribe(std::move(record));
-    return std::move(_f).Via(e);
+    return await::futures::SubscribeConst(std::move(f), std::move(record));
   }
 
  private:
