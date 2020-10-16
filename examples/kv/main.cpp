@@ -172,9 +172,9 @@ class KVNode final: public NodeBase {
 
 //////////////////////////////////////////////////////////////////////
 
-class KVStub {
+class KVBlockingStub {
  public:
-  KVStub(rpc::TRPCChannel& channel)
+  KVBlockingStub(rpc::TRPCChannel& channel)
       : channel_(channel) {
   }
 
@@ -200,7 +200,7 @@ class KVClient final: public ClientBase {
 
  protected:
   void MainThread() override {
-    KVStub kv(Channel());
+    KVBlockingStub kv{Channel()};
 
     for (size_t i = 1; ; ++i) {
       // Печатаем текущее системное время
