@@ -115,7 +115,7 @@ class Server : public IActor {
   }
 
  private:
-  std::string MakeName(const NodeConfig& config) {
+  static std::string MakeName(const NodeConfig& config) {
     return wheels::StringBuilder() << "Server-" << config.id;
   }
 

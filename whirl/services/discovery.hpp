@@ -9,6 +9,7 @@ namespace whirl {
 struct IDiscoveryService {
   virtual ~IDiscoveryService() = default;
 
+  // List addresses of cluster servers
   virtual std::vector<std::string> GetCluster() = 0;
 };
 
