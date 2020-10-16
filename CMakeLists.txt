@@ -18,4 +18,8 @@ add_subdirectory(third_party)
 add_subdirectory(whirl)
 #add_subdirectory(tests)
 
-add_subdirectory(examples)
+option(WHIRL_EXAMPLES "Whirl examples" OFF)
+
+if(WHIRL_EXAMPLES)
+    add_subdirectory(examples)
+endif()
