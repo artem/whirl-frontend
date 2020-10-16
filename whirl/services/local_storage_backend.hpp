@@ -14,9 +14,9 @@ using Bytes = std::string;
 struct ILocalStorageBackend {
   virtual ~ILocalStorageBackend() = default;
 
-  virtual void Set(const Bytes& key, const Bytes& value) = 0;
-  virtual bool Has(const Bytes& key) const = 0;
-  virtual Bytes Get(const Bytes& key) = 0;
+  virtual void Set(const std::string& key, const Bytes& value) = 0;
+  virtual bool Has(const std::string& key) const = 0;
+  virtual Bytes Get(const std::string& key) = 0;
 };
 
 using ILocalStorageBackendPtr = std::shared_ptr<ILocalStorageBackend>;

@@ -12,7 +12,7 @@ namespace whirl {
 
 class LocalBytesStorage {
  public:
-  Bytes Get(const Bytes& key) {
+  Bytes Get(const std::string& key) {
     auto found = data_.find(key);
     if (found != data_.end()) {
       return MakeCopy(found->second);  // string allocated in node's heap
@@ -21,12 +21,12 @@ class LocalBytesStorage {
     }
   }
 
-  bool Has(const Bytes& key) const {
+  bool Has(const std::string& key) const {
     GlobalHeapScope g;
     return data_.count(key) != 0;
   }
 
-  void Set(const Bytes& key, const Bytes& value) {
+  void Set(const std::string& key, const Bytes& value) {
     GlobalHeapScope g;
 
     auto found = data_.find(key);
@@ -48,15 +48,15 @@ class LocalStorageBackend : public ILocalStorageBackend {
   LocalStorageBackend(LocalBytesStorage& impl) : impl_(impl) {
   }
 
-  Bytes Get(const Bytes& key) {
+  Bytes Get(const std::string& key) {
     return impl_.Get(key);
   }
 
-  bool Has(const Bytes& key) const {
+  bool Has(const std::string& key) const {
     return impl_.Has(key);
   }
 
-  void Set(const Bytes& key, const Bytes& value) {
+  void Set(const std::string& key, const Bytes& value) {
     impl_.Set(key, value);
   }
 

@@ -25,21 +25,21 @@ class LocalKVStorage {
   LocalKVStorage(const LocalKVStorage& that) = delete;
   LocalKVStorage& operator=(const LocalKVStorage& that) = delete;
 
-  void Set(const Bytes& key, const V& value) {
+  void Set(const std::string& key, const V& value) {
     auto value_bytes = Serialize(value);
     impl_->Set(WithNamespace(key), value_bytes);
   }
 
-  bool Has(const Bytes& key) const {
+  bool Has(const std::string& key) const {
     return impl_->Has(WithNamespace(key));
   }
 
-  V Get(const Bytes& key) {
+  V Get(const std::string& key) {
     auto value_bytes = impl_->Get(WithNamespace(key));
     return Deserialize<V>(value_bytes);
   }
 
-  std::optional<V> TryGet(const Bytes& key) {
+  std::optional<V> TryGet(const std::string& key) {
     if (Has(key)) {
       return Get(key);
     } else {
@@ -47,7 +47,7 @@ class LocalKVStorage {
     }
   }
 
-  V GetOr(const Bytes& key, V default_value) {
+  V GetOr(const std::string& key, V default_value) {
     if (Has(key)) {
       return Get(key);
     } else {
@@ -60,7 +60,7 @@ class LocalKVStorage {
     return std::string("kv:") + name + ":";
   }
 
-  Bytes WithNamespace(const Bytes& user_key) const {
+  std::string WithNamespace(const std::string& user_key) const {
     return namespace_ + user_key;
   }
 
@@ -92,24 +92,24 @@ class LocalStorage {
   // TODO: remove
   LocalStorage() = default;
 
-  bool Has(const Bytes& key) const {
+  bool Has(const std::string& key) const {
     return impl_->Has(WithNamespace(key));
   }
 
   template <typename U>
-  void Store(const Bytes& key, const U& data) {
+  void Store(const std::string& key, const U& data) {
     auto data_bytes = Serialize(data);
     impl_->Set(WithNamespace(key), data_bytes);
   }
 
   template <typename U>
-  U Load(const Bytes& key) {
+  U Load(const std::string& key) {
     auto data_bytes = impl_->Get(WithNamespace(key));
     return Deserialize<U>(data_bytes);
   }
 
  private:
-  Bytes WithNamespace(const Bytes& user_key) const {
+  std::string WithNamespace(const std::string& user_key) const {
     static const std::string kNamespace = "local:";
     return kNamespace + user_key;
   }
