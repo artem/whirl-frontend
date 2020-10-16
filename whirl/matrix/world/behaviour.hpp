@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/world/time.hpp>
+#include <whirl/time.hpp>
 
 #include <memory>
 

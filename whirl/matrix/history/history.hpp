@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/helpers/serialize.hpp>
-#include <whirl/matrix/world/time.hpp>
+#include <whirl/time.hpp>
 
 #include <string>
 #include <vector>

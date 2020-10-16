@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/time.hpp>
+
 #include <memory>
 
 namespace whirl {
