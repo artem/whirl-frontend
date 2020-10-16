@@ -39,14 +39,14 @@ class HistoryChannel : public rpc::IRPCChannel {
     auto f = impl_->Call(method, input);
 
     auto record = [cookie](const Result<BytesValue>& result) mutable {
-      HandleCallResult(cookie, result);
+      RecordCallResult(cookie, result);
     };
 
     return await::futures::SubscribeConst(std::move(f), std::move(record));
   }
 
  private:
-  static void HandleCallResult(Cookie cookie,
+  static void RecordCallResult(Cookie cookie,
                                const Result<BytesValue>& result) {
     auto& recorder = GetHistoryRecorder();
 
