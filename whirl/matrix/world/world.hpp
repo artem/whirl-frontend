@@ -78,20 +78,13 @@ class World {
     AddActor(&network_);
     Scope(network_)->Start();
 
-    std::vector<ServerAddress> cluster_addrs;
-    for (auto& server : cluster_) {
-      cluster_addrs.push_back(server.NetAddress());
-    }
-
     // Start servers
     for (auto& server : cluster_) {
-      server.SetCluster(cluster_addrs);
       Scope(server)->Start();
     }
 
     // Start clients
     for (auto& client : clients_) {
-      client.SetCluster(cluster_addrs);
       Scope(client)->Start();
     }
 
@@ -193,6 +186,17 @@ class World {
 
   histories::Recorder& HistoryRecorder() {
     return history_recorder_;
+  }
+
+  // Context: Server
+  std::vector<std::string> ClusterAddresses() {
+    std::vector<ServerAddress> addrs;
+    addrs.reserve(cluster_.size());
+
+    for (auto& server : cluster_) {
+      addrs.push_back(server.NetAddress());
+    }
+    return addrs;
   }
 
   const histories::History& History() const {

@@ -16,10 +16,6 @@ class ClientBase : public INode {
       : services_(std::move(services)), config_(std::move(config)) {
   }
 
-  void SetCluster(std::vector<std::string> nodes) override {
-    nodes_ = std::move(nodes);
-  }
-
   void Start() override {
     services_.threads.Spawn([this]() { Main(); });
   }
@@ -30,6 +26,10 @@ class ClientBase : public INode {
   }
 
   rpc::IRPCChannelPtr MakeClientChannel();
+
+  void DiscoverCluster() {
+    cluster_ = services_.discovery->GetCluster();
+  }
 
   void ConnectToClusterNodes() {
     channel_ = rpc::TRPCChannel(MakeClientChannel());
@@ -50,7 +50,7 @@ class ClientBase : public INode {
   // Cluster
 
   size_t NodeCount() const {
-    return nodes_.size();
+    return cluster_.size();
   }
 
   rpc::TRPCChannel& Channel() {
@@ -104,6 +104,7 @@ class ClientBase : public INode {
     await::fibers::self::SetName("main");
 
     RandomPause();
+    DiscoverCluster();
     ConnectToClusterNodes();
     MainThread();
   }
@@ -113,7 +114,7 @@ class ClientBase : public INode {
 
   NodeConfig config_;
 
-  std::vector<std::string> nodes_;
+  std::vector<std::string> cluster_;
   rpc::TRPCChannel channel_;
 
  protected:

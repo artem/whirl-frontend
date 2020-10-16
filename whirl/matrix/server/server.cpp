@@ -10,6 +10,7 @@
 #include <whirl/matrix/server/services/random.hpp>
 #include <whirl/matrix/server/services/net_transport.hpp>
 #include <whirl/matrix/server/services/logger.hpp>
+#include <whirl/matrix/server/services/discovery.hpp>
 
 namespace whirl {
 
@@ -27,6 +28,8 @@ NodeServices Server::CreateNodeServices() {
   services.local_storage = LocalStorage(services.storage_engine);
 
   auto net_transport = std::make_shared<NetTransport>(heap_, network_);
+
+  services.discovery = std::make_shared<DiscoveryService>();
 
   services.rpc_server = rpc::TRPCServer(net_transport, executor);
   services.rpc_client = rpc::TRPCClient(net_transport, executor);

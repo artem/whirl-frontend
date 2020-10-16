@@ -9,16 +9,11 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-using Peers = std::vector<std::string>;
-
-//////////////////////////////////////////////////////////////////////
-
-// Program running on physical machine
+// Program running on physical server
 
 struct INode {
   virtual ~INode() = default;
   virtual void Start() = 0;
-  virtual void SetCluster(Peers peers) = 0;
 };
 
 using INodePtr = std::unique_ptr<INode>;

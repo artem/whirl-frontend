@@ -17,10 +17,6 @@ class NodeBase : public INode {
       : services_(std::move(services)), config_(std::move(config)) {
   }
 
-  void SetCluster(std::vector<std::string> peers) override {
-    peers_ = std::move(peers);
-  }
-
   void Start() override {
     Threads().Spawn([this]() { Main(); });
   }
@@ -32,8 +28,12 @@ class NodeBase : public INode {
 
   rpc::IRPCChannelPtr MakeChannelTo(const std::string& peer);
 
+  void DiscoverCluster() {
+    cluster_ = services_.discovery->GetCluster();
+  }
+
   void ConnectToPeers() {
-    for (const auto& peer : peers_) {
+    for (const auto& peer : cluster_) {
       channels_.push_back(MakeChannelTo(peer));
     }
   }
@@ -52,15 +52,15 @@ class NodeBase : public INode {
   // Cluster
 
   size_t PeerCount() const {
-    return peers_.size();
+    return cluster_.size();
   }
 
   const std::vector<std::string>& Peers() const {
-    return peers_;
+    return cluster_;
   }
 
   const std::string& PeerName(size_t index) const {
-    return peers_.at(index);
+    return cluster_.at(index);
   }
 
   TRPCChannel& PeerChannel(size_t index) {
@@ -137,7 +137,7 @@ class NodeBase : public INode {
 
   NodeConfig config_;
 
-  std::vector<std::string> peers_;
+  std::vector<std::string> cluster_;
   std::vector<TRPCChannel> channels_;
 };
 

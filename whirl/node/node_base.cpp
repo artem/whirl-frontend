@@ -19,6 +19,7 @@ void NodeBase::Main() {
 
   StartRPCServer();
   RegisterRPCMethods(services_.rpc_server);
+  DiscoverCluster();
   ConnectToPeers();
   MainThread();
 }

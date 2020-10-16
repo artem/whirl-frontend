@@ -74,16 +74,10 @@ class Server : public IActor {
     wall_time_clock_.AdjustOffset();
   }
 
-  void SetCluster(std::vector<ServerAddress> peers) {
-    peers_ = std::move(peers);
-  }
-
   void Start() override {
     WHIRL_LOG("Start node at server " << NetAddress());
 
     auto g = heap_.Use();
-    // Copy peers!
-    node_->SetCluster(peers_);
     node_->Start();
   }
 
@@ -159,7 +153,6 @@ class Server : public IActor {
   std::string name_;
 
   ProcessNetwork network_;
-  std::vector<ServerAddress> peers_;
 
   LocalWallTimeClock wall_time_clock_;
   LocalMonotonicClock monotonic_clock_;

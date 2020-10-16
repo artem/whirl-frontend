@@ -8,6 +8,7 @@
 #include <whirl/services/true_time.hpp>
 #include <whirl/services/filesystem.hpp>
 #include <whirl/services/logger.hpp>
+#include <whirl/services/discovery.hpp>
 
 #include <whirl/rpc/use/server.hpp>
 #include <whirl/rpc/use/client.hpp>
@@ -17,6 +18,8 @@ namespace whirl {
 struct NodeServices {
   ThreadsRuntime threads;
   ITimeServicePtr time_service;
+
+  IDiscoveryPtr discovery;
 
   rpc::TRPCServer rpc_server;
   rpc::TRPCClient rpc_client;

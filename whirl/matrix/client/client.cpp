@@ -9,7 +9,7 @@ namespace whirl {
 rpc::IRPCChannelPtr ClientBase::MakeClientChannel() {
   // Peer channels
   std::vector<rpc::IRPCChannelPtr> channels;
-  for (const auto& node : nodes_) {
+  for (const auto& node : cluster_) {
     channels.push_back(services_.rpc_client.MakeChannel(node));
   }
 
