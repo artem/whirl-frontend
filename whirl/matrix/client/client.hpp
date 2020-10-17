@@ -17,7 +17,7 @@ class ClientBase : public INode {
   }
 
   void Start() override {
-    services_.threads.Spawn([this]() { Main(); });
+    Threads().Spawn([this]() { Main(); });
   }
 
  private:
