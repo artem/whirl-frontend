@@ -10,8 +10,6 @@
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>
 
-#include <vector>
-
 namespace whirl {
 
 static Logger logger_{"Logging channel"};
