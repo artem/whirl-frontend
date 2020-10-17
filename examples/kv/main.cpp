@@ -8,9 +8,12 @@
 #include <whirl/matrix/history/checker/check.hpp>
 #include <whirl/matrix/history/models/kv.hpp>
 
+#include <await/fibers/core/id.hpp>
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/futures/combine/quorum.hpp>
+
+#include <whirl/rpc/impl/id.hpp>
 
 #include <whirl/helpers/serialize.hpp>
 
@@ -232,6 +235,9 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 //////////////////////////////////////////////////////////////////////
 
 void RunSimulation(size_t seed) {
+  await::fibers::ResetIds();
+  whirl::rpc::ResetIds();
+
   World world{seed};
 
   //world.SetAdversary(RunAdversary);

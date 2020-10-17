@@ -4,10 +4,14 @@
 
 namespace whirl::rpc {
 
-RPCId GenerateRequestId() {
-  static wheels::support::IdGenerator ids_;
+static wheels::support::IdGenerator ids_;
 
+RPCId GenerateRequestId() {
   return ids_.NextId();
+}
+
+void ResetIds() {
+  ids_.Reset();
 }
 
 }  // namespace whirl::rpc
