@@ -8,9 +8,12 @@
 #include <whirl/matrix/history/checker/check.hpp>
 #include <whirl/matrix/history/models/kv.hpp>
 
+#include <await/fibers/core/id.hpp>
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/futures/combine/quorum.hpp>
+
+#include <whirl/rpc/impl/id.hpp>
 
 #include <whirl/helpers/serialize.hpp>
 
@@ -64,16 +67,16 @@ class KVNode final: public NodeBase {
  protected:
   void RegisterRPCMethods(rpc::TRPCServer& rpc_server) override {
     rpc_server.RegisterMethod("Set",
-        [this](Key k, Value v) { Set(k, v); });
+                              [this](Key k, Value v) { Set(k, v); });
 
     rpc_server.RegisterMethod("Get",
-        [this](Key k) { return Get(k); });
+                              [this](Key k) { return Get(k); });
 
     rpc_server.RegisterMethod("Write",
-        [this](Key k, StampedValue v) { Write(k, v); });
+                              [this](Key k, StampedValue v) { Write(k, v); });
 
     rpc_server.RegisterMethod("Read",
-        [this](Key k) { return Read(k); });
+                              [this](Key k) { return Read(k); });
   }
 
   // RPC method handlers
@@ -172,10 +175,10 @@ class KVNode final: public NodeBase {
 
 //////////////////////////////////////////////////////////////////////
 
-class KVStub {
+class KVBlockingStub {
  public:
-  KVStub(rpc::TRPCChannel& channel)
-    : channel_(channel) {
+  KVBlockingStub(rpc::TRPCChannel& channel)
+      : channel_(channel) {
   }
 
   void Set(Key k, Value v) {
@@ -200,7 +203,7 @@ class KVClient final: public ClientBase {
 
  protected:
   void MainThread() override {
-    KVStub kv(Channel());
+    KVBlockingStub kv{Channel()};
 
     for (size_t i = 1; ; ++i) {
       // Печатаем текущее системное время
@@ -232,6 +235,9 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 //////////////////////////////////////////////////////////////////////
 
 void RunSimulation(size_t seed) {
+  await::fibers::ResetIds();
+  whirl::rpc::ResetIds();
+
   World world{seed};
 
   //world.SetAdversary(RunAdversary);

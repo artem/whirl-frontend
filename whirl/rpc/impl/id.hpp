@@ -8,4 +8,6 @@ using RPCId = size_t;
 
 RPCId GenerateRequestId();
 
+void ResetIds();
+
 }  // namespace whirl::rpc
