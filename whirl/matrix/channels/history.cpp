@@ -34,7 +34,7 @@ class HistoryChannel : public rpc::IRPCChannel {
 
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override {
-    size_t cookie = GetHistoryRecorder().CallStarted(method, input);
+    auto cookie = GetHistoryRecorder().CallStarted(method, input);
 
     auto f = impl_->Call(method, input);
 
