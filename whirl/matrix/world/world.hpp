@@ -165,7 +165,7 @@ class World {
 
     history_recorder_.Stop();
 
-    WHIRL_LOG("World stopped");
+    WHIRL_LOG("Simulation stopped");
   }
 
   size_t NumServers() const {
