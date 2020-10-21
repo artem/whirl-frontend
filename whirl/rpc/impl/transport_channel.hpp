@@ -45,11 +45,11 @@ class RPCTransportChannel
   using Requests = std::map<RPCId, Request>;
 
  public:
-  RPCTransportChannel(ITransportPtr t, IExecutorPtr e, std::string peer)
+  RPCTransportChannel(ITransportPtr t, IExecutorPtr e, TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
-        strand_(await::executors::MakeStrand(std::move(e))),
-        peer_(peer) {
+        peer_(peer),
+        strand_(await::executors::MakeStrand(e)) {
   }
 
   ~RPCTransportChannel() {
@@ -104,20 +104,16 @@ class RPCTransportChannel
  private:
   ITransportSocketPtr& GetTransportSocket();
 
-  void Fail(Request& request, std::error_code e) {
-    WHIRL_FMT_LOG("Fail request with id = {}", request.id);
-    std::move(request.promise).SetError(wheels::Error(e));
-  }
+  void Fail(Request& request, std::error_code e);
 
  private:
   ITransportPtr transport_;
   IExecutorPtr executor_;  // For callbacks
+
+  const TransportAddress peer_;
+
   IExecutorPtr strand_;
-
-  const std::string peer_;
-
   ITransportSocketPtr socket_{nullptr};
-
   Requests requests_;
 
   Logger logger_{"RPC channel"};

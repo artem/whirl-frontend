@@ -108,4 +108,9 @@ ITransportSocketPtr& RPCTransportChannel::GetTransportSocket() {
   return socket_;
 }
 
+void RPCTransportChannel::Fail(Request& request, std::error_code e) {
+  WHIRL_FMT_LOG("Fail request with id = {}", request.id);
+  std::move(request.promise).SetError(wheels::Error(e));
+}
+
 }  // namespace whirl::rpc
