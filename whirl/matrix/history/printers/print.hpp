@@ -3,6 +3,7 @@
 #include <whirl/matrix/history/history.hpp>
 
 #include <string>
+#include <set>
 
 namespace whirl::histories {
 

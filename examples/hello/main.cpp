@@ -2,8 +2,8 @@
 #include <whirl/node/logging.hpp>
 
 // Simulation
-#include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/world/world.hpp>
+#include <whirl/matrix/world/faults.hpp>
 #include <whirl/matrix/world/global.hpp>
 
 #include <await/fibers/sync/future.hpp>
@@ -38,11 +38,12 @@ class ChattyNode final: public NodeBase {
  protected:
   void RegisterRPCMethods(TRPCServer& rpc_server) override {
     rpc_server.RegisterMethod("Hello",
-        [this](std::string who) { Hello(who); });
+        [this](std::string who) { return Ping(who); });
   }
 
-  void Hello(std::string who) {
-    NODE_LOG("Hello from {}", who);
+  std::string Ping(std::string who) {
+    NODE_LOG("Ping from {}", who);
+    return "Pong";
   }
 
   void MainThread() override {
@@ -68,7 +69,7 @@ class ChattyNode final: public NodeBase {
       LocalStorage().Store<int>("progress", i);
       NODE_LOG("Save step: {}", i);
 
-      Yield();
+      Threads().Yield();
     }
   }
 };
@@ -77,12 +78,12 @@ class ChattyNode final: public NodeBase {
 
 class TestAdversary {
  public:
-  TestAdversary(ThreadsRuntime& runtime, WorldView world)
-     : runtime_(runtime), world_(world) {
+  TestAdversary(ThreadsRuntime& runtime)
+     : runtime_(runtime) {
   }
 
   void Run() {
-    for (size_t i = 0; i < world_.servers.size(); ++i) {
+    for (size_t i = 0; i < ServerCount(); ++i) {
       runtime_.Spawn([this, i]() { AbuseServer(i); });
     }
     runtime_.Spawn([this]() { AbuseNetwork(); });
@@ -95,8 +96,6 @@ class TestAdversary {
   }
 
   void AbuseServer(size_t index) {
-    Server& target = world_.servers[index];
-
     for (size_t i = 0; ; ++i) {
 
       if (GlobalNow() > 400) {
@@ -106,24 +105,24 @@ class TestAdversary {
 
       // Pause server
       if (whirl::GlobalRandomNumber() % 17 == 0) {
-        WHIRL_FMT_LOG("FAULT: Pause {}", target.Name());
-        target.Pause();
+        WHIRL_FMT_LOG("FAULT: Pause {}", GetServerName(index));
+        PauseServer(index);
         runtime_.SleepFor(whirl::GlobalRandomNumber() % 20);
-        WHIRL_FMT_LOG("FAULT: Resume {}", target.Name());
-        target.Resume();
+        WHIRL_FMT_LOG("FAULT: Resume {}", GetServerName(index));
+        ResumeServer(index);
         continue;
       }
 
       // Restart server
       if (whirl::GlobalRandomNumber() % 13 == 0) {
-        WHIRL_FMT_LOG("FAULT: Reboot {}", target.Name());
-        target.Reboot();
+        WHIRL_FMT_LOG("FAULT: Reboot {}", GetServerName(index));
+        RebootServer(index);
       }
 
       // Adjust wall time clock
       if (whirl::GlobalRandomNumber() % 100 == 0) {
-        WHIRL_FMT_LOG("FAULT: Adjust wall time at {}", target.Name());
-        target.AdjustWallTime();
+        WHIRL_FMT_LOG("FAULT: Adjust wall time at {}", GetServerName(index));
+        AdjustServerClock(index);
       }
 
       // Just wait some time
@@ -132,17 +131,16 @@ class TestAdversary {
   }
 
   void AbuseNetwork() {
-    // Mess with world_.network
+    // Mess with network
   }
 
  private:
   ThreadsRuntime& runtime_;
-  WorldView world_;
   Logger logger_{"Adversary"};
 };
 
-void RunAdversary(ThreadsRuntime& runtime, WorldView world) {
-  TestAdversary(runtime, world).Run();
+void Adversary(ThreadsRuntime& runtime) {
+  TestAdversary(runtime).Run();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -154,12 +152,12 @@ int main() {
   world.AddServer(node);
   world.AddServer(node);
   world.AddServer(node);
-  world.SetAdversary(RunAdversary);
+  world.SetAdversary(Adversary);
   world.Start();
 
   wheels::StopWatch stop_watch;
 
-  world.MakeSteps(100000);
+  world.MakeSteps(1000);
 
   auto elapsed = stop_watch.Elapsed();
 

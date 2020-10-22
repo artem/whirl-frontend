@@ -2,31 +2,19 @@
 #include <whirl/node/logging.hpp>
 
 // Simulation
-#include <whirl/matrix/client/client.hpp>
-#include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/client/client.hpp>
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
-#include <await/fibers/sync/thread_like.hpp>
-
-#include <wheels/support/random.hpp>
-#include <wheels/support/string_builder.hpp>
-#include <wheels/support/time.hpp>
 
 #include <cereal/types/string.hpp>
 
 #include <chrono>
 #include <cstdlib>
 
-using namespace std::chrono_literals;
-
 using namespace await::fibers;
 using namespace whirl;
-
-using wheels::Result;
-using wheels::Status;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -64,13 +52,13 @@ class ClientNode final: public ClientBase {
   void MainThread() override {
     while (true) {
       // Печатаем текущее системное время
-      WHIRL_LOG("Local wall time: " << WallTimeNow());
+      NODE_LOG("Local wall time: {}", WallTimeNow());
 
       // Получаем RPC канал до случайного узла кластера
       auto& channel = Channel();
 
       // Печатаем сетевой адрес узла, к которому полетит запрос
-      WHIRL_LOG("Make RPC to server " << channel.Peer());
+      NODE_LOG("Make RPC to server {}", channel.Peer());
 
       // Выполняем RPC
       // Имя метода - "Echo", аргумент - имя текущего клиента
@@ -103,9 +91,7 @@ int main() {
 
   // Cluster nodes
   auto node = MakeNode<EchoServerNode>();
-  world.AddServer(node);
-  world.AddServer(node);
-  world.AddServer(node);
+  world.AddServers(3, node);
 
   // Clients
   auto client = MakeNode<ClientNode>();
