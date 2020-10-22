@@ -10,6 +10,23 @@ namespace whirl::histories {
 
 static const size_t kUnitLength = 3;
 
+inline std::string PrintLabels(const CallLabels& labels) {
+  if (labels.empty()) {
+    return "";
+  }
+
+  std::stringstream out;
+  out << "{";
+  for (size_t i = 0; i < labels.size(); ++i) {
+    out << labels[i];
+    if (i + 1 < labels.size()) {
+      out << ", ";
+    }
+  }
+  out << "}";
+  return out.str();
+}
+
 inline std::string MakeSpace(TimePoint start_ts) {
   return std::string(start_ts * kUnitLength, ' ');
 };
@@ -61,7 +78,7 @@ void Print(const History& history) {
     }
 
     std::cout << MakeSpace(start_ts) << (i + 1) << ". "
-              << CallPrinter::Print(call) << std::endl;
+              << CallPrinter::Print(call) << "\t" << PrintLabels(call.labels) << std::endl;
 
     std::cout << MakeSpace(start_ts)
               << MakeCallSegment(start_ts, end_ts, call.IsCompleted())

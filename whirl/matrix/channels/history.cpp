@@ -2,6 +2,7 @@
 
 #include <whirl/rpc/impl/channel.hpp>
 #include <whirl/rpc/impl/errors.hpp>
+#include <whirl/rpc/impl/trace.hpp>
 
 #include <whirl/matrix/world/global.hpp>
 
@@ -49,6 +50,11 @@ class HistoryChannel : public rpc::IRPCChannel {
   static void RecordCallResult(Cookie cookie,
                                const Result<BytesValue>& result) {
     auto& recorder = GetHistoryRecorder();
+
+    auto trace_id = TryGetCurrentTraceId();
+    if (trace_id.has_value()) {
+      recorder.AddLabel(cookie, *trace_id);
+    }
 
     if (result.IsOk()) {
       recorder.CallCompleted(cookie, result.ValueUnsafe());

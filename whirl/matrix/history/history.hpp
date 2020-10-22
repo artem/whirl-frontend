@@ -61,12 +61,17 @@ class Arguments {
 
 //////////////////////////////////////////////////////////////////////
 
+using CallLabels = std::vector<std::string>;
+
+//////////////////////////////////////////////////////////////////////
+
 struct Call {
   std::string method;
   Arguments arguments;
   Value result;
   TimePoint start_time;
   std::optional<TimePoint> end_time;
+  CallLabels labels;
 
   bool IsCompleted() const {
     return end_time.has_value();

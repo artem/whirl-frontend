@@ -12,10 +12,13 @@ class Recorder {
     std::string method;
     Arguments arguments;
     TimePoint start_time;
+    CallLabels labels;
   };
 
  public:
   using Cookie = size_t;
+
+  void AddLabel(Cookie id, const std::string& label);
 
   // Context: Server
   Cookie CallStarted(const std::string& method, const std::string& input);

@@ -9,11 +9,11 @@ namespace whirl::histories {
 //////////////////////////////////////////////////////////////////////
 
 Call Recorder::Complete(const RunningCall& call, Value result) {
-  return Call{call.method, call.arguments, result, call.start_time, GlobalNow()};
+  return Call{call.method, call.arguments, result, call.start_time, GlobalNow(), call.labels};
 }
 
 Call Recorder::MaybeComplete(const RunningCall& call) {
-  return Call{call.method, call.arguments, Value::Void(), call.start_time, std::nullopt};
+  return Call{call.method, call.arguments, Value::Void(), call.start_time, std::nullopt, call.labels};
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -24,8 +24,16 @@ Recorder::Cookie Recorder::CallStarted(const std::string& method,
 
   Cookie id = ++next_cookie;
   running_calls_.emplace(id,
-                         RunningCall{method, Arguments{input}, GlobalNow()});
+                         RunningCall{method, Arguments{input}, GlobalNow(), {}});
   return id;
+}
+
+void Recorder::AddLabel(Cookie id, const std::string& label) {
+  GlobalHeapScope g;
+
+  auto it = running_calls_.find(id);
+  WHEELS_VERIFY(it != running_calls_.end(), "Call not found");
+  it->second.labels.push_back(label);
 }
 
 void Recorder::CallCompleted(Cookie id, const std::string& output) {
