@@ -27,7 +27,7 @@ inline std::string MakeCallSegment(TimePoint start, TimePoint end,
 //////////////////////////////////////////////////////////////////////
 
 template <typename CallPrinter>
-void Print(History history) {
+void Print(const History& history) {
   // Collect time points
 
   std::set<TimePoint> tps;
