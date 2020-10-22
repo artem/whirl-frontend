@@ -20,6 +20,10 @@ class Recorder {
 
   void AddLabel(Cookie id, const std::string& label);
 
+  size_t NumCompletedCalls() const {
+    return completed_calls_.size();
+  }
+
   // Context: Server
   Cookie CallStarted(const std::string& method, const std::string& input);
 

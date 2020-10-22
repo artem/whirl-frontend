@@ -55,6 +55,10 @@ void World::Stop() {
   impl_->Stop();
 }
 
+size_t World::NumCompletedCalls() const {
+  return impl_->HistoryRecorder().NumCompletedCalls();
+}
+
 const histories::History& World::History() const {
   return impl_->History();
 }

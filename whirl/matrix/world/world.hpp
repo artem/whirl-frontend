@@ -34,8 +34,9 @@ class World {
 
   bool Step();
   void MakeSteps(size_t count);
-
   void Stop();
+
+  size_t NumCompletedCalls() const;
 
   const histories::History& History() const;
 

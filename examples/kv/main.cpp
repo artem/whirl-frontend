@@ -242,8 +242,6 @@ void RunSimulation(size_t seed) {
 
   World world{seed};
 
-  //world.SetAdversary(RunAdversary);
-
   // Cluster nodes
   auto node = MakeNode<KVNode>();
   world.AddServers(3, node);
@@ -253,7 +251,9 @@ void RunSimulation(size_t seed) {
   world.AddClients(3, client);
 
   world.Start();
-  world.MakeSteps(503);
+  while (world.NumCompletedCalls() < 7) {
+    world.Step();
+  }
   world.Stop();
 
   const auto history = world.History();
