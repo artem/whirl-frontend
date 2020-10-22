@@ -57,7 +57,7 @@ class TracingExecutor : public IExecutor {
 
   void Execute(Task&& task) {
     auto wrapper = [id = id_, task = std::move(task)]() mutable {
-      TLTraceContext context(id);
+      TLTraceContext context{id};
       task();
     };
     e_->Execute(std::move(wrapper));

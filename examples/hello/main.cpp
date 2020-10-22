@@ -119,7 +119,7 @@ class TestAdversary {
       // Adjust wall time clock
       if (whirl::GlobalRandomNumber() % 100 == 0) {
         WHIRL_FMT_LOG("FAULT: Adjust wall time at {}", GetServerName(index));
-        server.AdjustWallTime();
+        server.AdjustWallClock();
       }
 
       // Just wait some time

@@ -20,8 +20,7 @@ History Prepare(const History& history) {
 
 template <typename Model>
 bool LinCheck(const History& history) {
-  return LinCheckBrute<Model>(
-      Prepare<Model>(history));
+  return LinCheckBrute<Model>(Prepare<Model>(history));
 }
 
 }  // namespace whirl::histories

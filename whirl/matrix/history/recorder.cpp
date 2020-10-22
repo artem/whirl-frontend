@@ -9,22 +9,24 @@ namespace whirl::histories {
 //////////////////////////////////////////////////////////////////////
 
 Call Recorder::Complete(const RunningCall& call, Value result) {
-  return Call{call.method, call.arguments, result, call.start_time, GlobalNow(), call.labels};
+  return Call{call.method,     call.arguments, result,
+              call.start_time, GlobalNow(),    call.labels};
 }
 
 Call Recorder::MaybeComplete(const RunningCall& call) {
-  return Call{call.method, call.arguments, Value::Void(), call.start_time, std::nullopt, call.labels};
+  return Call{call.method,     call.arguments, Value::Void(),
+              call.start_time, std::nullopt,   call.labels};
 }
 
 //////////////////////////////////////////////////////////////////////
 
 Recorder::Cookie Recorder::CallStarted(const std::string& method,
-                             const std::string& input) {
+                                       const std::string& input) {
   GlobalHeapScope g;
 
-  Cookie id = ++next_cookie;
-  running_calls_.emplace(id,
-                         RunningCall{method, Arguments{input}, GlobalNow(), {}});
+  Cookie id = ++next_id_;
+  running_calls_.emplace(
+      id, RunningCall{method, Arguments{input}, GlobalNow(), {}});
   return id;
 }
 
@@ -58,13 +60,13 @@ void Recorder::CallMaybeCompleted(Cookie id) {
   completed_calls_.push_back(MaybeComplete(pending_call));
 }
 
-void Recorder::Remove(Cookie id) {
+void Recorder::RemoveCall(Cookie id) {
   GlobalHeapScope g;
 
   running_calls_.erase(id);
 }
 
-void Recorder::Stop() {
+void Recorder::Finalize() {
   for (auto& [_, call] : running_calls_) {
     completed_calls_.push_back(MaybeComplete(call));
   }

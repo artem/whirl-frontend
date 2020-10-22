@@ -4,8 +4,7 @@
 
 namespace whirl {
 
-World::World(size_t seed)
-  : impl_(std::make_unique<WorldImpl>(seed)) {
+World::World(size_t seed) : impl_(std::make_unique<WorldImpl>(seed)) {
 }
 
 World::~World() {
@@ -53,6 +52,10 @@ void World::MakeSteps(size_t count) {
 
 void World::Stop() {
   impl_->Stop();
+}
+
+size_t World::NumCompletedCalls() const {
+  return impl_->HistoryRecorder().NumCompletedCalls();
 }
 
 const histories::History& World::History() const {

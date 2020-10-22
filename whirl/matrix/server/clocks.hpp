@@ -7,9 +7,9 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class LocalWallTimeClock {
+class LocalWallClock {
  public:
-  LocalWallTimeClock() : offset_(InitLocalClockOffset()) {
+  LocalWallClock() : offset_(InitLocalClockOffset()) {
   }
 
   void AdjustOffset() {

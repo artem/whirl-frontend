@@ -236,24 +236,28 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////
 
+size_t NumberOfReplicas(size_t seed) {
+  return 3 + seed % 5;
+}
+
 void RunSimulation(size_t seed) {
   await::fibers::ResetIds();
   whirl::rpc::ResetIds();
 
   World world{seed};
 
-  //world.SetAdversary(RunAdversary);
-
   // Cluster nodes
   auto node = MakeNode<KVNode>();
-  world.AddServers(3, node);
+  world.AddServers(NumberOfReplicas(seed), node);
 
   // Clients
   auto client = MakeNode<KVClient>();
   world.AddClients(3, client);
 
   world.Start();
-  world.MakeSteps(503);
+  while (world.NumCompletedCalls() < 7) {
+    world.Step();
+  }
   world.Stop();
 
   const auto history = world.History();

@@ -2,11 +2,10 @@
 
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/server/server.hpp>
-#include <whirl/matrix/world/cluster.hpp>
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/actor_ctx.hpp>
-#include <whirl/matrix/adversary/adversary.hpp>
+#include <whirl/matrix/adversary/process.hpp>
 #include <whirl/matrix/world/random_source.hpp>
 #include <whirl/matrix/world/behaviour.hpp>
 #include <whirl/matrix/history/recorder.hpp>
@@ -153,7 +152,7 @@ class WorldImpl {
 
     actors_.clear();
 
-    history_recorder_.Stop();
+    history_recorder_.Finalize();
 
     WHIRL_LOG("Simulation stopped");
   }
@@ -267,6 +266,7 @@ class WorldImpl {
 
   // Actors
 
+  using Servers = std::deque<Server>;
   Servers cluster_;
   Servers clients_;
 

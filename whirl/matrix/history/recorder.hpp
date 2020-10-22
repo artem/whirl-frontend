@@ -18,7 +18,13 @@ class Recorder {
  public:
   using Cookie = size_t;
 
+  // Context: Server
   void AddLabel(Cookie id, const std::string& label);
+
+  // Context: Global
+  size_t NumCompletedCalls() const {
+    return completed_calls_.size();
+  }
 
   // Context: Server
   Cookie CallStarted(const std::string& method, const std::string& input);
@@ -30,11 +36,12 @@ class Recorder {
   void CallMaybeCompleted(Cookie id);
 
   // Context: Server
-  void Remove(Cookie id);
+  void RemoveCall(Cookie id);
 
   // Context: World
-  void Stop();
+  void Finalize();
 
+  // After Finalize
   const History& GetHistory() const {
     return completed_calls_;
   }
@@ -45,7 +52,7 @@ class Recorder {
 
  private:
   std::vector<Call> completed_calls_;
-  Cookie next_cookie{0};
+  Cookie next_id_{0};
   std::map<Cookie, RunningCall> running_calls_;
 };
 
