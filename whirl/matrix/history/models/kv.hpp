@@ -35,6 +35,10 @@ class KVStoreModel {
     State next;
   };
 
+  static State InitialState() {
+    return {};
+  }
+
   static Result Apply(const State& current, const std::string& method,
                       const Arguments& arguments) {
     if (method == "Set") {

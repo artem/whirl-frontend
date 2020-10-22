@@ -16,7 +16,7 @@ class LinChecker {
   }
 
   bool Check() {
-    return Search(State());
+    return Search(Model::InitialState());
   }
 
  private:
