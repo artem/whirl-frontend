@@ -24,7 +24,7 @@ Recorder::Cookie Recorder::CallStarted(const std::string& method,
                                        const std::string& input) {
   GlobalHeapScope g;
 
-  Cookie id = ++next_cookie;
+  Cookie id = ++next_id_;
   running_calls_.emplace(
       id, RunningCall{method, Arguments{input}, GlobalNow(), {}});
   return id;

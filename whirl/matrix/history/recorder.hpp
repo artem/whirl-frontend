@@ -52,7 +52,7 @@ class Recorder {
 
  private:
   std::vector<Call> completed_calls_;
-  Cookie next_cookie{0};
+  Cookie next_id_{0};
   std::map<Cookie, RunningCall> running_calls_;
 };
 

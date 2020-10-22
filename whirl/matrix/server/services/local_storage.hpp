@@ -2,7 +2,10 @@
 
 #include <whirl/services/local_storage_backend.hpp>
 
+#include <whirl/matrix/common/allocator.hpp>
 #include <whirl/matrix/common/copy.hpp>
+
+#include <map>
 
 namespace whirl {
 
