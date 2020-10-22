@@ -13,7 +13,6 @@
 #include <await/fibers/sync/teleport.hpp>
 
 #include <await/futures/promise.hpp>
-#include <await/futures/helpers.hpp>
 
 // TODO: abstract logger
 #include <whirl/matrix/log/log.hpp>
@@ -65,14 +64,7 @@ class RPCTransportChannel
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override;
 
-  void Close() override {
-    // TODO: fiber-oblivious
-    await::fibers::TeleportGuard t(strand_);
-
-    if (socket_ && socket_->IsConnected()) {
-      socket_->Close();
-    }
-  }
+  void Close() override;
 
   const std::string& Peer() const override {
     return peer_;
@@ -98,6 +90,7 @@ class RPCTransportChannel
   void SendRequest(Request request);
   void ProcessResponse(const TransportMessage& message);
   void LostPeer();
+  void DoClose();
 
   RPCResponseMessage ParseResponse(const TransportMessage& message);
 

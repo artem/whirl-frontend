@@ -1,5 +1,8 @@
 #include <whirl/rpc/impl/transport_channel.hpp>
 
+#include <await/futures/helpers.hpp>
+#include <await/futures/await.hpp>
+
 namespace whirl::rpc {
 
 Future<BytesValue> RPCTransportChannel::Call(const std::string& method,
@@ -17,6 +20,14 @@ Future<BytesValue> RPCTransportChannel::Call(const std::string& method,
   auto e = MakeTracingExecutor(executor_, trace_id);
   return std::move(future).Via(std::move(e));
 }
+
+void RPCTransportChannel::Close() {
+  auto close = [self = shared_from_this()]() {
+    self->DoClose();
+  };
+  await::futures::SyncVia(strand_, std::move(close));
+}
+
 
 RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
     const std::string& method, const BytesValue& input) {
@@ -96,6 +107,12 @@ void RPCTransportChannel::LostPeer() {
   for (auto& [_, request] : requests) {
     TLTraceContext tg{request.trace_id};
     Fail(request, make_error_code(RPCErrorCode::TransportError));
+  }
+}
+
+void RPCTransportChannel::DoClose() {
+  if (socket_ && socket_->IsConnected()) {
+    socket_->Close();
   }
 }
 
