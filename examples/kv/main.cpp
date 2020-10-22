@@ -20,6 +20,8 @@
 #include <cereal/types/string.hpp>
 #include <fmt/ostream.h>
 
+#include <random>
+
 using namespace await::fibers;
 using namespace whirl;
 
@@ -248,12 +250,10 @@ void RunSimulation(size_t seed) {
 
   // Clients
   auto client = MakeNode<KVClient>();
-  world.AddClient(client);
-  world.AddClient(client);
-  world.AddClient(client);
+  world.AddClients(3, client);
 
   world.Start();
-  world.MakeSteps(500);
+  world.MakeSteps(503);
   world.Stop();
 
   const auto history = world.History();

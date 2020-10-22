@@ -29,10 +29,14 @@ class KVStoreModel {
  public:
   using State = std::map<K, V>;
 
+  static State InitialState() {
+    return {};
+  }
+
   struct Result {
     bool ok;
     Value value;
-    State next;
+    State next_state;
   };
 
   static Result Apply(const State& current, const std::string& method,
@@ -42,7 +46,7 @@ class KVStoreModel {
 
       auto [k, v] = arguments.As<K, V>();
 
-      State next = current;
+      State next{current};
       next.insert_or_assign(k, v);
       return {true, Value::Void(), std::move(next)};
 
@@ -62,12 +66,12 @@ class KVStoreModel {
     WHEELS_UNREACHABLE();
   }
 
-  static bool IsMutation(const std::string& method) {
-    return method == "Set";
+  static bool IsMutation(const Call& call) {
+    return call.method == "Set";
   }
 
-  static bool IsReadOnly(const std::string& method) {
-    return method == "Get";
+  static bool IsReadOnly(const Call& call) {
+    return call.method == "Get";
   }
 
   static std::string Print(State state) {

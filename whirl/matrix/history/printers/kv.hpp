@@ -58,8 +58,8 @@ struct KVCallPrinter {
 //////////////////////////////////////////////////////////////////////
 
 template <typename K, typename V>
-void PrintKVHistory(History h) {
-  Print<KVCallPrinter<K, V>>(h);
+void PrintKVHistory(const History& history) {
+  Print<KVCallPrinter<K, V>>(history);
 }
 
 }  // namespace whirl::histories

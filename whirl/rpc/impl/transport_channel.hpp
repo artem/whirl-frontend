@@ -13,7 +13,6 @@
 #include <await/fibers/sync/teleport.hpp>
 
 #include <await/futures/promise.hpp>
-#include <await/futures/helpers.hpp>
 
 // TODO: abstract logger
 #include <whirl/matrix/log/log.hpp>
@@ -45,11 +44,11 @@ class RPCTransportChannel
   using Requests = std::map<RPCId, Request>;
 
  public:
-  RPCTransportChannel(ITransportPtr t, IExecutorPtr e, std::string peer)
+  RPCTransportChannel(ITransportPtr t, IExecutorPtr e, TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
-        strand_(await::executors::MakeStrand(std::move(e))),
-        peer_(peer) {
+        peer_(peer),
+        strand_(await::executors::MakeStrand(e)) {
   }
 
   ~RPCTransportChannel() {
@@ -65,14 +64,7 @@ class RPCTransportChannel
   Future<BytesValue> Call(const std::string& method,
                           const BytesValue& input) override;
 
-  void Close() override {
-    // TODO: fiber-oblivious
-    await::fibers::TeleportGuard t(strand_);
-
-    if (socket_ && socket_->IsConnected()) {
-      socket_->Close();
-    }
-  }
+  void Close() override;
 
   const std::string& Peer() const override {
     return peer_;
@@ -98,26 +90,24 @@ class RPCTransportChannel
   void SendRequest(Request request);
   void ProcessResponse(const TransportMessage& message);
   void LostPeer();
+  void DoClose();
 
   RPCResponseMessage ParseResponse(const TransportMessage& message);
 
  private:
   ITransportSocketPtr& GetTransportSocket();
 
-  void Fail(Request& request, std::error_code e) {
-    WHIRL_FMT_LOG("Fail request with id = {}", request.id);
-    std::move(request.promise).SetError(wheels::Error(e));
-  }
+  void Fail(Request& request, std::error_code e);
 
  private:
   ITransportPtr transport_;
   IExecutorPtr executor_;  // For callbacks
+
+  const TransportAddress peer_;
+
   IExecutorPtr strand_;
-
-  const std::string peer_;
-
+  // State guarded by strand_
   ITransportSocketPtr socket_{nullptr};
-
   Requests requests_;
 
   Logger logger_{"RPC channel"};

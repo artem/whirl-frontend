@@ -8,12 +8,12 @@ namespace whirl::histories {
 
 //////////////////////////////////////////////////////////////////////
 
-Call RunningCall::CompleteWith(Value result) {
-  return Call{method, arguments, result, start_time, GlobalNow()};
+Call Recorder::Complete(const RunningCall& call, Value result) {
+  return Call{call.method, call.arguments, result, call.start_time, GlobalNow(), call.labels};
 }
 
-Call RunningCall::MaybeCompleted() {
-  return Call{method, arguments, Value::Void(), start_time, std::nullopt};
+Call Recorder::MaybeComplete(const RunningCall& call) {
+  return Call{call.method, call.arguments, Value::Void(), call.start_time, std::nullopt, call.labels};
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -24,8 +24,16 @@ Recorder::Cookie Recorder::CallStarted(const std::string& method,
 
   Cookie id = ++next_cookie;
   running_calls_.emplace(id,
-                         RunningCall{method, Arguments{input}, GlobalNow()});
+                         RunningCall{method, Arguments{input}, GlobalNow(), {}});
   return id;
+}
+
+void Recorder::AddLabel(Cookie id, const std::string& label) {
+  GlobalHeapScope g;
+
+  auto it = running_calls_.find(id);
+  WHEELS_VERIFY(it != running_calls_.end(), "Call not found");
+  it->second.labels.push_back(label);
 }
 
 void Recorder::CallCompleted(Cookie id, const std::string& output) {
@@ -36,7 +44,7 @@ void Recorder::CallCompleted(Cookie id, const std::string& output) {
   auto pending_call = std::move(it->second);
   running_calls_.erase(it);
 
-  completed_calls_.push_back(pending_call.CompleteWith(output));
+  completed_calls_.push_back(Complete(pending_call, output));
 }
 
 void Recorder::CallMaybeCompleted(Cookie id) {
@@ -47,7 +55,7 @@ void Recorder::CallMaybeCompleted(Cookie id) {
   auto pending_call = std::move(it->second);
   running_calls_.erase(it);
 
-  completed_calls_.push_back(pending_call.MaybeCompleted());
+  completed_calls_.push_back(MaybeComplete(pending_call));
 }
 
 void Recorder::Remove(Cookie id) {
@@ -58,7 +66,7 @@ void Recorder::Remove(Cookie id) {
 
 void Recorder::Stop() {
   for (auto& [_, call] : running_calls_) {
-    completed_calls_.push_back(call.MaybeCompleted());
+    completed_calls_.push_back(MaybeComplete(call));
   }
 }
 

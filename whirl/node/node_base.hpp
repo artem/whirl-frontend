@@ -93,7 +93,7 @@ class NodeBase : public INode {
   }
 
   const ILocalStorageBackendPtr& StorageBackend() {
-    return services_.storage_engine;
+    return services_.storage_backend;
   }
 
   const ITrueTimeServicePtr& TrueTime() {

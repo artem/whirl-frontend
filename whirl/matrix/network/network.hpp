@@ -10,6 +10,7 @@
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/world/global.hpp>
 #include <whirl/matrix/world/dice.hpp>
+#include <whirl/matrix/world/faults.hpp>
 
 #include <whirl/matrix/common/event_queue.hpp>
 #include <whirl/matrix/common/allocator.hpp>
@@ -27,7 +28,7 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class Network : public IActor {
+class Network : public IActor, public IFaultyNetwork {
   struct PacketEvent {
     NetPacket packet;
     TimePoint time;

@@ -3,12 +3,30 @@
 #include <whirl/matrix/history/history.hpp>
 
 #include <string>
+#include <set>
 
 namespace whirl::histories {
 
 //////////////////////////////////////////////////////////////////////
 
 static const size_t kUnitLength = 3;
+
+inline std::string PrintLabels(const CallLabels& labels) {
+  if (labels.empty()) {
+    return "";
+  }
+
+  std::stringstream out;
+  out << "{";
+  for (size_t i = 0; i < labels.size(); ++i) {
+    out << labels[i];
+    if (i + 1 < labels.size()) {
+      out << ", ";
+    }
+  }
+  out << "}";
+  return out.str();
+}
 
 inline std::string MakeSpace(TimePoint start_ts) {
   return std::string(start_ts * kUnitLength, ' ');
@@ -27,11 +45,11 @@ inline std::string MakeCallSegment(TimePoint start, TimePoint end,
 //////////////////////////////////////////////////////////////////////
 
 template <typename CallPrinter>
-void Print(History history) {
+void Print(const History& history) {
   // Collect time points
 
   std::set<TimePoint> tps;
-  for (auto& call : history) {
+  for (const auto& call : history) {
     tps.insert(call.start_time);
     if (call.IsCompleted()) {
       tps.insert(*call.end_time);
@@ -49,7 +67,7 @@ void Print(History history) {
   size_t max_tp = ctp + 1;
 
   for (size_t i = 0; i < history.size(); ++i) {
-    auto& call = history[i];
+    const auto& call = history[i];
 
     TimePoint start_ts = compact_tps[call.start_time];
 
@@ -61,7 +79,7 @@ void Print(History history) {
     }
 
     std::cout << MakeSpace(start_ts) << (i + 1) << ". "
-              << CallPrinter::Print(call) << std::endl;
+              << CallPrinter::Print(call) << "\t" << PrintLabels(call.labels) << std::endl;
 
     std::cout << MakeSpace(start_ts)
               << MakeCallSegment(start_ts, end_ts, call.IsCompleted())
