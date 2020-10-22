@@ -37,7 +37,8 @@ class LoggingChannel : public rpc::IRPCChannel {
                           const BytesValue& input) override {
     auto f = impl_->Call(method, input);
 
-    auto log = [method, peer = Peer()](const Result<BytesValue>& result) mutable {
+    auto log = [method,
+                peer = Peer()](const Result<BytesValue>& result) mutable {
       if (result.IsOk()) {
         WHIRL_FMT_LOG("Method {}.'{}' completed: Ok", peer, method);
       } else {

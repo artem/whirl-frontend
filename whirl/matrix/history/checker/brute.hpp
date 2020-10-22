@@ -50,7 +50,8 @@ class LinChecker {
         }
       }
 
-      auto result = Model::Apply(curr_state, calls_[i].method, calls_[i].arguments);
+      auto result =
+          Model::Apply(curr_state, calls_[i].method, calls_[i].arguments);
 
       if (result.ok) {
         if (!calls_[i].IsCompleted() || result.value == calls_[i].result) {

@@ -30,8 +30,7 @@ class Process : public ProcessBase {
     // Just throw runtime to this process heap
     ThreadsRuntime* runtime = MakeRuntime();
 
-    runtime->Spawn(
-        [this, runtime]() { strategy_(*runtime); });
+    runtime->Spawn([this, runtime]() { strategy_(*runtime); });
   }
 
  private:

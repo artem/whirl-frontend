@@ -22,12 +22,9 @@ Future<BytesValue> RPCTransportChannel::Call(const std::string& method,
 }
 
 void RPCTransportChannel::Close() {
-  auto close = [self = shared_from_this()]() {
-    self->DoClose();
-  };
+  auto close = [self = shared_from_this()]() { self->DoClose(); };
   await::futures::SyncVia(strand_, std::move(close));
 }
-
 
 RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
     const std::string& method, const BytesValue& input) {

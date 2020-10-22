@@ -4,8 +4,7 @@
 
 namespace whirl {
 
-World::World(size_t seed)
-  : impl_(std::make_unique<WorldImpl>(seed)) {
+World::World(size_t seed) : impl_(std::make_unique<WorldImpl>(seed)) {
 }
 
 World::~World() {
