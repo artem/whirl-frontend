@@ -106,6 +106,7 @@ class RPCTransportChannel
   const TransportAddress peer_;
 
   IExecutorPtr strand_;
+  // State guarded by strand_
   ITransportSocketPtr socket_{nullptr};
   Requests requests_;
 
