@@ -4,20 +4,8 @@
 
 namespace whirl {
 
-static Server& AccessServer(size_t index) {
-  return WorldImpl::Access()->GetServer(index);
-}
-
 IFaultyServer& AccessFaultyServer(size_t index) {
-  return AccessServer(index);
-}
-
-size_t ServerCount() {
-  return WorldImpl::Access()->NumServers();
-}
-
-std::string GetServerName(size_t index) {
-  return AccessServer(index).Name();
+  return WorldImpl::Access()->GetServer(index);
 }
 
 IFaultyNetwork& AccessFaultyNetwork() {

@@ -2,8 +2,6 @@
 
 #include <whirl/matrix/history/history.hpp>
 
-#include <wheels/support/result.hpp>
-
 #include <map>
 
 namespace whirl::histories {

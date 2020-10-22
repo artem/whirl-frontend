@@ -48,6 +48,18 @@ std::vector<std::string> GetClusterAddresses() {
 
 //////////////////////////////////////////////////////////////////////
 
+// For adversary
+
+size_t ServerCount() {
+  return WorldImpl::Access()->NumServers();
+}
+
+std::string GetServerName(size_t index) {
+  return WorldImpl::Access()->GetServer(index).Name();
+}
+
+//////////////////////////////////////////////////////////////////////
+
 size_t WorldStepNumber() {
   return WorldImpl::Access()->CurrentStep();
 }
