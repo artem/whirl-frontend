@@ -17,7 +17,7 @@ struct IFaultyServer {
 
   virtual void Reboot() = 0;
 
-  virtual void AdjustWallTime() = 0;
+  virtual void AdjustWallClock() = 0;
 };
 
 IFaultyServer& AccessFaultyServer(size_t index);

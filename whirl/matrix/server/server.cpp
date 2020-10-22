@@ -18,7 +18,7 @@ NodeServices Server::CreateNodeServices() {
   NodeServices services;
 
   auto executor = std::make_shared<EventQueueExecutor>(events_);
-  auto time_service = std::make_shared<TimeService>(wall_time_clock_,
+  auto time_service = std::make_shared<TimeService>(wall_clock_,
                                                     monotonic_clock_, events_);
 
   services.threads = ThreadsRuntime{executor, time_service};

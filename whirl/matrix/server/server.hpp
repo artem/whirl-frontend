@@ -77,8 +77,8 @@ class Server : public IActor, public IFaultyServer {
     paused_ = false;
   }
 
-  void AdjustWallTime() override {
-    wall_time_clock_.AdjustOffset();
+  void AdjustWallClock() override {
+    wall_clock_.AdjustOffset();
   }
 
   // IActor
@@ -157,7 +157,7 @@ class Server : public IActor, public IFaultyServer {
 
   ProcessNetwork network_;
 
-  LocalWallTimeClock wall_time_clock_;
+  LocalWallClock wall_clock_;
   LocalMonotonicClock monotonic_clock_;
   LocalBytesStorage storage_;
 
