@@ -2,7 +2,6 @@
 
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/server/server.hpp>
-#include <whirl/matrix/world/cluster.hpp>
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/actor_ctx.hpp>
@@ -267,6 +266,7 @@ class WorldImpl {
 
   // Actors
 
+  using Servers = std::deque<Server>;
   Servers cluster_;
   Servers clients_;
 
