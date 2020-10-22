@@ -244,7 +244,8 @@ void RunSimulation(size_t seed) {
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
-  world.AddServers(3, node);
+  const size_t replicas = 3 + seed % 5;
+  world.AddServers(replicas, node);
 
   // Clients
   auto client = MakeNode<KVClient>();
