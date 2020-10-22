@@ -25,8 +25,8 @@ struct NodeServices {
   rpc::TRPCClient rpc_client;
 
   LocalStorage local_storage;
-  // Use to create typed local storages
-  ILocalStorageBackendPtr storage_engine;
+  // Use to create local storages
+  ILocalStorageBackendPtr storage_backend;
 
   IRandomServicePtr random;
   IUidGeneratorPtr uids;
