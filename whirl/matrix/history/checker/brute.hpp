@@ -20,12 +20,13 @@ class LinChecker {
   }
 
  private:
-  bool StepInto(size_t i, State next);
+  bool StepInto(size_t i, State next_state);
 
-  bool Search(State s) {
-    // PrintSearchState();
+  bool Search(State curr_state) {
+    // PrintSearchState(curr_state);
 
     if (count_ == 0) {
+      // linear_ - linearization
       return true;
     }
 
@@ -44,16 +45,16 @@ class LinChecker {
       }
 
       if (!calls_[i].IsCompleted()) {
-        if (StepInto(i, s)) {
+        if (StepInto(i, curr_state)) {
           return true;
         }
       }
 
-      auto result = Model::Apply(s, calls_[i].method, calls_[i].arguments);
+      auto result = Model::Apply(curr_state, calls_[i].method, calls_[i].arguments);
 
       if (result.ok) {
         if (!calls_[i].IsCompleted() || result.value == calls_[i].result) {
-          if (StepInto(i, result.next)) {
+          if (StepInto(i, std::move(result.next_state))) {
             return true;
           }
         }
@@ -80,12 +81,12 @@ class LinChecker {
 };
 
 template <typename State>
-bool LinChecker<State>::StepInto(size_t i, State next) {
+bool LinChecker<State>::StepInto(size_t i, State next_state) {
   linear_.push_back(calls_[i]);
   std::swap(calls_[i], calls_[count_ - 1]);
   count_--;
 
-  bool succeeded = Search(std::move(next));
+  bool succeeded = Search(std::move(next_state));
 
   count_++;
   std::swap(calls_[i], calls_[count_ - 1]);

@@ -29,15 +29,15 @@ class KVStoreModel {
  public:
   using State = std::map<K, V>;
 
-  struct Result {
-    bool ok;
-    Value value;
-    State next;
-  };
-
   static State InitialState() {
     return {};
   }
+
+  struct Result {
+    bool ok;
+    Value value;
+    State next_state;
+  };
 
   static Result Apply(const State& current, const std::string& method,
                       const Arguments& arguments) {
@@ -46,7 +46,7 @@ class KVStoreModel {
 
       auto [k, v] = arguments.As<K, V>();
 
-      State next = current;
+      State next{current};
       next.insert_or_assign(k, v);
       return {true, Value::Void(), std::move(next)};
 
