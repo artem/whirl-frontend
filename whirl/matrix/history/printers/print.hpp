@@ -48,7 +48,7 @@ void Print(const History& history) {
   // Collect time points
 
   std::set<TimePoint> tps;
-  for (auto& call : history) {
+  for (const auto& call : history) {
     tps.insert(call.start_time);
     if (call.IsCompleted()) {
       tps.insert(*call.end_time);
@@ -66,7 +66,7 @@ void Print(const History& history) {
   size_t max_tp = ctp + 1;
 
   for (size_t i = 0; i < history.size(); ++i) {
-    auto& call = history[i];
+    const auto& call = history[i];
 
     TimePoint start_ts = compact_tps[call.start_time];
 
