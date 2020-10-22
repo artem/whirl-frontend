@@ -5,21 +5,35 @@
 
 namespace whirl {
 
-// TODO
+//////////////////////////////////////////////////////////////////////
+
+// Servers
 
 size_t ServerCount();
 
-// Server
+struct IFaultyServer {
+  virtual ~IFaultyServer() = default;
+
+  virtual void Pause() = 0;
+  virtual void Resume() = 0;
+  virtual void Reboot() = 0;
+  virtual void AdjustWallTime() = 0;
+};
+
+IFaultyServer& AccessFaultyServer(size_t index);
 
 std::string GetServerName(size_t index);
 
-void PauseServer(size_t index);
-void ResumeServer(size_t index);
-
-void RebootServer(size_t index);
-
-void AdjustServerClock(size_t index);
+//////////////////////////////////////////////////////////////////////
 
 // Network
+
+struct IFaultyNetwork {
+  virtual ~IFaultyNetwork() = default;
+
+  // TODO
+};
+
+IFaultyNetwork& AccessFaultyNetwork();
 
 }  // namespace whirl

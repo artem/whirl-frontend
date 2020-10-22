@@ -4,6 +4,7 @@
 #include <whirl/node/node.hpp>
 
 #include <whirl/matrix/world/actor.hpp>
+#include <whirl/matrix/world/faults.hpp>
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/server/clocks.hpp>
 #include <whirl/matrix/process/heap.hpp>
@@ -21,7 +22,7 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class Server : public IActor {
+class Server : public IActor, public IFaultyServer {
  public:
   Server(Network& network, NodeConfig config, INodeFactoryPtr factory)
       : config_(config),
@@ -41,22 +42,28 @@ class Server : public IActor {
     Crash();
   }
 
-  ServerAddress NetAddress() {
+  ServerAddress NetAddress() const {
     return Name();
   }
 
-  void Reboot() {
+  NodeId GetId() const {
+    return config_.id;
+  }
+
+  // IFaultyServer
+
+  void Reboot() override {
     Crash();
     Create();
     Start();
   }
 
-  void Pause() {
+  void Pause() override {
     WHEELS_VERIFY(!paused_, "Server already paused");
     paused_ = true;
   }
 
-  void Resume() {
+  void Resume() override {
     WHEELS_VERIFY(paused_, "Server is not paused");
 
     auto now = GlobalNow();
@@ -70,9 +77,11 @@ class Server : public IActor {
     paused_ = false;
   }
 
-  void AdjustWallTime() {
+  void AdjustWallTime() override {
     wall_time_clock_.AdjustOffset();
   }
+
+  // IActor
 
   void Start() override {
     WHIRL_LOG("Start node at server " << NetAddress());
@@ -80,12 +89,6 @@ class Server : public IActor {
     auto g = heap_.Use();
     node_->Start();
   }
-
-  NodeId GetId() const {
-    return config_.id;
-  }
-
-  // IActor
 
   const std::string& Name() const override {
     return name_;

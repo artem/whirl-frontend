@@ -10,11 +10,9 @@
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/thread_like.hpp>
 
-#include <wheels/support/random.hpp>
-#include <wheels/support/string_builder.hpp>
-#include <wheels/support/time.hpp>
-
 #include <cereal/types/string.hpp>
+
+#include <wheels/support/time.hpp>
 
 #include <chrono>
 #include <cstdlib>
@@ -23,9 +21,6 @@ using namespace std::chrono_literals;
 
 using namespace await::fibers;
 using namespace whirl;
-
-using wheels::Result;
-using wheels::Status;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -96,6 +91,8 @@ class TestAdversary {
   }
 
   void AbuseServer(size_t index) {
+    auto& server = AccessFaultyServer(index);
+
     for (size_t i = 0; ; ++i) {
 
       if (GlobalNow() > 400) {
@@ -103,26 +100,26 @@ class TestAdversary {
         continue;
       }
 
-      // Pause server
+      // Pause/resume server
       if (whirl::GlobalRandomNumber() % 17 == 0) {
         WHIRL_FMT_LOG("FAULT: Pause {}", GetServerName(index));
-        PauseServer(index);
+        server.Pause();
         runtime_.SleepFor(whirl::GlobalRandomNumber() % 20);
         WHIRL_FMT_LOG("FAULT: Resume {}", GetServerName(index));
-        ResumeServer(index);
+        server.Resume();
         continue;
       }
 
       // Restart server
       if (whirl::GlobalRandomNumber() % 13 == 0) {
         WHIRL_FMT_LOG("FAULT: Reboot {}", GetServerName(index));
-        RebootServer(index);
+        server.Reboot();
       }
 
       // Adjust wall time clock
       if (whirl::GlobalRandomNumber() % 100 == 0) {
         WHIRL_FMT_LOG("FAULT: Adjust wall time at {}", GetServerName(index));
-        AdjustServerClock(index);
+        server.AdjustWallTime();
       }
 
       // Just wait some time

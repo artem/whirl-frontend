@@ -8,8 +8,8 @@ static Server& AccessServer(size_t index) {
   return WorldImpl::Access()->GetServer(index);
 }
 
-static Network& AccessNetwork() {
-  return WorldImpl::Access()->GetNetwork();
+IFaultyServer& AccessFaultyServer(size_t index) {
+  return AccessServer(index);
 }
 
 size_t ServerCount() {
@@ -20,20 +20,8 @@ std::string GetServerName(size_t index) {
   return AccessServer(index).Name();
 }
 
-void PauseServer(size_t index) {
-  AccessServer(index).Pause();
-}
-
-void ResumeServer(size_t index) {
-  AccessServer(index).Resume();
-}
-
-void RebootServer(size_t index) {
-  AccessServer(index).Reboot();
-}
-
-void AdjustServerClock(size_t index) {
-  AccessServer(index).AdjustWallTime();
+IFaultyNetwork& AccessFaultyNetwork() {
+  return WorldImpl::Access()->GetNetwork();
 }
 
 }  // namespace whirl
