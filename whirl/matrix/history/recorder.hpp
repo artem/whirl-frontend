@@ -7,16 +7,13 @@
 
 namespace whirl::histories {
 
-struct RunningCall {
-  std::string method;
-  Arguments arguments;
-  TimePoint start_time;
-
-  Call CompleteWith(Value result);
-  Call MaybeCompleted();
-};
-
 class Recorder {
+  struct RunningCall {
+    std::string method;
+    Arguments arguments;
+    TimePoint start_time;
+  };
+
  public:
   using Cookie = size_t;
 
@@ -38,6 +35,10 @@ class Recorder {
   const History& GetHistory() const {
     return completed_calls_;
   }
+
+ private:
+  static Call Complete(const RunningCall& call, Value output);
+  static Call MaybeComplete(const RunningCall& call);
 
  private:
   std::vector<Call> completed_calls_;
