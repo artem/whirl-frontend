@@ -62,12 +62,12 @@ class KVStoreModel {
     WHEELS_UNREACHABLE();
   }
 
-  static bool IsMutation(const std::string& method) {
-    return method == "Set";
+  static bool IsMutation(const Call& call) {
+    return call.method == "Set";
   }
 
-  static bool IsReadOnly(const std::string& method) {
-    return method == "Get";
+  static bool IsReadOnly(const Call& call) {
+    return call.method == "Get";
   }
 
   static std::string Print(State state) {
