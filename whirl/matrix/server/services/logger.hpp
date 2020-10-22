@@ -6,7 +6,7 @@
 
 namespace whirl {
 
-struct LoggerProxy : public INodeLogger {
+class LoggerProxy : public INodeLogger {
  public:
   // Context: Server
   void Log(const std::string& message) {
