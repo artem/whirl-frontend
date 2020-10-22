@@ -58,13 +58,13 @@ void Recorder::CallMaybeCompleted(Cookie id) {
   completed_calls_.push_back(MaybeComplete(pending_call));
 }
 
-void Recorder::Remove(Cookie id) {
+void Recorder::RemoveCall(Cookie id) {
   GlobalHeapScope g;
 
   running_calls_.erase(id);
 }
 
-void Recorder::Stop() {
+void Recorder::Finalize() {
   for (auto& [_, call] : running_calls_) {
     completed_calls_.push_back(MaybeComplete(call));
   }

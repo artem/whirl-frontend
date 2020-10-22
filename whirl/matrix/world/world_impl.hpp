@@ -152,7 +152,7 @@ class WorldImpl {
 
     actors_.clear();
 
-    history_recorder_.Stop();
+    history_recorder_.Finalize();
 
     WHIRL_LOG("Simulation stopped");
   }

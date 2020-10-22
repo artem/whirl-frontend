@@ -18,8 +18,10 @@ class Recorder {
  public:
   using Cookie = size_t;
 
+  // Context: Server
   void AddLabel(Cookie id, const std::string& label);
 
+  // Context: Global
   size_t NumCompletedCalls() const {
     return completed_calls_.size();
   }
@@ -34,11 +36,12 @@ class Recorder {
   void CallMaybeCompleted(Cookie id);
 
   // Context: Server
-  void Remove(Cookie id);
+  void RemoveCall(Cookie id);
 
   // Context: World
-  void Stop();
+  void Finalize();
 
+  // After Finalize
   const History& GetHistory() const {
     return completed_calls_;
   }

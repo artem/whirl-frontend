@@ -62,7 +62,7 @@ class HistoryChannel : public rpc::IRPCChannel {
       if (MaybeCompleted(result.GetErrorCode())) {
         recorder.CallMaybeCompleted(cookie);
       } else {
-        recorder.Remove(cookie);
+        recorder.RemoveCall(cookie);
       }
     }
   }
