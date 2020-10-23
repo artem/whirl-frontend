@@ -31,7 +31,7 @@ class Recorder {
   void CallCompleted(Cookie id, const std::string& output);
 
   // Context: Server
-  void CallMaybeCompleted(Cookie id);
+  void CallLost(Cookie id);
 
   // Context: Server
   void RemoveCall(Cookie id);
@@ -45,8 +45,9 @@ class Recorder {
   }
 
  private:
+  // Finalizers
   static Call Complete(const RunningCall& call, Value output);
-  static Call MaybeComplete(const RunningCall& call);
+  static Call Lost(const RunningCall& call);
 
  private:
   std::vector<Call> finalized_calls_;

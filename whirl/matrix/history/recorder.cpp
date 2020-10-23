@@ -13,7 +13,7 @@ Call Recorder::Complete(const RunningCall& call, Value result) {
               call.start_time, GlobalNow(),    call.labels};
 }
 
-Call Recorder::MaybeComplete(const RunningCall& call) {
+Call Recorder::Lost(const RunningCall& call) {
   return Call{call.method,     call.arguments, Value::Void(),
               call.start_time, std::nullopt,   call.labels};
 }
@@ -49,7 +49,7 @@ void Recorder::CallCompleted(Cookie id, const std::string& output) {
   finalized_calls_.push_back(Complete(pending_call, output));
 }
 
-void Recorder::CallMaybeCompleted(Cookie id) {
+void Recorder::CallLost(Cookie id) {
   GlobalHeapScope g;
 
   auto it = running_calls_.find(id);
@@ -57,7 +57,7 @@ void Recorder::CallMaybeCompleted(Cookie id) {
   auto pending_call = std::move(it->second);
   running_calls_.erase(it);
 
-  finalized_calls_.push_back(MaybeComplete(pending_call));
+  finalized_calls_.push_back(Lost(pending_call));
 }
 
 void Recorder::RemoveCall(Cookie id) {
@@ -78,7 +78,7 @@ size_t Recorder::NumCompletedCalls() const {
 
 void Recorder::Finalize() {
   for (auto& [_, call] : running_calls_) {
-    finalized_calls_.push_back(MaybeComplete(call));
+    finalized_calls_.push_back(Lost(call));
   }
 }
 
