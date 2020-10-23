@@ -45,11 +45,11 @@ class RPCErrorCategory : public std::error_category {
   std::string message(int c) const override final {
     switch (static_cast<RPCErrorCode>(c)) {
       case RPCErrorCode::Ok:
-        return "RPC Ok";
+        return "RPC ok";
       case RPCErrorCode::ChannelClosed:
         return "Channel closed";
       case RPCErrorCode::TransportError:
-        return "Transport Error";
+        return "Transport error";
       case RPCErrorCode::ExecutionError:
         return "Execution error";
       case RPCErrorCode::MethodNotFound:
