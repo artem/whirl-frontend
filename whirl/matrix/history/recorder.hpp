@@ -18,14 +18,14 @@ class Recorder {
  public:
   using Cookie = size_t;
 
-  // Context: Server
-  void AddLabel(Cookie id, const std::string& label);
-
   // Context: Global
   size_t NumCompletedCalls() const;
 
   // Context: Server
   Cookie CallStarted(const std::string& method, const std::string& input);
+
+  // Context: Server
+  void AddLabel(Cookie id, const std::string& label);
 
   // Context: Server
   void CallCompleted(Cookie id, const std::string& output);
