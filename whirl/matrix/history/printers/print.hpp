@@ -2,6 +2,7 @@
 
 #include <whirl/matrix/history/history.hpp>
 
+#include <ostream>
 #include <string>
 #include <set>
 
@@ -45,7 +46,7 @@ inline std::string MakeCallSegment(TimePoint start, TimePoint end,
 //////////////////////////////////////////////////////////////////////
 
 template <typename CallPrinter>
-void Print(const History& history) {
+void Print(const History& history, std::ostream& out) {
   // Collect time points
 
   std::set<TimePoint> tps;
@@ -78,13 +79,11 @@ void Print(const History& history) {
       end_ts = max_tp;
     }
 
-    std::cout << MakeSpace(start_ts) << (i + 1) << ". "
-              << CallPrinter::Print(call) << "\t" << PrintLabels(call.labels)
-              << std::endl;
+    out << MakeSpace(start_ts) << (i + 1) << ". " << CallPrinter::Print(call)
+        << "\t" << PrintLabels(call.labels) << std::endl;
 
-    std::cout << MakeSpace(start_ts)
-              << MakeCallSegment(start_ts, end_ts, call.IsCompleted())
-              << std::endl;
+    out << MakeSpace(start_ts)
+        << MakeCallSegment(start_ts, end_ts, call.IsCompleted()) << std::endl;
   }
 }
 
