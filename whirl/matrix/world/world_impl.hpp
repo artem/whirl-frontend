@@ -30,7 +30,7 @@ class WorldImpl {
 
  public:
   WorldImpl(size_t seed)
-      : random_source_(seed), behaviour_(DefaultBehaviour()) {
+      : seed_(seed), random_source_(seed), behaviour_(DefaultBehaviour()) {
   }
 
   void AddServer(INodeFactoryPtr node) {
@@ -170,6 +170,10 @@ class WorldImpl {
 
   static WorldImpl* Access();
 
+  size_t Seed() const {
+    return seed_;
+  }
+
   Server& GetServer(size_t index) {
     return cluster_.at(index);
   }
@@ -262,6 +266,8 @@ class WorldImpl {
   }
 
  private:
+  size_t seed_;
+
   WorldClock clock_;
   RandomSource random_source_;
 
