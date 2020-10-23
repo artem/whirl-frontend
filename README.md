@@ -11,6 +11,12 @@
 - x86-64
 - Clang++ (>= 8)
 
+## Dependencies
+
+- [await](https://gitlab.com/Lipovsky/await) - Concurrency: fibers and futures with customizable runtime
+- [cereal](https://github.com/USCiLab/cereal) - Serialization
+- [fmt](https://github.com/fmtlib/fmt)
+
 ## Build
 
 ```shell
