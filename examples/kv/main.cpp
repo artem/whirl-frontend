@@ -155,13 +155,13 @@ class KVNode final: public NodeBase {
 
   // Выбираем самый свежий результат из кворумных чтений
   StampedValue FindNewestValue(const std::vector<StampedValue>& values) const {
-    size_t winner = 0;
+    auto winner = values[0];
     for (size_t i = 1; i < values.size(); ++i) {
-      if (values[i].ts > values[winner].ts) {
-        winner = i;
+      if (values[i].ts > winner.ts) {
+        winner = values[i];
       }
     }
-    return values[winner];
+    return winner;
   }
 
   // Размер кворума
@@ -254,6 +254,10 @@ void RunSimulation(size_t seed) {
   auto client = MakeNode<KVClient>();
   world.AddClients(3, client);
 
+  // Log
+  std::stringstream log;
+  world.WriteLogTo(log);
+
   world.Start();
   while (world.NumCompletedCalls() < 7) {
     world.Step();
@@ -264,7 +268,8 @@ void RunSimulation(size_t seed) {
   const bool linearizable = histories::LinCheck<KVStoreModel>(history);
 
   if (!linearizable) {
-    fmt::print("History (seed = {}) is NOT LINEARIZABLE\n", seed);
+    std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
+    fmt::print("History (seed = {}) is NOT LINEARIZABLE:\n", seed);
     histories::PrintKVHistory<Key, Value>(history);
     std::exit(1);
   }

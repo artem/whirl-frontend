@@ -2,7 +2,7 @@
 
 #include <whirl/rpc/impl/channel.hpp>
 
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>

@@ -3,7 +3,7 @@
 #include <whirl/rpc/impl/channel.hpp>
 #include <whirl/rpc/impl/errors.hpp>
 
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <whirl/services/time.hpp>
 

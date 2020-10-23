@@ -51,8 +51,7 @@ class HistoryChannel : public rpc::IRPCChannel {
                                const Result<BytesValue>& result) {
     auto& recorder = GetHistoryRecorder();
 
-    auto trace_id = TryGetCurrentTraceId();
-    if (trace_id.has_value()) {
+    if (auto trace_id = TryGetCurrentTraceId()) {
       recorder.AddLabel(cookie, *trace_id);
     }
 

@@ -5,7 +5,7 @@
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/server/clocks.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <await/futures/promise.hpp>
 

@@ -38,6 +38,10 @@ void World::SetAdversary(adversary::Strategy strategy) {
   impl_->SetAdversary(std::move(strategy));
 }
 
+void World::WriteLogTo(std::ostream& out) {
+  impl_->GetLog().SetOutput(&out);
+}
+
 void World::Start() {
   impl_->Start();
 }

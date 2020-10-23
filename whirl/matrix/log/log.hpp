@@ -2,43 +2,29 @@
 
 #include <whirl/matrix/log/event.hpp>
 
-#include <wheels/support/string_builder.hpp>
-
-#include <fmt/core.h>
+#include <iostream>
 
 namespace whirl {
 
-//////////////////////////////////////////////////////////////////////
-
-class Logger {
+class Log {
  public:
-  Logger(const std::string& component);
+  Log() : out_(&std::cout) {
+  }
 
-  void Log(const std::string& message);
+  void SetOutput(std::ostream* out) {
+    out_ = out;
+  }
+
+  void Write(const LogEvent& event) {
+    WriteTo(event, *out_);
+    *out_ << std::endl;
+  }
 
  private:
-  LogEvent MakeEvent(const std::string& message) const;
-  void Write(const LogEvent& event);
+  static void WriteTo(const LogEvent& event, std::ostream& out);
 
  private:
-  std::string component_;
+  std::ostream* out_;
 };
-
-//////////////////////////////////////////////////////////////////////
-
-#ifndef NDEBUG
-
-#define WHIRL_LOG(message) logger_.Log(::wheels::StringBuilder() << message)
-
-// TODO: at least one argument for format string
-#define WHIRL_FMT_LOG(...) logger_.Log(fmt::format(__VA_ARGS__))
-
-#else
-
-#define WHIRL_LOG(message)
-
-#define WHIRL_FMT_LOG(...)
-
-#endif
 
 }  // namespace whirl

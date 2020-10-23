@@ -4,6 +4,7 @@
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/world/behaviour.hpp>
 #include <whirl/matrix/history/recorder.hpp>
+#include <whirl/matrix/log/log.hpp>
 
 #include <cstdlib>
 #include <vector>
@@ -55,6 +56,8 @@ size_t ServerCount();
 std::string GetServerName(size_t index);
 
 //////////////////////////////////////////////////////////////////////
+
+Log& GetLog();
 
 // For logging
 

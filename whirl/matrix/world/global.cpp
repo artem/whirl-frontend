@@ -60,6 +60,10 @@ std::string GetServerName(size_t index) {
 
 //////////////////////////////////////////////////////////////////////
 
+Log& GetLog() {
+  return WorldImpl::Access()->GetLog();
+}
+
 size_t WorldStepNumber() {
   return WorldImpl::Access()->CurrentStep();
 }
