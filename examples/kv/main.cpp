@@ -254,6 +254,10 @@ void RunSimulation(size_t seed) {
   auto client = MakeNode<KVClient>();
   world.AddClients(3, client);
 
+  // Log
+  std::stringstream log;
+  world.WriteLogTo(log);
+
   world.Start();
   while (world.NumCompletedCalls() < 7) {
     world.Step();
@@ -264,7 +268,8 @@ void RunSimulation(size_t seed) {
   const bool linearizable = histories::LinCheck<KVStoreModel>(history);
 
   if (!linearizable) {
-    fmt::print("History (seed = {}) is NOT LINEARIZABLE\n", seed);
+    std::cout << "Log:" << std::endl << log.str() << std::endl;
+    fmt::print("History (seed = {}) is NOT LINEARIZABLE:\n", seed);
     histories::PrintKVHistory<Key, Value>(history);
     std::exit(1);
   }

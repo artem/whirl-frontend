@@ -6,6 +6,7 @@
 #include <whirl/node/node.hpp>
 
 #include <memory>
+#include <ostream>
 
 namespace whirl {
 
@@ -29,6 +30,8 @@ class World {
   void SetBehaviour(IWorldBehaviourPtr behaviour);
 
   void SetAdversary(adversary::Strategy strategy);
+
+  void WriteLogTo(std::ostream& out);
 
   void Start();
 

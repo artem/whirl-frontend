@@ -11,6 +11,7 @@
 #include <whirl/matrix/history/recorder.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
+#include <whirl/matrix/log/log.hpp>
 
 #include <wheels/support/id.hpp>
 
@@ -181,6 +182,10 @@ class WorldImpl {
     return step_count_;
   }
 
+  Log& GetLog() {
+    return log_;
+  }
+
   histories::Recorder& HistoryRecorder() {
     return history_recorder_;
   }
@@ -280,9 +285,10 @@ class WorldImpl {
   ActorContext active_;
   size_t step_count_{0};
 
-  histories::Recorder history_recorder_;
-
   Logger logger_{"World"};
+
+  Log log_;
+  histories::Recorder history_recorder_;
 };
 
 }  // namespace whirl
