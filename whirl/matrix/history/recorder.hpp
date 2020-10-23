@@ -22,9 +22,7 @@ class Recorder {
   void AddLabel(Cookie id, const std::string& label);
 
   // Context: Global
-  size_t NumCompletedCalls() const {
-    return completed_calls_.size();
-  }
+  size_t NumCompletedCalls() const;
 
   // Context: Server
   Cookie CallStarted(const std::string& method, const std::string& input);
@@ -43,7 +41,7 @@ class Recorder {
 
   // After Finalize
   const History& GetHistory() const {
-    return completed_calls_;
+    return finalized_calls_;
   }
 
  private:
@@ -51,7 +49,7 @@ class Recorder {
   static Call MaybeComplete(const RunningCall& call);
 
  private:
-  std::vector<Call> completed_calls_;
+  std::vector<Call> finalized_calls_;
   Cookie next_id_{0};
   std::map<Cookie, RunningCall> running_calls_;
 };

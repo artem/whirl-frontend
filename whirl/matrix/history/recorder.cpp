@@ -46,7 +46,7 @@ void Recorder::CallCompleted(Cookie id, const std::string& output) {
   auto pending_call = std::move(it->second);
   running_calls_.erase(it);
 
-  completed_calls_.push_back(Complete(pending_call, output));
+  finalized_calls_.push_back(Complete(pending_call, output));
 }
 
 void Recorder::CallMaybeCompleted(Cookie id) {
@@ -57,7 +57,7 @@ void Recorder::CallMaybeCompleted(Cookie id) {
   auto pending_call = std::move(it->second);
   running_calls_.erase(it);
 
-  completed_calls_.push_back(MaybeComplete(pending_call));
+  finalized_calls_.push_back(MaybeComplete(pending_call));
 }
 
 void Recorder::RemoveCall(Cookie id) {
@@ -66,9 +66,19 @@ void Recorder::RemoveCall(Cookie id) {
   running_calls_.erase(id);
 }
 
+size_t Recorder::NumCompletedCalls() const {
+  size_t count = 0;
+  for (const auto& call : finalized_calls_) {
+    if (call.IsCompleted()) {
+      ++count;
+    }
+  }
+  return count;
+}
+
 void Recorder::Finalize() {
   for (auto& [_, call] : running_calls_) {
-    completed_calls_.push_back(MaybeComplete(call));
+    finalized_calls_.push_back(MaybeComplete(call));
   }
 }
 
