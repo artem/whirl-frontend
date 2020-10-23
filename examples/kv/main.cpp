@@ -155,13 +155,13 @@ class KVNode final: public NodeBase {
 
   // Выбираем самый свежий результат из кворумных чтений
   StampedValue FindNewestValue(const std::vector<StampedValue>& values) const {
-    size_t winner = 0;
+    auto winner = values[0];
     for (size_t i = 1; i < values.size(); ++i) {
-      if (values[i].ts > values[winner].ts) {
-        winner = i;
+      if (values[i].ts > winner.ts) {
+        winner = values[i];
       }
     }
-    return values[winner];
+    return winner;
   }
 
   // Размер кворума
