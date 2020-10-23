@@ -6,6 +6,11 @@
 - [Paxi - Paxos protocol framework](https://github.com/ailidani/paxi)
 - [Teaching Rigorous Distributed Systems With Efficient Model Checking](https://ellismichael.com/papers/dslabs-eurosys19.pdf)
 
+## Requirements
+
+- x86-64
+- Clang++ (>= 8)
+
 ## Build
 
 ```shell
