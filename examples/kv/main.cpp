@@ -3,6 +3,7 @@
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>
+#include <whirl/matrix/world/global.hpp>
 #include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/history/printers/kv.hpp>
 #include <whirl/matrix/history/checker/check.hpp>
@@ -197,6 +198,15 @@ class KVBlockingStub {
 
 //////////////////////////////////////////////////////////////////////
 
+static const std::vector<std::string> kKeys({"a", "b", "c"});
+
+const std::string& ChooseKey() {
+  size_t count = 1 + WorldSeed() % 2;  // Constant in simulation
+  return kKeys.at(GlobalRandomNumber(count));
+}
+
+//////////////////////////////////////////////////////////////////////
+
 class KVClient final: public ClientBase {
  public:
   KVClient(NodeServices services, NodeConfig config)
@@ -214,15 +224,17 @@ class KVClient final: public ClientBase {
       // Подкинем монетку
       if (RandomNumber() % 2 == 0) {
         // Запись случайного значения
+        Key key = ChooseKey();
         Value value = RandomNumber(1, 100);
-        NODE_LOG("Execute Set({})", value);
-        kv.Set("test", value);
+        NODE_LOG("Execute Set({}, {})", key, value);
+        kv.Set(key, value);
         NODE_LOG("Set completed");
       } else {
         // Чтение
-        NODE_LOG("Execute Get(test)");
-        Value result = kv.Get("test");
-        NODE_LOG("Get(test) -> {}", result);
+        Key key = ChooseKey();
+        NODE_LOG("Execute Get({})", key);
+        Value result = kv.Get(key);
+        NODE_LOG("Get({}) -> {}", key, result);
       }
 
       Threads().SleepFor(RandomNumber(1, 100));
@@ -236,8 +248,9 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////
 
+// [3, 5]
 size_t NumberOfReplicas(size_t seed) {
-  return 3 + seed % 5;
+  return 3 + seed % 3;
 }
 
 void RunSimulation(size_t seed) {
