@@ -22,6 +22,9 @@ int KVDefaultValue<int>() {
 
 //////////////////////////////////////////////////////////////////////
 
+// KV Store sequential specification
+// --InitialState-> S_0 --Apply--> S_1 --Apply-> S_2 ...
+
 template <typename K, typename V>
 class KVStoreModel {
  public:
