@@ -3,7 +3,7 @@
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/common/allocator.hpp>
 
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/common/copy.hpp>
 
 #include <map>

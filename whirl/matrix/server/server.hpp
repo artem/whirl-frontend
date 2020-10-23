@@ -14,7 +14,7 @@
 
 #include <whirl/matrix/server/services/local_storage.hpp>
 
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <memory>
 

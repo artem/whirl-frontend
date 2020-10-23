@@ -7,7 +7,7 @@
 #include <await/executors/executor.hpp>
 
 // TODO: abstract logger
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <functional>
 #include <memory>

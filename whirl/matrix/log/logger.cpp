@@ -1,4 +1,4 @@
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/log/event.hpp>
 
 #include <whirl/matrix/common/allocator.hpp>

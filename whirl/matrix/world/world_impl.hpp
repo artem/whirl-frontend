@@ -10,7 +10,7 @@
 #include <whirl/matrix/world/behaviour.hpp>
 #include <whirl/matrix/history/recorder.hpp>
 
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <wheels/support/id.hpp>
 

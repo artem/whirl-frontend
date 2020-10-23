@@ -2,7 +2,7 @@
 
 #include <whirl/services/logger.hpp>
 
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 namespace whirl {
 

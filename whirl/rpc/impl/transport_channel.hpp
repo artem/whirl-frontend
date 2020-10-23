@@ -15,7 +15,7 @@
 #include <await/futures/promise.hpp>
 
 // TODO: abstract logger
-#include <whirl/matrix/log/log.hpp>
+#include <whirl/matrix/log/logger.hpp>
 
 #include <map>
 
