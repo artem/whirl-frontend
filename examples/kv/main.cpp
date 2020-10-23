@@ -268,7 +268,7 @@ void RunSimulation(size_t seed) {
   const bool linearizable = histories::LinCheck<KVStoreModel>(history);
 
   if (!linearizable) {
-    std::cout << "Log:" << std::endl << log.str() << std::endl;
+    std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
     fmt::print("History (seed = {}) is NOT LINEARIZABLE:\n", seed);
     histories::PrintKVHistory<Key, Value>(history);
     std::exit(1);
