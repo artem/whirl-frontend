@@ -270,7 +270,7 @@ void RunSimulation(size_t seed) {
   if (!linearizable) {
     std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
     fmt::print("History (seed = {}) is NOT LINEARIZABLE:\n", seed);
-    histories::PrintKVHistory<Key, Value>(history);
+    histories::PrintKVHistory<Key, Value>(history, std::cout);
     std::exit(1);
   }
 }
