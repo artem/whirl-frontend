@@ -18,6 +18,10 @@ namespace whirl {
 
 size_t WorldSeed();
 
+// Varies by simulation (seed)
+// Requirement: `randomizer` > 0
+size_t ThisWorldConst(size_t randomizer);
+
 //////////////////////////////////////////////////////////////////////
 
 // Deterministic randomness

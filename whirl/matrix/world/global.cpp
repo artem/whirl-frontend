@@ -10,6 +10,10 @@ size_t WorldSeed() {
   return WorldImpl::Access()->Seed();
 }
 
+size_t ThisWorldConst(size_t randomizer) {
+  return WorldSeed() % randomizer;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 RandomUInt GlobalRandomNumber() {

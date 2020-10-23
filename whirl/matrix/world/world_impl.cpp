@@ -4,19 +4,19 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-static WorldImpl* world = nullptr;
+static WorldImpl* this_world = nullptr;
 
-WorldImpl::WorldGuard::WorldGuard(WorldImpl* w) {
-  world = w;
+WorldImpl::WorldGuard::WorldGuard(WorldImpl* world) {
+  this_world = world;
 }
 
 WorldImpl::WorldGuard::~WorldGuard() {
-  world = nullptr;
+  this_world = nullptr;
 }
 
 WorldImpl* WorldImpl::Access() {
-  WHEELS_VERIFY(world != nullptr, "Not in world context");
-  return world;
+  WHEELS_VERIFY(this_world != nullptr, "Not in world context");
+  return this_world;
 }
 
 }  // namespace whirl
