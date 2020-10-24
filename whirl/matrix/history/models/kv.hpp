@@ -83,7 +83,7 @@ class KVStoreModel {
   static std::string Print(State state) {
     std::stringstream out;
     out << "{";
-    for (auto& [k, v] : state) {
+    for (const auto& [k, v] : state) {
       out << k << " -> " << v << ", ";
     }
     out << "}";
