@@ -6,7 +6,7 @@
 namespace whirl::histories {
 
 template <typename Model>
-History Prepare(const History& history) {
+History Cleanup(const History& history) {
   History result;
   for (auto& call : history) {
     if (!call.IsCompleted() && !Model::IsMutation(call)) {
@@ -19,8 +19,23 @@ History Prepare(const History& history) {
 }
 
 template <typename Model>
-bool LinCheck(const History& history) {
-  return LinCheckBrute<Model>(Prepare<Model>(history));
+bool LinCheckImpl(History history) {
+  return LinCheckBrute<Model>(history);
+}
+
+template <typename Model>
+bool LinCheck(History history) {
+  // Cleanup
+  history = Cleanup<Model>(history);
+  // Decompose to independent histories
+  auto sub_histories = Model::Decompose(history);
+  // Check
+  for (const auto& sub : sub_histories) {
+    if (!LinCheckImpl<Model>(sub)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 }  // namespace whirl::histories

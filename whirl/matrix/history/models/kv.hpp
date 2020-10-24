@@ -75,6 +75,11 @@ class KVStoreModel {
     return call.method == "Get";
   }
 
+  static std::vector<History> Decompose(const History& history) {
+    // TODO: split by key
+    return {history};
+  }
+
   static std::string Print(State state) {
     std::stringstream out;
     out << "{";
