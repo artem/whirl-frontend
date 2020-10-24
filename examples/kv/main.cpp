@@ -209,25 +209,24 @@ class KVClient final: public ClientBase {
 
  protected:
   void MainThread() override {
-    KVBlockingStub kv{Channel()};
+    KVBlockingStub kv_store{Channel()};
 
     for (size_t i = 1; ; ++i) {
       // Печатаем текущее системное время
       NODE_LOG("Local wall time: {}", WallTimeNow());
 
-      // Подкинем монетку
       if (RandomNumber() % 2 == 0) {
         // Запись случайного значения
         Key key = ChooseKey();
         Value value = RandomNumber(1, 100);
         NODE_LOG("Execute Set({}, {})", key, value);
-        kv.Set(key, value);
+        kv_store.Set(key, value);
         NODE_LOG("Set completed");
       } else {
         // Чтение
         Key key = ChooseKey();
         NODE_LOG("Execute Get({})", key);
-        Value result = kv.Get(key);
+        Value result = kv_store.Get(key);
         NODE_LOG("Get({}) -> {}", key, result);
       }
 
