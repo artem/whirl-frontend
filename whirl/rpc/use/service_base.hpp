@@ -8,13 +8,16 @@ namespace whirl::rpc {
 template <typename TService>
 class RPCServiceBase : public IRPCService {
  public:
-  bool Has(const std::string& name) const override {
-    return methods_.find(name) != methods_.end();
+  bool Has(const std::string& method) const override {
+    return methods_.find(method) != methods_.end();
   }
 
-  BytesValue Invoke(const std::string& name, const BytesValue& input) override {
-    auto& method = methods_[name];
-    return method(input);
+  BytesValue Invoke(const std::string& method, const BytesValue& input) override {
+    auto method_it = methods_.find(method);
+    WHEELS_VERIFY(method_it != methods_.end(), "RPC method not found: " << method);
+
+    auto& invoker = method_it->second;
+    return invoker(input);
   }
 
   void Initialize() override {
