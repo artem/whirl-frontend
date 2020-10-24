@@ -8,6 +8,8 @@ using namespace rpc;
 
 using ChannelVector = std::vector<IRPCChannelPtr>;
 
+static const std::string kRandomPeer = "random";
+
 class RandomChannel : public rpc::IRPCChannel {
  public:
   RandomChannel(ChannelVector channels) : channels_(std::move(channels)) {
@@ -28,7 +30,6 @@ class RandomChannel : public rpc::IRPCChannel {
   }
 
   const std::string& Peer() const override {
-    static const std::string kRandomPeer = "random";
     return kRandomPeer;
   }
 
