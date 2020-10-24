@@ -241,9 +241,6 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////
 
-void ReportLinearizabilityViolation(
-    )
-
 // [3, 5]
 size_t NumberOfReplicas(size_t seed) {
   return 3 + seed % 3;
