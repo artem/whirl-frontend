@@ -274,8 +274,10 @@ void RunSimulation(size_t seed) {
   const bool linearizable = histories::LinCheck<KVStoreModel>(history);
 
   if (!linearizable) {
+    // Log
     std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
-    fmt::print("History (seed = {}) is NOT LINEARIZABLE:\n", seed);
+
+    std::cout << "History (seed = " << seed << ") is NOT LINEARIZABLE:" << std::endl;
     histories::PrintKVHistory<Key, Value>(history, std::cout);
     std::exit(1);
   }
@@ -285,13 +287,12 @@ void RunSimulations(size_t count) {
   std::mt19937 seeds{42};
 
   for (size_t i = 1; i <= count; ++i) {
+    std::cout << "Simulation " << i << "..." << std::endl;
     RunSimulation(seeds());
-    std::cout << "Progress: " << i << std::endl;
   }
 }
 
 int main() {
   RunSimulations(1234);
-
   return 0;
 }
