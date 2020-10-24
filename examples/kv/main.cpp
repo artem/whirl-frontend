@@ -80,11 +80,11 @@ class KVNode final
 
   // ServiceBase
   void RegisterRPCMethods() override {
-    RegisterRPCMethod("Set", &KVNode::Set);
-    RegisterRPCMethod("Get", &KVNode::Get);
+    RPC_REGISTER_METHOD(Get);
+    RPC_REGISTER_METHOD(Set);
 
-    RegisterRPCMethod("Write", &KVNode::Write);
-    RegisterRPCMethod("Read", &KVNode::Read);
+    RPC_REGISTER_METHOD(Write);
+    RPC_REGISTER_METHOD(Read);
   }
 
   // RPC method handlers

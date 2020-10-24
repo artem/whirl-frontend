@@ -30,7 +30,7 @@ class EchoService : public rpc::RPCServiceBase<EchoService> {
 
  protected:
   void RegisterRPCMethods() {
-    RegisterRPCMethod("Echo", &EchoService::Echo);
+    RPC_REGISTER_METHOD(Echo);
   }
 };
 

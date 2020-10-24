@@ -3,10 +3,18 @@
 #include <whirl/rpc/impl/service.hpp>
 #include <whirl/rpc/impl/invoke_helper.hpp>
 
+#include <wheels/support/preprocessor.hpp>
+
 namespace whirl::rpc {
+
+//////////////////////////////////////////////////////////////////////
 
 template <typename TService>
 class RPCServiceBase : public IRPCService {
+ protected:
+  // See RPC_REGISTER_METHOD macro
+  using ThisService = TService;
+
  public:
   bool Has(const std::string& method) const override {
     return methods_.find(method) != methods_.end();
@@ -54,3 +62,8 @@ class RPCServiceBase : public IRPCService {
 };
 
 }  // namespace whirl::rpc
+
+//////////////////////////////////////////////////////////////////////
+
+#define RPC_REGISTER_METHOD(method) \
+  RegisterRPCMethod(TO_STRING(method), &ThisService::method)
