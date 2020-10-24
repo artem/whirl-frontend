@@ -48,8 +48,8 @@ class RPCTransportServer
   void ProcessRequest(const TransportMessage& message,
                       const ITransportSocketPtr& back);
 
-  void ResponseWithError(const RPCRequestMessage& request,
-                         const ITransportSocketPtr& back, RPCErrorCode error);
+  void RespondWithError(const RPCRequestMessage& request,
+                        const ITransportSocketPtr& back, RPCErrorCode error);
 
   void SendResponse(RPCResponseMessage response,
                     const ITransportSocketPtr& back);

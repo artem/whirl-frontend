@@ -56,14 +56,14 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
   auto service_it = services_.find(request.service);
 
   if (service_it == services_.end()) {
-    ResponseWithError(request, back, RPCErrorCode::ServiceNotFound);
+    RespondWithError(request, back, RPCErrorCode::ServiceNotFound);
     return;
   }
 
-  auto service = service_it->second;
+  const IRPCServicePtr& service = service_it->second;
 
   if (!service->Has(request.method)) {
-    ResponseWithError(request, back, RPCErrorCode::MethodNotFound);
+    RespondWithError(request, back, RPCErrorCode::MethodNotFound);
     return;
   }
 
@@ -71,12 +71,12 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
   try {
     result = service->Invoke(request.method, request.input);
   } catch (RPCBadRequest& e) {
-    ResponseWithError(request, back, RPCErrorCode::BadRequest);
+    RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
     WHIRL_FMT_LOG("Exception in '{}.{}': {}", request.service, request.method,
                   wheels::CurrentExceptionMessage());
-    ResponseWithError(request, back, RPCErrorCode::ExecutionError);
+    RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;
   }
 
@@ -84,9 +84,9 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
   SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
 }
 
-void RPCTransportServer::ResponseWithError(const RPCRequestMessage& request,
-                                           const ITransportSocketPtr& back,
-                                           RPCErrorCode error) {
+void RPCTransportServer::RespondWithError(const RPCRequestMessage& request,
+                                          const ITransportSocketPtr& back,
+                                          RPCErrorCode error) {
   SendResponse({request.id, request.method, "", error}, back);
 }
 
