@@ -94,5 +94,7 @@ class TRPCServer {
 
 }  // namespace whirl::rpc
 
+//////////////////////////////////////////////////////////////////////
+
 #define RPC_REGISTER_METHOD(cls, method) \
   rpc_server.RegisterMethod(TO_STRING(method), &cls::method, this)
