@@ -241,6 +241,9 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////
 
+void ReportLinearizabilityViolation(
+    )
+
 // [3, 5]
 size_t NumberOfReplicas(size_t seed) {
   return 3 + seed % 3;
@@ -276,9 +279,10 @@ void RunSimulation(size_t seed) {
   if (!linearizable) {
     // Log
     std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
-
+    // History
     std::cout << "History (seed = " << seed << ") is NOT LINEARIZABLE:" << std::endl;
     histories::PrintKVHistory<Key, Value>(history, std::cout);
+
     std::exit(1);
   }
 }
