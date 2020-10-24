@@ -144,7 +144,6 @@ class KVNode final: public NodeBase, public std::enable_shared_from_this<KVNode>
     // Локальные часы могут быть рассинхронизированы
     // Возмонжо стоит использовать сервис TrueTime?
     // См. TrueTime()
-    return TrueTime()->Now().latest;
     return WallTimeNow();
   }
 
