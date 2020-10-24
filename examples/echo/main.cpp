@@ -1,6 +1,8 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/node/logging.hpp>
 
+#include <whirl/rpc/use/service_base.hpp>
+
 // Simulation
 #include <whirl/matrix/world/world.hpp>
 #include <whirl/matrix/client/client.hpp>
@@ -18,7 +20,23 @@ using namespace whirl;
 
 //////////////////////////////////////////////////////////////////////
 
-// Echo server
+// Echo service
+
+class EchoService : public rpc::RPCServiceBase<EchoService> {
+ public:
+  std::string Echo(std::string input) {
+    return input;
+  }
+
+ protected:
+  void RegisterRPCMethods() {
+    RegisterRPCMethod("Echo", &EchoService::Echo);
+  }
+};
+
+//////////////////////////////////////////////////////////////////////
+
+// Echo server node
 
 class EchoServerNode final: public NodeBase {
  public:
@@ -27,16 +45,9 @@ class EchoServerNode final: public NodeBase {
   }
 
  protected:
-  void RegisterRPCMethods(TRPCServer& rpc_server) override {
-    rpc_server.RegisterHandler("Echo",
-                               [this](std::string data) { return Echo(data); });
-  }
-
-  // RPC method handlers
-
-  std::string Echo(std::string data) {
-    NODE_LOG("Echo request: '{}'", data);
-    return data ;
+  void RegisterRPCServices(const IRPCServerPtr& rpc_server) override {
+    rpc_server->RegisterService(
+        "Echo", std::make_shared<EchoService>());
   }
 };
 
@@ -68,12 +79,12 @@ class ClientNode final: public ClientBase {
       // Она распаковывает фьючу в Result<std::string>
       // См. <await/fibers/sync/future.hpp>
       auto result = Await(
-          Channel().Call("Echo", MyName()).As<std::string>());
+          Channel().Call("Echo.Echo", MyName()).As<std::string>());
 
       if (result.IsOk()) {
-        WHIRL_LOG("Echo response from " << channel.Peer() << ": '" << *result << "'");
+        NODE_LOG("Echo response from {}: '{}'", channel.Peer(), *result);
       } else {
-        WHIRL_LOG("Echo request failed");
+        NODE_LOG("Echo request failed");
       }
 
       // Threads() - рантайм, с помощью которого можно запускать новые потоки

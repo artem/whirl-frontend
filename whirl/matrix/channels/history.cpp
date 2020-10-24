@@ -33,11 +33,11 @@ class HistoryChannel : public rpc::IRPCChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method,
+  Future<BytesValue> Call(const Callee& callee,
                           const BytesValue& input) override {
-    auto cookie = GetHistoryRecorder().CallStarted(method, input);
+    auto cookie = GetHistoryRecorder().CallStarted(callee.method, input);
 
-    auto f = impl_->Call(method, input);
+    auto f = impl_->Call(callee, input);
 
     auto record = [cookie](const Result<BytesValue>& result) mutable {
       RecordCallResult(cookie, result);

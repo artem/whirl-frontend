@@ -37,13 +37,13 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method,
+  Future<BytesValue> Call(const Callee& callee,
                           const BytesValue& input) override {
-    auto f = impl_->Call(method, input);
+    auto f = impl_->Call(callee, input);
 
     auto self = this->shared_from_this();
 
-    auto retry = [self, method, input]() { return self->Call(method, input); };
+    auto retry = [self, callee, input]() { return self->Call(callee, input); };
 
     auto fallback = [time = time_,
                      retry = std::move(retry)](const Error& e) mutable {

@@ -11,6 +11,7 @@
 #include <whirl/matrix/process/network.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
 #include <whirl/matrix/common/copy.hpp>
+#include <whirl/matrix/common/hide_to_heap.hpp>
 
 #include <whirl/matrix/server/services/local_storage.hpp>
 
@@ -87,7 +88,10 @@ class Server : public IActor, public IFaultyServer {
     WHIRL_LOG("Start node at server " << NetAddress());
 
     auto g = heap_.Use();
-    node_->Start();
+
+    auto node = std::move(node_);
+    node->Start();
+    HideToHeap(std::move(node));
   }
 
   const std::string& Name() const override {
@@ -142,8 +146,6 @@ class Server : public IActor, public IFaultyServer {
     {
       auto g = heap_.Use();
       events_.Clear();
-      // Node is located on server's heap
-      node_.release();
     }
     heap_.Reset();
 

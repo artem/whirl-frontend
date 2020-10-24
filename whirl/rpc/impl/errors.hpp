@@ -11,8 +11,14 @@ enum class RPCErrorCode {
   ChannelClosed = 1,
   TransportError = 2,
   ExecutionError = 3,
-  MethodNotFound = 4,
-  BadRequest = 5,
+  ServiceNotFound = 4,
+  MethodNotFound = 5,
+  BadRequest = 6,
+};
+
+struct RPCBadRequest : std::runtime_error {
+  RPCBadRequest() : std::runtime_error("Arguments mismatch") {
+  }
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -52,6 +58,8 @@ class RPCErrorCategory : public std::error_category {
         return "Transport error";
       case RPCErrorCode::ExecutionError:
         return "Execution error";
+      case RPCErrorCode::ServiceNotFound:
+        return "Service not found";
       case RPCErrorCode::MethodNotFound:
         return "Method not found";
       case RPCErrorCode::BadRequest:

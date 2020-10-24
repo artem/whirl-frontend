@@ -5,9 +5,10 @@
 
 namespace whirl {
 
+using rpc::IRPCServerPtr;
+using rpc::IRPCServicePtr;
 using rpc::TRPCChannel;
 using rpc::TRPCClient;
-using rpc::TRPCServer;
 
 class NodeBase : public INode {
  public:
@@ -107,7 +108,7 @@ class NodeBase : public INode {
  protected:
   // Override this methods
 
-  virtual void RegisterRPCMethods(TRPCServer& /*rpc_server*/) {
+  virtual void RegisterRPCServices(const IRPCServerPtr& /*rpc_server*/) {
   }
 
   virtual void MainThread() {

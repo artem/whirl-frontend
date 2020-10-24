@@ -12,13 +12,14 @@ void RPCTransportServer::Start() {
   server_ = transport_->Serve(shared_from_this());
 }
 
-void RPCTransportServer::RegisterMethod(const std::string& method,
-                                        RPCMethodInvoker invoker) {
-  if (methods_.find(method) != methods_.end()) {
-    WHEELS_PANIC("RPC method '" << method << "' already registered");
+void RPCTransportServer::RegisterService(const std::string& name,
+                                         IRPCServicePtr service) {
+  if (services_.find(name) != services_.end()) {
+    WHEELS_PANIC("RPC service '" << name << "' already registered");
   }
 
-  methods_.emplace(method, std::move(invoker));
+  service->Initialize();
+  services_.emplace(name, std::move(service));
 }
 
 void RPCTransportServer::Shutdown() {
@@ -49,22 +50,37 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
 
   SetThisFiberTraceId(request.trace_id);
 
-  WHIRL_FMT_LOG("Process method '{}' request with id = {}", request.method,
-                request.id);
+  WHIRL_FMT_LOG("Process method '{}.{}' request with id = {}", request.service,
+                request.method, request.id);
 
-  if (methods_.count(request.method) == 0) {
+  auto service_it = services_.find(request.service);
+
+  if (service_it == services_.end()) {
+    ResponseWithError(request, back, RPCErrorCode::ServiceNotFound);
+    return;
+  }
+
+  auto service = service_it->second;
+
+  if (!service->Has(request.method)) {
     ResponseWithError(request, back, RPCErrorCode::MethodNotFound);
+    return;
   }
 
   BytesValue result;
-  auto invoker = methods_[request.method];
   try {
-    result = invoker(request.input);
+    result = service->Invoke(request.method, request.input);
+  } catch (RPCBadRequest& e) {
+    ResponseWithError(request, back, RPCErrorCode::BadRequest);
+    return;
   } catch (...) {
-    WHIRL_FMT_LOG("Exception in method '{}': {}", request.method,
+    WHIRL_FMT_LOG("Exception in '{}.{}': {}", request.service, request.method,
                   wheels::CurrentExceptionMessage());
     ResponseWithError(request, back, RPCErrorCode::ExecutionError);
+    return;
   }
+
+  // Ok
   SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
 }
 

@@ -16,7 +16,7 @@ struct INode {
   virtual void Start() = 0;
 };
 
-using INodePtr = std::unique_ptr<INode>;
+using INodePtr = std::shared_ptr<INode>;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -33,7 +33,7 @@ using INodeFactoryPtr = std::shared_ptr<INodeFactory>;
 template <typename TNode>
 class TNodeFactory : public INodeFactory {
   INodePtr CreateNode(NodeServices services, NodeConfig config) override {
-    return std::make_unique<TNode>(std::move(services), std::move(config));
+    return std::make_shared<TNode>(std::move(services), std::move(config));
   }
 };
 

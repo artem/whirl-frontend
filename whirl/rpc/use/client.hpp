@@ -66,11 +66,13 @@ class TRPCChannel {
   TRPCChannel& operator=(TRPCChannel&& that) = default;
 
   template <typename... Arguments>
-  detail::TRPCResult Call(const std::string& method, Arguments&&... arguments) {
+  detail::TRPCResult Call(const std::string& callee_str,
+                          Arguments&&... arguments) {
+    auto callee = Callee::Parse(callee_str);
     auto packed_arguments =
         std::make_tuple(std::forward<Arguments>(arguments)...);
     auto input = Serialize(packed_arguments);
-    return detail::TRPCResult{impl_->Call(method, std::move(input))};
+    return detail::TRPCResult{impl_->Call(callee, std::move(input))};
   }
 
   // Represent peer

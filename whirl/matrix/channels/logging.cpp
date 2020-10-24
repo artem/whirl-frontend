@@ -33,16 +33,16 @@ class LoggingChannel : public rpc::IRPCChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method,
+  Future<BytesValue> Call(const Callee& callee,
                           const BytesValue& input) override {
-    auto f = impl_->Call(method, input);
+    auto f = impl_->Call(callee, input);
 
-    auto log = [method,
+    auto log = [callee,
                 peer = Peer()](const Result<BytesValue>& result) mutable {
       if (result.IsOk()) {
-        WHIRL_FMT_LOG("Method {}.'{}' completed: Ok", peer, method);
+        WHIRL_FMT_LOG("Method {}.{} completed: Ok", peer, callee.ToString());
       } else {
-        WHIRL_FMT_LOG("Method {}.'{}' failed: {}", peer, method,
+        WHIRL_FMT_LOG("Method {}.{} failed: {}", peer, callee.ToString(),
                       result.GetErrorCode().message());
       }
     };

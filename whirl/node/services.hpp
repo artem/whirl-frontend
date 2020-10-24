@@ -10,7 +10,7 @@
 #include <whirl/services/logger.hpp>
 #include <whirl/services/discovery.hpp>
 
-#include <whirl/rpc/use/server.hpp>
+#include <whirl/rpc/impl/server.hpp>
 #include <whirl/rpc/use/client.hpp>
 
 namespace whirl {
@@ -21,7 +21,7 @@ struct NodeServices {
 
   IDiscoveryPtr discovery;
 
-  rpc::TRPCServer rpc_server;
+  rpc::IRPCServerPtr rpc_server;
   rpc::TRPCClient rpc_client;
 
   LocalStorage local_storage;
