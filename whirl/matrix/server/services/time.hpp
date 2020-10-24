@@ -2,7 +2,6 @@
 
 #include <whirl/services/time.hpp>
 
-#include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/server/clocks.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
 #include <whirl/matrix/log/logger.hpp>
