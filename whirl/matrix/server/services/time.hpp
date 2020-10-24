@@ -17,15 +17,15 @@ namespace whirl {
 
 class TimeService : public ITimeService {
  public:
-  TimeService(LocalWallClock& wall_time_clock,
+  TimeService(LocalWallClock& wall_clock,
               LocalMonotonicClock& monotonic_clock, EventQueue& events)
-      : wall_time_clock_(wall_time_clock),
+      : wall_clock_(wall_clock),
         monotonic_clock_(monotonic_clock),
         events_(events) {
   }
 
   TimePoint WallTimeNow() override {
-    return wall_time_clock_.Now();
+    return wall_clock_.Now();
   }
 
   TimePoint MonotonicNow() override {
@@ -42,11 +42,11 @@ class TimeService : public ITimeService {
 
  private:
   TimePoint AfterWorldTime(Duration d) const {
-    return GlobalNow() + wall_time_clock_.ShapeDuration(d);
+    return GlobalNow() + wall_clock_.ShapeDuration(d);
   }
 
  private:
-  LocalWallClock& wall_time_clock_;
+  LocalWallClock& wall_clock_;
   LocalMonotonicClock& monotonic_clock_;
 
   EventQueue& events_;
