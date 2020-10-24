@@ -60,7 +60,7 @@ std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
 
 // KV storage node
 
-class KVNode final: public NodeBase {
+class KVNode final: public NodeBase, public std::enable_shared_from_this<KVNode> {
  public:
   KVNode(NodeServices services, NodeConfig config)
       : NodeBase(std::move(services), config),
@@ -69,17 +69,10 @@ class KVNode final: public NodeBase {
 
  protected:
   void RegisterRPCMethods(rpc::TRPCServer& rpc_server) override {
-    rpc_server.RegisterMethod("Set",
-                              [this](Key k, Value v) { Set(k, v); });
-
-    rpc_server.RegisterMethod("Get",
-                              [this](Key k) { return Get(k); });
-
-    rpc_server.RegisterMethod("Write",
-                              [this](Key k, StampedValue v) { Write(k, v); });
-
-    rpc_server.RegisterMethod("Read",
-                              [this](Key k) { return Read(k); });
+    RPC_REGISTER_METHOD(KVNode, Set);
+    RPC_REGISTER_METHOD(KVNode, Get);
+    RPC_REGISTER_METHOD(KVNode, Write);
+    RPC_REGISTER_METHOD(KVNode, Read);
   }
 
   // RPC method handlers
@@ -151,6 +144,7 @@ class KVNode final: public NodeBase {
     // Локальные часы могут быть рассинхронизированы
     // Возмонжо стоит использовать сервис TrueTime?
     // См. TrueTime()
+    return TrueTime()->Now().latest;
     return WallTimeNow();
   }
 
@@ -200,9 +194,10 @@ class KVBlockingStub {
 
 static const std::vector<std::string> kKeys({"a", "b", "c"});
 
+
 const std::string& ChooseKey() {
-  size_t count = 1 + WorldSeed() % 2;  // Constant in simulation
-  return kKeys.at(GlobalRandomNumber(count));
+  size_t this_test_keys = 1 + ThisWorldConst(10117) % 2;
+  return kKeys.at(GlobalRandomNumber(this_test_keys));
 }
 
 //////////////////////////////////////////////////////////////////////

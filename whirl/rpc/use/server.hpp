@@ -3,6 +3,7 @@
 #include <whirl/rpc/impl/transport_server.hpp>
 
 #include <wheels/support/function_meta.hpp>
+#include <wheels/support/preprocessor.hpp>
 
 #include <cereal/types/tuple.hpp>
 
@@ -58,8 +59,9 @@ class TRPCServer {
   TRPCServer(TRPCServer&& that) = default;
   TRPCServer& operator=(TRPCServer&& that) = default;
 
+
   template <typename F>
-  void RegisterMethod(const std::string& method, F&& f) {
+  void RegisterHandler(const std::string& name, F&& f) {
     // Deduce method arguments and return type
 
     using ArgumentsTupleType = typename FunctionTraits<F>::ArgumentsTuple;
@@ -73,7 +75,17 @@ class TRPCServer {
       return TypedMethod::Invoke(std::move(f), input);
     };
 
-    impl_->RegisterMethod(method, std::move(invoker));
+    impl_->RegisterMethod(name, std::move(invoker));
+  }
+
+  template <typename T, typename R, typename ... Args>
+  void RegisterMethod(const std::string& name, R(T::*method)(Args...), T* object) {
+
+    auto binded_method = [object, method](Args&& ... args) -> R {
+      return (object->*method)(std::forward<Args>(args)...);
+    };
+
+    RegisterHandler(name, std::move(binded_method));
   }
 
  private:
@@ -81,3 +93,6 @@ class TRPCServer {
 };
 
 }  // namespace whirl::rpc
+
+#define RPC_REGISTER_METHOD(cls, method) \
+  rpc_server.RegisterMethod(TO_STRING(method), &cls::method, this)

@@ -32,8 +32,7 @@ class ChattyNode final: public NodeBase {
 
  protected:
   void RegisterRPCMethods(TRPCServer& rpc_server) override {
-    rpc_server.RegisterMethod("Hello",
-        [this](std::string who) { return Ping(who); });
+    rpc_server.RegisterMethod("Hello", &ChattyNode::Ping, this);
   }
 
   std::string Ping(std::string who) {

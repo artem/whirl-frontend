@@ -28,8 +28,8 @@ class EchoServerNode final: public NodeBase {
 
  protected:
   void RegisterRPCMethods(TRPCServer& rpc_server) override {
-    rpc_server.RegisterMethod("Echo",
-                              [this](std::string data) { return Echo(data); });
+    rpc_server.RegisterHandler("Echo",
+                               [this](std::string data) { return Echo(data); });
   }
 
   // RPC method handlers
