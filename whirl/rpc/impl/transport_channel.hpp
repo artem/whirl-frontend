@@ -10,8 +10,6 @@
 #include <await/executors/executor.hpp>
 #include <await/executors/strand.hpp>
 
-#include <await/fibers/sync/teleport.hpp>
-
 #include <await/futures/promise.hpp>
 
 // TODO: abstract logger
