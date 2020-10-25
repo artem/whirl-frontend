@@ -3,6 +3,8 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
+#include <whirl/rpc/use/channel.hpp>
+
 // TODO!
 #include <whirl/matrix/log/logger.hpp>
 

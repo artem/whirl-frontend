@@ -16,6 +16,8 @@
 
 #include <whirl/rpc/impl/id.hpp>
 
+#include <whirl/rpc/use/service_base.hpp>
+
 #include <whirl/helpers/serialize.hpp>
 
 #include <cereal/types/string.hpp>
@@ -60,7 +62,9 @@ std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
 
 // KV storage node
 
-class KVNode final: public NodeBase, public std::enable_shared_from_this<KVNode> {
+class KVNode final
+ : public rpc::RPCServiceBase<KVNode>, public NodeBase,
+   public std::enable_shared_from_this<KVNode> {
  public:
   KVNode(NodeServices services, NodeConfig config)
       : NodeBase(std::move(services), config),
@@ -68,11 +72,19 @@ class KVNode final: public NodeBase, public std::enable_shared_from_this<KVNode>
   }
 
  protected:
-  void RegisterRPCMethods(rpc::TRPCServer& rpc_server) override {
-    RPC_REGISTER_METHOD(KVNode, Set);
-    RPC_REGISTER_METHOD(KVNode, Get);
-    RPC_REGISTER_METHOD(KVNode, Write);
-    RPC_REGISTER_METHOD(KVNode, Read);
+  // NodeBase
+  void RegisterRPCServices(const rpc::IRPCServerPtr& rpc_server) override {
+    rpc_server->RegisterService(
+        "KV", shared_from_this());
+  }
+
+  // ServiceBase
+  void RegisterRPCMethods() override {
+    RPC_REGISTER_METHOD(Get);
+    RPC_REGISTER_METHOD(Set);
+
+    RPC_REGISTER_METHOD(Write);
+    RPC_REGISTER_METHOD(Read);
   }
 
   // RPC method handlers
@@ -87,7 +99,7 @@ class KVNode final: public NodeBase, public std::enable_shared_from_this<KVNode>
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
           PeerChannel(i).Call(
-              "Write", k, StampedValue{v, write_ts}));
+              "KV.Write", k, StampedValue{v, write_ts}));
     }
 
     // Синхронно дожидаемся большинства подтверждений
@@ -100,7 +112,7 @@ class KVNode final: public NodeBase, public std::enable_shared_from_this<KVNode>
     // Отправляем пирам команду Read(k)
     for (size_t i = 0; i < PeerCount(); ++i) {
       reads.push_back(
-          PeerChannel(i).Call("Read", k));
+          PeerChannel(i).Call("KV.Read", k));
     }
 
     // Собираем кворум большинства
@@ -178,11 +190,11 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(channel_.Call("Set", k, v).As<void>()).ExpectOk();
+    Await(channel_.Call("KV.Set", k, v).As<void>()).ExpectOk();
   }
 
   Value Get(Key k) {
-    return Await(channel_.Call("Get", k).As<Value>()).Value();
+    return Await(channel_.Call("KV.Get", k).As<Value>()).Value();
   }
 
  private:

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <whirl/rpc/impl/method.hpp>
 #include <whirl/rpc/impl/raw_value.hpp>
 
 #include <await/futures/future.hpp>
@@ -17,9 +18,7 @@ using await::futures::Future;
 struct IRPCChannel {
   virtual ~IRPCChannel() = default;
 
-  virtual void Start() = 0;
-
-  virtual Future<BytesValue> Call(const std::string& method,
+  virtual Future<BytesValue> Call(const Method& method,
                                   const BytesValue& input) = 0;
 
   virtual void Close() = 0;

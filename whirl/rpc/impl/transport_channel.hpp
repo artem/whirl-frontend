@@ -1,5 +1,6 @@
 #pragma once
 
+#include <whirl/rpc/impl/method.hpp>
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/protocol.hpp>
 #include <whirl/rpc/impl/channel.hpp>
@@ -34,7 +35,7 @@ class RPCTransportChannel
   struct Request {
     RPCId id;
     TraceId trace_id;
-    std::string method;
+    Method method;
     BytesValue input;
     Promise<BytesValue> promise;
   };
@@ -49,17 +50,17 @@ class RPCTransportChannel
         strand_(await::executors::MakeStrand(e)) {
   }
 
+  void Start() {
+    // GetTransportSocket();
+  }
+
   ~RPCTransportChannel() {
     Close();
   }
 
   // IRPCChannel
 
-  void Start() override {
-    // GetTransportSocket();
-  }
-
-  Future<BytesValue> Call(const std::string& method,
+  Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override;
 
   void Close() override;
@@ -82,7 +83,7 @@ class RPCTransportChannel
   }
 
  private:
-  Request MakeRequest(const std::string& method, const BytesValue& input);
+  Request MakeRequest(const Method& method, const BytesValue& input);
 
   // Inside strand executor
   void SendRequest(Request request);

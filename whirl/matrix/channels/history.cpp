@@ -21,10 +21,6 @@ class HistoryChannel : public rpc::IRPCChannel {
   HistoryChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
   }
 
-  void Start() override {
-    // Nop
-  }
-
   void Close() override {
     impl_->Close();
   }
@@ -33,9 +29,9 @@ class HistoryChannel : public rpc::IRPCChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method,
+  Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override {
-    auto cookie = GetHistoryRecorder().CallStarted(method, input);
+    auto cookie = GetHistoryRecorder().CallStarted(method.name, input);
 
     auto f = impl_->Call(method, input);
 

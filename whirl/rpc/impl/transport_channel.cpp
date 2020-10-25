@@ -5,7 +5,7 @@
 
 namespace whirl::rpc {
 
-Future<BytesValue> RPCTransportChannel::Call(const std::string& method,
+Future<BytesValue> RPCTransportChannel::Call(const Method& method,
                                              const BytesValue& input) {
   auto request = MakeRequest(method, input);
   auto trace_id = request.trace_id;
@@ -27,7 +27,7 @@ void RPCTransportChannel::Close() {
 }
 
 RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
-    const std::string& method, const BytesValue& input) {
+    const Method& method, const BytesValue& input) {
   Request request;
 
   request.id = GenerateRequestId();

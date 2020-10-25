@@ -1,5 +1,6 @@
 #pragma once
 
+#include <whirl/rpc/impl/method.hpp>
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/raw_value.hpp>
 #include <whirl/rpc/impl/trace.hpp>
@@ -23,7 +24,7 @@ struct RPCRequestMessage {
   RPCId id;
   TraceId trace_id;
   std::string to;  // For debugging
-  std::string method;
+  Method method;
   BytesValue input;
 
   SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(to),
@@ -36,7 +37,7 @@ struct RPCRequestMessage {
 
 struct RPCResponseMessage {
   RPCId request_id;
-  std::string method;  // For debugging
+  Method method;  // For debugging
   BytesValue result;
   RPCErrorCode error;
 

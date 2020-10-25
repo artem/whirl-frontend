@@ -6,6 +6,8 @@
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
 
+#include <await/futures/helpers.hpp>
+
 namespace whirl::adversary {
 
 using namespace await::futures;

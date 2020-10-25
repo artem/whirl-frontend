@@ -21,10 +21,6 @@ class LoggingChannel : public rpc::IRPCChannel {
   LoggingChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
   }
 
-  void Start() override {
-    // Nop
-  }
-
   void Close() override {
     impl_->Close();
   }
@@ -33,16 +29,16 @@ class LoggingChannel : public rpc::IRPCChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const std::string& method,
+  Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override {
     auto f = impl_->Call(method, input);
 
     auto log = [method,
                 peer = Peer()](const Result<BytesValue>& result) mutable {
       if (result.IsOk()) {
-        WHIRL_FMT_LOG("Method {}.'{}' completed: Ok", peer, method);
+        WHIRL_FMT_LOG("Call {}.{} completed: Ok", peer, method);
       } else {
-        WHIRL_FMT_LOG("Method {}.'{}' failed: {}", peer, method,
+        WHIRL_FMT_LOG("Call {}.{} failed: {}", peer, method,
                       result.GetErrorCode().message());
       }
     };

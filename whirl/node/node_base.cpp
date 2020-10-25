@@ -13,7 +13,7 @@ void NodeBase::Start() {
 }
 
 void NodeBase::StartRPCServer() {
-  services_.rpc_server.Start();
+  services_.rpc_server->Start();
 }
 
 void NodeBase::DiscoverCluster() {
@@ -38,7 +38,7 @@ void NodeBase::Main() {
   await::fibers::self::SetName("main");
 
   StartRPCServer();
-  RegisterRPCMethods(services_.rpc_server);
+  RegisterRPCServices(services_.rpc_server);
   DiscoverCluster();
   ConnectToPeers();
   MainThread();
