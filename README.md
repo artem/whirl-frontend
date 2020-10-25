@@ -1,5 +1,13 @@
 # Whirl 
 
+## Example
+
+[KV](https://gitlab.com/Lipovsky/whirl/-/blob/master/examples/kv/main.cpp) - simple replicated KV store
+
+- Quorum reads/writes
+- Last-write-wins with wall clock
+- Persistent storage
+
 ## Inspiration
 
 - [Testing Distributed Systems w/ Deterministic Simulation](https://www.youtube.com/watch?v=4fFDFbi3toc)
