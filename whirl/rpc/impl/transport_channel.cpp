@@ -41,7 +41,7 @@ RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
 void RPCTransportChannel::SendRequest(Request request) {
   TLTraceContext tg{request.trace_id};
 
-  WHIRL_FMT_LOG("Request method '{}' on peer {}", request.callee.ToString(),
+  WHIRL_FMT_LOG("Request method '{}' on peer {}", request.callee,
                 peer_);
 
   ITransportSocketPtr& socket = GetTransportSocket();

@@ -36,9 +36,9 @@ class LoggingChannel : public rpc::IRPCChannel {
     auto log = [callee,
                 peer = Peer()](const Result<BytesValue>& result) mutable {
       if (result.IsOk()) {
-        WHIRL_FMT_LOG("Method {}.{} completed: Ok", peer, callee.ToString());
+        WHIRL_FMT_LOG("Call {}.{} completed: Ok", peer, callee);
       } else {
-        WHIRL_FMT_LOG("Method {}.{} failed: {}", peer, callee.ToString(),
+        WHIRL_FMT_LOG("Call {}.{} failed: {}", peer, callee,
                       result.GetErrorCode().message());
       }
     };

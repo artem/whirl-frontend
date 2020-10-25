@@ -51,7 +51,7 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
   SetThisFiberTraceId(request.trace_id);
 
   WHIRL_FMT_LOG("Process '{}' request with id = {}",
-                request.callee.ToString(), request.id);
+                request.callee, request.id);
 
   auto service_it = services_.find(request.callee.service);
 
@@ -74,7 +74,7 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
-    WHIRL_FMT_LOG("Exception in {}: {}", request.callee.ToString(),
+    WHIRL_FMT_LOG("Exception in {}: {}", request.callee,
                   wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;

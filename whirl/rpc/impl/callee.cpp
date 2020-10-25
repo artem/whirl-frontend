@@ -12,4 +12,9 @@ Callee Callee::Parse(std::string callee) {
   return {parts[0], parts[1]};
 }
 
+std::ostream& operator<< (std::ostream& out, const Callee& callee) {
+  out << callee.service << "." << callee.method;
+  return out;
+}
+
 }  // namespace whirl::rpc
