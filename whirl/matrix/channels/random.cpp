@@ -19,10 +19,6 @@ class RandomChannel : public rpc::IRPCChannel {
     Close();
   }
 
-  void Start() override {
-    // Nop
-  }
-
   Future<BytesValue> Call(const Callee& callee,
                           const BytesValue& input) override {
     size_t index = GlobalRandomNumber(channels_.size());

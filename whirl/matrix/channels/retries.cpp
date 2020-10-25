@@ -25,10 +25,6 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
       : impl_(std::move(impl)), time_(std::move(time)) {
   }
 
-  void Start() override {
-    // Nop
-  }
-
   void Close() override {
     impl_->Close();
   }

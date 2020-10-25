@@ -50,15 +50,15 @@ class RPCTransportChannel
         strand_(await::executors::MakeStrand(e)) {
   }
 
+  void Start() {
+    // GetTransportSocket();
+  }
+
   ~RPCTransportChannel() {
     Close();
   }
 
   // IRPCChannel
-
-  void Start() override {
-    // GetTransportSocket();
-  }
 
   Future<BytesValue> Call(const Callee& callee,
                           const BytesValue& input) override;

@@ -21,10 +21,6 @@ class HistoryChannel : public rpc::IRPCChannel {
   HistoryChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
   }
 
-  void Start() override {
-    // Nop
-  }
-
   void Close() override {
     impl_->Close();
   }

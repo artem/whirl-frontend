@@ -3,6 +3,8 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 
+#include <whirl/rpc/use/channel.hpp>
+
 namespace whirl {
 
 using rpc::IRPCServerPtr;
@@ -25,6 +27,10 @@ class NodeBase : public INode {
   void ConnectToPeers();
 
  protected:
+  const NodeServices& ThisNodeServices() {
+    return services_;
+  }
+
   // Me
 
   NodeId Id() const {

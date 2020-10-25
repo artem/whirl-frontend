@@ -18,8 +18,6 @@ using await::futures::Future;
 struct IRPCChannel {
   virtual ~IRPCChannel() = default;
 
-  virtual void Start() = 0;
-
   virtual Future<BytesValue> Call(const Callee& callee,
                                   const BytesValue& input) = 0;
 

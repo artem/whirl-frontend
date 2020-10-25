@@ -21,10 +21,6 @@ class LoggingChannel : public rpc::IRPCChannel {
   LoggingChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
   }
 
-  void Start() override {
-    // Nop
-  }
-
   void Close() override {
     impl_->Close();
   }
