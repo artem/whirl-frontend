@@ -29,11 +29,11 @@ template <typename Result, typename... Args>
 struct InvokeHelper {
   template <typename M>
   static BytesValue Invoke(M f, const BytesValue& input) {
-    using PackedArgs = typename Pack<Args...>::Tuple;
+    using ArgsTuple = typename Pack<Args...>::Tuple;
 
-    auto packed_args = DeserializeInput<PackedArgs>(input);
+    auto packed_args = DeserializeInput<ArgsTuple>(input);
     Result result =
-        std::apply(std::move(f), std::forward<PackedArgs>(packed_args));
+        std::apply(std::move(f), std::forward<ArgsTuple>(packed_args));
     return Serialize(result);
   }
 };
@@ -42,10 +42,10 @@ template <typename... Args>
 struct InvokeHelper<void, Args...> {
   template <typename M>
   static BytesValue Invoke(M f, const BytesValue& input) {
-    using PackedArgs = typename Pack<Args...>::Tuple;
+    using ArgsTuple = typename Pack<Args...>::Tuple;
 
-    auto packed_args = DeserializeInput<PackedArgs>(input);
-    std::apply(std::move(f), std::forward<PackedArgs>(packed_args));
+    auto packed_args = DeserializeInput<ArgsTuple>(input);
+    std::apply(std::move(f), std::forward<ArgsTuple>(packed_args));
     return "";
   }
 };

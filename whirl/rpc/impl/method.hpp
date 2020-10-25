@@ -12,7 +12,7 @@ struct Method {
   std::string service;
   std::string name;
 
-  // Expected format: {service}.{name}
+  // Format: "{service}.{name}"
   static Method Parse(std::string method);
 
   SERIALIZE(CEREAL_NVP(service), CEREAL_NVP(name))
