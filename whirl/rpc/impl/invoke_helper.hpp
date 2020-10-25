@@ -11,10 +11,10 @@ namespace whirl::rpc {
 
 namespace detail {
 
-template <typename PackedArgs>
-PackedArgs DeserializeInput(const BytesValue& input) {
+template <typename ArgsTuple>
+ArgsTuple DeserializeInput(const BytesValue& input) {
   try {
-    return Deserialize<PackedArgs>(input);
+    return Deserialize<ArgsTuple>(input);
   } catch (...) {
     throw RPCBadRequest();
   }
