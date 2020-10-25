@@ -21,8 +21,8 @@ struct NodeServices {
 
   IDiscoveryPtr discovery;
 
-  rpc::IRPCServerPtr rpc_server;
-  rpc::TRPCClient rpc_client;
+  rpc::IServerPtr rpc_server;
+  rpc::TClient rpc_client;
 
   LocalStorage local_storage;
   // Use to create local storages

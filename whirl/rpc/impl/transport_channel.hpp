@@ -26,9 +26,9 @@ using await::futures::Promise;
 
 // Fair-loss channel
 
-class RPCTransportChannel
-    : public std::enable_shared_from_this<RPCTransportChannel>,
-      public IRPCChannel,
+class TransportChannel
+    : public std::enable_shared_from_this<TransportChannel>,
+      public IChannel,
       public ITransportHandler {
  private:
   struct Request {
@@ -42,7 +42,7 @@ class RPCTransportChannel
   using Requests = std::map<RPCId, Request>;
 
  public:
-  RPCTransportChannel(ITransportPtr t, IExecutorPtr e, TransportAddress peer)
+  TransportChannel(ITransportPtr t, IExecutorPtr e, TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
         peer_(peer),
@@ -53,11 +53,11 @@ class RPCTransportChannel
     // GetTransportSocket();
   }
 
-  ~RPCTransportChannel() {
+  ~TransportChannel() {
     Close();
   }
 
-  // IRPCChannel
+  // IChannel
 
   Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override;
@@ -90,7 +90,7 @@ class RPCTransportChannel
   void LostPeer();
   void DoClose();
 
-  RPCResponseMessage ParseResponse(const TransportMessage& message);
+  ResponseMessage ParseResponse(const TransportMessage& message);
 
  private:
   ITransportSocketPtr& GetTransportSocket();

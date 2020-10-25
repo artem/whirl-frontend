@@ -5,8 +5,8 @@
 
 namespace whirl::rpc {
 
-Future<BytesValue> RPCTransportChannel::Call(const Method& method,
-                                             const BytesValue& input) {
+Future<BytesValue> TransportChannel::Call(const Method& method,
+                                          const BytesValue& input) {
   auto request = MakeRequest(method, input);
   auto trace_id = request.trace_id;
 
@@ -21,12 +21,12 @@ Future<BytesValue> RPCTransportChannel::Call(const Method& method,
   return std::move(future).Via(std::move(e));
 }
 
-void RPCTransportChannel::Close() {
+void TransportChannel::Close() {
   auto close = [self = shared_from_this()]() { self->DoClose(); };
   await::futures::SyncVia(strand_, std::move(close));
 }
 
-RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
+TransportChannel::Request TransportChannel::MakeRequest(
     const Method& method, const BytesValue& input) {
   Request request;
 
@@ -38,7 +38,7 @@ RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
   return request;
 }
 
-void RPCTransportChannel::SendRequest(Request request) {
+void TransportChannel::SendRequest(Request request) {
   TLTraceContext tg{request.trace_id};
 
   WHIRL_FMT_LOG("Request method '{}' on peer {}", request.method, peer_);
@@ -53,13 +53,13 @@ void RPCTransportChannel::SendRequest(Request request) {
 
   auto id = request.id;
 
-  socket->Send(Serialize<RPCRequestMessage>(
+  socket->Send(Serialize<RequestMessage>(
       {request.id, request.trace_id, peer_, request.method, request.input}));
 
   requests_.emplace(id, std::move(request));
 }
 
-void RPCTransportChannel::ProcessResponse(const TransportMessage& message) {
+void TransportChannel::ProcessResponse(const TransportMessage& message) {
   WHIRL_FMT_LOG("Process response message from {}", peer_);
 
   auto response = ParseResponse(message);
@@ -85,12 +85,12 @@ void RPCTransportChannel::ProcessResponse(const TransportMessage& message) {
   }
 }
 
-RPCResponseMessage RPCTransportChannel::ParseResponse(
+ResponseMessage TransportChannel::ParseResponse(
     const TransportMessage& message) {
-  return Deserialize<RPCResponseMessage>(message);
+  return Deserialize<ResponseMessage>(message);
 }
 
-void RPCTransportChannel::LostPeer() {
+void TransportChannel::LostPeer() {
   auto requests = std::move(requests_);
   requests_.clear();
 
@@ -107,13 +107,13 @@ void RPCTransportChannel::LostPeer() {
   }
 }
 
-void RPCTransportChannel::DoClose() {
+void TransportChannel::DoClose() {
   if (socket_ && socket_->IsConnected()) {
     socket_->Close();
   }
 }
 
-ITransportSocketPtr& RPCTransportChannel::GetTransportSocket() {
+ITransportSocketPtr& TransportChannel::GetTransportSocket() {
   if (socket_) {
     return socket_;
   }
@@ -122,7 +122,7 @@ ITransportSocketPtr& RPCTransportChannel::GetTransportSocket() {
   return socket_;
 }
 
-void RPCTransportChannel::Fail(Request& request, std::error_code e) {
+void TransportChannel::Fail(Request& request, std::error_code e) {
   WHIRL_FMT_LOG("Fail request with id = {}", request.id);
   std::move(request.promise).SetError(wheels::Error(e));
 }

@@ -4,6 +4,6 @@
 
 namespace whirl {
 
-rpc::IRPCChannelPtr MakeHistoryChannel(rpc::IRPCChannelPtr channel);
+rpc::IChannelPtr MakeHistoryChannel(rpc::IChannelPtr channel);
 
 }  // namespace whirl

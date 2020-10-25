@@ -14,9 +14,9 @@ namespace whirl::rpc {
 
 namespace detail {
 
-class TRPCResult {
+class TCallResult {
  public:
-  explicit TRPCResult(Future<BytesValue>&& raw_result)
+  explicit TCallResult(Future<BytesValue>&& raw_result)
       : raw_result_(std::move(raw_result)) {
   }
 
@@ -49,19 +49,19 @@ class TRPCResult {
 // 1) Future<std::string> f = channel.Call("Echo.Echo", data);
 // 2) auto f = channel.Call("Echo.Echo", data).As<std::string>();
 
-class TRPCChannel {
+class TChannel {
  public:
-  TRPCChannel(IRPCChannelPtr impl = nullptr) : impl_(impl) {
+  TChannel(IChannelPtr impl = nullptr) : impl_(impl) {
   }
 
   template <typename... Arguments>
-  detail::TRPCResult Call(const std::string& method_str,
-                          Arguments&&... arguments) {
+  detail::TCallResult Call(const std::string& method_str,
+                           Arguments&&... arguments) {
     auto method = Method::Parse(method_str);
     auto packed_arguments =
         std::make_tuple(std::forward<Arguments>(arguments)...);
     auto input = Serialize(packed_arguments);
-    return detail::TRPCResult{impl_->Call(method, input)};
+    return detail::TCallResult{impl_->Call(method, input)};
   }
 
   // Represent peer
@@ -74,7 +74,7 @@ class TRPCChannel {
   }
 
  private:
-  IRPCChannelPtr impl_;
+  IChannelPtr impl_;
 };
 
 }  // namespace whirl::rpc

@@ -15,8 +15,8 @@ using await::futures::Future;
 
 // Communication line between client and remote service
 
-struct IRPCChannel {
-  virtual ~IRPCChannel() = default;
+struct IChannel {
+  virtual ~IChannel() = default;
 
   virtual Future<BytesValue> Call(const Method& method,
                                   const BytesValue& input) = 0;
@@ -26,14 +26,14 @@ struct IRPCChannel {
   virtual const std::string& Peer() const = 0;
 };
 
-using IRPCChannelPtr = std::shared_ptr<IRPCChannel>;
+using IChannelPtr = std::shared_ptr<IChannel>;
 
 //////////////////////////////////////////////////////////////////////
 
 struct IRPCClient {
   virtual ~IRPCClient() = default;
 
-  virtual IRPCChannelPtr MakeChannel(std::string peer) = 0;
+  virtual IChannelPtr MakeChannel(std::string peer) = 0;
 };
 
 using IRPCClientPtr = std::shared_ptr<IRPCClient>;

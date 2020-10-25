@@ -7,11 +7,6 @@
 
 namespace whirl {
 
-using rpc::IRPCServerPtr;
-using rpc::IRPCServicePtr;
-using rpc::TRPCChannel;
-using rpc::TRPCClient;
-
 class NodeBase : public INode {
  public:
   NodeBase(NodeServices services, NodeConfig config)
@@ -23,7 +18,7 @@ class NodeBase : public INode {
  private:
   void StartRPCServer();
   void DiscoverCluster();
-  rpc::IRPCChannelPtr MakeChannel(const std::string& peer_addr);
+  rpc::IChannelPtr MakeChannel(const std::string& peer_addr);
   void ConnectToPeers();
 
  protected:
@@ -55,7 +50,7 @@ class NodeBase : public INode {
     return cluster_.at(index);
   }
 
-  TRPCChannel& PeerChannel(size_t index) {
+  rpc::TChannel& PeerChannel(size_t index) {
     return channels_.at(index);
   }
 
@@ -114,7 +109,7 @@ class NodeBase : public INode {
  protected:
   // Override this methods
 
-  virtual void RegisterRPCServices(const IRPCServerPtr& /*rpc_server*/) {
+  virtual void RegisterRPCServices(const rpc::IServerPtr& /*rpc_server*/) {
   }
 
   virtual void MainThread() {
@@ -129,7 +124,7 @@ class NodeBase : public INode {
   const NodeConfig config_;
 
   std::vector<std::string> cluster_;
-  std::vector<TRPCChannel> channels_;
+  std::vector<rpc::TChannel> channels_;
 };
 
 }  // namespace whirl

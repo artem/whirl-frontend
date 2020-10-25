@@ -19,9 +19,9 @@ using wheels::Result;
 using namespace await::futures;
 
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
-                       public rpc::IRPCChannel {
+                       public rpc::IChannel {
  public:
-  RetriesChannel(IRPCChannelPtr impl, ITimeServicePtr time)
+  RetriesChannel(IChannelPtr impl, ITimeServicePtr time)
       : impl_(std::move(impl)), time_(std::move(time)) {
   }
 
@@ -56,12 +56,12 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
  private:
-  rpc::IRPCChannelPtr impl_;
+  rpc::IChannelPtr impl_;
   ITimeServicePtr time_;
 };
 
-rpc::IRPCChannelPtr WithRetries(rpc::IRPCChannelPtr channel,
-                                ITimeServicePtr time) {
+rpc::IChannelPtr WithRetries(rpc::IChannelPtr channel,
+                             ITimeServicePtr time) {
   return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
 }
 

@@ -6,6 +6,6 @@
 
 namespace whirl {
 
-rpc::IRPCChannelPtr MakeLoggingChannel(rpc::IRPCChannelPtr channel);
+rpc::IChannelPtr MakeLoggingChannel(rpc::IChannelPtr channel);
 
 }  // namespace whirl

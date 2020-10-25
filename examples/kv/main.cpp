@@ -63,7 +63,7 @@ std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
 // KV storage node
 
 class KVNode final
- : public rpc::RPCServiceBase<KVNode>, public NodeBase,
+ : public rpc::ServiceBase<KVNode>, public NodeBase,
    public std::enable_shared_from_this<KVNode> {
  public:
   KVNode(NodeServices services, NodeConfig config)
@@ -73,7 +73,7 @@ class KVNode final
 
  protected:
   // NodeBase
-  void RegisterRPCServices(const rpc::IRPCServerPtr& rpc_server) override {
+  void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
     rpc_server->RegisterService(
         "KV", shared_from_this());
   }
@@ -185,7 +185,7 @@ class KVNode final
 
 class KVBlockingStub {
  public:
-  KVBlockingStub(rpc::TRPCChannel& channel)
+  KVBlockingStub(rpc::TChannel& channel)
       : channel_(channel) {
   }
 
@@ -198,7 +198,7 @@ class KVBlockingStub {
   }
 
  private:
-  rpc::TRPCChannel& channel_;
+  rpc::TChannel& channel_;
 };
 
 //////////////////////////////////////////////////////////////////////

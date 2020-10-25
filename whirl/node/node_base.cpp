@@ -20,7 +20,7 @@ void NodeBase::DiscoverCluster() {
   cluster_ = services_.discovery->GetCluster();
 }
 
-rpc::IRPCChannelPtr NodeBase::MakeChannel(const std::string& peer_addr) {
+rpc::IChannelPtr NodeBase::MakeChannel(const std::string& peer_addr) {
   auto transport = services_.rpc_client.MakeChannel(peer_addr);
   auto log = MakeLoggingChannel(std::move(transport));
   auto retries = WithRetries(std::move(log), TimeService());

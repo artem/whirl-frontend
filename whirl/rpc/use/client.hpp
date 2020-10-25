@@ -8,18 +8,16 @@ namespace whirl::rpc {
 
 using await::executors::IExecutorPtr;
 
-//////////////////////////////////////////////////////////////////////
-
-class TRPCClient {
+class TClient {
  public:
-  TRPCClient() {
+  TClient() {
   }
 
-  TRPCClient(ITransportPtr t, IExecutorPtr e)
+  TClient(ITransportPtr t, IExecutorPtr e)
       : transport_(std::move(t)), executor_(std::move(e)) {
   }
 
-  IRPCChannelPtr MakeChannel(const std::string& peer);
+  IChannelPtr MakeChannel(const std::string& peer);
 
  private:
   ITransportPtr transport_;

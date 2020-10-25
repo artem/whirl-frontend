@@ -16,9 +16,9 @@ static Logger logger_{"Logging channel"};
 using namespace rpc;
 using wheels::Result;
 
-class LoggingChannel : public rpc::IRPCChannel {
+class LoggingChannel : public rpc::IChannel {
  public:
-  LoggingChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
+  LoggingChannel(IChannelPtr impl) : impl_(std::move(impl)) {
   }
 
   void Close() override {
@@ -47,10 +47,10 @@ class LoggingChannel : public rpc::IRPCChannel {
   }
 
  private:
-  rpc::IRPCChannelPtr impl_;
+  rpc::IChannelPtr impl_;
 };
 
-rpc::IRPCChannelPtr MakeLoggingChannel(rpc::IRPCChannelPtr channel) {
+rpc::IChannelPtr MakeLoggingChannel(rpc::IChannelPtr channel) {
   return std::make_shared<LoggingChannel>(std::move(channel));
 }
 

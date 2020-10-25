@@ -8,7 +8,7 @@
 
 namespace whirl {
 
-rpc::IRPCChannelPtr WithRetries(rpc::IRPCChannelPtr channel,
-                                ITimeServicePtr time);
+rpc::IChannelPtr WithRetries(rpc::IChannelPtr channel,
+                             ITimeServicePtr time);
 
 }  // namespace whirl

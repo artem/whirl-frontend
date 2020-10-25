@@ -10,7 +10,7 @@ namespace whirl::rpc {
 //////////////////////////////////////////////////////////////////////
 
 template <typename TService>
-class RPCServiceBase : public IRPCService {
+class ServiceBase : public IService {
  protected:
   // See RPC_REGISTER_METHOD macro
   using ThisService = TService;

@@ -22,18 +22,18 @@ using await::executors::IExecutorPtr;
 
 //////////////////////////////////////////////////////////////////////
 
-class RPCTransportServer
-    : public IRPCServer,
-      public std::enable_shared_from_this<RPCTransportServer>,
+class ServerImpl
+    : public IServer,
+      public std::enable_shared_from_this<ServerImpl>,
       public ITransportHandler {
  public:
-  RPCTransportServer(ITransportPtr t, IExecutorPtr e)
+  ServerImpl(ITransportPtr t, IExecutorPtr e)
       : transport_(t), executor_(e) {
   }
 
   void Start() override;
   void RegisterService(const std::string& name,
-                       IRPCServicePtr service) override;
+                       IServicePtr service) override;
   void Shutdown() override;
 
   // ITransportHandler
@@ -48,10 +48,10 @@ class RPCTransportServer
   void ProcessRequest(const TransportMessage& message,
                       const ITransportSocketPtr& back);
 
-  void RespondWithError(const RPCRequestMessage& request,
+  void RespondWithError(const RequestMessage& request,
                         const ITransportSocketPtr& back, RPCErrorCode error);
 
-  void SendResponse(RPCResponseMessage response,
+  void SendResponse(ResponseMessage response,
                     const ITransportSocketPtr& back);
 
  private:
@@ -61,7 +61,7 @@ class RPCTransportServer
 
   ITransportServerPtr server_;
 
-  std::map<std::string, IRPCServicePtr> services_;
+  std::map<std::string, IServicePtr> services_;
 
   Logger logger_{"RPC server"};
 };

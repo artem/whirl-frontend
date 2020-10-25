@@ -27,14 +27,14 @@ class ClientBase : public INode {
     Threads().SleepFor(RandomNumber(50));
   }
 
-  rpc::IRPCChannelPtr MakeClientChannel();
+  rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
     cluster_ = services_.discovery->GetCluster();
   }
 
   void ConnectToClusterNodes() {
-    channel_ = rpc::TRPCChannel(MakeClientChannel());
+    channel_ = rpc::TChannel(MakeClientChannel());
   }
 
  protected:
@@ -55,7 +55,7 @@ class ClientBase : public INode {
     return cluster_.size();
   }
 
-  rpc::TRPCChannel& Channel() {
+  rpc::TChannel& Channel() {
     return channel_;
   }
 
@@ -109,7 +109,7 @@ class ClientBase : public INode {
   const NodeConfig config_;
 
   std::vector<std::string> cluster_;
-  rpc::TRPCChannel channel_;
+  rpc::TChannel channel_;
 
  protected:
   Logger logger_{"Client"};

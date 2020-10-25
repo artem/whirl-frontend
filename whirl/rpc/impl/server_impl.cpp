@@ -1,4 +1,4 @@
-#include <whirl/rpc/impl/transport_server.hpp>
+#include <whirl/rpc/impl/server_impl.hpp>
 
 #include <whirl/rpc/impl/trace.hpp>
 
@@ -8,12 +8,12 @@
 
 namespace whirl::rpc {
 
-void RPCTransportServer::Start() {
+void ServerImpl::Start() {
   server_ = transport_->Serve(shared_from_this());
 }
 
-void RPCTransportServer::RegisterService(const std::string& name,
-                                         IRPCServicePtr service) {
+void ServerImpl::RegisterService(const std::string& name,
+                                 IServicePtr service) {
   if (services_.find(name) != services_.end()) {
     WHEELS_PANIC("RPC service '" << name << "' already registered");
   }
@@ -22,7 +22,7 @@ void RPCTransportServer::RegisterService(const std::string& name,
   services_.emplace(name, std::move(service));
 }
 
-void RPCTransportServer::Shutdown() {
+void ServerImpl::Shutdown() {
   if (server_) {
     server_->Shutdown();
   }
@@ -30,8 +30,8 @@ void RPCTransportServer::Shutdown() {
 
 // ITransportHandler
 
-void RPCTransportServer::HandleMessage(const TransportMessage& message,
-                                       ITransportSocketPtr back) {
+void ServerImpl::HandleMessage(const TransportMessage& message,
+                               ITransportSocketPtr back) {
   // Process request
   await::fibers::Spawn(
       [self = shared_from_this(), message, back = std::move(back)]() mutable {
@@ -40,13 +40,13 @@ void RPCTransportServer::HandleMessage(const TransportMessage& message,
       executor_);
 }
 
-void RPCTransportServer::HandleDisconnect() {
+void ServerImpl::HandleDisconnect() {
   // Some client lost
 }
 
-void RPCTransportServer::ProcessRequest(const TransportMessage& message,
-                                        const ITransportSocketPtr& back) {
-  auto request = Deserialize<RPCRequestMessage>(message);
+void ServerImpl::ProcessRequest(const TransportMessage& message,
+                                const ITransportSocketPtr& back) {
+  auto request = Deserialize<RequestMessage>(message);
 
   SetThisFiberTraceId(request.trace_id);
 
@@ -60,7 +60,7 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
     return;
   }
 
-  const IRPCServicePtr& service = service_it->second;
+  const IServicePtr& service = service_it->second;
 
   if (!service->Has(request.method.name)) {
     RespondWithError(request, back, RPCErrorCode::MethodNotFound);
@@ -84,14 +84,14 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
   SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
 }
 
-void RPCTransportServer::RespondWithError(const RPCRequestMessage& request,
-                                          const ITransportSocketPtr& back,
-                                          RPCErrorCode error) {
+void ServerImpl::RespondWithError(const RequestMessage& request,
+                                  const ITransportSocketPtr& back,
+                                  RPCErrorCode error) {
   SendResponse({request.id, request.method, "", error}, back);
 }
 
-void RPCTransportServer::SendResponse(RPCResponseMessage response,
-                                      const ITransportSocketPtr& back) {
+void ServerImpl::SendResponse(ResponseMessage response,
+                              const ITransportSocketPtr& back) {
   back->Send(Serialize(response));
 }
 

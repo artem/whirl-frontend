@@ -22,7 +22,7 @@ using namespace whirl;
 
 // Echo service
 
-class EchoService : public rpc::RPCServiceBase<EchoService> {
+class EchoService : public rpc::ServiceBase<EchoService> {
  public:
   std::string Echo(std::string input) {
     return input;
@@ -45,7 +45,7 @@ class EchoServerNode final: public NodeBase {
   }
 
  protected:
-  void RegisterRPCServices(const IRPCServerPtr& rpc_server) override {
+  void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
     rpc_server->RegisterService(
         "Echo", std::make_shared<EchoService>());
   }

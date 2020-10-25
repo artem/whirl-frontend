@@ -6,11 +6,11 @@ namespace whirl {
 
 using namespace rpc;
 
-using ChannelVector = std::vector<IRPCChannelPtr>;
+using ChannelVector = std::vector<IChannelPtr>;
 
 static const std::string kRandomPeer = "random";
 
-class RandomChannel : public rpc::IRPCChannel {
+class RandomChannel : public rpc::IChannel {
  public:
   RandomChannel(ChannelVector channels) : channels_(std::move(channels)) {
   }
@@ -40,7 +40,7 @@ class RandomChannel : public rpc::IRPCChannel {
   ChannelVector channels_;
 };
 
-rpc::IRPCChannelPtr MakeRandomChannel(ChannelVector&& channels) {
+rpc::IChannelPtr MakeRandomChannel(ChannelVector&& channels) {
   return std::make_shared<RandomChannel>(std::move(channels));
 }
 

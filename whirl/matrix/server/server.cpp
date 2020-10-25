@@ -12,7 +12,7 @@
 #include <whirl/matrix/server/services/logger.hpp>
 #include <whirl/matrix/server/services/discovery.hpp>
 
-#include <whirl/rpc/impl/transport_server.hpp>
+#include <whirl/rpc/impl/server_impl.hpp>
 
 namespace whirl {
 
@@ -34,8 +34,8 @@ NodeServices Server::CreateNodeServices() {
   services.discovery = std::make_shared<DiscoveryService>();
 
   services.rpc_server =
-      std::make_shared<RPCTransportServer>(net_transport, executor);
-  services.rpc_client = rpc::TRPCClient(net_transport, executor);
+      std::make_shared<rpc::ServerImpl>(net_transport, executor);
+  services.rpc_client = rpc::TClient(net_transport, executor);
 
   services.random = std::make_shared<RandomService>();
   services.uids = std::make_shared<UidGenerator>();

@@ -16,9 +16,9 @@ using wheels::Result;
 
 using Cookie = histories::Recorder::Cookie;
 
-class HistoryChannel : public rpc::IRPCChannel {
+class HistoryChannel : public rpc::IChannel {
  public:
-  HistoryChannel(IRPCChannelPtr impl) : impl_(std::move(impl)) {
+  HistoryChannel(IChannelPtr impl) : impl_(std::move(impl)) {
   }
 
   void Close() override {
@@ -68,10 +68,10 @@ class HistoryChannel : public rpc::IRPCChannel {
   }
 
  private:
-  rpc::IRPCChannelPtr impl_;
+  rpc::IChannelPtr impl_;
 };
 
-rpc::IRPCChannelPtr MakeHistoryChannel(rpc::IRPCChannelPtr channel) {
+rpc::IChannelPtr MakeHistoryChannel(rpc::IChannelPtr channel) {
   return std::make_shared<HistoryChannel>(std::move(channel));
 }
 

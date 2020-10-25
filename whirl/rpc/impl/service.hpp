@@ -4,8 +4,8 @@
 
 namespace whirl::rpc {
 
-struct IRPCService {
-  virtual ~IRPCService() = default;
+struct IService {
+  virtual ~IService() = default;
 
   virtual void Initialize() = 0;
 
@@ -14,6 +14,6 @@ struct IRPCService {
                             const BytesValue& input) = 0;
 };
 
-using IRPCServicePtr = std::shared_ptr<IRPCService>;
+using IServicePtr = std::shared_ptr<IService>;
 
 }  // namespace whirl::rpc
