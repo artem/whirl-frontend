@@ -19,10 +19,10 @@ class RandomChannel : public rpc::IRPCChannel {
     Close();
   }
 
-  Future<BytesValue> Call(const Callee& callee,
+  Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override {
     size_t index = GlobalRandomNumber(channels_.size());
-    return channels_[index]->Call(callee, input);
+    return channels_[index]->Call(method, input);
   }
 
   const std::string& Peer() const override {

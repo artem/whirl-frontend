@@ -5,9 +5,9 @@
 
 namespace whirl::rpc {
 
-Future<BytesValue> RPCTransportChannel::Call(const Callee& callee,
+Future<BytesValue> RPCTransportChannel::Call(const Method& method,
                                              const BytesValue& input) {
-  auto request = MakeRequest(callee, input);
+  auto request = MakeRequest(method, input);
   auto trace_id = request.trace_id;
 
   auto future = request.promise.MakeFuture();
@@ -27,12 +27,12 @@ void RPCTransportChannel::Close() {
 }
 
 RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
-    const Callee& callee, const BytesValue& input) {
+    const Method& method, const BytesValue& input) {
   Request request;
 
   request.id = GenerateRequestId();
   request.trace_id = GetOrGenerateNewTraceId(request.id);
-  request.callee = callee;
+  request.method = method;
   request.input = input;
 
   return request;
@@ -41,7 +41,7 @@ RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
 void RPCTransportChannel::SendRequest(Request request) {
   TLTraceContext tg{request.trace_id};
 
-  WHIRL_FMT_LOG("Request method '{}' on peer {}", request.callee,
+  WHIRL_FMT_LOG("Request method '{}' on peer {}", request.method,
                 peer_);
 
   ITransportSocketPtr& socket = GetTransportSocket();
@@ -55,7 +55,7 @@ void RPCTransportChannel::SendRequest(Request request) {
   auto id = request.id;
 
   socket->Send(Serialize<RPCRequestMessage>(
-      {request.id, request.trace_id, peer_, request.callee, request.input}));
+      {request.id, request.trace_id, peer_, request.method, request.input}));
 
   requests_.emplace(id, std::move(request));
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/callee.hpp>
+#include <whirl/rpc/impl/method.hpp>
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/protocol.hpp>
 #include <whirl/rpc/impl/channel.hpp>
@@ -35,7 +35,7 @@ class RPCTransportChannel
   struct Request {
     RPCId id;
     TraceId trace_id;
-    Callee callee;
+    Method method;
     BytesValue input;
     Promise<BytesValue> promise;
   };
@@ -60,7 +60,7 @@ class RPCTransportChannel
 
   // IRPCChannel
 
-  Future<BytesValue> Call(const Callee& callee,
+  Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override;
 
   void Close() override;
@@ -83,7 +83,7 @@ class RPCTransportChannel
   }
 
  private:
-  Request MakeRequest(const Callee& callee, const BytesValue& input);
+  Request MakeRequest(const Method& method, const BytesValue& input);
 
   // Inside strand executor
   void SendRequest(Request request);

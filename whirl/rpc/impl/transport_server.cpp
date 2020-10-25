@@ -51,9 +51,9 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
   SetThisFiberTraceId(request.trace_id);
 
   WHIRL_FMT_LOG("Process '{}' request with id = {}",
-                request.callee, request.id);
+                request.method, request.id);
 
-  auto service_it = services_.find(request.callee.service);
+  auto service_it = services_.find(request.method.service);
 
   if (service_it == services_.end()) {
     RespondWithError(request, back, RPCErrorCode::ServiceNotFound);
@@ -62,32 +62,32 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
 
   const IRPCServicePtr& service = service_it->second;
 
-  if (!service->Has(request.callee.method)) {
+  if (!service->Has(request.method.name)) {
     RespondWithError(request, back, RPCErrorCode::MethodNotFound);
     return;
   }
 
   BytesValue result;
   try {
-    result = service->Invoke(request.callee.method, request.input);
+    result = service->Invoke(request.method.name, request.input);
   } catch (RPCBadRequest& e) {
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
-    WHIRL_FMT_LOG("Exception in {}: {}", request.callee,
+    WHIRL_FMT_LOG("Exception in {}: {}", request.method,
                   wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;
   }
 
   // Ok
-  SendResponse({request.id, request.callee, result, RPCErrorCode::Ok}, back);
+  SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
 }
 
 void RPCTransportServer::RespondWithError(const RPCRequestMessage& request,
                                           const ITransportSocketPtr& back,
                                           RPCErrorCode error) {
-  SendResponse({request.id, request.callee, "", error}, back);
+  SendResponse({request.id, request.method, "", error}, back);
 }
 
 void RPCTransportServer::SendResponse(RPCResponseMessage response,
