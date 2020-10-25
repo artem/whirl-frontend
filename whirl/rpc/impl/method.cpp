@@ -12,7 +12,7 @@ Method Method::Parse(std::string method) {
   return {parts[0], parts[1]};
 }
 
-std::ostream& operator<< (std::ostream& out, const Method& method) {
+std::ostream& operator<<(std::ostream& out, const Method& method) {
   out << method.service << "." << method.name;
   return out;
 }

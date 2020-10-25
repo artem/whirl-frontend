@@ -18,6 +18,6 @@ struct Method {
   SERIALIZE(CEREAL_NVP(service), CEREAL_NVP(name))
 };
 
-std::ostream& operator<< (std::ostream& out, const Method& method);
+std::ostream& operator<<(std::ostream& out, const Method& method);
 
 }  // namespace whirl::rpc
