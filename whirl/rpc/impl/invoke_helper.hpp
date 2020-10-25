@@ -27,25 +27,25 @@ struct Pack {
 
 template <typename Result, typename... Args>
 struct InvokeHelper {
-  template <typename M>
-  static BytesValue Invoke(M f, const BytesValue& input) {
+  template <typename F>
+  static BytesValue Invoke(F f, const BytesValue& input) {
     using ArgsTuple = typename Pack<Args...>::Tuple;
 
-    auto packed_args = DeserializeInput<ArgsTuple>(input);
+    auto args = DeserializeInput<ArgsTuple>(input);
     Result result =
-        std::apply(std::move(f), std::forward<ArgsTuple>(packed_args));
+        std::apply(std::move(f), std::forward<ArgsTuple>(args));
     return Serialize(result);
   }
 };
 
 template <typename... Args>
 struct InvokeHelper<void, Args...> {
-  template <typename M>
-  static BytesValue Invoke(M f, const BytesValue& input) {
+  template <typename F>
+  static BytesValue Invoke(F f, const BytesValue& input) {
     using ArgsTuple = typename Pack<Args...>::Tuple;
 
-    auto packed_args = DeserializeInput<ArgsTuple>(input);
-    std::apply(std::move(f), std::forward<ArgsTuple>(packed_args));
+    auto args = DeserializeInput<ArgsTuple>(input);
+    std::apply(std::move(f), std::forward<ArgsTuple>(args));
     return "";
   }
 };
