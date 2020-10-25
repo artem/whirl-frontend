@@ -8,8 +8,7 @@ namespace whirl {
 
 class ThisNode {
  public:
-  ThisNode(NodeServices services)
-      : services_(std::move(services)) {
+  ThisNode(NodeServices services) : services_(std::move(services)) {
   }
 
  protected:

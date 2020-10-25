@@ -77,4 +77,4 @@ class TRPCChannel {
   IRPCChannelPtr impl_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::rpc
