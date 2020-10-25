@@ -50,10 +50,9 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
 
   SetThisFiberTraceId(request.trace_id);
 
-  WHIRL_FMT_LOG("Process '{}.{}' request with id = {}", request.service,
-                request.method, request.id);
+  WHIRL_FMT_LOG("Process '{}' request with id = {}", request.callee.ToString(), request.id);
 
-  auto service_it = services_.find(request.service);
+  auto service_it = services_.find(request.callee.service);
 
   if (service_it == services_.end()) {
     RespondWithError(request, back, RPCErrorCode::ServiceNotFound);
@@ -62,32 +61,32 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
 
   const IRPCServicePtr& service = service_it->second;
 
-  if (!service->Has(request.method)) {
+  if (!service->Has(request.callee.method)) {
     RespondWithError(request, back, RPCErrorCode::MethodNotFound);
     return;
   }
 
   BytesValue result;
   try {
-    result = service->Invoke(request.method, request.input);
+    result = service->Invoke(request.callee.method, request.input);
   } catch (RPCBadRequest& e) {
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
-    WHIRL_FMT_LOG("Exception in '{}.{}': {}", request.service, request.method,
+    WHIRL_FMT_LOG("Exception in {}: {}", request.callee.ToString(),
                   wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;
   }
 
   // Ok
-  SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
+  SendResponse({request.id, request.callee, result, RPCErrorCode::Ok}, back);
 }
 
 void RPCTransportServer::RespondWithError(const RPCRequestMessage& request,
                                           const ITransportSocketPtr& back,
                                           RPCErrorCode error) {
-  SendResponse({request.id, request.method, "", error}, back);
+  SendResponse({request.id, request.callee, "", error}, back);
 }
 
 void RPCTransportServer::SendResponse(RPCResponseMessage response,

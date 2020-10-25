@@ -1,5 +1,6 @@
 #pragma once
 
+#include <whirl/rpc/impl/callee.hpp>
 #include <whirl/rpc/impl/id.hpp>
 #include <whirl/rpc/impl/raw_value.hpp>
 #include <whirl/rpc/impl/trace.hpp>
@@ -23,12 +24,11 @@ struct RPCRequestMessage {
   RPCId id;
   TraceId trace_id;
   std::string to;  // For debugging
-  std::string service;
-  std::string method;
+  Callee callee;
   BytesValue input;
 
   SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(to),
-            CEREAL_NVP(service), CEREAL_NVP(method), CEREAL_NVP(input))
+            CEREAL_NVP(callee), CEREAL_NVP(input))
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -37,11 +37,11 @@ struct RPCRequestMessage {
 
 struct RPCResponseMessage {
   RPCId request_id;
-  std::string method;  // For debugging
+  Callee callee;  // For debugging
   BytesValue result;
   RPCErrorCode error;
 
-  SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(method), CEREAL_NVP(result),
+  SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(callee), CEREAL_NVP(result),
             CEREAL_NVP(error))
 
   bool IsOk() const {

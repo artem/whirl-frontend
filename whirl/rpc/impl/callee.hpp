@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <whirl/helpers/serialize.hpp>
+
 namespace whirl::rpc {
 
 struct Callee {
@@ -13,6 +15,8 @@ struct Callee {
   }
 
   static Callee Parse(std::string callee);
+
+  SERIALIZE(CEREAL_NVP(service), CEREAL_NVP(method))
 };
 
 }  // namespace whirl::rpc

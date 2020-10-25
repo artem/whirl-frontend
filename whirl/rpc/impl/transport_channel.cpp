@@ -41,8 +41,7 @@ RPCTransportChannel::Request RPCTransportChannel::MakeRequest(
 void RPCTransportChannel::SendRequest(Request request) {
   TLTraceContext tg{request.trace_id};
 
-  WHIRL_FMT_LOG("Request method '{}.{}' on peer {}", request.callee.service,
-                request.callee.method, peer_);
+  WHIRL_FMT_LOG("Request method '{}' on peer {}", request.callee.ToString(), peer_);
 
   ITransportSocketPtr& socket = GetTransportSocket();
 
@@ -55,8 +54,7 @@ void RPCTransportChannel::SendRequest(Request request) {
   auto id = request.id;
 
   socket->Send(Serialize<RPCRequestMessage>(
-      {request.id, request.trace_id, peer_, request.callee.service,
-       request.callee.method, request.input}));
+      {request.id, request.trace_id, peer_, request.callee, request.input}));
 
   requests_.emplace(id, std::move(request));
 }
