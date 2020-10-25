@@ -50,7 +50,7 @@ void RPCTransportServer::ProcessRequest(const TransportMessage& message,
 
   SetThisFiberTraceId(request.trace_id);
 
-  WHIRL_FMT_LOG("Process '{}' request with id = {}", request.method,
+  WHIRL_FMT_LOG("Process {} request, id = {}", request.method,
                 request.id);
 
   auto service_it = services_.find(request.method.service);

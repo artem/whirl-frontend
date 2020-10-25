@@ -137,7 +137,7 @@ class Server : public IActor, public IFaultyServer {
   }
 
   void Crash() {
-    WHIRL_LOG("Crash server " << NetAddress());
+    WHIRL_LOG("Crash server " << Name());
 
     // Reset all client connections
     network_.Reset();
