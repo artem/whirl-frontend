@@ -5,8 +5,8 @@
 [KV](https://gitlab.com/Lipovsky/whirl/-/blob/master/examples/kv/main.cpp) - simple replicated KV store
 
 - Quorum reads/writes
-- Last-write-wins with wall clock
-- Persistent storage
+- Last-write-wins via wall clock
+- Persistent local storage
 
 ## Inspiration
 
