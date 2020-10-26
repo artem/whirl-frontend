@@ -37,7 +37,7 @@ class ServiceBase : public IService {
  protected:
   // Override this
   virtual void RegisterRPCMethods() {
-    // Use RegisterRPCMethod
+    // Use RPC_REGISTER_METHOD macro
   }
 
   template <typename R, typename... Args>
