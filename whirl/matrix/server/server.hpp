@@ -47,10 +47,6 @@ class Server : public IActor, public IFaultyServer {
     return Name();
   }
 
-  NodeId GetId() const {
-    return config_.id;
-  }
-
   // IFaultyServer
 
   void Reboot() override {
@@ -85,7 +81,7 @@ class Server : public IActor, public IFaultyServer {
   // IActor
 
   void Start() override {
-    WHIRL_LOG("Start node at server " << NetAddress());
+    WHIRL_LOG("Start node at server " << Name());
 
     auto g = heap_.Use();
 
