@@ -1,5 +1,6 @@
 #pragma once
 
+#include <whirl/services/config.hpp>
 #include <whirl/services/threads.hpp>
 #include <whirl/services/time.hpp>
 #include <whirl/services/local_storage.hpp>
@@ -16,6 +17,8 @@
 namespace whirl {
 
 struct NodeServices {
+  IConfigPtr config;
+
   ThreadsRuntime threads;
   ITimeServicePtr time_service;
 

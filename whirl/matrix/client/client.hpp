@@ -14,8 +14,8 @@ namespace whirl {
 
 class ClientBase : public INode {
  public:
-  ClientBase(NodeServices services, NodeConfig config)
-      : services_(std::move(services)), config_(std::move(config)) {
+  ClientBase(NodeServices services)
+      : services_(std::move(services)) {
   }
 
   void Start() override {
@@ -41,12 +41,7 @@ class ClientBase : public INode {
   // Me
 
   NodeId Id() const {
-    return config_.id;
-  }
-
-  // Context: Server
-  const std::string& MyName() const {
-    return config_.name;
+    return services_.config->Id();
   }
 
   // Cluster
@@ -106,7 +101,6 @@ class ClientBase : public INode {
 
  private:
   NodeServices services_;
-  const NodeConfig config_;
 
   std::vector<std::string> cluster_;
   rpc::TChannel channel_;

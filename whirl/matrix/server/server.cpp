@@ -2,6 +2,7 @@
 
 // Services
 
+#include <whirl/matrix/server/services/config.hpp>
 #include <whirl/matrix/server/services/executor.hpp>
 #include <whirl/matrix/server/services/time.hpp>
 #include <whirl/matrix/server/services/local_storage.hpp>
@@ -18,6 +19,8 @@ namespace whirl {
 
 NodeServices Server::CreateNodeServices() {
   NodeServices services;
+
+  services.config = std::make_shared<Config>(config_.id);
 
   auto executor = std::make_shared<EventQueueExecutor>(events_);
   auto time_service =

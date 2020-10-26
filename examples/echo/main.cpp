@@ -40,8 +40,8 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 
 class EchoServerNode final: public NodeBase {
  public:
-  EchoServerNode(NodeServices services, NodeConfig config)
-      : NodeBase(std::move(services), config) {
+  EchoServerNode(NodeServices services)
+      : NodeBase(std::move(services)) {
   }
 
  protected:
@@ -55,8 +55,8 @@ class EchoServerNode final: public NodeBase {
 
 class ClientNode final: public ClientBase {
  public:
-  ClientNode(NodeServices services, NodeConfig config)
-      : ClientBase(std::move(services), config) {
+  ClientNode(NodeServices services)
+      : ClientBase(std::move(services)) {
   }
 
  protected:
@@ -79,7 +79,7 @@ class ClientNode final: public ClientBase {
       // Она распаковывает фьючу в Result<std::string>
       // См. <await/fibers/sync/future.hpp>
       auto result = Await(
-          Channel().Call("Echo.Echo", MyName()).As<std::string>());
+          Channel().Call("Echo.Echo", std::string("Hello!")).As<std::string>());
 
       if (result.IsOk()) {
         NODE_LOG("Echo response from {}: '{}'", channel.Peer(), *result);

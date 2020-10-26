@@ -37,7 +37,9 @@ class WorldImpl {
     WorldGuard g(this);
 
     NodeId id = ids_.NextId();
-    cluster_.emplace_back(network_, NodeConfig{id}, node);
+    auto name = fmt::format("Server-{}", cluster_.size() + 1);
+
+    cluster_.emplace_back(network_, ServerConfig{id, name}, node);
     AddActor(&cluster_.back());
   }
 
@@ -45,7 +47,9 @@ class WorldImpl {
     WorldGuard g(this);
 
     NodeId id = ids_.NextId();
-    clients_.emplace_back(network_, NodeConfig{id}, node);
+    auto name = fmt::format("Client-{}", clients_.size() + 1);
+
+    clients_.emplace_back(network_, ServerConfig{id, name}, node);
     AddActor(&clients_.back());
   }
 

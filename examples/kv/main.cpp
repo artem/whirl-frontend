@@ -66,8 +66,8 @@ class KVNode final
  : public rpc::ServiceBase<KVNode>, public NodeBase,
    public std::enable_shared_from_this<KVNode> {
  public:
-  KVNode(NodeServices services, NodeConfig config)
-      : NodeBase(std::move(services), config),
+  KVNode(NodeServices services)
+      : NodeBase(std::move(services)),
         kv_(StorageBackend(), "test") {
   }
 
@@ -215,8 +215,8 @@ const std::string& ChooseKey() {
 
 class KVClient final: public ClientBase {
  public:
-  KVClient(NodeServices services, NodeConfig config)
-      : ClientBase(std::move(services), config) {
+  KVClient(NodeServices services)
+      : ClientBase(std::move(services)) {
   }
 
  protected:

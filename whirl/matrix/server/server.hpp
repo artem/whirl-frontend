@@ -7,6 +7,7 @@
 #include <whirl/matrix/world/faults.hpp>
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/server/clocks.hpp>
+#include <whirl/matrix/server/config.hpp>
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/network.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
@@ -25,11 +26,10 @@ namespace whirl {
 
 class Server : public IActor, public IFaultyServer {
  public:
-  Server(Network& network, NodeConfig config, INodeFactoryPtr factory)
+  Server(Network& network, ServerConfig config, INodeFactoryPtr factory)
       : config_(config),
         node_factory_(std::move(factory)),
-        name_(MakeName(config)),
-        network_(network, name_) {
+        network_(network, Name()) {
     config_.name = Name();
     Create();
   }
@@ -95,7 +95,7 @@ class Server : public IActor, public IFaultyServer {
   }
 
   const std::string& Name() const override {
-    return name_;
+    return config_.name;
   }
 
   bool IsRunnable() const override {
@@ -122,10 +122,6 @@ class Server : public IActor, public IFaultyServer {
   }
 
  private:
-  static std::string MakeName(const NodeConfig& config) {
-    return wheels::StringBuilder() << "Server-" << config.id;
-  }
-
   NodeServices CreateNodeServices();
 
   void Create() {
@@ -133,7 +129,7 @@ class Server : public IActor, public IFaultyServer {
 
     auto g = heap_.Use();
     auto services = CreateNodeServices();
-    node_ = node_factory_->CreateNode(std::move(services), MakeCopy(config_));
+    node_ = node_factory_->CreateNode(std::move(services));
   }
 
   void Crash() {
@@ -153,7 +149,7 @@ class Server : public IActor, public IFaultyServer {
   }
 
  private:
-  NodeConfig config_;
+  ServerConfig config_;
   INodeFactoryPtr node_factory_;
   std::string name_;
 
