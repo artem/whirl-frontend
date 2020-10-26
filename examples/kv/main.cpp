@@ -54,7 +54,7 @@ struct StampedValue {
 
 // Для логирования
 std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
-  out << "{" << v.value << ", " << v.ts << "}";
+  out << "{" << v.value << ", ts: " << v.ts << "}";
   return out;
 }
 
