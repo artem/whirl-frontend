@@ -28,6 +28,8 @@ class WorldImpl {
     ~WorldGuard();
   };
 
+  using Servers = std::deque<Server>;
+
  public:
   WorldImpl(size_t seed)
       : seed_(seed), random_source_(seed), behaviour_(DefaultBehaviour()) {
@@ -35,22 +37,12 @@ class WorldImpl {
 
   void AddServer(INodeFactoryPtr node) {
     WorldGuard g(this);
-
-    NodeId id = ids_.NextId();
-    auto name = fmt::format("Server-{}", cluster_.size() + 1);
-
-    cluster_.emplace_back(network_, ServerConfig{id, name}, node);
-    AddActor(&cluster_.back());
+    AddServerImpl(cluster_, node, "Server");
   }
 
   void AddClient(INodeFactoryPtr node) {
     WorldGuard g(this);
-
-    NodeId id = ids_.NextId();
-    auto name = fmt::format("Client-{}", clients_.size() + 1);
-
-    clients_.emplace_back(network_, ServerConfig{id, name}, node);
-    AddActor(&clients_.back());
+    AddServerImpl(clients_, node, "Client");
   }
 
   void SetAdversary(adversary::Strategy strategy) {
@@ -243,6 +235,14 @@ class WorldImpl {
   }
 
  private:
+  void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
+    size_t id = ids_.NextId();
+    std::string name = type + "-" + std::to_string(servers.size() + 1);
+
+    servers.emplace_back(network_, ServerConfig{id, name}, node);
+    AddActor(&servers.back());
+  }
+
   void SetStartTime() {
     clock_.MoveForwardTo(GlobalStartTime());
   }
@@ -288,7 +288,6 @@ class WorldImpl {
 
   // Actors
 
-  using Servers = std::deque<Server>;
   Servers cluster_;
   Servers clients_;
 
