@@ -32,8 +32,7 @@ struct InvokeHelper {
     using ArgsTuple = typename Pack<Args...>::Tuple;
 
     auto args = DeserializeInput<ArgsTuple>(input);
-    Result result =
-        std::apply(std::move(f), std::forward<ArgsTuple>(args));
+    Result result = std::apply(std::move(f), std::forward<ArgsTuple>(args));
     return Serialize(result);
   }
 };

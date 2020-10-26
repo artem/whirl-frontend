@@ -5,8 +5,7 @@
 namespace whirl::rpc {
 
 IChannelPtr TClient::MakeChannel(const std::string& peer) {
-  auto impl =
-      std::make_shared<TransportChannel>(transport_, executor_, peer);
+  auto impl = std::make_shared<TransportChannel>(transport_, executor_, peer);
   impl->Start();
   return impl;
 }

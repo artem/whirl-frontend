@@ -22,18 +22,15 @@ using await::executors::IExecutorPtr;
 
 //////////////////////////////////////////////////////////////////////
 
-class ServerImpl
-    : public IServer,
-      public std::enable_shared_from_this<ServerImpl>,
-      public ITransportHandler {
+class ServerImpl : public IServer,
+                   public std::enable_shared_from_this<ServerImpl>,
+                   public ITransportHandler {
  public:
-  ServerImpl(ITransportPtr t, IExecutorPtr e)
-      : transport_(t), executor_(e) {
+  ServerImpl(ITransportPtr t, IExecutorPtr e) : transport_(t), executor_(e) {
   }
 
   void Start() override;
-  void RegisterService(const std::string& name,
-                       IServicePtr service) override;
+  void RegisterService(const std::string& name, IServicePtr service) override;
   void Shutdown() override;
 
   // ITransportHandler
@@ -51,8 +48,7 @@ class ServerImpl
   void RespondWithError(const RequestMessage& request,
                         const ITransportSocketPtr& back, RPCErrorCode error);
 
-  void SendResponse(ResponseMessage response,
-                    const ITransportSocketPtr& back);
+  void SendResponse(ResponseMessage response, const ITransportSocketPtr& back);
 
  private:
   // Services

@@ -9,8 +9,7 @@ namespace whirl {
 
 class NodeBase : public INode {
  public:
-  NodeBase(NodeServices services)
-      : services_(std::move(services)) {
+  NodeBase(NodeServices services) : services_(std::move(services)) {
   }
 
   void Start() override;

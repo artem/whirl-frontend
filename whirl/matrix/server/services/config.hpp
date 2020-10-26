@@ -6,8 +6,7 @@ namespace whirl {
 
 class Config : public IConfig {
  public:
-  Config(size_t id)
-    : id_(id) {
+  Config(size_t id) : id_(id) {
   }
 
   size_t Id() const override {

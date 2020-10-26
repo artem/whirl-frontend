@@ -13,8 +13,7 @@ void ServerImpl::Start() {
   server_ = transport_->Serve(shared_from_this());
 }
 
-void ServerImpl::RegisterService(const std::string& name,
-                                 IServicePtr service) {
+void ServerImpl::RegisterService(const std::string& name, IServicePtr service) {
   if (services_.find(name) != services_.end()) {
     WHEELS_PANIC("RPC service '" << name << "' already registered");
   }
@@ -51,8 +50,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
 
   SetThisFiberTraceId(request.trace_id);
 
-  WHIRL_FMT_LOG("Process {} request, id = {}", request.method,
-                request.id);
+  WHIRL_FMT_LOG("Process {} request, id = {}", request.method, request.id);
 
   auto service_it = services_.find(request.method.service);
 

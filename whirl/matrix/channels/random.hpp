@@ -6,7 +6,6 @@
 
 namespace whirl {
 
-rpc::IChannelPtr MakeRandomChannel(
-    std::vector<rpc::IChannelPtr>&& channels);
+rpc::IChannelPtr MakeRandomChannel(std::vector<rpc::IChannelPtr>&& channels);
 
 }  // namespace whirl

@@ -26,10 +26,9 @@ using await::futures::Promise;
 
 // Fair-loss channel
 
-class TransportChannel
-    : public std::enable_shared_from_this<TransportChannel>,
-      public IChannel,
-      public ITransportHandler {
+class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
+                         public IChannel,
+                         public ITransportHandler {
  private:
   struct Request {
     RPCId id;

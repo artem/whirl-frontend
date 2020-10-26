@@ -14,8 +14,7 @@ namespace whirl {
 
 class ClientBase : public INode {
  public:
-  ClientBase(NodeServices services)
-      : services_(std::move(services)) {
+  ClientBase(NodeServices services) : services_(std::move(services)) {
   }
 
   void Start() override {

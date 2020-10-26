@@ -60,8 +60,7 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   ITimeServicePtr time_;
 };
 
-rpc::IChannelPtr WithRetries(rpc::IChannelPtr channel,
-                             ITimeServicePtr time) {
+rpc::IChannelPtr WithRetries(rpc::IChannelPtr channel, ITimeServicePtr time) {
   return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
 }
 
