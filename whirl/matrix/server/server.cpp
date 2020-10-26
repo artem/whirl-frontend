@@ -27,7 +27,6 @@ NodeServices Server::CreateNodeServices() {
   services.time_service = time_service;
 
   services.storage_backend = std::make_shared<LocalStorageBackend>(storage_);
-  services.local_storage = LocalStorage(services.storage_backend);
 
   auto net_transport = std::make_shared<NetTransport>(heap_, network_);
 

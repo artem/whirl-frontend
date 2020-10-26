@@ -86,12 +86,6 @@ class LocalStorage {
   LocalStorage(const LocalStorage& that) = delete;
   LocalStorage& operator=(const LocalStorage& that) = delete;
 
-  LocalStorage(LocalStorage&& that) = default;
-  LocalStorage& operator=(LocalStorage&& that) = default;
-
-  // TODO: remove
-  LocalStorage() = default;
-
   bool Has(const std::string& key) const {
     return impl_->Has(WithNamespace(key));
   }

@@ -24,7 +24,6 @@ struct NodeServices {
   rpc::IServerPtr rpc_server;
   rpc::TClient rpc_client;
 
-  LocalStorage local_storage;
   // Use to create local storages
   ILocalStorageBackendPtr storage_backend;
 

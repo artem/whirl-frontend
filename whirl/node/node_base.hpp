@@ -90,10 +90,6 @@ class NodeBase : public INode {
     return services_.time_service;
   }
 
-  LocalStorage& LocalStorage() {
-    return services_.local_storage;
-  }
-
   const ILocalStorageBackendPtr& StorageBackend() {
     return services_.storage_backend;
   }
