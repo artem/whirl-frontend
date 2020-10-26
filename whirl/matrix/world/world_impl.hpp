@@ -70,10 +70,16 @@ class WorldImpl {
     AddActor(&network_);
     Scope(network_)->Start();
 
+    WHIRL_FMT_LOG("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
+
+    WHIRL_FMT_LOG("Starting cluster...");
+
     // Start servers
     for (auto& server : cluster_) {
       Scope(server)->Start();
     }
+
+    WHIRL_FMT_LOG("Starting clients...");
 
     // Start clients
     for (auto& client : clients_) {
@@ -82,6 +88,7 @@ class WorldImpl {
 
     // Start adversary
     if (adversary_.has_value()) {
+      WHIRL_FMT_LOG("Starting adversary...");
       Scope(*adversary_)->Start();
     }
 
