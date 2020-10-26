@@ -60,7 +60,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
     return;
   }
 
-  const IServicePtr& service = service_it->second;
+  const IServicePtr service = service_it->second;
 
   if (!service->Has(request.method.name)) {
     RespondWithError(request, back, RPCErrorCode::MethodNotFound);
