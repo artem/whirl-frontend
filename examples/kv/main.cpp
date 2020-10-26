@@ -53,7 +53,7 @@ struct StampedValue {
 };
 
 // Для логирования
-std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
+std::ostream& operator<<(std::ostream& out, const StampedValue& v) {
   out << "{" << v.value << ", ts: " << v.ts << "}";
   return out;
 }
@@ -62,20 +62,18 @@ std::ostream& operator<< (std::ostream& out, const StampedValue& v) {
 
 // KV storage node
 
-class KVNode final
- : public rpc::ServiceBase<KVNode>, public NodeBase,
-   public std::enable_shared_from_this<KVNode> {
+class KVNode final : public rpc::ServiceBase<KVNode>,
+                     public NodeBase,
+                     public std::enable_shared_from_this<KVNode> {
  public:
   KVNode(NodeServices services)
-      : NodeBase(std::move(services)),
-        kv_(StorageBackend(), "kv") {
+      : NodeBase(std::move(services)), kv_(StorageBackend(), "kv") {
   }
 
  protected:
   // NodeBase
   void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
-    rpc_server->RegisterService(
-        "KV", shared_from_this());
+    rpc_server->RegisterService("KV", shared_from_this());
   }
 
   // ServiceBase
@@ -98,8 +96,7 @@ class KVNode final
     std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          PeerChannel(i).Call(
-              "KV.Write", k, StampedValue{v, write_ts}));
+          PeerChannel(i).Call("KV.Write", k, StampedValue{v, write_ts}));
     }
 
     // Синхронно дожидаемся большинства подтверждений
@@ -111,8 +108,7 @@ class KVNode final
 
     // Отправляем пирам команду Read(k)
     for (size_t i = 0; i < PeerCount(); ++i) {
-      reads.push_back(
-          PeerChannel(i).Call("KV.Read", k));
+      reads.push_back(PeerChannel(i).Call("KV.Read", k));
     }
 
     // Собираем кворум большинства
@@ -185,8 +181,7 @@ class KVNode final
 
 class KVBlockingStub {
  public:
-  KVBlockingStub(rpc::TChannel& channel)
-      : channel_(channel) {
+  KVBlockingStub(rpc::TChannel& channel) : channel_(channel) {
   }
 
   void Set(Key k, Value v) {
@@ -205,7 +200,6 @@ class KVBlockingStub {
 
 static const std::vector<std::string> kKeys({"a", "b", "c"});
 
-
 const std::string& ChooseKey() {
   size_t this_test_keys = 1 + ThisWorldConst(10117) % 2;
   return kKeys.at(GlobalRandomNumber(this_test_keys));
@@ -213,17 +207,16 @@ const std::string& ChooseKey() {
 
 //////////////////////////////////////////////////////////////////////
 
-class KVClient final: public ClientBase {
+class KVClient final : public ClientBase {
  public:
-  KVClient(NodeServices services)
-      : ClientBase(std::move(services)) {
+  KVClient(NodeServices services) : ClientBase(std::move(services)) {
   }
 
  protected:
   void MainThread() override {
     KVBlockingStub kv_store{Channel()};
 
-    for (size_t i = 1; ; ++i) {
+    for (size_t i = 1;; ++i) {
       // Печатаем текущее системное время
       NODE_LOG("Local wall time: {}", WallTimeNow());
 
@@ -291,7 +284,8 @@ void RunSimulation(size_t seed) {
     // Log
     std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
     // History
-    std::cout << "History (seed = " << seed << ") is NOT LINEARIZABLE:" << std::endl;
+    std::cout << "History (seed = " << seed
+              << ") is NOT LINEARIZABLE:" << std::endl;
     histories::PrintKVHistory<Key, Value>(history, std::cout);
 
     std::exit(1);
