@@ -61,8 +61,6 @@ std::vector<std::string> GetClusterAddresses();
 
 size_t ServerCount();
 
-std::string GetServerName(size_t index);
-
 //////////////////////////////////////////////////////////////////////
 
 Log& GetLog();

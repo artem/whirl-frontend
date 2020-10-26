@@ -12,6 +12,8 @@ namespace whirl {
 struct IFaultyServer {
   virtual ~IFaultyServer() = default;
 
+  virtual const std::string& Name() const = 0;
+
   virtual void Pause() = 0;
   virtual void Resume() = 0;
 
