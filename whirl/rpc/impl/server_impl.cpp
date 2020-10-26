@@ -1,6 +1,7 @@
 #include <whirl/rpc/impl/server_impl.hpp>
 
 #include <whirl/rpc/impl/trace.hpp>
+#include <whirl/rpc/impl/exceptions.hpp>
 
 #include <await/fibers/core/api.hpp>
 
@@ -70,7 +71,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   BytesValue result;
   try {
     result = service->Invoke(request.method.name, request.input);
-  } catch (RPCBadRequest& e) {
+  } catch (rpc::BadRequest& e) {
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {

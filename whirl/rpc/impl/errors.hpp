@@ -16,11 +16,6 @@ enum class RPCErrorCode {
   BadRequest = 6,
 };
 
-struct RPCBadRequest : std::runtime_error {
-  RPCBadRequest() : std::runtime_error("Arguments mismatch") {
-  }
-};
-
 //////////////////////////////////////////////////////////////////////
 
 namespace whirl::rpc {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/rpc/impl/raw_value.hpp>
-#include <whirl/rpc/impl/errors.hpp>
+#include <whirl/rpc/impl/exceptions.hpp>
 
 namespace whirl::rpc {
 
@@ -16,7 +16,7 @@ ArgsTuple DeserializeInput(const BytesValue& input) {
   try {
     return Deserialize<ArgsTuple>(input);
   } catch (...) {
-    throw RPCBadRequest();
+    throw BadRequest("Arguments mismatch");
   }
 }
 
