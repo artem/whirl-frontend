@@ -10,7 +10,7 @@ class Config : public IConfig {
     : id_(id) {
   }
 
-  size_t Id() override {
+  size_t Id() const override {
     return id_;
   }
 

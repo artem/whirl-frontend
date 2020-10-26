@@ -8,7 +8,7 @@ namespace whirl {
 struct IConfig {
   virtual ~IConfig() = default;
 
-  virtual size_t Id() = 0;
+  virtual size_t Id() const = 0;
 
   // TODO: attributes
 };
