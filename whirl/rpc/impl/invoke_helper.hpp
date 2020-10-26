@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/raw_value.hpp>
+#include <whirl/rpc/impl/bytes_value.hpp>
 #include <whirl/rpc/impl/exceptions.hpp>
 
 namespace whirl::rpc {

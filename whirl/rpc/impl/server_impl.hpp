@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/raw_value.hpp>
+#include <whirl/rpc/impl/bytes_value.hpp>
 #include <whirl/rpc/impl/protocol.hpp>
 #include <whirl/rpc/impl/net_transport.hpp>
 #include <whirl/rpc/impl/server.hpp>
