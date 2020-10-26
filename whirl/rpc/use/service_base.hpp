@@ -45,13 +45,13 @@ class ServiceBase : public IService {
                          R (TService::*method)(Args...)) {
     TService* self = static_cast<TService*>(this);
 
-    auto self_method = [self, method](Args&&... args) -> R {
+    auto closure = [self, method](Args&&... args) -> R {
       return (self->*method)(std::forward<Args>(args)...);
     };
 
-    auto invoker = [method = std::move(self_method)](
+    auto invoker = [closure = std::move(closure)](
                        const BytesValue& input) mutable -> BytesValue {
-      return detail::InvokeHelper<R, Args...>::Invoke(method, input);
+      return detail::InvokeHelper<R, Args...>::Invoke(closure, input);
     };
 
     methods_.emplace(name, invoker);
