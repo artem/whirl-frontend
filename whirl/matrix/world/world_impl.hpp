@@ -123,7 +123,7 @@ class WorldImpl {
     }
   }
 
-  void Stop() {
+  size_t Stop() {
     WorldGuard g(this);
 
     // Adversary
@@ -159,6 +159,8 @@ class WorldImpl {
     history_recorder_.Finalize();
 
     WHIRL_LOG("Simulation stopped");
+
+    return 0;  // TODO
   }
 
   size_t NumServers() const {

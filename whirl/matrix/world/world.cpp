@@ -54,8 +54,8 @@ void World::MakeSteps(size_t count) {
   impl_->MakeSteps(count);
 }
 
-void World::Stop() {
-  impl_->Stop();
+size_t World::Stop() {
+  return impl_->Stop();
 }
 
 size_t World::NumCompletedCalls() const {

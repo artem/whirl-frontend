@@ -37,7 +37,9 @@ class World {
 
   bool Step();
   void MakeSteps(size_t count);
-  void Stop();
+
+  // Returns hash of simulation
+  size_t Stop();
 
   size_t NumCompletedCalls() const;
 
