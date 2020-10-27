@@ -30,7 +30,6 @@ class Server : public IActor, public IFaultyServer {
       : config_(config),
         node_factory_(std::move(factory)),
         network_(network, Name()) {
-    config_.name = Name();
     Create();
   }
 
