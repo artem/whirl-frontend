@@ -59,7 +59,7 @@ std::vector<std::string> GetClusterAddresses();
 
 // For adversary
 
-size_t ServerCount();
+size_t ClusterSize();
 
 //////////////////////////////////////////////////////////////////////
 

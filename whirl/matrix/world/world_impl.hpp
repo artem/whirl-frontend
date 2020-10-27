@@ -163,7 +163,7 @@ class WorldImpl {
     return 0;  // TODO
   }
 
-  size_t NumServers() const {
+  size_t ClusterSize() const {
     return cluster_.size();
   }
 

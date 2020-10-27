@@ -60,8 +60,8 @@ std::vector<std::string> GetClusterAddresses() {
 
 // For adversary
 
-size_t ServerCount() {
-  return WorldImpl::Access()->NumServers();
+size_t ClusterSize() {
+  return WorldImpl::Access()->ClusterSize();
 }
 
 //////////////////////////////////////////////////////////////////////
