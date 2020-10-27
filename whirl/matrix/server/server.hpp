@@ -30,7 +30,6 @@ class Server : public IActor, public IFaultyServer {
       : config_(config),
         node_factory_(std::move(factory)),
         network_(network, Name()) {
-    Create();
   }
 
   // Non-copyable
@@ -50,7 +49,6 @@ class Server : public IActor, public IFaultyServer {
 
   void Reboot() override {
     Crash();
-    Create();
     Start();
   }
 
@@ -80,11 +78,14 @@ class Server : public IActor, public IFaultyServer {
   // IActor
 
   void Start() override {
+    monotonic_clock_.Reset();
+
     WHIRL_LOG("Start node at server " << Name());
 
     auto g = heap_.Use();
 
-    auto node = std::move(node_);
+    auto services = CreateNodeServices();
+    auto node = node_factory_->CreateNode(std::move(services));
     node->Start();
     HideToHeap(std::move(node));
   }
@@ -119,14 +120,6 @@ class Server : public IActor, public IFaultyServer {
  private:
   NodeServices CreateNodeServices();
 
-  void Create() {
-    monotonic_clock_.Reset();
-
-    auto g = heap_.Use();
-    auto services = CreateNodeServices();
-    node_ = node_factory_->CreateNode(std::move(services));
-  }
-
   void Crash() {
     WHIRL_LOG("Crash server " << Name());
 
@@ -146,9 +139,6 @@ class Server : public IActor, public IFaultyServer {
  private:
   ServerConfig config_;
   INodeFactoryPtr node_factory_;
-  std::string name_;
-
-  ProcessNetwork network_;
 
   LocalWallClock wall_clock_;
   LocalMonotonicClock monotonic_clock_;
@@ -156,11 +146,11 @@ class Server : public IActor, public IFaultyServer {
 
   // Node process
 
+  ProcessNetwork network_;
   mutable ProcessHeap heap_;
+
   EventQueue events_;
   bool paused_{false};  // TODO: better?
-
-  INodePtr node_;
 
   Logger logger_{"Server"};
 };
