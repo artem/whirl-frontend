@@ -26,7 +26,6 @@ class ClientBase : public INode {
     Threads().SleepFor(RandomNumber(50));
   }
 
-  std::string NodeAddress(std::string server) const;
   rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {

@@ -2,7 +2,8 @@
 
 namespace whirl {
 
-ProcessSocket::ProcessSocket(ProcessNetwork* net, SocketFd fd, std::string peer)
+ProcessSocket::ProcessSocket(ProcessNetwork* net, SocketFd fd,
+                             ServerAddress peer)
     : net_(net), fd_(fd), peer_(peer) {
 }
 

@@ -9,8 +9,8 @@
 
 namespace whirl::rpc {
 
-void ServerImpl::Start(std::string port) {
-  server_ = transport_->Serve(port, shared_from_this());
+void ServerImpl::Start() {
+  server_ = transport_->Serve(shared_from_this());
 }
 
 void ServerImpl::RegisterService(const std::string& name, IServicePtr service) {

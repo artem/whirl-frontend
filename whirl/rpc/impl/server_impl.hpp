@@ -29,7 +29,7 @@ class ServerImpl : public IServer,
   ServerImpl(ITransportPtr t, IExecutorPtr e) : transport_(t), executor_(e) {
   }
 
-  void Start(std::string port) override;
+  void Start() override;
   void RegisterService(const std::string& name, IServicePtr service) override;
   void Shutdown() override;
 
