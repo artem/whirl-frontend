@@ -53,7 +53,8 @@ using ITransportServerPtr = std::shared_ptr<ITransportServer>;
 struct ITransport {
   virtual ~ITransport() = default;
 
-  virtual ITransportServerPtr Serve(ITransportHandlerPtr handler) = 0;
+  virtual ITransportServerPtr Serve(std::string port,
+                                    ITransportHandlerPtr handler) = 0;
   virtual ITransportSocketPtr ConnectTo(const std::string& peer,
                                         ITransportHandlerPtr handler) = 0;
 };

@@ -13,6 +13,10 @@ class Config : public IConfig {
     return id_;
   }
 
+  std::string RpcPort() const override {
+    return "rpc";
+  }
+
  private:
   size_t id_;
 };

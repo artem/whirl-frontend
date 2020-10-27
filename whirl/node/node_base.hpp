@@ -15,6 +15,7 @@ class NodeBase : public INode {
   void Start() override;
 
  private:
+  std::string PeerAddress(std::string peer) const;
   void StartRPCServer();
   void DiscoverCluster();
   rpc::IChannelPtr MakeChannel(const std::string& peer_addr);

@@ -6,11 +6,15 @@
 
 namespace whirl {
 
+std::string ClientBase::NodeAddress(std::string server) const {
+  return server + ":" + services_.config->RpcPort();
+}
+
 rpc::IChannelPtr ClientBase::MakeClientChannel() {
   // Peer channels
   std::vector<rpc::IChannelPtr> channels;
-  for (const auto& addr : cluster_) {
-    channels.push_back(services_.rpc_client.MakeChannel(addr));
+  for (const auto& server : cluster_) {
+    channels.push_back(services_.rpc_client.MakeChannel(NodeAddress(server)));
   }
 
   // Retries -> History -> Random -> Peers

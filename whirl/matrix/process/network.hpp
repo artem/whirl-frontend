@@ -27,7 +27,7 @@ class ProcessNetwork;
 
 class ProcessSocket {
  public:
-  ProcessSocket(ProcessNetwork* net, SocketFd fd, ServerAddress peer);
+  ProcessSocket(ProcessNetwork* net, SocketFd fd, std::string peer);
   ~ProcessSocket();
 
   static ProcessSocket Invalid() {
@@ -83,8 +83,8 @@ class ProcessServerSocket {
 
 class ProcessNetwork {
  public:
-  ProcessNetwork(Network& net, ServerAddress address)
-      : net_(net), address_(address) {
+  ProcessNetwork(Network& net, ServerAddress server)
+      : net_(net), server_(server) {
   }
 
   // On server reboot
@@ -122,13 +122,14 @@ class ProcessNetwork {
   }
 
   // Context: Server
-  ProcessServerSocket Serve(INetSocketHandler* handler) {
+  ProcessServerSocket Serve(std::string port, INetSocketHandler* handler) {
     SocketFd fd = NextSocketFd();
+    std::string address = server_ + ":" + port;
     {
       GlobalHeapScope g;
-      servers_.emplace(fd, net_.Serve(address_, handler));
+      servers_.emplace(fd, net_.Serve(address, handler));
     }
-    return ProcessServerSocket(this, fd, MakeCopy(address_));
+    return ProcessServerSocket(this, fd, MakeCopy(address));
   }
 
   // Context: Server
@@ -152,7 +153,7 @@ class ProcessNetwork {
 
  private:
   Network& net_;
-  ServerAddress address_;
+  std::string server_;
 
   SocketFd next_fd_{1};
   std::map<SocketFd, NetSocket> clients_;

@@ -7,7 +7,7 @@ namespace whirl::rpc {
 struct IServer {
   virtual ~IServer() = default;
 
-  virtual void Start() = 0;
+  virtual void Start(std::string port) = 0;
   virtual void RegisterService(const std::string& name,
                                IServicePtr service) = 0;
   virtual void Shutdown() = 0;

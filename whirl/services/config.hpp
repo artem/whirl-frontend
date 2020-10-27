@@ -10,6 +10,8 @@ struct IConfig {
 
   virtual size_t Id() const = 0;
 
+  virtual std::string RpcPort() const = 0;
+
   // TODO: attributes
 };
 

@@ -73,9 +73,9 @@ class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
 
 class NetTransportServer : public ITransportServer, public INetSocketHandler {
  public:
-  NetTransportServer(ProcessHeap& heap, ProcessNetwork& net,
+  NetTransportServer(ProcessHeap& heap, ProcessNetwork& net, std::string port,
                      ITransportHandlerPtr handler)
-      : heap_(heap), server_socket_(net.Serve(this)), handler_(handler) {
+      : heap_(heap), server_socket_(net.Serve(port, this)), handler_(handler) {
   }
 
   void Shutdown() override {
@@ -105,8 +105,9 @@ struct NetTransport : public ITransport {
       : heap_(heap), net_(net) {
   }
 
-  ITransportServerPtr Serve(ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportServer>(heap_, net_, handler);
+  ITransportServerPtr Serve(std::string port,
+                            ITransportHandlerPtr handler) override {
+    return std::make_shared<NetTransportServer>(heap_, net_, port, handler);
   }
 
   ITransportSocketPtr ConnectTo(const std::string& peer,

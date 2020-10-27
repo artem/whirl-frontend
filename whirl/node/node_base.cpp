@@ -13,23 +13,27 @@ void NodeBase::Start() {
 }
 
 void NodeBase::StartRPCServer() {
-  services_.rpc_server->Start();
+  services_.rpc_server->Start(services_.config->RpcPort());
 }
 
 void NodeBase::DiscoverCluster() {
   cluster_ = services_.discovery->GetCluster();
 }
 
-rpc::IChannelPtr NodeBase::MakeChannel(const std::string& peer_addr) {
-  auto transport = services_.rpc_client.MakeChannel(peer_addr);
+std::string NodeBase::PeerAddress(std::string peer) const {
+  return peer + ":" + services_.config->RpcPort();
+}
+
+rpc::IChannelPtr NodeBase::MakeChannel(const std::string& peer) {
+  auto transport = services_.rpc_client.MakeChannel(PeerAddress(peer));
   auto log = MakeLoggingChannel(std::move(transport));
   auto retries = WithRetries(std::move(log), TimeService());
   return retries;
 }
 
 void NodeBase::ConnectToPeers() {
-  for (const auto& peer_addr : cluster_) {
-    channels_.push_back(MakeChannel(peer_addr));
+  for (const auto& peer : cluster_) {
+    channels_.push_back(MakeChannel(peer));
   }
 }
 
