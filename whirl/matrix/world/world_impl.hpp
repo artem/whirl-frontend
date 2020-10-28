@@ -13,6 +13,8 @@
 #include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/log/log.hpp>
 
+#include <whirl/helpers/untyped_dict.hpp>
+
 #include <wheels/support/id.hpp>
 
 #include <deque>
@@ -246,6 +248,14 @@ class WorldImpl {
     return active_.Get();
   }
 
+  void SetGlobal(const std::string& name, std::any value) {
+    globals_.Set(name, value);
+  }
+
+  std::any GetGlobal(const std::string& name) const {
+    return globals_.Get(name);
+  }
+
  private:
   void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
     size_t id = ids_.NextId();
@@ -324,6 +334,8 @@ class WorldImpl {
 
   Log log_;
   histories::Recorder history_recorder_;
+
+  UntypedDict globals_;
 };
 
 }  // namespace whirl

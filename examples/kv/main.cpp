@@ -201,8 +201,8 @@ class KVBlockingStub {
 static const std::vector<std::string> kKeys({"a", "b", "c"});
 
 const std::string& ChooseKey() {
-  size_t this_test_keys = 1 + ThisWorldConst(10117) % 2;
-  return kKeys.at(GlobalRandomNumber(this_test_keys));
+  size_t num_keys = GetGlobal<size_t>("num_keys");
+  return kKeys.at(GlobalRandomNumber(num_keys));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -253,6 +253,10 @@ size_t NumberOfReplicas(size_t seed) {
   return 3 + seed % 3;
 }
 
+size_t NumberOfKeys(size_t seed) {
+  return 1 + seed % 2;
+}
+
 void RunSimulation(size_t seed) {
   await::fibers::ResetIds();
   whirl::rpc::ResetIds();
@@ -270,6 +274,9 @@ void RunSimulation(size_t seed) {
   // Log
   std::stringstream log;
   world.WriteLogTo(log);
+
+  // Globals
+  world.SetGlobal("num_keys", NumberOfKeys(seed));
 
   world.Start();
   while (world.NumCompletedCalls() < 7) {

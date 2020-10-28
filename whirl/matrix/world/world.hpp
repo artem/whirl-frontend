@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <ostream>
+#include <any>
 
 namespace whirl {
 
@@ -31,6 +32,11 @@ class World {
 
   void SetAdversary(adversary::Strategy strategy);
 
+  template <typename T>
+  void SetGlobal(const std::string& key, T value) {
+    SetGlobalImpl(key, value);
+  }
+
   void WriteLogTo(std::ostream& out);
 
   void Start();
@@ -46,6 +52,9 @@ class World {
   Duration TimeElapsed() const;
 
   const histories::History& History() const;
+
+ private:
+  void SetGlobalImpl(const std::string& key, std::any value);
 
  private:
   std::unique_ptr<WorldImpl> impl_;

@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <any>
 
 namespace whirl {
 
@@ -70,5 +71,22 @@ Log& GetLog();
 size_t WorldStepNumber();
 bool AmIActor();
 std::string CurrentActorName();
+
+//////////////////////////////////////////////////////////////////////
+
+// Global user-set variables
+
+namespace detail {
+
+std::any GetGlobal(const std::string &name);
+
+}  // namespace detail
+
+template <typename T>
+T GetGlobal(const std::string& name) {
+  return std::any_cast<T>(detail::GetGlobal(name));
+}
+
+//////////////////////////////////////////////////////////////////////
 
 }  // namespace whirl

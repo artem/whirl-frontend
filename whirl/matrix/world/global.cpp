@@ -82,4 +82,14 @@ std::string CurrentActorName() {
   return WorldImpl::Access()->CurrentActor()->Name();
 }
 
+//////////////////////////////////////////////////////////////////////
+
+namespace detail {
+
+std::any GetGlobal(const std::string &name) {
+  return WorldImpl::Access()->GetGlobal(name);
+}
+
+}  // namespace detail
+
 }  // namespace whirl

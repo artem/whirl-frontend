@@ -70,4 +70,9 @@ Duration World::TimeElapsed() const {
   return impl_->TimeElapsed();
 }
 
+void World::SetGlobalImpl(const std::string& key, std::any value) {
+  impl_->SetGlobal(key, value);
+}
+
+
 }  // namespace whirl
