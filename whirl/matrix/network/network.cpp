@@ -107,6 +107,18 @@ void Network::Step() {
   }
 }
 
+void Network::Shutdown() {
+  servers_.clear();
+  endpoints_.clear();
+  link_layer_.Shutdown();
+  conns_.clear();
+}
+
+void Network::SendResetPacket(Link* link, NetEndpointId dest) {
+  WHIRL_LOG("Send reset packet to endpoint " << dest);
+  link->Add({EPacketType::Reset, 0, "<reset>", dest});
+}
+
 // IFaultyNetwork
 
 void Network::Split() {

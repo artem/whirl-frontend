@@ -92,11 +92,7 @@ class Network : public IActor, public IFaultyNetwork {
 
   void Step() override;
 
-  void Shutdown() override {
-    servers_.clear();
-    endpoints_.clear();
-    link_layer_.Shutdown();
-  }
+  void Shutdown() override;
 
   // IFaultyNetwork
 
@@ -121,10 +117,7 @@ class Network : public IActor, public IFaultyNetwork {
     endpoints_.erase(id);
   }
 
-  void SendResetPacket(Link* link, NetEndpointId to) {
-    WHIRL_LOG("Send reset packet to endpoint " << to);
-    link->Add({EPacketType::Reset, 0, "<reset>", to});
-  }
+  void SendResetPacket(Link* link, NetEndpointId dest);
 
  private:
   Endpoints endpoints_;
