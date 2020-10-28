@@ -13,19 +13,22 @@ namespace whirl {
 
 // Link layer
 
-using Partition = std::set<std::string>;
+using ServerName = std::string;
 
-class LinkNetwork {
+using Partition = std::set<ServerName>;
+
+class LinkLayer {
+
  public:
-  LinkNetwork() = default;
+  LinkLayer() = default;
 
   // Non-copyable
-  LinkNetwork(const LinkNetwork& that) = delete;
-  LinkNetwork& operator=(const LinkNetwork& that) = delete;
+  LinkLayer(const LinkLayer& that) = delete;
+  LinkLayer& operator=(const LinkLayer& that) = delete;
 
   // Build network
 
-  void AddServer(const std::string& server);
+  void AddServer(const ServerName& server);
 
   const auto& Servers() const {
     return servers_;
@@ -35,12 +38,12 @@ class LinkNetwork {
   void BuildLinks();
 
   // After `BuildLinks`
-  Link* GetLink(const std::string& start, const std::string& end);
+  Link* GetLink(const ServerName& start, const ServerName& end);
 
   // Acting
 
   bool IsRunnable() const;
-  Link* NextPacketLink();
+  Link* FindLinkWithNextPacket();
   void Shutdown();
 
   // Partitions
@@ -49,11 +52,11 @@ class LinkNetwork {
   void Heal();
 
  private:
-  size_t ServerToIndex(const std::string& server) const;
+  size_t ServerToIndex(const ServerName& server) const;
   size_t GetLinkIndex(size_t i, size_t j) const;
 
  private:
-  std::vector<std::string> servers_;
+  std::vector<ServerName> servers_;
 
   // NB: Persistent addresses
   std::deque<Link> links_;

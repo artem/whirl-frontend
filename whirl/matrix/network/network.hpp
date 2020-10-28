@@ -5,7 +5,7 @@
 #include <whirl/matrix/network/message.hpp>
 #include <whirl/matrix/network/packet.hpp>
 #include <whirl/matrix/network/socket.hpp>
-#include <whirl/matrix/network/link_network.hpp>
+#include <whirl/matrix/network/link_layer.hpp>
 
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/clock.hpp>
@@ -88,7 +88,7 @@ class Network : public IActor, public IFaultyNetwork {
   }
 
   TimePoint NextStepTime() override {
-    Link* link = link_layer_.NextPacketLink();
+    Link* link = link_layer_.FindLinkWithNextPacket();
     WHEELS_VERIFY(link, "No active links");
     return *(link->NextPacketTime());
   }
@@ -133,7 +133,7 @@ class Network : public IActor, public IFaultyNetwork {
   // State
   Endpoints endpoints_;
   Servers servers_;
-  LinkNetwork link_layer_;
+  LinkLayer link_layer_;
 
   wheels::support::IdGenerator endpoint_ids_;
 

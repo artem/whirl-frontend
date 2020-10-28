@@ -58,7 +58,7 @@ void Network::DisconnectClient(NetEndpointId id) {
 }
 
 void Network::Step() {
-  Link* link = link_layer_.NextPacketLink();
+  Link* link = link_layer_.FindLinkWithNextPacket();
   auto packet = link->ExtractNextPacket();
 
   auto dest_endpoint_it = endpoints_.find(packet.dest);

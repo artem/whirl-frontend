@@ -1,4 +1,4 @@
-#include <whirl/matrix/network/link_network.hpp>
+#include <whirl/matrix/network/link_layer.hpp>
 
 #include <whirl/matrix/world/global.hpp>
 
@@ -6,11 +6,11 @@
 
 namespace whirl {
 
-void LinkNetwork::AddServer(const std::string& server) {
+void LinkLayer::AddServer(const ServerName& server) {
   servers_.push_back(server);
 }
 
-void LinkNetwork::BuildLinks() {
+void LinkLayer::BuildLinks() {
   for (size_t i = 0; i < servers_.size(); ++i) {
     for (size_t j = 0; j < servers_.size(); ++j) {
       links_.emplace_back(servers_[i], servers_[j]);
@@ -26,14 +26,14 @@ void LinkNetwork::BuildLinks() {
   }
 }
 
-Link* LinkNetwork::GetLink(const std::string& start, const std::string& end) {
+Link* LinkLayer::GetLink(const ServerName& start, const ServerName& end) {
   size_t i = ServerToIndex(start);
   size_t j = ServerToIndex(end);
 
   return &links_.at(GetLinkIndex(i, j));
 }
 
-bool LinkNetwork::IsRunnable() const {
+bool LinkLayer::IsRunnable() const {
   for (const auto& link : links_) {
     if (!link.IsPaused() && link.HasPackets()) {
       return true;
@@ -42,7 +42,7 @@ bool LinkNetwork::IsRunnable() const {
   return false;
 }
 
-Link* LinkNetwork::NextPacketLink() {
+Link* LinkLayer::FindLinkWithNextPacket() {
   Link* next = nullptr;
 
   for (auto& link : links_) {
@@ -63,13 +63,13 @@ Link* LinkNetwork::NextPacketLink() {
   return next;
 }
 
-void LinkNetwork::Shutdown() {
+void LinkLayer::Shutdown() {
   for (auto& link : links_) {
     link.Shutdown();
   }
 }
 
-size_t LinkNetwork::ServerToIndex(const std::string& server) const {
+size_t LinkLayer::ServerToIndex(const ServerName& server) const {
   for (size_t i = 0; i < servers_.size(); ++i) {
     if (server == servers_[i]) {
       return i;
@@ -78,7 +78,7 @@ size_t LinkNetwork::ServerToIndex(const std::string& server) const {
   WHEELS_UNREACHABLE();
 }
 
-size_t LinkNetwork::GetLinkIndex(size_t i, size_t j) const {
+size_t LinkLayer::GetLinkIndex(size_t i, size_t j) const {
   return i * servers_.size() + j;
 }
 
@@ -88,7 +88,7 @@ static bool Cross(const Link& link, const Partition& lhs) {
   return lhs.count(link.Start()) != lhs.count(link.End());
 }
 
-void LinkNetwork::Split(const Partition& lhs) {
+void LinkLayer::Split(const Partition& lhs) {
   for (auto& link : links_) {
     if (Cross(link, lhs)) {
       link.Pause();
@@ -96,7 +96,7 @@ void LinkNetwork::Split(const Partition& lhs) {
   }
 }
 
-void LinkNetwork::Heal() {
+void LinkLayer::Heal() {
   for (auto& link : links_) {
     link.Resume();
   }
