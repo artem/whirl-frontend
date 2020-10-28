@@ -29,6 +29,10 @@ void Network::DisconnectServer(const ServerAddress& address) {
 
 // Client
 
+Link* Network::GetLinkTo(const std::string server) {
+  return link_layer_.GetLink(CurrentActorName(), server);
+}
+
 // Called from actor fibers
 NetSocket Network::ConnectTo(const ServerAddress& address,
                              INetSocketHandler* handler) {
@@ -43,7 +47,7 @@ NetSocket Network::ConnectTo(const ServerAddress& address,
   NetEndpointId server_id = server_it->second;
   NetEndpointId client_id = CreateNewEndpoint(handler);
 
-  return NetSocket{this, client_id, server_id};
+  return NetSocket{this, GetLinkTo(address), client_id, server_id};
 }
 
 // Called from client socket dtor
@@ -53,25 +57,18 @@ void Network::DisconnectClient(NetEndpointId id) {
   RemoveEndpoint(id);
 }
 
-// Context: Server
-void Network::SendMessage(NetEndpointId from, const Message& message,
-                          NetEndpointId to) {
-  GlobalHeapScope guard;
-
-  WHIRL_FMT_LOG("Send {} -> {} message <{}>", from, to, message);
-  Send({EPacketType::Data, from, MakeCopy(message), to});
-}
-
 void Network::Step() {
-  NetPacket packet = ExtractNextPacket();
+  Link* link = link_layer_.NextPacketLink();
+  auto packet = link->ExtractNextPacket();
 
   auto dest_endpoint_it = endpoints_.find(packet.dest);
 
   if (dest_endpoint_it == endpoints_.end()) {
+    // TODO
     WHIRL_LOG("Cannot deliver message <" << packet.message << ">: endpoint "
                                          << packet.dest << " disconnected");
     if (packet.IsData()) {
-      SendResetPacket(packet.source);
+      SendResetPacket(link->GetOpposite(), packet.source);
     }
     return;
   }
@@ -79,12 +76,14 @@ void Network::Step() {
   auto& endpoint = dest_endpoint_it->second;
 
   if (packet.IsData()) {
-    WHIRL_FMT_LOG("Deliver message to endpoint {}: <{}>", packet.dest,
-                  packet.message);
+    WHIRL_FMT_LOG("Deliver message to {} (endpoint {}): <{}>", link->End(),
+                  packet.dest, packet.message);
     endpoint.handler->HandleMessage(
-        packet.message, LightNetSocket(this, packet.dest, packet.source));
+        packet.message,
+        LightNetSocket(link->GetOpposite(), packet.dest, packet.source));
   } else {
-    WHIRL_FMT_LOG("Deliver reset message to endpoint {}", packet.dest);
+    WHIRL_FMT_LOG("Deliver reset message to {} (endpoint {})", link->End(),
+                  packet.dest);
     endpoint.handler->HandleDisconnect();
 
     // endpoints_.erase(packet.to);

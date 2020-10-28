@@ -22,6 +22,17 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
+struct NextStep {
+  IActor* actor;
+  TimePoint time;
+
+  static NextStep NoStep() {
+    return {nullptr, 0};
+  }
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class WorldImpl {
   struct WorldGuard {
     WorldGuard(WorldImpl* world);
@@ -94,15 +105,15 @@ class WorldImpl {
   bool Step() {
     WorldGuard g(this);
 
-    IActor* actor = FindNextActor();
-    if (!actor) {
+    NextStep next = FindNextStep();
+    if (!next.actor) {
       return false;
     }
 
     ++step_count_;
 
-    clock_.MoveForwardTo(actor->NextStepTime());
-    Scope(actor)->Step();
+    clock_.MoveForwardTo(next.time);
+    Scope(next.actor)->Step();
 
     return true;
   }
@@ -230,18 +241,13 @@ class WorldImpl {
     return active_.Get();
   }
 
-  // Statistics
-
-  size_t PacketsSent() const {
-    return network_.PacketsSent();
-  }
-
  private:
   void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
     size_t id = ids_.NextId();
     std::string name = type + "-" + std::to_string(servers.size() + 1);
 
     servers.emplace_back(network_, ServerConfig{id, name}, node);
+    network_.AddServer(name);
     AddActor(&servers.back());
   }
 
@@ -261,21 +267,25 @@ class WorldImpl {
     actors_.push_back(actor);
   }
 
-  IActor* FindNextActor() {
+  NextStep FindNextStep() {
     if (actors_.empty()) {
-      return nullptr;
+      return NextStep::NoStep();
     }
 
-    IActor* next = nullptr;
+    auto next_step = NextStep::NoStep();
+
     for (IActor* actor : actors_) {
       if (actor->IsRunnable()) {
-        if (!next || next->NextStepTime() > actor->NextStepTime()) {
-          next = actor;
+        TimePoint next_step_time = actor->NextStepTime();
+
+        if (!next_step.actor || next_step_time < next_step.time) {
+          next_step.actor = actor;
+          next_step.time = next_step_time;
         }
       }
     }
 
-    return next;
+    return next_step;
   }
 
  private:

@@ -3,8 +3,9 @@
 #include <whirl/matrix/network/address.hpp>
 #include <whirl/matrix/network/endpoint_id.hpp>
 #include <whirl/matrix/network/message.hpp>
-#include <whirl/matrix/network/socket.hpp>
 #include <whirl/matrix/network/packet.hpp>
+#include <whirl/matrix/network/socket.hpp>
+#include <whirl/matrix/network/link_network.hpp>
 
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/clock.hpp>
@@ -29,17 +30,6 @@ namespace whirl {
 //////////////////////////////////////////////////////////////////////
 
 class Network : public IActor, public IFaultyNetwork {
-  struct PacketEvent {
-    NetPacket packet;
-    TimePoint time;
-
-    bool operator<(const PacketEvent& that) const {
-      return time < that.time;
-    }
-  };
-
-  using PacketQueue = PriorityQueue<PacketEvent>;
-
   struct Endpoint {
     INetSocketHandler* handler;
   };
@@ -49,11 +39,16 @@ class Network : public IActor, public IFaultyNetwork {
   using Servers = std::map<ServerAddress, NetEndpointId>;
 
  public:
-  Network() {
-  }
+  Network() = default;
 
   Network(const Network& that) = delete;
   Network& operator=(const Network& that) = delete;
+
+  // Build
+
+  void AddServer(std::string name) {
+    link_layer_.AddServer(name);
+  }
 
   // Server
 
@@ -80,7 +75,7 @@ class Network : public IActor, public IFaultyNetwork {
   // IActor
 
   void Start() override {
-    // Nop
+    link_layer_.BuildLinks();
   }
 
   const std::string& Name() const override {
@@ -89,28 +84,27 @@ class Network : public IActor, public IFaultyNetwork {
   }
 
   bool IsRunnable() const override {
-    return !packets_.IsEmpty();
+    return link_layer_.IsRunnable();
   }
 
   TimePoint NextStepTime() override {
-    return packets_.Smallest().time;
+    Link* link = link_layer_.NextPacketLink();
+    WHEELS_VERIFY(link, "No active links");
+    return *(link->NextPacketTime());
   }
 
   void Step() override;
 
   void Shutdown() override {
-    packets_.Clear();
     servers_.clear();
     endpoints_.clear();
-  }
-
-  // Statistics
-
-  size_t PacketsSent() const {
-    return packets_sent_;
+    link_layer_.Shutdown();
   }
 
  private:
+  // Context: Server
+  Link* GetLinkTo(const ServerAddress server);
+
   NetEndpointId NewEndpointId() {
     return endpoint_ids_.NextId();
   }
@@ -125,44 +119,18 @@ class Network : public IActor, public IFaultyNetwork {
     endpoints_.erase(id);
   }
 
-  NetPacket ExtractNextPacket() {
-    return packets_.Extract().packet;
-  }
-
-  void SendResetPacket(NetEndpointId to) {
+  void SendResetPacket(Link* link, NetEndpointId to) {
     WHIRL_LOG("Send reset packet to endpoint " << to);
-    Send({EPacketType::Reset, 0, "", to});
-  }
-
-  TimePoint ChooseDeliveryTime() {
-    return GlobalNow() + NetPacketDeliveryTime();
-  }
-
-  void Send(NetPacket packet) {
-    DoSend(packet);
-
-    if (duplicates_ && DuplicateNetPacket()) {
-      DoSend(packet);
-    }
-  }
-
-  void DoSend(NetPacket packet) {
-    packets_.Insert(PacketEvent({packet, ChooseDeliveryTime()}));
-    ++packets_sent_;
+    link->Add({EPacketType::Reset, 0, "", to});
   }
 
  private:
   // State
   Endpoints endpoints_;
   Servers servers_;
-  PacketQueue packets_;
-
-  bool duplicates_{false};
+  LinkNetwork link_layer_;
 
   wheels::support::IdGenerator endpoint_ids_;
-
-  // Statistics
-  size_t packets_sent_{0};
 
   Logger logger_{"Network"};
 };

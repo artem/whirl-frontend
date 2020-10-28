@@ -3,10 +3,9 @@
 #include <whirl/matrix/network/address.hpp>
 #include <whirl/matrix/network/endpoint_id.hpp>
 #include <whirl/matrix/network/message.hpp>
+#include <whirl/matrix/network/link.hpp>
 
 namespace whirl {
-
-// TODO: socket = 2 uni-directional socket channels
 
 class Network;
 
@@ -18,7 +17,7 @@ class Network;
 
 struct NetSocket {
  public:
-  NetSocket(Network* net, NetEndpointId self, NetEndpointId peer);
+  NetSocket(Network* net, Link* link, NetEndpointId self, NetEndpointId peer);
   ~NetSocket();
 
   static NetSocket Invalid();
@@ -35,12 +34,14 @@ struct NetSocket {
   void Close();
 
  private:
+  NetPacket MakePacket(const Message& message);
   void Invalidate();
 
  private:
   NetEndpointId self_;
   NetEndpointId peer_;
   Network* net_;
+  Link* link_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -69,14 +70,17 @@ class NetServerSocket {
 
 class LightNetSocket {
  public:
-  LightNetSocket(Network* net, NetEndpointId self, NetEndpointId peer);
+  LightNetSocket(Link* link, NetEndpointId self, NetEndpointId peer);
 
   void Send(const Message& message);
 
  private:
+  NetPacket MakePacket(const Message& message);
+
+ private:
   NetEndpointId self_;
   NetEndpointId peer_;
-  Network* net_;
+  Link* link_;
 };
 
 //////////////////////////////////////////////////////////////////////

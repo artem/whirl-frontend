@@ -8,19 +8,25 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-LightNetSocket::LightNetSocket(Network* net, NetEndpointId self,
+LightNetSocket::LightNetSocket(Link* link, NetEndpointId self,
                                NetEndpointId peer)
-    : self_(self), peer_(peer), net_(net) {
+    : self_(self), peer_(peer), link_(link) {
+}
+
+NetPacket LightNetSocket::MakePacket(const Message& message) {
+  return {EPacketType::Data, self_, message, peer_};
 }
 
 void LightNetSocket::Send(const Message& message) {
-  net_->SendMessage(self_, message, peer_);
+  GlobalHeapScope g;
+  link_->Add(MakePacket(message));
 }
 
 //////////////////////////////////////////////////////////////////////
 
-NetSocket::NetSocket(Network* net, NetEndpointId self, NetEndpointId peer)
-    : self_(self), peer_(peer), net_(net) {
+NetSocket::NetSocket(Network* net, Link* link, NetEndpointId self,
+                     NetEndpointId peer)
+    : self_(self), peer_(peer), net_(net), link_(link) {
 }
 
 NetSocket::~NetSocket() {
@@ -28,7 +34,7 @@ NetSocket::~NetSocket() {
 }
 
 NetSocket NetSocket::Invalid() {
-  return NetSocket{nullptr, 0, 0};
+  return NetSocket{nullptr, nullptr, 0, 0};
 }
 
 void NetSocket::Close() {
@@ -38,8 +44,13 @@ void NetSocket::Close() {
   }
 }
 
+NetPacket NetSocket::MakePacket(const Message& message) {
+  return {EPacketType::Data, self_, message, peer_};
+}
+
 void NetSocket::Send(const Message& message) {
-  net_->SendMessage(self_, message, peer_);
+  GlobalHeapScope g;
+  link_->Add(MakePacket(message));
 }
 
 bool NetSocket::IsValid() const {
@@ -50,12 +61,14 @@ NetSocket::NetSocket(NetSocket&& that) {
   self_ = that.self_;
   peer_ = that.peer_;
   net_ = that.net_;
+  link_ = that.link_;
 
   that.Invalidate();
 }
 
 void NetSocket::Invalidate() {
   net_ = nullptr;
+  link_ = nullptr;
   self_ = peer_ = 0;
 }
 
