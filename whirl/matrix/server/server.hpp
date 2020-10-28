@@ -48,6 +48,8 @@ class Server : public IActor, public IFaultyServer {
   // IFaultyServer
 
   void Reboot() override {
+    GlobalHeapScope g;
+
     Crash();
     Start();
   }
