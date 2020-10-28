@@ -113,10 +113,6 @@ class Network : public IActor, public IFaultyNetwork {
     return id;
   }
 
-  void RemoveEndpoint(NetEndpointId id) {
-    endpoints_.erase(id);
-  }
-
   void SendResetPacket(Link* link, NetEndpointId dest);
 
  private:

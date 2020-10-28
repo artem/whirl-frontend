@@ -27,7 +27,7 @@ void Network::DisconnectServer(const ServerAddress& address) {
   WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address,
                 id);
   servers_.erase(address);
-  RemoveEndpoint(id);
+  endpoints_.erase(id);
 
   // TODO: Replace by keep-alive!
   {
@@ -71,7 +71,7 @@ NetSocket Network::ConnectTo(const ServerAddress& address,
 void Network::DisconnectClient(NetEndpointId id) {
   WHIRL_FMT_LOG("Disconnect client endpoint: {}", id);
   GlobalHeapScope guard;
-  RemoveEndpoint(id);
+  endpoints_.erase(id);
   conns_.erase(id);
 }
 
