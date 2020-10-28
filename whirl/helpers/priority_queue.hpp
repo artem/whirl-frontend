@@ -27,6 +27,10 @@ class PriorityQueue {
     items_.insert(std::move(value));
   }
 
+  size_t Size() const {
+    return items_.size();
+  }
+
  private:
   std::multiset<T> items_;
 };

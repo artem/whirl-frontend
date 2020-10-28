@@ -48,6 +48,10 @@ class EventQueue {
     events_.Clear();
   }
 
+  size_t Size() const {
+    return events_.Size();
+  }
+
  private:
   PriorityQueue<Event> events_;
 };
