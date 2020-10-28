@@ -43,6 +43,8 @@ class World {
 
   size_t NumCompletedCalls() const;
 
+  Duration TimeElapsed() const;
+
   const histories::History& History() const;
 
  private:

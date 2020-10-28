@@ -66,4 +66,8 @@ const histories::History& World::History() const {
   return impl_->History();
 }
 
+Duration World::TimeElapsed() const {
+  return impl_->TimeElapsed();
+}
+
 }  // namespace whirl

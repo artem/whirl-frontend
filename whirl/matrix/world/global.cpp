@@ -26,7 +26,7 @@ RandomUInt GlobalRandomNumber(size_t bound) {
 }
 
 RandomUInt GlobalRandomNumber(size_t lo, size_t hi) {
-  WHEELS_VERIFY(lo < hi, "Invalid range");
+  WHEELS_VERIFY(lo <= hi, "Invalid range");
   return lo + GlobalRandomNumber(hi - lo);
 }
 

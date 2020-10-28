@@ -7,10 +7,13 @@
 
 #include <vector>
 #include <deque>
+#include <set>
 
 namespace whirl {
 
 // Link layer
+
+using Partition = std::set<std::string>;
 
 class LinkNetwork {
  public:
@@ -24,6 +27,10 @@ class LinkNetwork {
 
   void AddServer(const std::string& server);
 
+  const auto& Servers() const {
+    return servers_;
+  }
+
   // After all `AddServer`
   void BuildLinks();
 
@@ -35,6 +42,11 @@ class LinkNetwork {
   bool IsRunnable() const;
   Link* NextPacketLink();
   void Shutdown();
+
+  // Partitions
+
+  void Split(const Partition& lhs);
+  void Heal();
 
  private:
   size_t ServerToIndex(const std::string& server) const;

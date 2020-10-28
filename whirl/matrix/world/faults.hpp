@@ -31,7 +31,8 @@ IFaultyServer& AccessFaultyServer(size_t index);
 struct IFaultyNetwork {
   virtual ~IFaultyNetwork() = default;
 
-  // TODO
+  virtual void Split() = 0;
+  virtual void Heal() = 0;
 };
 
 IFaultyNetwork& AccessFaultyNetwork();

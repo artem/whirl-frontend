@@ -101,6 +101,11 @@ class Network : public IActor, public IFaultyNetwork {
     link_layer_.Shutdown();
   }
 
+  // IFaultyNetwork
+
+  void Split() override;
+  void Heal() override;
+
  private:
   // Context: Server
   Link* GetLinkTo(const ServerAddress server);

@@ -72,6 +72,7 @@ class WorldImpl {
     WorldGuard g(this);
 
     SetStartTime();
+    start_time_ = clock_.Now();
 
     // Start network:
     AddActor(&network_);
@@ -229,6 +230,10 @@ class WorldImpl {
     return clock_.Now();
   }
 
+  Duration TimeElapsed() const {
+    return clock_.Now() - start_time_;
+  }
+
   RandomSource::ResultType RandomNumber() {
     return random_source_.Next();
   }
@@ -314,6 +319,8 @@ class WorldImpl {
   size_t step_count_{0};
 
   Logger logger_{"World"};
+
+  TimePoint start_time_;
 
   Log log_;
   histories::Recorder history_recorder_;

@@ -1,5 +1,7 @@
 #include <whirl/matrix/network/link_network.hpp>
 
+#include <whirl/matrix/world/global.hpp>
+
 #include <wheels/support/compiler.hpp>
 
 namespace whirl {
@@ -78,6 +80,26 @@ size_t LinkNetwork::ServerToIndex(const std::string& server) const {
 
 size_t LinkNetwork::GetLinkIndex(size_t i, size_t j) const {
   return i * servers_.size() + j;
+}
+
+// Partitions
+
+static bool Cross(const Link& link, const Partition& lhs) {
+  return lhs.count(link.Start()) != lhs.count(link.End());
+}
+
+void LinkNetwork::Split(const Partition& lhs) {
+  for (auto& link : links_) {
+    if (Cross(link, lhs)) {
+      link.Pause();
+    }
+  }
+}
+
+void LinkNetwork::Heal() {
+  for (auto& link : links_) {
+    link.Resume();
+  }
 }
 
 }  // namespace whirl

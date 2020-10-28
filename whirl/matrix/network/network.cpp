@@ -90,4 +90,35 @@ void Network::Step() {
   }
 }
 
+// IFaultyNetwork
+
+void Network::Split() {
+  GlobalHeapScope g;
+
+  // Generate partition
+  std::vector<std::string> servers = link_layer_.Servers();
+
+  Partition lhs;
+  size_t lhs_size = GlobalRandomNumber(1, servers.size());
+
+  for (size_t i = 0; i < lhs_size; ++i) {
+    size_t k = GlobalRandomNumber(i, lhs_size);
+    std::swap(servers[i], servers[k]);
+    lhs.insert(servers[i]);
+  }
+
+  // Print
+  WHIRL_FMT_LOG("Network partitioned: {} / {}", lhs.size(), servers.size() - lhs.size());
+
+  // Split
+  link_layer_.Split(lhs);
+}
+
+void Network::Heal() {
+  GlobalHeapScope g;
+
+  link_layer_.Heal();
+  WHIRL_FMT_LOG("Network healed");
+}
+
 }  // namespace whirl
