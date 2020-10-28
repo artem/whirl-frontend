@@ -201,8 +201,7 @@ class KVBlockingStub {
 static const std::vector<std::string> kKeys({"a", "b", "c"});
 
 const std::string& ChooseKey() {
-  size_t num_keys = GetGlobal<size_t>("num_keys");
-  return kKeys.at(GlobalRandomNumber(num_keys));
+  return kKeys.at(GlobalRandomNumber(GetGlobal<size_t>("num_keys")));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -253,6 +252,7 @@ size_t NumberOfReplicas(size_t seed) {
   return 3 + seed % 3;
 }
 
+// [1, 2]
 size_t NumberOfKeys(size_t seed) {
   return 1 + seed % 2;
 }
