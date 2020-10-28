@@ -14,8 +14,6 @@
 
 #include <whirl/matrix/log/logger.hpp>
 
-#include <whirl/matrix/common/copy.hpp>
-
 #include <wheels/support/id.hpp>
 
 #include <map>
