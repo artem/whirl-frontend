@@ -6,6 +6,7 @@
 #include <whirl/matrix/network/packet.hpp>
 #include <whirl/matrix/network/socket.hpp>
 #include <whirl/matrix/network/link_layer.hpp>
+#include <whirl/matrix/network/connection.hpp>
 
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/faults.hpp>
@@ -31,6 +32,8 @@ class Network : public IActor, public IFaultyNetwork {
   using Endpoints = std::map<NetEndpointId, Endpoint>;
 
   using Servers = std::map<ServerAddress, NetEndpointId>;
+
+  using ClientConnections = std::map<NetEndpointId, Connection>;
 
  public:
   Network() = default;
@@ -120,14 +123,14 @@ class Network : public IActor, public IFaultyNetwork {
 
   void SendResetPacket(Link* link, NetEndpointId to) {
     WHIRL_LOG("Send reset packet to endpoint " << to);
-    link->Add({EPacketType::Reset, 0, "", to});
+    link->Add({EPacketType::Reset, 0, "<reset>", to});
   }
 
  private:
-  // State
   Endpoints endpoints_;
   Servers servers_;
   LinkLayer link_layer_;
+  ClientConnections conns_;
 
   wheels::support::IdGenerator endpoint_ids_;
 

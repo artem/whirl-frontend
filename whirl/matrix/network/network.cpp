@@ -28,6 +28,16 @@ void Network::DisconnectServer(const ServerAddress& address) {
                 id);
   servers_.erase(address);
   RemoveEndpoint(id);
+
+  // TODO: Replace by keep-alive!
+  {
+    // Send reset to clients
+    for (auto& [_, conn] : conns_) {
+      if (conn.server == id) {
+        SendResetPacket(conn.link->GetOpposite(), conn.client);
+      }
+    }
+  }
 }
 
 // Client
@@ -50,7 +60,11 @@ NetSocket Network::ConnectTo(const ServerAddress& address,
   NetEndpointId server_id = server_it->second;
   NetEndpointId client_id = CreateNewEndpoint(handler);
 
-  return NetSocket{this, GetLinkTo(address), client_id, server_id};
+  Link* link = GetLinkTo(address);
+
+  conns_.emplace(client_id, Connection{client_id, server_id, link});
+
+  return NetSocket{this, link, client_id, server_id};
 }
 
 // Called from client socket dtor
@@ -58,6 +72,7 @@ void Network::DisconnectClient(NetEndpointId id) {
   WHIRL_FMT_LOG("Disconnect client endpoint: {}", id);
   GlobalHeapScope guard;
   RemoveEndpoint(id);
+  conns_.erase(id);
 }
 
 void Network::Step() {
@@ -67,7 +82,6 @@ void Network::Step() {
   auto dest_endpoint_it = endpoints_.find(packet.dest);
 
   if (dest_endpoint_it == endpoints_.end()) {
-    // TODO
     WHIRL_LOG("Cannot deliver message <" << packet.message << ">: endpoint "
                                          << packet.dest << " disconnected");
     if (packet.IsData()) {
@@ -85,7 +99,7 @@ void Network::Step() {
         packet.message,
         LightNetSocket(link->GetOpposite(), packet.dest, packet.source));
   } else {
-    WHIRL_FMT_LOG("Deliver reset message to {} (endpoint {})", link->End(),
+    WHIRL_FMT_LOG("Deliver reset packet to {} (endpoint {})", link->End(),
                   packet.dest);
     endpoint.handler->HandleDisconnect();
 
