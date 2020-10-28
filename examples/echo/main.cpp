@@ -65,14 +65,8 @@ class ClientNode final: public ClientBase {
       // Печатаем текущее системное время
       NODE_LOG("Local wall time: {}", WallTimeNow());
 
-      // Получаем RPC канал до случайного узла кластера
-      auto& channel = Channel();
-
-      // Печатаем сетевой адрес узла, к которому полетит запрос
-      NODE_LOG("Make RPC to server {}", channel.Peer());
-
       // Выполняем RPC
-      // Имя метода - "Echo", аргумент - имя текущего клиента
+      // Вызываем метод "Echo" у сервиса "Echo"
       // Результат вызова - Future, она типизируется вызовом .As<std::string>()
 
       // Фьючу дожидаемся синхронно с помощью функции Await
@@ -82,7 +76,7 @@ class ClientNode final: public ClientBase {
           Channel().Call("Echo.Echo", std::string("Hello!")).As<std::string>());
 
       if (result.IsOk()) {
-        NODE_LOG("Echo response from {}: '{}'", channel.Peer(), *result);
+        NODE_LOG("Echo response: '{}'", *result);
       } else {
         NODE_LOG("Echo request failed");
       }
