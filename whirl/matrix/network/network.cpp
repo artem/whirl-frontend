@@ -1,5 +1,8 @@
 #include <whirl/matrix/network/network.hpp>
 
+#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/dice.hpp>
+
 namespace whirl {
 
 NetServerSocket Network::Serve(const ServerAddress& address,

@@ -8,12 +8,8 @@
 #include <whirl/matrix/network/link_layer.hpp>
 
 #include <whirl/matrix/world/actor.hpp>
-#include <whirl/matrix/world/clock.hpp>
-#include <whirl/matrix/world/global.hpp>
-#include <whirl/matrix/world/dice.hpp>
 #include <whirl/matrix/world/faults.hpp>
 
-#include <whirl/matrix/common/event_queue.hpp>
 #include <whirl/matrix/common/allocator.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
