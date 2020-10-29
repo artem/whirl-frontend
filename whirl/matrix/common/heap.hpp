@@ -67,6 +67,7 @@ class Heap {
     return next_ - heap_.Start();
   }
 
+  // TODO: zero memory?
   void Reset() {
     next_ = heap_.Start();
   }
