@@ -18,7 +18,7 @@ void SetThisFiberTraceId(TraceId id) {
 }
 
 std::optional<TraceId> TryGetThisFiberTraceId() {
-  return await::fibers::self::GetLocal("rpc_trace_id");
+  return await::fibers::self::GetLocal<TraceId>("rpc_trace_id");
 }
 
 //////////////////////////////////////////////////////////////////////
