@@ -7,7 +7,7 @@ namespace whirl {
 
 struct ServerConfig {
   size_t id;
-  std::string name;
+  std::string hostname;
 };
 
 }  // namespace whirl

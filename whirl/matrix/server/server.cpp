@@ -93,6 +93,10 @@ void Server::AdjustWallClock() {
 
 // IActor
 
+const std::string& Server::Name() const {
+  return HostName();
+}
+
 void Server::Start() {
   monotonic_clock_.Reset();
 

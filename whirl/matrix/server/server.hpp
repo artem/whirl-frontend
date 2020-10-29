@@ -39,8 +39,8 @@ class Server : public IActor, public IFaultyServer {
 
   ~Server();
 
-  ServerAddress NetAddress() const {
-    return Name();
+  const std::string& HostName() const {
+    return config_.hostname;
   }
 
   // IFaultyServer
@@ -55,9 +55,7 @@ class Server : public IActor, public IFaultyServer {
 
   // IActor
 
-  const std::string& Name() const override {
-    return config_.name;
-  }
+  const std::string& Name() const override;
 
   void Start() override;
   bool IsRunnable() const override;

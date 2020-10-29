@@ -214,14 +214,14 @@ class WorldImpl {
   }
 
   // Context: Server
-  std::vector<std::string> ClusterAddresses() {
-    std::vector<ServerAddress> addrs;
-    addrs.reserve(cluster_.size());
+  std::vector<std::string> GetCluster() {
+    std::vector<std::string> cluster;
+    cluster.reserve(cluster_.size());
 
     for (auto& server : cluster_) {
-      addrs.push_back(server.NetAddress());
+      cluster.push_back(server.HostName());
     }
-    return addrs;
+    return cluster;
   }
 
   const histories::History& History() const {

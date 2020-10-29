@@ -52,16 +52,12 @@ histories::Recorder& GetHistoryRecorder() {
 
 //////////////////////////////////////////////////////////////////////
 
-std::vector<std::string> GetClusterAddresses() {
-  return WorldImpl::Access()->ClusterAddresses();
+size_t GetClusterSize() {
+  return WorldImpl::Access()->ClusterSize();
 }
 
-//////////////////////////////////////////////////////////////////////
-
-// For adversary
-
-size_t ClusterSize() {
-  return WorldImpl::Access()->ClusterSize();
+std::vector<std::string> GetCluster() {
+  return WorldImpl::Access()->GetCluster();
 }
 
 //////////////////////////////////////////////////////////////////////
