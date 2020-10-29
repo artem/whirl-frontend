@@ -4,19 +4,54 @@
 #include <whirl/rpc/impl/errors.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
+#include <whirl/matrix/world/global.hpp>
 
 #include <whirl/services/time.hpp>
 
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>
+#include <whirl/rpc/impl/context.hpp>
+
+#include <whirl/helpers/weak_ptr.hpp>
 
 namespace whirl {
 
-static Logger logger_{"Logging channel"};
+static Logger logger_{"Retries channel"};
 
 using namespace rpc;
 using wheels::Result;
 using namespace await::futures;
+
+struct WeakContext {
+  static WeakContext Get() {
+    if (auto ctx = rpc::GetContext()) {
+      return WeakContext(ctx);
+    } else {
+      return WeakContext();
+    }
+  }
+
+  bool NotEmpty() const {
+    return !empty_;
+  }
+
+  bool Expired() const {
+    return ctx_.expired();
+  }
+
+ private:
+  WeakContext(ContextPtr ctx)
+    : empty_{false}, ctx_(ctx) {
+  }
+
+  WeakContext()
+    : empty_{true} {
+  }
+
+ private:
+  bool empty_;
+  std::weak_ptr<rpc::Context> ctx_;
+};
 
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public rpc::IChannel {
@@ -34,25 +69,51 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
   Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input) override {
+                              const BytesValue& input) override {
+
+    auto ctx = WeakContext::Get();
+    return CallImpl(method, input, InitDelay(), ctx);
+  }
+
+ private:
+  Future<BytesValue> CallImpl(const Method& method,
+                          const BytesValue& input, Duration delay, WeakContext ctx) {
+
     auto f = impl_->Call(method, input);
 
     auto self = this->shared_from_this();
 
-    auto retry = [self, method, input]() { return self->Call(method, input); };
+    auto retry = [this, self, method, input, delay, ctx](Result<void>) -> Future<BytesValue> {
+      if (ctx.NotEmpty() && ctx.Expired()) {
+        //WHIRL_FMT_LOG("Request context expired, stop retrying");
+        return MakeError(Error(RPCErrorCode::TransportError));
+      }
 
-    auto fallback = [time = time_,
+      WHIRL_FMT_LOG("Retry {}.{} request", self->Peer(), method);
+      return self->CallImpl(method, input, NextDelay(delay), ctx);
+    };
+
+    auto ex = f.GetExecutor();
+
+    auto fallback = [time = time_, delay, ex,
                      retry = std::move(retry)](const Error& e) mutable {
       if (e.GetErrorCode() == RPCErrorCode::TransportError) {
-        // auto after = time_service->After(10);
-        // std::move(after).Then(retry);
-        return retry();
+        return time->After(delay).Via(ex).Then(retry);
       } else {
         return await::futures::MakeError(Error(e)).As<BytesValue>();
       }
     };
 
     return await::futures::RecoverWith(std::move(f), fallback);
+  }
+
+ private:
+  Duration NextDelay(Duration delay) const{
+    return delay * 2;
+  }
+
+  Duration InitDelay() const {
+    return GlobalRandomNumber(90, 110);
   }
 
  private:
