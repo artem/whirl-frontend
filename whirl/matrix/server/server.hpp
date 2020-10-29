@@ -83,7 +83,6 @@ class Server : public IActor, public IFaultyServer {
   mutable ProcessHeap heap_;
 
   EventQueue events_;
-  bool paused_{false};  // TODO: better?
 
   Logger logger_{"Server"};
 };

@@ -48,8 +48,6 @@ void Server::Crash() {
   }
   heap_.Reset();
 
-  paused_ = false;
-
   state_ = State::Crashed;
 }
 
@@ -63,15 +61,14 @@ void Server::Reboot() {
 void Server::Pause() {
   GlobalHeapScope g;
 
-  WHEELS_VERIFY(!paused_, "Server already paused");
-  paused_ = true;
+  WHEELS_VERIFY(state_ != State::Paused, "Server already paused");
   state_ = State::Paused;
 }
 
 void Server::Resume() {
   GlobalHeapScope g;
 
-  WHEELS_VERIFY(paused_, "Server is not paused");
+  WHEELS_VERIFY(state_ == State::Paused, "Server is not paused");
 
   auto now = GlobalNow();
 
@@ -84,7 +81,6 @@ void Server::Resume() {
     }
   }
 
-  paused_ = false;
   state_ = State::Running;
 }
 
@@ -111,7 +107,7 @@ void Server::Start() {
 }
 
 bool Server::IsRunnable() const {
-  if (paused_) {
+  if (state_ == State::Paused) {
     return false;
   }
   auto g = heap_.Use();
