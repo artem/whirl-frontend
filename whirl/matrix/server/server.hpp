@@ -23,11 +23,11 @@ namespace whirl {
 
 class Server : public IActor, public IFaultyServer {
  private:
-  enum State {
-    Initial = 1,
-    Running = 3,
-    Paused = 4,
-    Crashed = 5,
+  enum class State {
+    Initial,
+    Running,
+    Paused,
+    Crashed,
   };
 
  public:
