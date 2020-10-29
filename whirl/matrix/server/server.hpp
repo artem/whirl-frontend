@@ -21,21 +21,22 @@ namespace whirl {
 //////////////////////////////////////////////////////////////////////
 
 class Server : public IActor, public IFaultyServer {
+ private:
+  enum State {
+    Initial = 1,
+    Running = 3,
+    Paused = 4,
+    Crashed = 5,
+  };
+
  public:
-  Server(Network& network, ServerConfig config, INodeFactoryPtr factory)
-      : config_(config),
-        node_factory_(std::move(factory)),
-        network_(network, Name()) {
-  }
+  Server(Network& network, ServerConfig config, INodeFactoryPtr factory);
 
   // Non-copyable
   Server(const Server& that) = delete;
   Server& operator=(const Server& that) = delete;
 
-  ~Server() {
-    node_factory_.reset();
-    Crash();
-  }
+  ~Server();
 
   ServerAddress NetAddress() const {
     return Name();
@@ -67,6 +68,8 @@ class Server : public IActor, public IFaultyServer {
   NodeServices CreateNodeServices();
 
  private:
+  State state_{State::Initial};
+
   ServerConfig config_;
   INodeFactoryPtr node_factory_;
 

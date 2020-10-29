@@ -20,6 +20,17 @@
 
 namespace whirl {
 
+Server::Server(Network& network, ServerConfig config, INodeFactoryPtr factory)
+    : config_(config),
+      node_factory_(std::move(factory)),
+      network_(network, Name()) {
+}
+
+Server::~Server() {
+  node_factory_.reset();
+  WHEELS_VERIFY(state_ == State::Crashed, "Invalid state");
+}
+
 // IFaultyServer
 
 void Server::Crash() {
@@ -38,6 +49,8 @@ void Server::Crash() {
   heap_.Reset();
 
   paused_ = false;
+
+  state_ = State::Crashed;
 }
 
 void Server::Reboot() {
@@ -52,6 +65,7 @@ void Server::Pause() {
 
   WHEELS_VERIFY(!paused_, "Server already paused");
   paused_ = true;
+  state_ = State::Paused;
 }
 
 void Server::Resume() {
@@ -71,6 +85,7 @@ void Server::Resume() {
   }
 
   paused_ = false;
+  state_ = State::Running;
 }
 
 void Server::AdjustWallClock() {
@@ -91,6 +106,8 @@ void Server::Start() {
   auto node = node_factory_->CreateNode(std::move(services));
   node->Start();
   HideToHeap(std::move(node));
+
+  state_ = State::Running;
 }
 
 bool Server::IsRunnable() const {
