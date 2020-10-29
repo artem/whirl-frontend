@@ -46,7 +46,7 @@ class Server : public IActor, public IFaultyServer {
   // IFaultyServer
 
   void Crash() override;
-  void Reboot() override;
+  void FastReboot() override;
 
   void Pause() override;
   void Resume() override;

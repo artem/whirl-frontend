@@ -48,12 +48,13 @@ void Server::Crash() {
     auto g = heap_.Use();
     events_.Clear();
   }
+
   heap_.Reset();
 
   state_ = State::Crashed;
 }
 
-void Server::Reboot() {
+void Server::FastReboot() {
   GlobalHeapScope g;
 
   Crash();
