@@ -66,6 +66,10 @@ const histories::History& World::History() const {
   return impl_->History();
 }
 
+size_t World::StepCount() const {
+  return impl_->CurrentStep();
+}
+
 Duration World::TimeElapsed() const {
   return impl_->TimeElapsed();
 }
