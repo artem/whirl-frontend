@@ -63,8 +63,8 @@ class Heap {
     return AllocateNewBlock(bytes);
   }
 
-  void Free(char* /*addr*/) {
-    // ...
+  void Free(char* addr) {
+    WHEELS_VERIFY(FromHere(addr), "Do not mess with heaps");
   }
 
   size_t BytesAllocated() const {

@@ -4,6 +4,7 @@
 #include <cereal/archives/json.hpp>
 
 #include <whirl/matrix/common/allocator.hpp>
+#include <whirl/matrix/common/copy.hpp>
 
 #include <sstream>
 
@@ -45,7 +46,8 @@ std::string Serialize(const T& object) {
     oarchive(object);
   }  // archive goes out of scope, ensuring all contents are flushed
 
-  return output.str();
+  auto str = output.str();
+  return CopyToHeap(str, g.ParentScopeHeap());
 }
 
 template <typename T>
@@ -60,7 +62,7 @@ T Deserialize(const std::string& bytes) {
     iarchive(object);  // Read the data from the archive
   }
 
-  return std::move(object);
+  return CopyToHeap(object, g.ParentScopeHeap());
 }
 
 //////////////////////////////////////////////////////////////////////

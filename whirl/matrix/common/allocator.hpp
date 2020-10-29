@@ -16,6 +16,10 @@ class HeapScopeGuard {
     SetHeap(h);
   }
 
+  whirl::Heap* ParentScopeHeap() {
+    return saved_;
+  }
+
   ~HeapScopeGuard() {
     SetHeap(saved_);
   }
