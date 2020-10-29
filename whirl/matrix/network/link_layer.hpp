@@ -5,7 +5,6 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
-#include <deque>
 #include <set>
 
 namespace whirl {
@@ -55,9 +54,7 @@ class LinkLayer {
 
  private:
   std::vector<ServerName> servers_;
-
-  // NB: Persistent addresses
-  std::deque<Link> links_;
+  std::vector<Link> links_;
 };
 
 }  // namespace whirl

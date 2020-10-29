@@ -11,17 +11,21 @@ void LinkLayer::AddServer(const ServerName& server) {
 }
 
 void LinkLayer::BuildLinks() {
+  // Create one-way link between each pair of servers
   for (size_t i = 0; i < servers_.size(); ++i) {
     for (size_t j = 0; j < servers_.size(); ++j) {
       links_.emplace_back(servers_[i], servers_[j]);
+    }
+  }
 
-      if (i >= j) {
-        size_t ij = GetLinkIndex(i, j);
-        size_t ji = GetLinkIndex(j, i);
+  // Link opposite links
+  for (size_t i = 0; i < servers_.size(); ++i) {
+    for (size_t j = i; j < servers_.size(); ++j) {
+      size_t ij = GetLinkIndex(i, j);
+      size_t ji = GetLinkIndex(j, i);
 
-        links_[ij].SetOpposite(&links_[ji]);
-        links_[ji].SetOpposite(&links_[ij]);
-      }
+      links_[ij].SetOpposite(&links_[ji]);
+      links_[ji].SetOpposite(&links_[ij]);
     }
   }
 }
