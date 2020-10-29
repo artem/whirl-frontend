@@ -1,18 +1,17 @@
 #include <whirl/matrix/channels/logging.hpp>
 
-#include <whirl/rpc/impl/channel.hpp>
+#include <whirl/rpc/impl/request_context.hpp>
 #include <whirl/rpc/impl/errors.hpp>
+
+#include <whirl/services/time.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/world/global.hpp>
 
-#include <whirl/services/time.hpp>
+#include <whirl/helpers/weak_ptr.hpp>
 
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>
-#include <whirl/rpc/impl/context.hpp>
-
-#include <whirl/helpers/weak_ptr.hpp>
 
 namespace whirl {
 
@@ -22,36 +21,8 @@ using namespace rpc;
 using wheels::Result;
 using namespace await::futures;
 
-struct WeakContext {
-  static WeakContext Get() {
-    if (auto ctx = rpc::GetContext()) {
-      return WeakContext(ctx);
-    } else {
-      return WeakContext();
-    }
-  }
+using WeakRequestContextRef = std::weak_ptr<rpc::RequestContext>;
 
-  bool NotEmpty() const {
-    return !empty_;
-  }
-
-  bool Expired() const {
-    return ctx_.expired();
-  }
-
- private:
-  WeakContext(ContextPtr ctx)
-    : empty_{false}, ctx_(ctx) {
-  }
-
-  WeakContext()
-    : empty_{true} {
-  }
-
- private:
-  bool empty_;
-  std::weak_ptr<rpc::Context> ctx_;
-};
 
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public rpc::IChannel {
@@ -71,26 +42,26 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   Future<BytesValue> Call(const Method& method,
                               const BytesValue& input) override {
 
-    auto ctx = WeakContext::Get();
-    return CallImpl(method, input, InitDelay(), ctx);
+    WeakRequestContextRef context = rpc::GetRequestContext();
+    return CallImpl(method, input, InitDelay(), context);
   }
 
  private:
   Future<BytesValue> CallImpl(const Method& method,
-                          const BytesValue& input, Duration delay, WeakContext ctx) {
+                          const BytesValue& input, Duration delay, WeakRequestContextRef context) {
 
     auto f = impl_->Call(method, input);
 
     auto self = this->shared_from_this();
 
-    auto retry = [this, self, method, input, delay, ctx](Result<void>) -> Future<BytesValue> {
-      if (ctx.NotEmpty() && ctx.Expired()) {
-        //WHIRL_FMT_LOG("Request context expired, stop retrying");
+    auto retry = [this, self, method, input, delay, context](Result<void>) -> Future<BytesValue> {
+      if (IsExpired(context)) {
+        WHIRL_FMT_LOG("Request context for {} expired, stop retrying", method);
         return MakeError(Error(RPCErrorCode::TransportError));
       }
 
       WHIRL_FMT_LOG("Retry {}.{} request", self->Peer(), method);
-      return self->CallImpl(method, input, NextDelay(delay), ctx);
+      return self->CallImpl(method, input, NextDelay(delay), context);
     };
 
     auto ex = f.GetExecutor();
