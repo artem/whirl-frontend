@@ -47,6 +47,22 @@ class Server : public IActor, public IFaultyServer {
 
   // IFaultyServer
 
+  void Crash() override {
+    WHIRL_LOG("Crash server " << Name());
+
+    // Reset all client connections
+    network_.Reset();
+
+    WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
+    {
+      auto g = heap_.Use();
+      events_.Clear();
+    }
+    heap_.Reset();
+
+    paused_ = false;
+  }
+
   void Reboot() override {
     GlobalHeapScope g;
 
@@ -121,22 +137,6 @@ class Server : public IActor, public IFaultyServer {
 
  private:
   NodeServices CreateNodeServices();
-
-  void Crash() {
-    WHIRL_LOG("Crash server " << Name());
-
-    // Reset all client connections
-    network_.Reset();
-
-    WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
-    {
-      auto g = heap_.Use();
-      events_.Clear();
-    }
-    heap_.Reset();
-
-    paused_ = false;
-  }
 
  private:
   ServerConfig config_;

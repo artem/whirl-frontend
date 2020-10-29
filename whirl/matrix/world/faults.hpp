@@ -17,6 +17,7 @@ struct IFaultyServer {
   virtual void Pause() = 0;
   virtual void Resume() = 0;
 
+  virtual void Crash() = 0;
   virtual void Reboot() = 0;
 
   virtual void AdjustWallClock() = 0;
