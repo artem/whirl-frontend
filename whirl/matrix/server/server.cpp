@@ -36,6 +36,8 @@ Server::~Server() {
 void Server::Crash() {
   GlobalHeapScope g;
 
+  WHEELS_VERIFY(state_ != State::Crashed, "Server already crashed");
+
   WHIRL_LOG("Crash server " << Name());
 
   // Reset all client connections
@@ -126,7 +128,9 @@ void Server::Step() {
 }
 
 void Server::Shutdown() {
-  Crash();
+  if (state_ != State::Crashed) {
+    Crash();
+  }
 }
 
 // Private
