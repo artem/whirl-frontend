@@ -92,7 +92,9 @@ class ClientNode final: public ClientBase {
 //////////////////////////////////////////////////////////////////////
 
 int main() {
-  World world{17};
+  static const size_t kSeed = 17;
+
+  World world{kSeed};
 
   // Cluster nodes
   auto node = MakeNode<EchoServerNode>();
@@ -104,7 +106,14 @@ int main() {
 
   world.Start();
   world.MakeSteps(256);
-  world.Stop();
+  size_t digest = world.Stop();
+
+  std::cout
+      << "Seed: " << kSeed
+      << ", digest: " << digest
+      << ", time: " << world.TimeElapsed()
+      << ", steps: " << world.StepCount()
+      << std::endl;
 
   return 0;
 }
