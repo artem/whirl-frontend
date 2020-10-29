@@ -78,7 +78,7 @@ std::string CurrentActorName();
 
 namespace detail {
 
-std::any GetGlobal(const std::string &name);
+std::any GetGlobal(const std::string& name);
 
 }  // namespace detail
 

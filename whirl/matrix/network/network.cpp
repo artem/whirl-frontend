@@ -137,7 +137,8 @@ void Network::Split() {
   }
 
   // Print
-  WHIRL_FMT_LOG("Network partitioned: {} / {}", lhs.size(), servers.size() - lhs.size());
+  WHIRL_FMT_LOG("Network partitioned: {} / {}", lhs.size(),
+                servers.size() - lhs.size());
 
   // Split
   link_layer_.Split(lhs);

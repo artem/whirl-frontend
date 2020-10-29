@@ -10,8 +10,7 @@ namespace whirl::rpc {
 
 class RequestContext {
  public:
-  RequestContext(const RequestMessage& request)
-    : request_(request) {
+  RequestContext(const RequestMessage& request) : request_(request) {
   }
 
   RPCId GetId() const {

@@ -23,7 +23,6 @@ using namespace await::futures;
 
 using WeakRequestContextRef = std::weak_ptr<rpc::RequestContext>;
 
-
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public rpc::IChannel {
  public:
@@ -40,21 +39,20 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
   Future<BytesValue> Call(const Method& method,
-                              const BytesValue& input) override {
-
+                          const BytesValue& input) override {
     WeakRequestContextRef context = rpc::GetRequestContext();
     return CallImpl(method, input, InitDelay(), context);
   }
 
  private:
-  Future<BytesValue> CallImpl(const Method& method,
-                          const BytesValue& input, Duration delay, WeakRequestContextRef context) {
-
+  Future<BytesValue> CallImpl(const Method& method, const BytesValue& input,
+                              Duration delay, WeakRequestContextRef context) {
     auto f = impl_->Call(method, input);
 
     auto self = this->shared_from_this();
 
-    auto retry = [this, self, method, input, delay, context](Result<void>) -> Future<BytesValue> {
+    auto retry = [this, self, method, input, delay,
+                  context](Result<void>) -> Future<BytesValue> {
       if (IsExpired(context)) {
         WHIRL_FMT_LOG("Request context for {} expired, stop retrying", method);
         return MakeError(Error(RPCErrorCode::TransportError));
@@ -79,7 +77,7 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
  private:
-  Duration NextDelay(Duration delay) const{
+  Duration NextDelay(Duration delay) const {
     return delay * 2;
   }
 

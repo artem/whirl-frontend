@@ -6,8 +6,7 @@ namespace whirl {
 
 class LightTransportSocket : public ITransportSocket {
  public:
-  LightTransportSocket(LightNetSocket socket)
-      : socket_(std::move(socket)) {
+  LightTransportSocket(LightNetSocket socket) : socket_(std::move(socket)) {
   }
 
   void Send(const std::string& message) override {

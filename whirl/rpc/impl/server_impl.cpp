@@ -52,7 +52,8 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   SetThisFiberTraceId(request.trace_id);
   SetRequestContext(request);
 
-  WHIRL_FMT_LOG("Process {} request from {}, id = {}", request.method, back->Peer(), request.id);
+  WHIRL_FMT_LOG("Process {} request from {}, id = {}", request.method,
+                back->Peer(), request.id);
 
   auto service_it = services_.find(request.method.service);
 

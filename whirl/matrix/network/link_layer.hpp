@@ -17,7 +17,6 @@ using ServerName = std::string;
 using Partition = std::set<ServerName>;
 
 class LinkLayer {
-
  public:
   LinkLayer() = default;
 
