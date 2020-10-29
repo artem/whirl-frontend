@@ -1,6 +1,7 @@
 #include <whirl/rpc/impl/server_impl.hpp>
 
 #include <whirl/rpc/impl/trace.hpp>
+#include <whirl/rpc/impl/context.hpp>
 #include <whirl/rpc/impl/exceptions.hpp>
 
 #include <await/fibers/core/api.hpp>
@@ -49,6 +50,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   auto request = Deserialize<RequestMessage>(message);
 
   SetThisFiberTraceId(request.trace_id);
+  SetContext(request.id);
 
   WHIRL_FMT_LOG("Process {} request, id = {}", request.method, request.id);
 
