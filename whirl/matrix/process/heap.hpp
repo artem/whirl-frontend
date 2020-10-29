@@ -15,6 +15,10 @@ class ProcessHeap {
     return impl_.BytesAllocated();
   }
 
+  bool FromHere(char* addr) const {
+    return impl_.FromHere(addr);
+  }
+
   void Reset() {
     impl_.Reset();
   }

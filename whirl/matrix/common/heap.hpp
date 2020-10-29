@@ -55,6 +55,10 @@ class Heap {
     ReleaseHeapMemory(std::move(heap_));
   }
 
+  bool FromHere(char* addr) const {
+    return addr >= heap_.Start() && addr < heap_.End();
+  }
+
   char* Allocate(size_t bytes) {
     return AllocateNewBlock(bytes);
   }

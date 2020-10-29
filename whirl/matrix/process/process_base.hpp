@@ -4,6 +4,7 @@
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/network.hpp>
+#include <whirl/matrix/process/crash.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
 #include <whirl/matrix/common/allocator.hpp>
 
@@ -48,6 +49,7 @@ class ProcessBase : public IActor {
     {
       auto g = heap_.Use();
       events_.Clear();
+      ReleaseFibersOnCrash(heap_);
     }
     heap_.Reset();
   }

@@ -17,6 +17,8 @@
 
 #include <wheels/support/id.hpp>
 
+#include <await/fibers/core/guts.hpp>
+
 #include <deque>
 #include <vector>
 
@@ -170,9 +172,12 @@ class WorldImpl {
 
     actors_.clear();
 
+    CheckNoFibersLeft();
+
     history_recorder_.Finalize();
 
     WHIRL_LOG("Simulation stopped");
+
 
     return ComputeDigest();
   }
@@ -305,6 +310,10 @@ class WorldImpl {
 
   size_t ComputeDigest() const {
     return clock_.Now() * 31007 + step_count_ * 40013;
+  }
+
+  void CheckNoFibersLeft() {
+    WHEELS_VERIFY(await::fibers::AliveFibers().IsEmpty(), "Alive fibers!");
   }
 
  private:

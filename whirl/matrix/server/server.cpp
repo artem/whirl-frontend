@@ -2,6 +2,7 @@
 
 #include <whirl/matrix/common/hide_to_heap.hpp>
 #include <whirl/matrix/common/copy.hpp>
+#include <whirl/matrix/process/crash.hpp>
 
 // Services
 
@@ -47,6 +48,7 @@ void Server::Crash() {
   {
     auto g = heap_.Use();
     events_.Clear();
+    ReleaseFibersOnCrash(heap_);
   }
 
   heap_.Reset();
