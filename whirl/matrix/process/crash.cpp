@@ -2,6 +2,7 @@
 
 #include <await/fibers/core/fiber.hpp>
 #include <await/fibers/core/guts.hpp>
+#include <await/fibers/core/stack.hpp>
 
 #include <vector>
 
@@ -20,6 +21,9 @@ void ReleaseFibersOnCrash(const ProcessHeap &heap) {
   }
 
   for (auto* f : lost) {
+    // Release off-heap resources
+    await::fibers::ReleaseStack(std::move(f->GetStack()));
+    // Unlink from global alive list
     f->Unlink();
   }
 }
