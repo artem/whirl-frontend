@@ -1,5 +1,8 @@
 #include <whirl/matrix/server/server.hpp>
 
+#include <whirl/matrix/common/hide_to_heap.hpp>
+#include <whirl/matrix/common/copy.hpp>
+
 // Services
 
 #include <whirl/matrix/server/services/config.hpp>
@@ -16,6 +19,104 @@
 #include <whirl/rpc/impl/server_impl.hpp>
 
 namespace whirl {
+
+// IFaultyServer
+
+void Server::Crash() {
+  GlobalHeapScope g;
+
+  WHIRL_LOG("Crash server " << Name());
+
+  // Reset all client connections
+  network_.Reset();
+
+  WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
+  {
+    auto g = heap_.Use();
+    events_.Clear();
+  }
+  heap_.Reset();
+
+  paused_ = false;
+}
+
+void Server::Reboot() {
+  GlobalHeapScope g;
+
+  Crash();
+  Start();
+}
+
+void Server::Pause() {
+  GlobalHeapScope g;
+
+  WHEELS_VERIFY(!paused_, "Server already paused");
+  paused_ = true;
+}
+
+void Server::Resume() {
+  GlobalHeapScope g;
+
+  WHEELS_VERIFY(paused_, "Server is not paused");
+
+  auto now = GlobalNow();
+
+  {
+    auto g = heap_.Use();
+
+    while (!events_.IsEmpty() && events_.NextEventTime() < now) {
+      auto pending_event = events_.TakeNext();
+      events_.Add(now, std::move(pending_event.action));
+    }
+  }
+
+  paused_ = false;
+}
+
+void Server::AdjustWallClock() {
+  GlobalHeapScope g;
+  wall_clock_.AdjustOffset();
+}
+
+// IActor
+
+void Server::Start() {
+  monotonic_clock_.Reset();
+
+  WHIRL_LOG("Start node at server " << Name());
+
+  auto g = heap_.Use();
+
+  auto services = CreateNodeServices();
+  auto node = node_factory_->CreateNode(std::move(services));
+  node->Start();
+  HideToHeap(std::move(node));
+}
+
+bool Server::IsRunnable() const {
+  if (paused_) {
+    return false;
+  }
+  auto g = heap_.Use();
+  return !events_.IsEmpty();
+}
+
+TimePoint Server::NextStepTime() {
+  auto g = heap_.Use();
+  return events_.NextEventTime();
+}
+
+void Server::Step() {
+  auto g = heap_.Use();
+  auto event = events_.TakeNext();
+  event();
+}
+
+void Server::Shutdown() {
+  Crash();
+}
+
+// Private
 
 NodeServices Server::CreateNodeServices() {
   NodeServices services;

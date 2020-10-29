@@ -5,20 +5,16 @@
 
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/faults.hpp>
+#include <whirl/matrix/server/config.hpp>
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/server/clocks.hpp>
-#include <whirl/matrix/server/config.hpp>
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/network.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
-#include <whirl/matrix/common/copy.hpp>
-#include <whirl/matrix/common/hide_to_heap.hpp>
 
 #include <whirl/matrix/server/services/local_storage.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
-
-#include <memory>
 
 namespace whirl {
 
@@ -47,93 +43,25 @@ class Server : public IActor, public IFaultyServer {
 
   // IFaultyServer
 
-  void Crash() override {
-    WHIRL_LOG("Crash server " << Name());
+  void Crash() override;
+  void Reboot() override;
 
-    // Reset all client connections
-    network_.Reset();
+  void Pause() override;
+  void Resume() override;
 
-    WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
-    {
-      auto g = heap_.Use();
-      events_.Clear();
-    }
-    heap_.Reset();
-
-    paused_ = false;
-  }
-
-  void Reboot() override {
-    GlobalHeapScope g;
-
-    Crash();
-    Start();
-  }
-
-  void Pause() override {
-    WHEELS_VERIFY(!paused_, "Server already paused");
-    paused_ = true;
-  }
-
-  void Resume() override {
-    WHEELS_VERIFY(paused_, "Server is not paused");
-
-    auto now = GlobalNow();
-    auto g = heap_.Use();
-
-    while (!events_.IsEmpty() && events_.NextEventTime() < now) {
-      auto pending_event = events_.TakeNext();
-      events_.Add(now, std::move(pending_event.action));
-    }
-
-    paused_ = false;
-  }
-
-  void AdjustWallClock() override {
-    wall_clock_.AdjustOffset();
-  }
+  void AdjustWallClock() override;
 
   // IActor
-
-  void Start() override {
-    monotonic_clock_.Reset();
-
-    WHIRL_LOG("Start node at server " << Name());
-
-    auto g = heap_.Use();
-
-    auto services = CreateNodeServices();
-    auto node = node_factory_->CreateNode(std::move(services));
-    node->Start();
-    HideToHeap(std::move(node));
-  }
 
   const std::string& Name() const override {
     return config_.name;
   }
 
-  bool IsRunnable() const override {
-    if (paused_) {
-      return false;
-    }
-    auto g = heap_.Use();
-    return !events_.IsEmpty();
-  }
-
-  TimePoint NextStepTime() override {
-    auto g = heap_.Use();
-    return events_.NextEventTime();
-  }
-
-  void Step() override {
-    auto g = heap_.Use();
-    auto event = events_.TakeNext();
-    event();
-  }
-
-  void Shutdown() override {
-    Crash();
-  }
+  void Start() override;
+  bool IsRunnable() const override;
+  TimePoint NextStepTime() override;
+  void Step() override;
+  void Shutdown() override;
 
  private:
   NodeServices CreateNodeServices();
