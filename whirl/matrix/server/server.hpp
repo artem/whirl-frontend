@@ -5,14 +5,15 @@
 
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/faults.hpp>
+
 #include <whirl/matrix/server/config.hpp>
-#include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/server/clocks.hpp>
+#include <whirl/matrix/server/local_storage.hpp>
+
+#include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/network.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
-
-#include <whirl/matrix/server/services/local_storage.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
 
@@ -75,7 +76,7 @@ class Server : public IActor, public IFaultyServer {
 
   LocalWallClock wall_clock_;
   LocalMonotonicClock monotonic_clock_;
-  LocalBytesStorage storage_;
+  LocalBytesStorage persistent_storage_;
 
   // Node process
 
