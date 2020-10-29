@@ -6,8 +6,8 @@ namespace whirl {
 
 class LightTransportSocket : public ITransportSocket {
  public:
-  LightTransportSocket(LightNetSocket socket, const std::string& peer)
-      : socket_(std::move(socket)), peer_(peer) {
+  LightTransportSocket(LightNetSocket socket)
+      : socket_(std::move(socket)) {
   }
 
   void Send(const std::string& message) override {
@@ -15,7 +15,7 @@ class LightTransportSocket : public ITransportSocket {
   }
 
   const std::string& Peer() const override {
-    return peer_;
+    return socket_.Peer();
   }
 
   bool IsConnected() const override {
@@ -28,7 +28,6 @@ class LightTransportSocket : public ITransportSocket {
 
  private:
   LightNetSocket socket_;
-  std::string peer_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -38,7 +37,7 @@ void NetTransportServer::HandleMessage(const Message& message,
   auto g = heap_.Use();
 
   handler_->HandleMessage(message,
-                          std::make_shared<LightTransportSocket>(back, "?"));
+                          std::make_shared<LightTransportSocket>(back));
 }
 
 }  // namespace whirl

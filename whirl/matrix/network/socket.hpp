@@ -29,6 +29,10 @@ struct NetSocket {
   // Movable
   NetSocket(NetSocket&& that);
 
+  const std::string& Peer() const {
+    return link_->End();
+  }
+
   bool IsValid() const;
   void Send(const Message& message);
   void Close();
@@ -73,6 +77,10 @@ class LightNetSocket {
   LightNetSocket(Link* link, NetEndpointId self, NetEndpointId peer);
 
   void Send(const Message& message);
+
+  const std::string& Peer() const {
+    return link_->End();
+  }
 
  private:
   NetPacket MakePacket(const Message& message);
