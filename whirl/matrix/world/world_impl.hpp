@@ -174,7 +174,7 @@ class WorldImpl {
 
     WHIRL_LOG("Simulation stopped");
 
-    return 0;  // TODO
+    return ComputeDigest();
   }
 
   size_t ClusterSize() const {
@@ -301,6 +301,10 @@ class WorldImpl {
     }
 
     return next_step;
+  }
+
+  size_t ComputeDigest() const {
+    return clock_.Now() * 31007 + step_count_ * 40013;
   }
 
  private:
