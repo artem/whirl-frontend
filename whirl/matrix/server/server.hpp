@@ -57,7 +57,9 @@ class Server : public IActor, public IFaultyServer {
 
   const std::string& Name() const override;
 
+  // Share with IFaultyServer
   void Start() override;
+
   bool IsRunnable() const override;
   TimePoint NextStepTime() override;
   void Step() override;

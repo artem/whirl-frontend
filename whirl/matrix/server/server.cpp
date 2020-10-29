@@ -98,6 +98,9 @@ const std::string& Server::Name() const {
 }
 
 void Server::Start() {
+  WHEELS_VERIFY(state_ == State::Initial || state_ == State::Crashed,
+                "Invalid state");
+
   monotonic_clock_.Reset();
 
   WHIRL_LOG("Start node at server " << Name());

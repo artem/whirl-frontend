@@ -18,6 +18,9 @@ struct IFaultyServer {
   virtual void Resume() = 0;
 
   virtual void Crash() = 0;
+  // After Crash
+  virtual void Start() = 0;
+
   virtual void Reboot() = 0;
 
   virtual void AdjustWallClock() = 0;
@@ -33,6 +36,8 @@ struct IFaultyNetwork {
   virtual ~IFaultyNetwork() = default;
 
   virtual void Split() = 0;
+
+  // After Split
   virtual void Heal() = 0;
 };
 
