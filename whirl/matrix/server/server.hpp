@@ -45,6 +45,8 @@ class Server : public IActor, public IFaultyServer {
 
   // IFaultyServer
 
+  bool IsAlive() const override;
+
   void Crash() override;
   void FastReboot() override;
 

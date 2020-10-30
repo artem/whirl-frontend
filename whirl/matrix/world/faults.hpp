@@ -15,6 +15,8 @@ struct IFaultyServer {
 
   virtual const std::string& Name() const = 0;
 
+  virtual bool IsAlive() const = 0;
+
   virtual void Pause() = 0;
   // After Pause
   virtual void Resume() = 0;

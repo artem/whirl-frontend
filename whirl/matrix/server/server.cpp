@@ -34,6 +34,10 @@ Server::~Server() {
 
 // IFaultyServer
 
+bool Server::IsAlive() const {
+  return state_ == State::Running || state_ == State::Paused;
+}
+
 void Server::Crash() {
   GlobalHeapScope g;
 
