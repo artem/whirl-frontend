@@ -260,6 +260,7 @@ size_t NumberOfKeys(size_t seed) {
   return 1 + seed % 2;
 }
 
+// Seed -> simulation digest
 size_t RunSimulation(size_t seed) {
   static const size_t kTimeLimit = 10000;
   static const size_t kCompletedCalls = 7;
