@@ -244,7 +244,8 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 //////////////////////////////////////////////////////////////////////
 
 void FailTest() {
-  std::cerr << "(ﾉಥ益ಥ）ﾉ ┻━┻" << std::endl;
+  std::cout << "(ﾉಥ益ಥ）ﾉ ┻━┻" << std::endl;
+  std::cout.flush();
   std::exit(1);
 }
 
@@ -338,7 +339,7 @@ void TestDeterminism() {
 
   // Repeat with the same seed
   if (RunSimulation(kSeed) != digest) {
-    std::cerr << "Impl is not deterministic" << std::endl;
+    std::cout << "Impl is not deterministic" << std::endl;
     FailTest();
   }
 }
@@ -357,6 +358,8 @@ void RunSimulations(size_t count) {
 int main() {
   TestDeterminism();
   RunSimulations(12345);
+
+  std::cout << std::endl << "Looks good! ヽ(‘ー`)ノ" << std::endl;
 
   return 0;
 }
