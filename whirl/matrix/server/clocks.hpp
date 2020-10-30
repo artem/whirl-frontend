@@ -24,10 +24,6 @@ class WallClock {
     return GlobalNow() + offset_;
   }
 
-  Duration ShapeDuration(Duration d) {
-    return d;
-  }
-
  private:
   Duration offset_{0};
 };
@@ -48,6 +44,12 @@ class MonotonicClock {
   TimePoint Now() const {
     // TODO: drift
     return ElapsedSinceLastReset() + init_;
+  }
+
+  // For timeouts and sleeps
+  Duration Drift(Duration d) {
+    // TODO: drift
+    return d;
   }
 
  private:

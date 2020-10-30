@@ -32,7 +32,7 @@ class TimeService : public ITimeService {
   }
 
   Future<void> After(Duration d) override {
-    auto tp = AfterWorldTime(d);
+    auto tp = AfterGlobalTime(d);
 
     auto [f, p] = await::futures::MakeContract<void>();
     events_.Add(tp, [p = std::move(p)]() mutable { std::move(p).Set(); });
@@ -40,8 +40,8 @@ class TimeService : public ITimeService {
   }
 
  private:
-  TimePoint AfterWorldTime(Duration d) const {
-    return GlobalNow() + wall_clock_.ShapeDuration(d);
+  TimePoint AfterGlobalTime(Duration d) const {
+    return GlobalNow() + monotonic_clock_.Drift(d);
   }
 
  private:
