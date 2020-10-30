@@ -51,7 +51,7 @@ void Server::Crash() {
   WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
   {
     auto g = heap_.Use();
-    events_.Clear();
+    events_ = nullptr;
     ReleaseFibersOnCrash(heap_);
   }
 
@@ -84,9 +84,9 @@ void Server::Resume() {
   {
     auto g = heap_.Use();
 
-    while (!events_.IsEmpty() && events_.NextEventTime() < now) {
-      auto pending_event = events_.TakeNext();
-      events_.Add(now, std::move(pending_event.action));
+    while (!events_->IsEmpty() && events_->NextEventTime() < now) {
+      auto pending_event = events_->TakeNext();
+      events_->Add(now, std::move(pending_event.action));
     }
   }
 
@@ -114,6 +114,9 @@ void Server::Start() {
 
   auto g = heap_.Use();
 
+  // events_ = new EventQueue() ?
+  events_ = heap_.New<EventQueue>();
+
   auto services = CreateNodeServices();
   auto node = node_factory_->CreateNode(std::move(services));
   node->Start();
@@ -123,21 +126,22 @@ void Server::Start() {
 }
 
 bool Server::IsRunnable() const {
-  if (state_ == State::Paused) {
+  if (state_ != State::Running) {
     return false;
   }
   auto g = heap_.Use();
-  return !events_.IsEmpty();
+  WHEELS_VERIFY(events_, "Event queue is not created");
+  return !events_->IsEmpty();
 }
 
 TimePoint Server::NextStepTime() {
   auto g = heap_.Use();
-  return events_.NextEventTime();
+  return events_->NextEventTime();
 }
 
 void Server::Step() {
   auto g = heap_.Use();
-  auto event = events_.TakeNext();
+  auto event = events_->TakeNext();
   event();
 }
 
@@ -154,9 +158,9 @@ NodeServices Server::CreateNodeServices() {
 
   services.config = std::make_shared<Config>(config_.id);
 
-  auto executor = std::make_shared<EventQueueExecutor>(events_);
+  auto executor = std::make_shared<EventQueueExecutor>(*events_);
   auto time_service =
-      std::make_shared<TimeService>(wall_clock_, monotonic_clock_, events_);
+      std::make_shared<TimeService>(wall_clock_, monotonic_clock_, *events_);
 
   services.threads = ThreadsRuntime{executor, time_service};
   services.time_service = time_service;

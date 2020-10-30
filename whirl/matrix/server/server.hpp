@@ -85,7 +85,7 @@ class Server : public IActor, public IFaultyServer {
   ProcessNetwork network_;
   mutable ProcessHeap heap_;
 
-  EventQueue events_;
+  EventQueue* events_{nullptr};
 
   Logger logger_{"Server"};
 };

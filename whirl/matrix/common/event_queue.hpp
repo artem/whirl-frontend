@@ -25,9 +25,9 @@ class EventQueue {
     }
   };
 
-  using Queue = std::multiset<Event>;
-
  public:
+  EventQueue() = default;
+
   void Add(TimePoint time, Action action) {
     events_.Insert({time, std::move(action)});
   }

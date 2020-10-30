@@ -23,6 +23,11 @@ class ProcessHeap {
     impl_.Reset();
   }
 
+  template <typename T, typename ... Args>
+  T* New(Args&& ... args) {
+    return new (impl_.Allocate(sizeof(T))) T(std::forward<Args>(args)...);
+  }
+
  private:
   Heap impl_;
 };
