@@ -2,9 +2,7 @@
 
 #include <wheels/support/mmap_allocation.hpp>
 
-#include <cstring>
 #include <utility>
-#include <optional>
 
 namespace whirl {
 

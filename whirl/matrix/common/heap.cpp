@@ -2,6 +2,7 @@
 
 #include <wheels/support/assert.hpp>
 
+#include <cstring>
 #include <vector>
 
 namespace whirl {
