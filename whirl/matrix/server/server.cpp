@@ -43,18 +43,18 @@ void Server::Crash() {
 
   WHEELS_VERIFY(state_ != State::Crashed, "Server already crashed");
 
-  WHIRL_LOG("Crash server " << Name());
+  WHIRL_LOG("Crash server " << HostName());
 
-  // Reset all client connections
+  // 1) Disconnect from network
   network_.Reset();
 
-  WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
+  // 2) Reset process heap
+  //WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
   {
     auto g = heap_.Use();
     events_ = nullptr;
     ReleaseFibersOnCrash(heap_);
   }
-
   heap_.Reset();
 
   state_ = State::Crashed;
