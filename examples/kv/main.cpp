@@ -1,5 +1,7 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/node/logging.hpp>
+#include <whirl/rpc/use/service_base.hpp>
+#include <whirl/helpers/serialize.hpp>
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>
@@ -10,15 +12,12 @@
 #include <whirl/matrix/history/models/kv.hpp>
 
 #include <await/fibers/core/id.hpp>
+#include <whirl/rpc/impl/id.hpp>
+
+// Concurrency
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/futures/combine/quorum.hpp>
-
-#include <whirl/rpc/impl/id.hpp>
-
-#include <whirl/rpc/use/service_base.hpp>
-
-#include <whirl/helpers/serialize.hpp>
 
 #include <cereal/types/string.hpp>
 #include <fmt/ostream.h>
@@ -247,6 +246,13 @@ using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////
 
+void FailTest() {
+  std::cerr << "(ﾉಥ益ಥ）ﾉ ┻━┻" << std::endl;
+  std::exit(1);
+}
+
+//////////////////////////////////////////////////////////////////////
+
 // [3, 5]
 size_t NumberOfReplicas(size_t seed) {
   return 3 + seed % 3;
@@ -257,7 +263,13 @@ size_t NumberOfKeys(size_t seed) {
   return 1 + seed % 2;
 }
 
-void RunSimulation(size_t seed) {
+size_t RunSimulation(size_t seed) {
+  static const size_t kTimeLimit = 10000;
+  static const size_t kCompletedCalls = 7;
+
+  std::cout << "Simulation seed: " << seed << std::endl;
+
+  // Reset RPC and fiber ids
   await::fibers::ResetIds();
   whirl::rpc::ResetIds();
 
@@ -278,29 +290,65 @@ void RunSimulation(size_t seed) {
   // Globals
   world.SetGlobal("num_keys", NumberOfKeys(seed));
 
+  // Run simulation
   world.Start();
-  while (world.NumCompletedCalls() < 7) {
+  while (world.NumCompletedCalls() < kCompletedCalls &&
+         world.TimeElapsed() < kTimeLimit) {
     world.Step();
   }
-  world.Stop();
 
+  // Stop and compute simulation digest
+  size_t digest = world.Stop();
+
+  // Print report
+  std::cout << "Seed " << seed << " -> "
+            << "digest: " << digest << ", time: " << world.TimeElapsed()
+            << ", steps: " << world.StepCount() << std::endl;
+
+  // Time limit exceeded
+  if (world.NumCompletedCalls() < kCompletedCalls) {
+    // Log
+    std::cout << "Log:" << std::endl << log.str() << std::endl;
+    std::cout << "Simulation time limit exceeded" << std::endl;
+    std::exit(1);
+  }
+
+  // Check linearizability
   const auto history = world.History();
   const bool linearizable = histories::LinCheck<KVStoreModel>(history);
 
   if (!linearizable) {
     // Log
-    std::cout << "Log:" << std::endl << log.rdbuf() << std::endl;
+    std::cout << "Log:" << std::endl << log.str() << std::endl;
     // History
     std::cout << "History (seed = " << seed
               << ") is NOT LINEARIZABLE:" << std::endl;
     histories::PrintKVHistory<Key, Value>(history, std::cout);
 
-    std::exit(1);
+    FailTest();
+  }
+
+  return digest;
+}
+
+void TestDeterminism() {
+  static const size_t kSeed = 104107713;
+
+  std::cout << "Test determinism:" << std::endl;
+
+  size_t digest = RunSimulation(kSeed);
+
+  // Repeat with the same seed
+  if (RunSimulation(kSeed) != digest) {
+    std::cerr << "Impl is not deterministic" << std::endl;
+    FailTest();
   }
 }
 
 void RunSimulations(size_t count) {
   std::mt19937 seeds{42};
+
+  std::cout << "Run simulations:" << std::endl;
 
   for (size_t i = 1; i <= count; ++i) {
     std::cout << "Simulation " << i << "..." << std::endl;
@@ -309,6 +357,8 @@ void RunSimulations(size_t count) {
 }
 
 int main() {
-  RunSimulations(1234);
+  TestDeterminism();
+  RunSimulations(12345);
+
   return 0;
 }
