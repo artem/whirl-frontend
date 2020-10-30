@@ -35,7 +35,7 @@ using Value = int;
 
 //////////////////////////////////////////////////////////////////////
 
-// Реплики хранят версионированные значения
+// Replicas store versioned (stamped) values
 
 using Timestamp = size_t;
 
@@ -47,11 +47,11 @@ struct StampedValue {
     return {0, 0};
   }
 
-  // Сериализация для локального хранилища и передачи по сети
+  // Serialization support for local storage and RPC
   SERIALIZE(value, ts)
 };
 
-// Для логирования
+// For logging
 std::ostream& operator<<(std::ostream& out, const StampedValue& v) {
   out << "{" << v.value << ", ts: " << v.ts << "}";
   return out;
@@ -77,16 +77,18 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   // ServiceBase
   void RegisterRPCMethods() override {
-    RPC_REGISTER_METHOD(Get);
+    // Public
     RPC_REGISTER_METHOD(Set);
+    RPC_REGISTER_METHOD(Get);
 
+    // TODO: split coordinator/storage to different RPC services
     RPC_REGISTER_METHOD(Write);
     RPC_REGISTER_METHOD(Read);
   }
 
   // RPC method handlers
 
-  // Публичные операции - Set/Get
+  // Public methods: Set and Get
 
   void Set(Key k, Value v) {
     Timestamp write_ts = ChooseWriteTimestamp();
@@ -98,40 +100,39 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
           PeerChannel(i).Call("KV.Write", k, StampedValue{v, write_ts}));
     }
 
-    // Синхронно дожидаемся большинства подтверждений
+    // Await acks from majority of replicas
     Await(Quorum(std::move(writes), Majority())).ExpectOk();
   }
 
   Value Get(Key k) {
     std::vector<Future<StampedValue>> reads;
 
-    // Отправляем пирам команду Read(k)
+    // Broadcast KV.Read request
     for (size_t i = 0; i < PeerCount(); ++i) {
       reads.push_back(PeerChannel(i).Call("KV.Read", k));
     }
 
-    // Собираем кворум большинства
+    // Await responses from majority of replicas
     auto values = Await(Quorum(std::move(reads), Majority())).Value();
 
     for (size_t i = 0; i < values.size(); ++i) {
       NODE_LOG("{}-th value in read quorum: {}", i + 1, values[i]);
     }
 
-    auto winner = FindNewestValue(values);
+    auto winner = FindMostRecentValue(values);
     return winner.value;
   }
 
-  // Внутренние команды репликам
+  // Internal storage methods
 
   void Write(Key k, StampedValue v) {
     std::optional<StampedValue> local = kv_.TryGet(k);
 
     if (!local.has_value()) {
-      // Раньше не видели данный ключ
+      // First write for this key
       Update(k, v);
     } else {
-      // Если временная метка записи больше, чем локальная,
-      // то обновляем значение в локальном хранилище
+      // Write timestamp > timestamp of locally stored value
       if (v.ts > local->ts) {
         Update(k, v);
       }
@@ -148,14 +149,14 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   }
 
   Timestamp ChooseWriteTimestamp() {
-    // Локальные часы могут быть рассинхронизированы
-    // Возмонжо стоит использовать сервис TrueTime?
-    // См. TrueTime()
+    // Local wall clock may be out of sync with other replicas
+    // Use TrueTime (TrueTime() method)
     return WallTimeNow();
   }
 
-  // Выбираем самый свежий результат из кворумных чтений
-  StampedValue FindNewestValue(const std::vector<StampedValue>& values) const {
+  // Find value with largest timestamp
+  StampedValue FindMostRecentValue(
+      const std::vector<StampedValue>& values) const {
     auto winner = values[0];
     for (size_t i = 1; i < values.size(); ++i) {
       if (values[i].ts > winner.ts) {
@@ -165,14 +166,14 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     return winner;
   }
 
-  // Размер кворума
+  // Quorum size
   size_t Majority() const {
     return PeerCount() / 2 + 1;
   }
 
  private:
-  // Локальное персистентное K/V хранилище
-  // Ключи - строки, значения - StampedValue
+  // Local persistent K/V storage
+  // strings -> StampedValues
   LocalKVStorage<StampedValue> kv_;
 };
 
@@ -215,24 +216,20 @@ class KVClient final : public ClientBase {
     KVBlockingStub kv_store{Channel()};
 
     for (size_t i = 1;; ++i) {
-      // Печатаем текущее системное время
-      NODE_LOG("Local wall time: {}", WallTimeNow());
-
       if (RandomNumber() % 2 == 0) {
-        // Запись случайного значения
         Key key = ChooseKey();
         Value value = RandomNumber(1, 100);
         NODE_LOG("Execute Set({}, {})", key, value);
         kv_store.Set(key, value);
         NODE_LOG("Set completed");
       } else {
-        // Чтение
         Key key = ChooseKey();
         NODE_LOG("Execute Get({})", key);
         Value result = kv_store.Get(key);
         NODE_LOG("Get({}) -> {}", key, result);
       }
 
+      // Sleep for some time
       Threads().SleepFor(RandomNumber(1, 100));
     }
   }
@@ -240,8 +237,8 @@ class KVClient final : public ClientBase {
 
 //////////////////////////////////////////////////////////////////////
 
-// Последовательная спецификация для KV
-// Используется в чекере линеаризуемости
+// Sequential specification for KV storage
+// Used by linearizability cheker
 using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////
