@@ -6,6 +6,8 @@
 #include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/common/copy.hpp>
 
+#include <wheels/support/assert.hpp>
+
 #include <map>
 
 namespace whirl {

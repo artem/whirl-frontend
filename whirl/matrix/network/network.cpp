@@ -3,6 +3,10 @@
 #include <whirl/matrix/world/global.hpp>
 #include <whirl/matrix/world/dice.hpp>
 
+#include <whirl/matrix/common/allocator.hpp>
+
+#include <wheels/support/assert.hpp>
+
 namespace whirl {
 
 NetServerSocket Network::Serve(const ServerAddress& address,
@@ -73,6 +77,22 @@ void Network::DisconnectClient(NetEndpointId id) {
   GlobalHeapScope guard;
   endpoints_.erase(id);
   conns_.erase(id);
+}
+
+// IActor
+
+void Network::Start() {
+  link_layer_.BuildLinks();
+}
+
+bool Network::IsRunnable() const {
+  return link_layer_.IsRunnable();
+}
+
+TimePoint Network::NextStepTime() {
+  Link* link = link_layer_.FindLinkWithNextPacket();
+  WHEELS_VERIFY(link, "No active links");
+  return *(link->NextPacketTime());
 }
 
 void Network::Step() {

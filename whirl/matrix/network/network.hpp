@@ -11,8 +11,6 @@
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/faults.hpp>
 
-#include <whirl/matrix/common/allocator.hpp>
-
 #include <whirl/matrix/log/logger.hpp>
 
 #include <wheels/support/id.hpp>
@@ -71,27 +69,15 @@ class Network : public IActor, public IFaultyNetwork {
 
   // IActor
 
-  void Start() override {
-    link_layer_.BuildLinks();
-  }
-
   const std::string& Name() const override {
     static const std::string kName = "Network";
     return kName;
   }
 
-  bool IsRunnable() const override {
-    return link_layer_.IsRunnable();
-  }
-
-  TimePoint NextStepTime() override {
-    Link* link = link_layer_.FindLinkWithNextPacket();
-    WHEELS_VERIFY(link, "No active links");
-    return *(link->NextPacketTime());
-  }
-
+  void Start() override;
+  bool IsRunnable() const override;
+  TimePoint NextStepTime() override;
   void Step() override;
-
   void Shutdown() override;
 
   // IFaultyNetwork
