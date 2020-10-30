@@ -76,8 +76,8 @@ class Server : public IActor, public IFaultyServer {
   ServerConfig config_;
   INodeFactoryPtr node_factory_;
 
-  LocalWallClock wall_clock_;
-  LocalMonotonicClock monotonic_clock_;
+  WallClock wall_clock_;
+  MonotonicClock monotonic_clock_;
   LocalBytesStorage persistent_storage_;
 
   // Node process

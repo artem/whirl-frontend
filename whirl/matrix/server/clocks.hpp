@@ -5,11 +5,13 @@
 
 namespace whirl {
 
+// Local clocks
+
 //////////////////////////////////////////////////////////////////////
 
-class LocalWallClock {
+class WallClock {
  public:
-  LocalWallClock() : offset_(InitLocalClockOffset()) {
+  WallClock() : offset_(InitLocalClockOffset()) {
   }
 
   void AdjustOffset() {
@@ -32,9 +34,9 @@ class LocalWallClock {
 
 //////////////////////////////////////////////////////////////////////
 
-class LocalMonotonicClock {
+class MonotonicClock {
  public:
-  LocalMonotonicClock() {
+  MonotonicClock() {
     Reset();
   }
 

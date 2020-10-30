@@ -16,7 +16,7 @@ namespace whirl {
 
 class TimeService : public ITimeService {
  public:
-  TimeService(LocalWallClock& wall_clock, LocalMonotonicClock& monotonic_clock,
+  TimeService(WallClock& wall_clock, MonotonicClock& monotonic_clock,
               EventQueue& events)
       : wall_clock_(wall_clock),
         monotonic_clock_(monotonic_clock),
@@ -45,8 +45,8 @@ class TimeService : public ITimeService {
   }
 
  private:
-  LocalWallClock& wall_clock_;
-  LocalMonotonicClock& monotonic_clock_;
+  WallClock& wall_clock_;
+  MonotonicClock& monotonic_clock_;
 
   EventQueue& events_;
 
