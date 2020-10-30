@@ -20,11 +20,11 @@ void ReleaseFibersOnCrash(const ProcessHeap &heap) {
     }
   }
 
-  for (auto* f : lost) {
+  for (auto* fiber : lost) {
     // Release off-heap resources
-    await::fibers::ReleaseStack(std::move(f->GetStack()));
+    await::fibers::ReleaseStack(std::move(fiber->GetStack()));
     // Unlink from global alive list
-    f->Unlink();
+    fiber->Unlink();
   }
 }
 
