@@ -7,6 +7,7 @@
 #include <await/fibers/core/api.hpp>
 
 #include <wheels/support/exception.hpp>
+#include <wheels/support/panic.hpp>
 
 namespace whirl::rpc {
 
