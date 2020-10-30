@@ -114,7 +114,7 @@ void TransportChannel::DoClose() {
 }
 
 ITransportSocketPtr& TransportChannel::GetTransportSocket() {
-  if (socket_) {
+  if (socket_ && socket_->IsConnected()) {
     return socket_;
   }
   WHIRL_FMT_LOG("Reconnect to {}", peer_);
