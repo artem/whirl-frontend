@@ -3,8 +3,10 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 
+/*
 #include <whirl/matrix/common/allocator.hpp>
 #include <whirl/matrix/common/copy.hpp>
+*/
 
 #include <sstream>
 
@@ -38,7 +40,7 @@ static const auto kJsonOutputOptions =
 
 template <typename T>
 std::string Serialize(const T& object) {
-  GlobalHeapScope g;
+  //GlobalHeapScope g;
 
   std::stringstream output;
   {
@@ -47,12 +49,14 @@ std::string Serialize(const T& object) {
   }  // archive goes out of scope, ensuring all contents are flushed
 
   auto str = output.str();
-  return CopyToHeap(str, g.ParentScopeHeap());
+  return str;
+
+  //return CopyToHeap(str, g.ParentScopeHeap());
 }
 
 template <typename T>
 T Deserialize(const std::string& bytes) {
-  GlobalHeapScope g;
+  //GlobalHeapScope g;
 
   T object;
 
@@ -62,7 +66,9 @@ T Deserialize(const std::string& bytes) {
     iarchive(object);  // Read the data from the archive
   }
 
-  return CopyToHeap(object, g.ParentScopeHeap());
+  return object;
+
+  //return CopyToHeap(object, g.ParentScopeHeap());
 }
 
 //////////////////////////////////////////////////////////////////////
