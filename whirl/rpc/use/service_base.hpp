@@ -5,6 +5,8 @@
 
 #include <wheels/support/preprocessor.hpp>
 
+#include <map>
+
 namespace whirl::rpc {
 
 //////////////////////////////////////////////////////////////////////
