@@ -1,5 +1,7 @@
 #include <whirl/matrix/common/allocator.hpp>
 
+#include <cstdlib>
+#include <cstdio>
 #include <new>
 
 static thread_local whirl::Heap* heap{nullptr};
@@ -38,5 +40,5 @@ void operator delete(void* addr) noexcept {
 }
 
 void PrintAllocDebugInfo() {
-  printf("Malloc/free balance: %d\n", global_allocs_balance);
+  std::printf("Malloc/free balance: %d\n", global_allocs_balance);
 }
