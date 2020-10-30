@@ -7,6 +7,8 @@
 void SetHeap(whirl::Heap* heap);
 whirl::Heap* GetHeap();
 
+void PrintAllocDebugInfo();
+
 //////////////////////////////////////////////////////////////////////
 
 class HeapScopeGuard {
