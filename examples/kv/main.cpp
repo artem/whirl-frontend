@@ -81,7 +81,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     RPC_REGISTER_METHOD(Set);
     RPC_REGISTER_METHOD(Get);
 
-    // TODO: split coordinator/storage to different RPC services
+    // TODO: split coordinator / storage roles to different RPC services
     RPC_REGISTER_METHOD(Write);
     RPC_REGISTER_METHOD(Read);
   }
