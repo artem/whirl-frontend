@@ -51,7 +51,7 @@ class Heap {
 
  public:
   Heap() : heap_(AllocateHeapMemory()) {
-    WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0, "Choose another zfill block size");
+    WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0, "Choose another kZFillBlockSize");
     Reset();
   }
 
@@ -59,25 +59,25 @@ class Heap {
     ReleaseHeapMemory(std::move(heap_));
   }
 
-  bool FromHere(char* addr) const {
-    return addr >= heap_.Start() && addr < heap_.End();
-  }
-
   // And initialize with zeroes
   char* Allocate(size_t bytes) {
     return AllocateNewBlock(bytes);
+  }
+
+  bool FromHere(char* addr) const {
+    return addr >= heap_.Start() && addr < heap_.End();
   }
 
   void Free(char* addr) {
     WHEELS_VERIFY(FromHere(addr), "Do not mess with heaps");
   }
 
-  size_t BytesAllocated() const {
-    return next_ - heap_.Start();
-  }
-
   void Reset() {
     next_ = zfilled_ = heap_.Start();
+  }
+
+  size_t BytesAllocated() const {
+    return next_ - heap_.Start();
   }
 
  private:
