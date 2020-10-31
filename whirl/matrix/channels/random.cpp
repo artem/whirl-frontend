@@ -10,7 +10,7 @@ using ChannelVector = std::vector<IChannelPtr>;
 
 static const std::string kRandomPeer = "Random";
 
-class RandomChannel : public rpc::IChannel {
+class RandomChannel : public IChannel {
  public:
   RandomChannel(ChannelVector channels) : channels_(std::move(channels)) {
   }
@@ -40,7 +40,7 @@ class RandomChannel : public rpc::IChannel {
   ChannelVector channels_;
 };
 
-rpc::IChannelPtr MakeRandomChannel(ChannelVector&& channels) {
+IChannelPtr MakeRandomChannel(ChannelVector&& channels) {
   return std::make_shared<RandomChannel>(std::move(channels));
 }
 

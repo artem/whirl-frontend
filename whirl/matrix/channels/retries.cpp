@@ -40,7 +40,7 @@ class Backoff {
 
 //////////////////////////////////////////////////////////////////////
 
-using Scope = std::weak_ptr<rpc::RequestContext>;
+using Scope = std::weak_ptr<RequestContext>;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -132,7 +132,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 //////////////////////////////////////////////////////////////////////
 
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
-                       public rpc::IChannel {
+                       public IChannel {
  public:
   RetriesChannel(IChannelPtr impl, ITimeServicePtr time)
       : impl_(std::move(impl)), time_(std::move(time)) {
@@ -148,18 +148,18 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
 
   Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override {
-    Scope scope = rpc::GetRequestContext();
+    Scope scope = GetRequestContext();
     auto retrier = std::make_shared<Retrier>(impl_, method, input,
                                              std::move(scope), time_);
     return retrier->Start();
   }
 
  private:
-  rpc::IChannelPtr impl_;
+  IChannelPtr impl_;
   ITimeServicePtr time_;
 };
 
-rpc::IChannelPtr WithRetries(rpc::IChannelPtr channel, ITimeServicePtr time) {
+IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time) {
   return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
 }
 
