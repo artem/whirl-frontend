@@ -2,7 +2,7 @@
 
 #include <whirl/services/local_storage_backend.hpp>
 
-#include <whirl/matrix/server/local_storage.hpp>
+#include <whirl/matrix/server/storage.hpp>
 
 namespace whirl {
 

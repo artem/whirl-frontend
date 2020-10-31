@@ -8,7 +8,7 @@
 
 #include <whirl/matrix/server/config.hpp>
 #include <whirl/matrix/server/clocks.hpp>
-#include <whirl/matrix/server/local_storage.hpp>
+#include <whirl/matrix/server/storage.hpp>
 
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/process/heap.hpp>
