@@ -70,7 +70,10 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
  private:
-  void Call() {
+  void Retry() {
+    WHIRL_FMT_LOG("Retry {}.{} request, attempt {}", channel_->Peer(),
+                  method_, attempt_);
+
     ++attempt_;
     auto f = channel_->Call(method_, input_);
     SubscribeToResult(std::move(f));
@@ -91,11 +94,11 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     if (result.IsOk()) {
       std::move(promise_).Set(std::move(result));
     } else {
-      Retry(std::move(e));
+      ScheduleRetry(std::move(e));
     }
   }
 
-  void Retry(IExecutorPtr e) {
+  void ScheduleRetry(IExecutorPtr e) {
     if (IsExpired(scope_)) {
       WHIRL_FMT_LOG("Context for {}.{} expired, stop retrying",
                     channel_->Peer(), method_);
@@ -103,10 +106,8 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
       return;
     }
 
-    auto retry = [this, self = shared_from_this()](Result<void>) {
-      WHIRL_FMT_LOG("Retry {}.{} request, attempt {}", channel_->Peer(),
-                    method_, attempt_);
-      self->Call();
+    auto retry = [self = shared_from_this()](Result<void>) {
+      self->Retry();
     };
 
     auto after = time_->After(backoff_.Next());
