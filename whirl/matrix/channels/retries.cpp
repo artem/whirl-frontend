@@ -13,6 +13,8 @@
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>
 
+#include <algorithm>
+
 namespace whirl {
 
 static Logger logger_{"Retries channel"};
@@ -77,8 +79,10 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
  private:
+  // TODO: remove hardcoded constants
+
   Duration NextDelay(Duration delay) const {
-    return delay * 2;
+    return std::min<Duration>(delay * 2, 1000);
   }
 
   Duration InitDelay() const {
