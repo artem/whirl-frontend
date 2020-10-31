@@ -1,7 +1,6 @@
 #include <whirl/node/node_base.hpp>
 
 // TODO
-#include <whirl/matrix/channels/logging.hpp>
 #include <whirl/matrix/channels/retries.hpp>
 
 #include <wheels/support/assert.hpp>
@@ -22,8 +21,7 @@ void NodeBase::DiscoverCluster() {
 
 rpc::IChannelPtr NodeBase::MakeChannel(const std::string& peer_addr) {
   auto transport = services_.rpc_client.MakeChannel(peer_addr);
-  auto log = MakeLoggingChannel(std::move(transport));
-  auto retries = WithRetries(std::move(log), TimeService());
+  auto retries = WithRetries(std::move(transport), TimeService());
   return retries;
 }
 

@@ -8,7 +8,7 @@ using namespace rpc;
 
 using ChannelVector = std::vector<IChannelPtr>;
 
-static const std::string kRandomPeer = "random";
+static const std::string kRandomPeer = "Random";
 
 class RandomChannel : public rpc::IChannel {
  public:
