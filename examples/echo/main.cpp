@@ -38,9 +38,9 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 
 // Echo server node
 
-class EchoServerNode final: public NodeBase {
+class EchoNode final: public NodeBase {
  public:
-  EchoServerNode(NodeServices services)
+  EchoNode(NodeServices services)
       : NodeBase(std::move(services)) {
   }
 
@@ -97,7 +97,7 @@ int main() {
   World world{kSeed};
 
   // Cluster nodes
-  auto node = MakeNode<EchoServerNode>();
+  auto node = MakeNode<EchoNode>();
   world.AddServers(3, node);
 
   // Clients
