@@ -1,4 +1,4 @@
-#include <whirl/matrix/channels/logging.hpp>
+#include <whirl/matrix/channels/retries.hpp>
 
 #include <whirl/rpc/impl/request_context.hpp>
 #include <whirl/rpc/impl/errors.hpp>
@@ -6,12 +6,10 @@
 #include <whirl/services/time.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
-#include <whirl/matrix/world/global.hpp>
 
 #include <whirl/helpers/weak_ptr.hpp>
 
 #include <await/futures/promise.hpp>
-#include <await/futures/helpers.hpp>
 
 #include <algorithm>
 
@@ -23,7 +21,114 @@ using namespace rpc;
 using wheels::Result;
 using namespace await::futures;
 
-using WeakRequestContextRef = std::weak_ptr<rpc::RequestContext>;
+//////////////////////////////////////////////////////////////////////
+
+class Backoff {
+ public:
+  Backoff() {
+  }
+
+  Duration Next() {
+    auto d = next_;
+    next_ = std::min<Duration>(next_ * 2, 1000);
+    return d;
+  }
+
+ private:
+  Duration next_{50};
+};
+
+//////////////////////////////////////////////////////////////////////
+
+using Scope = std::weak_ptr<rpc::RequestContext>;
+
+//////////////////////////////////////////////////////////////////////
+
+class Retrier : public std::enable_shared_from_this<Retrier> {
+ public:
+  Retrier(const IChannelPtr& channel, const Method& method,
+          const BytesValue& input, Scope scope, ITimeServicePtr time)
+      : channel_(channel),
+        method_(method),
+        input_(input),
+        scope_(std::move(scope)),
+        time_(time) {
+  }
+
+  Future<BytesValue> Start() {
+    auto with_retries = std::move(promise_).MakeFuture();
+
+    auto self = shared_from_this();
+
+    ++attempt_;
+    auto f = channel_->Call(method_, input_);
+    auto e = f.GetExecutor();
+    SubscribeToResult(std::move(f));
+
+    // Forward executor
+    return std::move(with_retries).Via(e);
+  }
+
+ private:
+  void Call() {
+    ++attempt_;
+    auto f = channel_->Call(method_, input_);
+    SubscribeToResult(std::move(f));
+  }
+
+  void SubscribeToResult(Future<BytesValue> f) {
+    auto e = f.GetExecutor();
+
+    auto handler = [self = shared_from_this(),
+        e](Result<BytesValue> result) mutable {
+      self->Handle(std::move(result), std::move(e));
+    };
+
+    std::move(f).Subscribe(std::move(handler));
+  }
+
+  void Handle(Result<BytesValue> result, IExecutorPtr e) {
+    if (result.IsOk()) {
+      std::move(promise_).Set(std::move(result));
+    } else {
+      Retry(std::move(e));
+    }
+  }
+
+  void Retry(IExecutorPtr e) {
+    if (IsExpired(scope_)) {
+      WHIRL_FMT_LOG("Context for {}.{} expired, stop retrying",
+                    channel_->Peer(), method_);
+      std::move(promise_).SetError(Error(RPCErrorCode::TransportError));
+      return;
+    }
+
+    auto retry = [this, self = shared_from_this()](Result<void>) {
+      WHIRL_FMT_LOG("Retry {}.{} request, attempt {}", channel_->Peer(),
+                    method_, attempt_);
+      self->Call();
+    };
+
+    auto after = time_->After(backoff_.Next());
+    std::move(after).Via(e).Subscribe(retry);
+  }
+
+ private:
+  Promise<BytesValue> promise_;
+
+  IChannelPtr channel_;
+  Method method_;
+  BytesValue input_;
+
+  Scope scope_;
+
+  ITimeServicePtr time_;
+
+  size_t attempt_{0};
+  Backoff backoff_;
+};
+
+//////////////////////////////////////////////////////////////////////
 
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public rpc::IChannel {
@@ -42,51 +147,10 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
 
   Future<BytesValue> Call(const Method& method,
                           const BytesValue& input) override {
-    WeakRequestContextRef context = rpc::GetRequestContext();
-    return CallImpl(method, input, InitDelay(), context);
-  }
-
- private:
-  Future<BytesValue> CallImpl(const Method& method, const BytesValue& input,
-                              Duration delay, WeakRequestContextRef context) {
-    auto f = impl_->Call(method, input);
-
-    auto self = this->shared_from_this();
-
-    auto retry = [this, self, method, input, delay,
-                  context](Result<void>) -> Future<BytesValue> {
-      if (IsExpired(context)) {
-        WHIRL_FMT_LOG("Request context for {} expired, stop retrying", method);
-        return MakeError(Error(RPCErrorCode::TransportError));
-      }
-
-      WHIRL_FMT_LOG("Retry {}.{} request", self->Peer(), method);
-      return self->CallImpl(method, input, NextDelay(delay), context);
-    };
-
-    auto ex = f.GetExecutor();
-
-    auto fallback = [time = time_, delay, ex,
-                     retry = std::move(retry)](const Error& e) mutable {
-      if (e.GetErrorCode() == RPCErrorCode::TransportError) {
-        return time->After(delay).Via(ex).Then(retry);
-      } else {
-        return await::futures::MakeError(Error(e)).As<BytesValue>();
-      }
-    };
-
-    return await::futures::RecoverWith(std::move(f), fallback);
-  }
-
- private:
-  // TODO: remove hardcoded constants
-
-  Duration NextDelay(Duration delay) const {
-    return std::min<Duration>(delay * 2, 1000);
-  }
-
-  Duration InitDelay() const {
-    return GlobalRandomNumber(90, 110);
+    Scope scope = rpc::GetRequestContext();
+    auto retrier = std::make_shared<Retrier>(impl_, method, input,
+                                             std::move(scope), time_);
+    return retrier->Start();
   }
 
  private:
