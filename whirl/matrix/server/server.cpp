@@ -21,15 +21,28 @@
 
 namespace whirl {
 
-Server::Server(Network& network, ServerConfig config, INodeFactoryPtr factory)
+Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
     : config_(config),
       node_factory_(std::move(factory)),
-      network_(network, Name()) {
+      transport_(net, Name(), heap_) {
 }
 
 Server::~Server() {
   node_factory_.reset();
   WHEELS_VERIFY(state_ == State::Crashed, "Invalid state");
+}
+
+// INetServer
+
+void Server::HandlePacket(const net::Packet& packet, net::Link* out) {
+  auto g = heap_.Use();
+
+  // Switch to server actor just for better logging
+  auto handle_packet = [this, packet, out]() {
+    GlobalHeapScope g;
+    transport_.HandlePacket(packet, out);
+  };
+  events_->Add(GlobalNow(), std::move(handle_packet));
 }
 
 // IFaultyServer
@@ -45,11 +58,11 @@ void Server::Crash() {
 
   WHIRL_LOG("Crash server " << HostName());
 
-  // 1) Disconnect from network
-  network_.Reset();
+  // 1) Remove all network endpoints
+  transport_.Reset();
 
   // 2) Reset process heap
-  //WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
+  // WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
   {
     auto g = heap_.Use();
     events_ = nullptr;
@@ -168,7 +181,7 @@ NodeServices Server::CreateNodeServices() {
   services.storage_backend =
       std::make_shared<LocalStorageBackend>(persistent_storage_);
 
-  auto net_transport = std::make_shared<NetTransport>(heap_, network_);
+  auto net_transport = std::make_shared<NetTransport>(transport_);
 
   services.discovery = std::make_shared<DiscoveryService>();
 

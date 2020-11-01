@@ -1,104 +1,82 @@
 #pragma once
 
 #include <whirl/matrix/network/address.hpp>
-#include <whirl/matrix/network/endpoint_id.hpp>
 #include <whirl/matrix/network/message.hpp>
-#include <whirl/matrix/network/link.hpp>
+#include <whirl/matrix/network/timestamp.hpp>
+#include <whirl/matrix/network/packet.hpp>
 
-namespace whirl {
+#include <memory>
 
-class Network;
+namespace whirl::net {
+
+class Transport;
+class Link;
 
 // Sockets
 
 //////////////////////////////////////////////////////////////////////
 
-// Client socket
-
-struct NetSocket {
+class ClientSocket {
  public:
-  NetSocket(Network* net, Link* link, NetEndpointId self, NetEndpointId peer);
-  ~NetSocket();
+  ClientSocket(Transport* transport, Link* link, Port self, Port server,
+               Timestamp ts);
+  ~ClientSocket();
 
-  static NetSocket Invalid();
-
-  // Non-copyable
-  NetSocket(const NetSocket& that) = delete;
-  NetSocket& operator=(const NetSocket& that) = delete;
-
-  // Movable
-  NetSocket(NetSocket&& that);
-
-  const std::string& Peer() const {
-    return link_->End();
-  }
+  const std::string& Peer() const;
 
   bool IsValid() const;
   void Send(const Message& message);
   void Close();
 
  private:
-  NetPacket MakePacket(const Message& message);
-  void Invalidate();
-
- private:
-  NetEndpointId self_;
-  NetEndpointId peer_;
-  Network* net_;
-  Link* link_;
+  class Impl;
+  std::unique_ptr<Impl> impl_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-// Server socket
-
-class NetServerSocket {
+class ServerSocket {
  public:
-  NetServerSocket(Network* net, ServerAddress self);
-  ~NetServerSocket();
+  ServerSocket(Transport* transport, Port port);
+  ~ServerSocket();
 
-  // Non-copyable
-  NetServerSocket(const NetServerSocket& that) = delete;
-  NetServerSocket operator=(const NetServerSocket& that) = delete;
-
-  NetServerSocket(NetServerSocket&& that);
+  void Close();
 
  private:
-  ServerAddress self_;
-  Network* net_;
+  class Impl;
+  std::unique_ptr<Impl> impl_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
 // Just throws messages to network, does not own net endpoint
 
-class LightNetSocket {
+class ReplySocket {
  public:
-  LightNetSocket(Link* link, NetEndpointId self, NetEndpointId peer);
+  ReplySocket(Link* link, const Packet& packet);
 
   void Send(const Message& message);
 
-  const std::string& Peer() const {
-    return link_->End();
-  }
+  const std::string& Peer() const;
 
  private:
-  NetPacket MakePacket(const Message& message);
+  Packet MakePacket(const Message& message);
 
  private:
-  NetEndpointId self_;
-  NetEndpointId peer_;
   Link* link_;
+  Port self_port_;
+  Port peer_port_;
+  Timestamp ts_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-struct INetSocketHandler {
-  virtual ~INetSocketHandler() = default;
+struct ISocketHandler {
+  virtual ~ISocketHandler() = default;
 
-  virtual void HandleMessage(const Message& message, LightNetSocket back) = 0;
+  virtual void HandleMessage(const Message& message, ReplySocket back) = 0;
 
-  virtual void HandleDisconnect() = 0;
+  virtual void HandleDisconnect(const std::string& peer) = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::net

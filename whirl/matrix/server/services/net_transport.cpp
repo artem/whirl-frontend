@@ -4,9 +4,9 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class LightTransportSocket : public ITransportSocket {
+class ReplyTransportSocket : public ITransportSocket {
  public:
-  LightTransportSocket(LightNetSocket socket) : socket_(std::move(socket)) {
+  ReplyTransportSocket(net::ReplySocket socket) : socket_(socket) {
   }
 
   void Send(const std::string& message) override {
@@ -26,17 +26,15 @@ class LightTransportSocket : public ITransportSocket {
   }
 
  private:
-  LightNetSocket socket_;
+  net::ReplySocket socket_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-void NetTransportServer::HandleMessage(const Message& message,
-                                       LightNetSocket back) {
-  auto g = heap_.Use();
-
+void NetTransportServer::HandleMessage(const net::Message& message,
+                                       net::ReplySocket back) {
   handler_->HandleMessage(message,
-                          std::make_shared<LightTransportSocket>(back));
+                          std::make_shared<ReplyTransportSocket>(back));
 }
 
 }  // namespace whirl

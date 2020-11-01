@@ -1,9 +1,20 @@
 #pragma once
 
+#include <cstdlib>
 #include <string>
 
-namespace whirl {
+#include <ostream>
+#include <fmt/ostream.h>
 
-using ServerAddress = std::string;
+namespace whirl::net {
 
-}  // namespace whirl
+using Port = size_t;
+
+struct Address {
+  std::string host;
+  Port port;
+};
+
+std::ostream& operator<<(std::ostream& out, const Address& address);
+
+}  // namespace whirl::net

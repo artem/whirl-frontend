@@ -1,71 +1,40 @@
 #pragma once
 
-#include <whirl/matrix/network/address.hpp>
-#include <whirl/matrix/network/endpoint_id.hpp>
-#include <whirl/matrix/network/message.hpp>
-#include <whirl/matrix/network/packet.hpp>
-#include <whirl/matrix/network/socket.hpp>
-#include <whirl/matrix/network/link_layer.hpp>
-#include <whirl/matrix/network/connection.hpp>
-
 #include <whirl/matrix/world/actor.hpp>
 #include <whirl/matrix/world/faults.hpp>
 
+#include <whirl/matrix/network/link.hpp>
+#include <whirl/matrix/network/server.hpp>
+
 #include <whirl/matrix/log/logger.hpp>
 
-#include <wheels/support/id.hpp>
-
-#include <map>
+#include <string>
+#include <cstdlib>
 #include <vector>
+#include <set>
 
-namespace whirl {
+namespace whirl::net {
 
-//////////////////////////////////////////////////////////////////////
+// Link layer
+
+using HostName = std::string;
+
+using Partition = std::set<HostName>;
 
 class Network : public IActor, public IFaultyNetwork {
-  struct Endpoint {
-    INetSocketHandler* handler;
-  };
-
-  using Endpoints = std::map<NetEndpointId, Endpoint>;
-
-  using Servers = std::map<ServerAddress, NetEndpointId>;
-
-  using ClientConnections = std::map<NetEndpointId, Connection>;
-
  public:
   Network() = default;
 
+  // Non-copyable
   Network(const Network& that) = delete;
   Network& operator=(const Network& that) = delete;
 
-  // Build
+  // Build network
 
-  void AddServer(std::string name) {
-    link_layer_.AddServer(name);
-  }
+  void AddServer(INetServer* server);
 
-  // Server
-
-  NetServerSocket Serve(const ServerAddress& address,
-                        INetSocketHandler* handler);
-
-  // Called from NetServerSocket dtor
-  void DisconnectServer(const ServerAddress& address);
-
-  // Client
-
-  // Called from actor fibers
-  NetSocket ConnectTo(const ServerAddress& address, INetSocketHandler* handler);
-
-  // Called from NetSocket dtor
-  void DisconnectClient(NetEndpointId id);
-
-  // Send
-
-  // Context: Server
-  void SendMessage(NetEndpointId from, const Message& message,
-                   NetEndpointId to);
+  // After `BuildLinks`
+  Link* GetLink(const HostName& start, const HostName& end);
 
   // IActor
 
@@ -74,44 +43,35 @@ class Network : public IActor, public IFaultyNetwork {
     return kName;
   }
 
+  // After `AddServer`
   void Start() override;
+
   bool IsRunnable() const override;
   TimePoint NextStepTime() override;
   void Step() override;
+
   void Shutdown() override;
 
-  // IFaultyNetwork
+  // Partitions
 
   void Split() override;
+  void Split(const Partition& lhs);
   void Heal() override;
 
  private:
-  // Context: Server
-  Link* GetLinkTo(const ServerAddress server);
+  size_t ServerToIndex(const HostName& server) const;
+  size_t GetLinkIndex(size_t i, size_t j) const;
 
-  NetEndpointId NewEndpointId() {
-    return endpoint_ids_.NextId();
-  }
+  // After all `AddServer`
+  void BuildLinks();
 
-  NetEndpointId CreateNewEndpoint(INetSocketHandler* handler) {
-    auto id = NewEndpointId();
-    endpoints_.emplace(id, Endpoint{handler});
-    return id;
-  }
-
-  void SendResetPacket(Link* link, NetEndpointId dest);
+  Link* FindLinkWithNextPacket();
 
  private:
-  Endpoints endpoints_;
-  Servers servers_;
-  LinkLayer link_layer_;
-  ClientConnections conns_;
-
-  wheels::support::IdGenerator endpoint_ids_;
+  std::vector<INetServer*> servers_;
+  std::vector<Link> links_;
 
   Logger logger_{"Network"};
 };
 
-//////////////////////////////////////////////////////////////////////
-
-}  // namespace whirl
+}  // namespace whirl::net

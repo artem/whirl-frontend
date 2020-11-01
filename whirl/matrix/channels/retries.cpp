@@ -71,8 +71,8 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
  private:
   void Retry() {
-    WHIRL_FMT_LOG("Retry {}.{} request, attempt {}", channel_->Peer(),
-                  method_, attempt_);
+    WHIRL_FMT_LOG("Retry {}.{} request, attempt {}", channel_->Peer(), method_,
+                  attempt_);
 
     ++attempt_;
     auto f = channel_->Call(method_, input_);
@@ -83,7 +83,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     auto e = f.GetExecutor();
 
     auto handler = [self = shared_from_this(),
-        e](Result<BytesValue> result) mutable {
+                    e](Result<BytesValue> result) mutable {
       self->Handle(std::move(result), std::move(e));
     };
 
@@ -106,9 +106,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
       return;
     }
 
-    auto retry = [self = shared_from_this()](Result<void>) {
-      self->Retry();
-    };
+    auto retry = [self = shared_from_this()](Result<void>) { self->Retry(); };
 
     auto after = time_->After(backoff_.Next());
     std::move(after).Via(e).Subscribe(retry);

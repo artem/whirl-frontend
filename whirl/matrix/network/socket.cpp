@@ -1,93 +1,120 @@
 #include <whirl/matrix/network/socket.hpp>
 
-#include <whirl/matrix/network/network.hpp>
+#include <whirl/matrix/network/link.hpp>
+#include <whirl/matrix/network/transport.hpp>
 
 #include <whirl/matrix/common/allocator.hpp>
 
-namespace whirl {
+namespace whirl::net {
 
 //////////////////////////////////////////////////////////////////////
 
-LightNetSocket::LightNetSocket(Link* link, NetEndpointId self,
-                               NetEndpointId peer)
-    : self_(self), peer_(peer), link_(link) {
+class ClientSocket::Impl {
+ public:
+  Impl(Transport* transport, Link* link, Port self, Port server,
+               Timestamp ts)
+               : transport_(transport), link_(link), self_port_(self), server_port_(server), ts_(ts) {
+  }
+
+  ~Impl() {
+    transport_->RemoveEndpoint(self_port_);
+  }
+
+  const std::string& Peer() const {
+    GlobalHeapScope g;
+    return link_->EndHostName();
+  }
+
+  void Send(const Message& message) {
+    GlobalHeapScope g;
+    link_->Add(MakePacket(message));
+  }
+
+ private:
+  Packet MakePacket(const Message& message) {
+    return {EPacketType::Data, self_port_, message, server_port_, ts_};
+  }
+
+ private:
+  Transport* transport_;
+  Link* link_;
+  Port self_port_;
+  Port server_port_;
+  Timestamp ts_;
+};
+
+ClientSocket::ClientSocket(Transport* transport, Link* link, Port self, Port server,
+                           Timestamp ts)
+    : impl_(std::make_unique<Impl>(transport, link, self, server, ts)) {
 }
 
-NetPacket LightNetSocket::MakePacket(const Message& message) {
-  return {EPacketType::Data, self_, message, peer_};
+ClientSocket::~ClientSocket() {
 }
 
-void LightNetSocket::Send(const Message& message) {
+const std::string& ClientSocket::Peer() const {
+  return impl_->Peer();
+}
+
+void ClientSocket::Send(const Message& message) {
+  impl_->Send(message);
+}
+
+void ClientSocket::Close() {
+  impl_.reset();
+}
+
+bool ClientSocket::IsValid() const {
+  return (bool)impl_;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+class ServerSocket::Impl {
+ public:
+  Impl(Transport* transport, Port port)
+    : transport_(transport), port_(port) {
+  }
+
+  ~Impl() {
+    transport_->RemoveEndpoint(port_);
+  }
+
+ private:
+  Transport* transport_;
+  Port port_;
+};
+
+ServerSocket::ServerSocket(Transport* transport, Port port)
+  : impl_(std::make_unique<Impl>(transport, port)) {
+}
+
+ServerSocket::~ServerSocket() {
+}
+
+void ServerSocket::Close() {
+  impl_.reset();
+}
+
+//////////////////////////////////////////////////////////////////////
+
+ReplySocket::ReplySocket(Link* link, const Packet& packet)
+    : link_(link),
+      self_port_(packet.dest_port),
+      peer_port_(packet.source_port),
+      ts_(packet.ts) {
+}
+
+Packet ReplySocket::MakePacket(const Message& message) {
+  return {EPacketType::Data, self_port_, message, peer_port_, ts_};
+}
+
+void ReplySocket::Send(const Message& message) {
   GlobalHeapScope g;
   link_->Add(MakePacket(message));
 }
 
-//////////////////////////////////////////////////////////////////////
-
-NetSocket::NetSocket(Network* net, Link* link, NetEndpointId self,
-                     NetEndpointId peer)
-    : self_(self), peer_(peer), net_(net), link_(link) {
+const std::string& ReplySocket::Peer() const {
+  return link_->EndHostName();
 }
 
-NetSocket::~NetSocket() {
-  Close();
-}
-
-NetSocket NetSocket::Invalid() {
-  return NetSocket{nullptr, nullptr, 0, 0};
-}
-
-void NetSocket::Close() {
-  if (IsValid()) {
-    net_->DisconnectClient(self_);
-    Invalidate();
-  }
-}
-
-NetPacket NetSocket::MakePacket(const Message& message) {
-  return {EPacketType::Data, self_, message, peer_};
-}
-
-void NetSocket::Send(const Message& message) {
-  GlobalHeapScope g;
-  link_->Add(MakePacket(message));
-}
-
-bool NetSocket::IsValid() const {
-  return !(self_ == 0 && peer_ == 0);
-}
-
-NetSocket::NetSocket(NetSocket&& that) {
-  self_ = that.self_;
-  peer_ = that.peer_;
-  net_ = that.net_;
-  link_ = that.link_;
-
-  that.Invalidate();
-}
-
-void NetSocket::Invalidate() {
-  net_ = nullptr;
-  link_ = nullptr;
-  self_ = peer_ = 0;
-}
-
-//////////////////////////////////////////////////////////////////////
-
-NetServerSocket::NetServerSocket(Network* net, ServerAddress self)
-    : self_(self), net_(net) {
-}
-
-NetServerSocket::NetServerSocket(NetServerSocket&& that) {
-  self_ = that.self_;
-  net_ = that.net_;
-  that.net_ = nullptr;
-}
-
-NetServerSocket::~NetServerSocket() {
-  if (net_) {
-    net_->DisconnectServer(self_);
-  }
-}
-
-}  // namespace whirl
+}  // namespace whirl::net

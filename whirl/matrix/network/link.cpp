@@ -5,11 +5,12 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl {
+namespace whirl::net {
 
-void Link::Add(NetPacket packet) {
-  WHIRL_FMT_LOG("Send packet from {} (endpoint {}) to {} (endpoint {}): <{}>",
-                Start(), packet.source, End(), packet.dest, packet.message);
+void Link::Add(Packet packet) {
+  WHIRL_FMT_LOG("Send packet from {}:{} to {}:{}: <{}>", StartHostName(),
+                packet.source_port, EndHostName(), packet.dest_port,
+                packet.message);
   packets_.Insert({packet, ChoosePacketDeliveryTime()});
 }
 
@@ -17,7 +18,7 @@ TimePoint Link::ChoosePacketDeliveryTime() const {
   return GlobalNow() + NetPacketDeliveryTime();
 }
 
-NetPacket Link::ExtractNextPacket() {
+Packet Link::ExtractNextPacket() {
   WHEELS_VERIFY(!paused_, "Link is paused");
   return packets_.Extract().packet;
 }
@@ -45,4 +46,4 @@ void Link::Resume() {
   }
 }
 
-}  // namespace whirl
+}  // namespace whirl::net
