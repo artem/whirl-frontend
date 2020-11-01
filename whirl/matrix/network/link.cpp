@@ -16,6 +16,9 @@ void Link::Add(Packet packet) {
 }
 
 TimePoint Link::ChoosePacketDeliveryTime() const {
+  if (IsLoopBack()) {
+    return GlobalNow() + 1;
+  }
   return GlobalNow() + NetPacketDeliveryTime();
 }
 
