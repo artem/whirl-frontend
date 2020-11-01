@@ -70,15 +70,15 @@ class Replier {
   }
 
   void KeepAlive() {
-    Send({EPacketType::KeepAlive, packet_.dest_port, "<keep-alive>", packet_.source_port, packet_.ts});
+    Reply(EPacketType::KeepAlive, "<keep-alive>");
   }
 
   void Reset() {
-    Send({EPacketType::Reset, packet_.dest_port, "<reset>", packet_.source_port, packet_.ts});
+    Reply(EPacketType::Reset, "<reset>");
   }
 
   void Data(const Message& message) {
-    Send({EPacketType::Data, packet_.dest_port, message, packet_.source_port, packet_.ts});
+    Reply(EPacketType::Data, message);
   }
 
  private:
@@ -86,8 +86,12 @@ class Replier {
     out_->Add(packet);
   }
 
+  void Reply(EPacketType type, Message payload) {
+    Send({type, packet_.dest_port, std::move(payload), packet_.source_port, packet_.ts});
+  }
+
  private:
-  Packet packet_;
+  const Packet packet_;
   Link* out_;
 };
 
