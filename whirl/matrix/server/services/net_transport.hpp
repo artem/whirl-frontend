@@ -53,9 +53,9 @@ class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
     handler_->HandleMessage(message, nullptr);
   }
 
-  void HandleDisconnect(const std::string& /*peer*/) override {
+  void HandleDisconnect(const std::string& peer) override {
     socket_.Close();
-    handler_->HandleDisconnect();
+    handler_->HandleDisconnect(peer);
   }
 
  private:
@@ -78,8 +78,8 @@ class NetTransportServer : public ITransportServer, public net::ISocketHandler {
   void HandleMessage(const net::Message& message,
                      net::ReplySocket back) override;
 
-  void HandleDisconnect(const std::string& /*client*/) override {
-    handler_->HandleDisconnect();
+  void HandleDisconnect(const std::string& client) override {
+    handler_->HandleDisconnect(client);
   }
 
  private:
