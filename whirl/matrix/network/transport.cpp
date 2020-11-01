@@ -98,9 +98,9 @@ class Replier {
 void Transport::HandlePacket(const Packet& packet, Link* out) {
   GlobalHeapScope g;
 
-  Address peer_address{out->EndHostName(), packet.source_port};
+  Address source{out->EndHostName(), packet.source_port};
 
-  WHIRL_FMT_LOG("Handle packet from {} with ts = {}", peer_address, packet.ts);
+  WHIRL_FMT_LOG("Handle packet from {} with ts = {}", source, packet.ts);
 
   Replier replier(packet, out);
 
@@ -110,7 +110,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     // Endpoint not found
 
     if (packet.type != EPacketType::Reset) {
-      WHIRL_FMT_LOG("Endpoint at port {} not found, send reset packet to {}", packet.dest_port, peer_address);
+      WHIRL_FMT_LOG("Endpoint at port {} not found, send reset packet to {}", packet.dest_port, source);
       replier.Reset();
     }
     return;
@@ -119,18 +119,18 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   const auto& endpoint = it->second;
 
   if (packet.ts < endpoint.ts) {
-    WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", peer_address);
+    WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", source);
     replier.Reset();
 
   } else if (packet.type == EPacketType::KeepAlive) {
     // KeepAlive
-    WHIRL_FMT_LOG("Send keep-alive back to {}", peer_address);
+    WHIRL_FMT_LOG("Send keep-alive back to {}", source);
     replier.KeepAlive();
 
   } else if (packet.type == EPacketType::Reset) {
     // Disconnect
     auto g = heap_.Use();
-    endpoint.handler->HandleDisconnect(peer_address.host);
+    endpoint.handler->HandleDisconnect(source.host);
 
   } else if (packet.type == EPacketType::Data) {
     // Message
