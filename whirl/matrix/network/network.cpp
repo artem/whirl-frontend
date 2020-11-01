@@ -82,6 +82,7 @@ TimePoint Network::NextStepTime() {
 void Network::Step() {
   Link* link = FindLinkWithNextPacket();
   Packet packet = link->ExtractNextPacket();
+
   link->End()->HandlePacket(packet, link->GetOpposite());
 }
 

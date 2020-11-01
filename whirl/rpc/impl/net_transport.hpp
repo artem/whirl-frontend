@@ -54,7 +54,7 @@ struct ITransport {
   virtual ~ITransport() = default;
 
   virtual ITransportServerPtr Serve(ITransportHandlerPtr handler) = 0;
-  virtual ITransportSocketPtr ConnectTo(const std::string& peer,
+  virtual ITransportSocketPtr ConnectTo(const TransportAddress& peer,
                                         ITransportHandlerPtr handler) = 0;
 };
 

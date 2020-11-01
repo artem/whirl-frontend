@@ -6,7 +6,7 @@
 
 namespace whirl::net {
 
-enum class EPacketType { Data, Reset, KeepAlive };
+enum class EPacketType { Data, Reset, Ping };
 
 struct Packet {
   EPacketType type;

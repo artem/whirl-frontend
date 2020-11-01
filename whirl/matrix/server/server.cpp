@@ -35,14 +35,7 @@ Server::~Server() {
 // INetServer
 
 void Server::HandlePacket(const net::Packet& packet, net::Link* out) {
-  auto g = heap_.Use();
-
-  // Switch to server actor just for better logging
-  auto handle_packet = [this, packet, out]() {
-    GlobalHeapScope g;
-    transport_.HandlePacket(packet, out);
-  };
-  events_->Add(GlobalNow(), std::move(handle_packet));
+  transport_.HandlePacket(packet, out);
 }
 
 // IFaultyServer

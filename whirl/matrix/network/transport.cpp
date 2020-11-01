@@ -9,7 +9,7 @@
 namespace whirl::net {
 
 Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap)
-  : net_(net), host_(host), heap_(heap) {
+  : net_(net), host_(host), heap_(heap), logger_{host} {
 }
 
 ClientSocket Transport::ConnectTo(const Address& address, ISocketHandler* handler) {
@@ -20,17 +20,18 @@ ClientSocket Transport::ConnectTo(const Address& address, ISocketHandler* handle
   Port port = FindFreePort();
   Timestamp ts = GetEndpointTimestamp();
 
-  WHIRL_FMT_LOG("Connecting to {}: local port = {}, ts = {}", address, port, ts);
+  WHIRL_FMT_LOG("Connecting to {}: local port = {}", address, port);
 
   endpoints_.emplace(port, Endpoint{handler, ts});
 
-  /*
-  // KeepAlive
+  // Init ping-pong
   link->Add(
-      {EPacketType::KeepAlive, port, "<keep-alive>", address.port, ts});
-  */
+      {EPacketType::Ping, port, "<ping>", address.port, ts});
 
-  return ClientSocket{this, link, port, address.port, ts};
+  {
+    auto g = heap_.Use();
+    return ClientSocket{this, link, port, address.port, ts};
+  }
 };
 
 ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
@@ -41,9 +42,12 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
   auto ts = GetEndpointTimestamp();
   endpoints_.emplace(port, Endpoint{handler, ts});
 
-  WHIRL_FMT_LOG("Start serving at port {}, ts = {}", port, ts);
+  WHIRL_FMT_LOG("Start serving at port {}", port);
 
-  return ServerSocket{this, port};
+  {
+    auto g = heap_.Use();
+    return ServerSocket{this, port};
+  }
 };
 
 void Transport::RemoveEndpoint(Port port) {
@@ -69,8 +73,8 @@ class Replier {
     : packet_(packet), out_(out) {
   }
 
-  void KeepAlive() {
-    Reply(EPacketType::KeepAlive, "<keep-alive>");
+  void Ping() {
+    Reply(EPacketType::Ping, "<ping>");
   }
 
   void Reset() {
@@ -98,9 +102,14 @@ class Replier {
 void Transport::HandlePacket(const Packet& packet, Link* out) {
   GlobalHeapScope g;
 
-  Address source{out->EndHostName(), packet.source_port};
+  Address from{out->EndHostName(), packet.source_port};
+  Address to{host_, packet.dest_port};
 
-  WHIRL_FMT_LOG("Handle packet from {} with ts = {}", source, packet.ts);
+  /*
+  if (packet.type != EPacketType::Ping) {
+    WHIRL_FMT_LOG("Handle packet from {} with ts = {}", from, packet.ts);
+  }
+  */
 
   Replier replier(packet, out);
 
@@ -110,7 +119,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     // Endpoint not found
 
     if (packet.type != EPacketType::Reset) {
-      WHIRL_FMT_LOG("Endpoint at port {} not found, send reset packet to {}", packet.dest_port, source);
+      //WHIRL_FMT_LOG("Endpoint {} not found, send reset packet to {}", to, from);
       replier.Reset();
     }
     return;
@@ -119,24 +128,31 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   const auto& endpoint = it->second;
 
   if (packet.ts < endpoint.ts) {
-    WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", source);
+    //WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", from);
     replier.Reset();
+    return;
 
-  } else if (packet.type == EPacketType::KeepAlive) {
-    // KeepAlive
-    WHIRL_FMT_LOG("Send keep-alive back to {}", source);
-    replier.KeepAlive();
+  } else if (packet.type == EPacketType::Ping) {
+    // Ping
+    // WHIRL_FMT_LOG("Send ping back to {}", source);
+    replier.Ping();
+    return;
 
   } else if (packet.type == EPacketType::Reset) {
     // Disconnect
     auto g = heap_.Use();
-    endpoint.handler->HandleDisconnect(source.host);
+    endpoint.handler->HandleDisconnect(from.host);
+    return;
 
   } else if (packet.type == EPacketType::Data) {
     // Message
+
+    WHIRL_FMT_LOG("Handle message from {}: <{}>", from, packet.message);
+
     auto g = heap_.Use();
     endpoint.handler->HandleMessage(packet.message,
         ReplySocket(out, packet));
+    return;
   }
 }
 

@@ -8,9 +8,10 @@
 namespace whirl::net {
 
 void Link::Add(Packet packet) {
-  WHIRL_FMT_LOG("Send packet from {}:{} to {}:{}: <{}>", StartHostName(),
-                packet.source_port, EndHostName(), packet.dest_port,
-                packet.message);
+  if (packet.type == EPacketType::Data) {
+    Address to{EndHostName(), packet.dest_port};
+    WHIRL_FMT_LOG("Send packet to {}: <{}>", to, packet.message);
+  }
   packets_.Insert({packet, ChoosePacketDeliveryTime()});
 }
 
