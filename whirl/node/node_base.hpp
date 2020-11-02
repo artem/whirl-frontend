@@ -71,6 +71,10 @@ class NodeBase : public INode {
     return services_.time_service->MonotonicNow();
   }
 
+  void SleepFor(Duration delay) {
+    Threads().SleepFor(delay);
+  }
+
   Uid GenerateUid() {
     return services_.uids->Generate();
   }
