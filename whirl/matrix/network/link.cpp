@@ -12,14 +12,14 @@ void Link::Add(Packet packet) {
     Address to{EndHostName(), packet.dest_port};
     WHIRL_FMT_LOG("Send packet to {}: <{}>", to, packet.message);
   }
-  packets_.Insert({packet, ChoosePacketDeliveryTime()});
+  packets_.Insert({packet, ChooseDeliveryTime(packet)});
 }
 
-TimePoint Link::ChoosePacketDeliveryTime() const {
+TimePoint Link::ChooseDeliveryTime(const Packet& packet) const {
   if (IsLoopBack()) {
     return GlobalNow() + 1;
   }
-  return GlobalNow() + NetPacketDeliveryTime();
+  return GlobalNow() + NetPacketDeliveryTime(packet);
 }
 
 Packet Link::ExtractNextPacket() {

@@ -2,6 +2,8 @@
 
 #include <whirl/time.hpp>
 
+#include <whirl/matrix/network/packet.hpp>
+
 #include <memory>
 
 namespace whirl {
@@ -26,7 +28,8 @@ struct IWorldBehaviour {
 
   // Network
 
-  virtual Duration NetPacketDeliveryTime() = 0;
+  // DPI =)
+  virtual Duration NetPacketDeliveryTime(const net::Packet& packet) = 0;
 };
 
 using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;

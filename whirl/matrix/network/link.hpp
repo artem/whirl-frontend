@@ -85,7 +85,7 @@ class Link {
   void Resume();
 
  private:
-  TimePoint ChoosePacketDeliveryTime() const;
+  TimePoint ChooseDeliveryTime(const Packet& packet) const;
 
  private:
   INetServer* start_;
