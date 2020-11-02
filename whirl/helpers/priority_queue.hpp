@@ -1,6 +1,5 @@
 #pragma once
 
-#include <set>
 #include <queue>
 
 namespace whirl {
