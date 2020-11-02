@@ -28,7 +28,7 @@ class HeapsAllocator {
 
  private:
   MmapAllocation AllocateNewHeap() {
-    static const size_t kPages = 1024 * 1024;
+    static const size_t kPages = 16 * 1024;
     return MmapAllocation::AllocatePages(kPages);
   }
 
