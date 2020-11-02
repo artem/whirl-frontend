@@ -9,10 +9,11 @@
 namespace whirl::net {
 
 Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap)
-  : net_(net), host_(host), heap_(heap), logger_{host} {
+    : net_(net), host_(host), heap_(heap), logger_{host} {
 }
 
-ClientSocket Transport::ConnectTo(const Address& address, ISocketHandler* handler) {
+ClientSocket Transport::ConnectTo(const Address& address,
+                                  ISocketHandler* handler) {
   GlobalHeapScope g;
 
   Link* link = net_.GetLink(host_, address.host);
@@ -25,8 +26,7 @@ ClientSocket Transport::ConnectTo(const Address& address, ISocketHandler* handle
   endpoints_.emplace(port, Endpoint{handler, ts});
 
   // Init ping-pong
-  link->Add(
-      {EPacketType::Ping, port, "<ping>", address.port, ts});
+  link->Add({EPacketType::Ping, port, "<ping>", address.port, ts});
 
   {
     auto g = heap_.Use();
@@ -66,11 +66,9 @@ void Transport::Reset() {
   endpoints_.clear();
 }
 
-
 class Replier {
  public:
-  Replier(const Packet& packet, Link* out)
-    : packet_(packet), out_(out) {
+  Replier(const Packet& packet, Link* out) : packet_(packet), out_(out) {
   }
 
   void Ping() {
@@ -91,7 +89,8 @@ class Replier {
   }
 
   void Reply(EPacketType type, Message payload) {
-    Send({type, packet_.dest_port, std::move(payload), packet_.source_port, packet_.ts});
+    Send({type, packet_.dest_port, std::move(payload), packet_.source_port,
+          packet_.ts});
   }
 
  private:
@@ -119,7 +118,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     // Endpoint not found
 
     if (packet.type != EPacketType::Reset) {
-      //WHIRL_FMT_LOG("Endpoint {} not found, send reset packet to {}", to, from);
+      // WHIRL_FMT_LOG("Endpoint {} not found, send reset packet to {}", to,
+      // from);
       replier.Reset();
     }
     return;
@@ -128,7 +128,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   const auto& endpoint = it->second;
 
   if (packet.ts < endpoint.ts) {
-    //WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", from);
+    // WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", from);
     replier.Reset();
     return;
 
@@ -150,8 +150,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     WHIRL_FMT_LOG("Handle message from {}: <{}>", from, packet.message);
 
     auto g = heap_.Use();
-    endpoint.handler->HandleMessage(packet.message,
-        ReplySocket(out, packet));
+    endpoint.handler->HandleMessage(packet.message, ReplySocket(out, packet));
     return;
   }
 }

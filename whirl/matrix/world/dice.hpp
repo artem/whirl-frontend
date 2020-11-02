@@ -9,6 +9,10 @@ namespace whirl {
 
 // Clocks
 
+inline int InitClockDrift() {
+  return GetWorldBehaviour()->InitClockDrift();
+}
+
 inline TimePoint GlobalStartTime() {
   return GetWorldBehaviour()->GlobalStartTime();
 }

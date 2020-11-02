@@ -9,6 +9,29 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
+class Drift {
+ public:
+  Drift(int value) : drift_(value) {
+  }
+
+  // For now
+  // Real time duration -> user duration
+  Duration Elapsed(Duration real) const {
+    return (real * (100 + drift_)) / 100;
+  }
+
+  // For sleeps/timeouts
+  // User duration -> real time duration
+  Duration SleepOrTimeout(Duration user) const {
+    return (user * 100) / (100 + drift_);
+  }
+
+ private:
+  int drift_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class WallClock {
  public:
   WallClock() : offset_(InitLocalClockOffset()) {
@@ -32,7 +55,7 @@ class WallClock {
 
 class MonotonicClock {
  public:
-  MonotonicClock() {
+  MonotonicClock(): drift_(InitClockDrift()) {
     Reset();
   }
 
@@ -42,24 +65,24 @@ class MonotonicClock {
   }
 
   TimePoint Now() const {
-    // TODO: drift
-    return ElapsedSinceLastReset() + init_;
+    return drift_.Elapsed(ElapsedSinceLastReset()) + init_;
   }
 
   // For timeouts and sleeps
-  Duration Drift(Duration d) {
-    // TODO: drift
-    return d;
+  Duration SleepOrTimeout(Duration d) const {
+    return drift_.SleepOrTimeout(d);
   }
 
  private:
+  // Global time
   Duration ElapsedSinceLastReset() const {
     return GlobalNow() - start_;
   }
 
  private:
+  Drift drift_;
   TimePoint start_;
-  Duration init_;
+  TimePoint init_;
 };
 
 }  // namespace whirl

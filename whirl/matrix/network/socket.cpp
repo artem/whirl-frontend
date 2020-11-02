@@ -11,9 +11,12 @@ namespace whirl::net {
 
 class ClientSocket::Impl {
  public:
-  Impl(Transport* transport, Link* link, Port self, Port server,
-               Timestamp ts)
-               : transport_(transport), link_(link), self_port_(self), server_port_(server), ts_(ts) {
+  Impl(Transport* transport, Link* link, Port self, Port server, Timestamp ts)
+      : transport_(transport),
+        link_(link),
+        self_port_(self),
+        server_port_(server),
+        ts_(ts) {
   }
 
   ~Impl() {
@@ -43,8 +46,8 @@ class ClientSocket::Impl {
   Timestamp ts_;
 };
 
-ClientSocket::ClientSocket(Transport* transport, Link* link, Port self, Port server,
-                           Timestamp ts)
+ClientSocket::ClientSocket(Transport* transport, Link* link, Port self,
+                           Port server, Timestamp ts)
     : impl_(std::make_unique<Impl>(transport, link, self, server, ts)) {
 }
 
@@ -71,8 +74,7 @@ bool ClientSocket::IsValid() const {
 
 class ServerSocket::Impl {
  public:
-  Impl(Transport* transport, Port port)
-    : transport_(transport), port_(port) {
+  Impl(Transport* transport, Port port) : transport_(transport), port_(port) {
   }
 
   ~Impl() {
@@ -85,7 +87,7 @@ class ServerSocket::Impl {
 };
 
 ServerSocket::ServerSocket(Transport* transport, Port port)
-  : impl_(std::make_unique<Impl>(transport, port)) {
+    : impl_(std::make_unique<Impl>(transport, port)) {
 }
 
 ServerSocket::~ServerSocket() {

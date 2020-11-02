@@ -13,6 +13,9 @@ struct IWorldBehaviour {
 
   // Time
 
+  virtual int InitClockDrift() = 0;
+  virtual int ClockDriftBound() = 0;
+
   virtual TimePoint GlobalStartTime() = 0;
 
   virtual TimePoint ResetMonotonicClock() = 0;

@@ -68,7 +68,8 @@ class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
 class NetTransportServer : public ITransportServer, public net::ISocketHandler {
  public:
   NetTransportServer(net::Transport& transport, ITransportHandlerPtr handler)
-      : server_socket_(transport.Serve(kTransportPort, this)), handler_(handler) {
+      : server_socket_(transport.Serve(kTransportPort, this)),
+        handler_(handler) {
   }
 
   void Shutdown() override {

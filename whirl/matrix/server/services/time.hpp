@@ -41,7 +41,7 @@ class TimeService : public ITimeService {
 
  private:
   TimePoint AfterGlobalTime(Duration d) const {
-    return GlobalNow() + monotonic_clock_.Drift(d);
+    return GlobalNow() + monotonic_clock_.SleepOrTimeout(d);
   }
 
  private:

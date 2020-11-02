@@ -24,7 +24,7 @@ namespace whirl {
 Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
     : config_(config),
       node_factory_(std::move(factory)),
-      transport_(net, Name(), heap_) {
+      transport_(net, config.hostname, heap_) {
 }
 
 Server::~Server() {
