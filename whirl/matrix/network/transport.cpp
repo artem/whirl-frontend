@@ -4,6 +4,8 @@
 
 #include <whirl/matrix/common/allocator.hpp>
 
+#include <whirl/matrix/world/global.hpp>
+
 #include <wheels/support/assert.hpp>
 
 namespace whirl::net {
@@ -25,8 +27,10 @@ ClientSocket Transport::ConnectTo(const Address& address,
 
   endpoints_.emplace(port, Endpoint{handler, ts});
 
-  // Init ping-pong
-  link->Add({EPacketType::Ping, port, "<ping>", address.port, ts});
+  if (IsThereAdversary()) {
+    // Init ping-pong for detecting crashes / reboots
+    link->Add({EPacketType::Ping, port, "<ping>", address.port, ts});
+  }
 
   {
     auto g = heap_.Use();

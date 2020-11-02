@@ -44,6 +44,10 @@ IWorldBehaviourPtr GetWorldBehaviour() {
   return WorldImpl::Access()->Behaviour();
 }
 
+bool IsThereAdversary() {
+  return WorldImpl::Access()->HasAdversary();
+}
+
 //////////////////////////////////////////////////////////////////////
 
 histories::Recorder& GetHistoryRecorder() {

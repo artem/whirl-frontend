@@ -68,6 +68,10 @@ class WorldImpl {
     AddActor(&adversary_.value());
   }
 
+  bool HasAdversary() const {
+    return adversary_.has_value();
+  }
+
   void SetBehaviour(IWorldBehaviourPtr behaviour) {
     behaviour_ = std::move(behaviour);
   }

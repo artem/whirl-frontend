@@ -48,6 +48,8 @@ TimePoint GlobalNow();
 
 IWorldBehaviourPtr GetWorldBehaviour();
 
+bool IsThereAdversary();
+
 //////////////////////////////////////////////////////////////////////
 
 histories::Recorder& GetHistoryRecorder();
