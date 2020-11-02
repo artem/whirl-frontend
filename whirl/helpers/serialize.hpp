@@ -40,7 +40,7 @@ static const auto kJsonOutputOptions =
 
 template <typename T>
 std::string Serialize(const T& object) {
-  //GlobalHeapScope g;
+  // GlobalHeapScope g;
 
   std::stringstream output;
   {
@@ -51,12 +51,12 @@ std::string Serialize(const T& object) {
   auto str = output.str();
   return str;
 
-  //return CopyToHeap(str, g.ParentScopeHeap());
+  // return CopyToHeap(str, g.ParentScopeHeap());
 }
 
 template <typename T>
 T Deserialize(const std::string& bytes) {
-  //GlobalHeapScope g;
+  // GlobalHeapScope g;
 
   T object;
 
@@ -68,7 +68,7 @@ T Deserialize(const std::string& bytes) {
 
   return object;
 
-  //return CopyToHeap(object, g.ParentScopeHeap());
+  // return CopyToHeap(object, g.ParentScopeHeap());
 }
 
 //////////////////////////////////////////////////////////////////////

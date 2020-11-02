@@ -10,9 +10,11 @@
 #include <whirl/matrix/server/clocks.hpp>
 #include <whirl/matrix/server/storage.hpp>
 
+#include <whirl/matrix/network/server.hpp>
 #include <whirl/matrix/network/network.hpp>
+#include <whirl/matrix/network/transport.hpp>
+
 #include <whirl/matrix/process/heap.hpp>
-#include <whirl/matrix/process/network.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
@@ -21,7 +23,7 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class Server : public IActor, public IFaultyServer {
+class Server : public IActor, public IFaultyServer, public net::INetServer {
  private:
   enum class State {
     Initial,
@@ -31,7 +33,7 @@ class Server : public IActor, public IFaultyServer {
   };
 
  public:
-  Server(Network& network, ServerConfig config, INodeFactoryPtr factory);
+  Server(net::Network& network, ServerConfig config, INodeFactoryPtr factory);
 
   // Non-copyable
   Server(const Server& that) = delete;
@@ -39,9 +41,13 @@ class Server : public IActor, public IFaultyServer {
 
   ~Server();
 
-  const std::string& HostName() const {
+  // INetServer
+
+  const std::string& HostName() const override {
     return config_.hostname;
   }
+
+  void HandlePacket(const net::Packet& packet, net::Link* out) override;
 
   // IFaultyServer
 
@@ -82,9 +88,8 @@ class Server : public IActor, public IFaultyServer {
 
   // Node process
 
-  ProcessNetwork network_;
   mutable ProcessHeap heap_;
-
+  net::Transport transport_;
   EventQueue* events_{nullptr};
 
   Logger logger_{"Server"};

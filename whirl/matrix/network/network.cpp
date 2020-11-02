@@ -1,159 +1,128 @@
 #include <whirl/matrix/network/network.hpp>
 
-#include <whirl/matrix/world/global.hpp>
-#include <whirl/matrix/world/dice.hpp>
-
 #include <whirl/matrix/common/allocator.hpp>
+#include <whirl/matrix/world/global.hpp>
 
-#include <wheels/support/assert.hpp>
+#include <wheels/support/compiler.hpp>
 
-namespace whirl {
+namespace whirl::net {
 
-NetServerSocket Network::Serve(const ServerAddress& address,
-                               INetSocketHandler* handler) {
-  {
-    GlobalHeapScope guard;
-    WHEELS_VERIFY(servers_.count(address) == 0, "Address already in use");
-
-    auto id = CreateNewEndpoint(handler);
-    servers_.emplace(address, id);
-
-    WHIRL_LOG("Serve address " << address << ", endpoint " << id);
-  }
-  return NetServerSocket(this, address);
+void Network::AddServer(INetServer* server) {
+  servers_.push_back(server);
 }
 
-// Called from server socket dtor
-void Network::DisconnectServer(const ServerAddress& address) {
-  GlobalHeapScope guard;
+void Network::BuildLinks() {
+  // Create one-way link between each pair of servers
+  for (size_t i = 0; i < servers_.size(); ++i) {
+    for (size_t j = 0; j < servers_.size(); ++j) {
+      links_.emplace_back(servers_[i], servers_[j]);
+    }
+  }
 
-  auto id = servers_[address];
-  WHIRL_FMT_LOG("Stop serve address {}, delete server endpoint {}", address,
-                id);
-  servers_.erase(address);
-  endpoints_.erase(id);
+  // Link opposite physical links
+  for (size_t i = 0; i < servers_.size(); ++i) {
+    for (size_t j = i; j < servers_.size(); ++j) {
+      size_t ij = GetLinkIndex(i, j);
+      size_t ji = GetLinkIndex(j, i);
 
-  // TODO: Replace by keep-alive!
-  {
-    // Send reset to clients
-    for (auto& [_, conn] : conns_) {
-      if (conn.server == id) {
-        SendResetPacket(conn.link->GetOpposite(), conn.client);
-      }
+      links_[ij].SetOpposite(&links_[ji]);
+      links_[ji].SetOpposite(&links_[ij]);
     }
   }
 }
 
-// Client
+Link* Network::GetLink(const HostName& start, const HostName& end) {
+  size_t i = ServerToIndex(start);
+  size_t j = ServerToIndex(end);
 
-Link* Network::GetLinkTo(const std::string server) {
-  return link_layer_.GetLink(CurrentActorName(), server);
-}
-
-// Called from actor fibers
-NetSocket Network::ConnectTo(const ServerAddress& address,
-                             INetSocketHandler* handler) {
-  GlobalHeapScope guard;
-
-  auto server_it = servers_.find(address);
-
-  if (server_it == servers_.end()) {
-    return NetSocket::Invalid();
-  }
-
-  NetEndpointId server_id = server_it->second;
-  NetEndpointId client_id = CreateNewEndpoint(handler);
-
-  Link* link = GetLinkTo(address);
-
-  conns_.emplace(client_id, Connection{client_id, server_id, link});
-
-  return NetSocket{this, link, client_id, server_id};
-}
-
-// Called from client socket dtor
-void Network::DisconnectClient(NetEndpointId id) {
-  WHIRL_FMT_LOG("Disconnect client endpoint: {}", id);
-  GlobalHeapScope guard;
-  endpoints_.erase(id);
-  conns_.erase(id);
+  return &links_.at(GetLinkIndex(i, j));
 }
 
 // IActor
 
 void Network::Start() {
-  link_layer_.BuildLinks();
+  BuildLinks();
 }
 
 bool Network::IsRunnable() const {
-  return link_layer_.IsRunnable();
+  for (const auto& link : links_) {
+    if (!link.IsPaused() && link.HasPackets()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+Link* Network::FindLinkWithNextPacket() {
+  Link* next = nullptr;
+
+  for (auto& link : links_) {
+    if (link.IsPaused() || !link.HasPackets()) {
+      continue;
+    }
+    if (!next) {
+      next = &link;
+      continue;
+    }
+
+    // i - active, next - not empty
+    if (*(link.NextPacketTime()) < *(next->NextPacketTime())) {
+      next = &link;
+    }
+  }
+
+  return next;
 }
 
 TimePoint Network::NextStepTime() {
-  Link* link = link_layer_.FindLinkWithNextPacket();
-  WHEELS_VERIFY(link, "No active links");
-  return *(link->NextPacketTime());
+  Link* link = FindLinkWithNextPacket();
+  return *link->NextPacketTime();
 }
 
 void Network::Step() {
-  Link* link = link_layer_.FindLinkWithNextPacket();
-  auto packet = link->ExtractNextPacket();
+  Link* link = FindLinkWithNextPacket();
+  Packet packet = link->ExtractNextPacket();
 
-  auto dest_endpoint_it = endpoints_.find(packet.dest);
-
-  if (dest_endpoint_it == endpoints_.end()) {
-    WHIRL_LOG("Cannot deliver message <" << packet.message << ">: endpoint "
-                                         << packet.dest << " disconnected");
-    if (packet.IsData()) {
-      SendResetPacket(link->GetOpposite(), packet.source);
-    }
-    return;
-  }
-
-  auto& endpoint = dest_endpoint_it->second;
-
-  if (packet.IsData()) {
-    WHIRL_FMT_LOG("Deliver message to {} (endpoint {}): <{}>", link->End(),
-                  packet.dest, packet.message);
-    endpoint.handler->HandleMessage(
-        packet.message,
-        LightNetSocket(link->GetOpposite(), packet.dest, packet.source));
-  } else {
-    WHIRL_FMT_LOG("Deliver reset packet to {} (endpoint {})", link->End(),
-                  packet.dest);
-    endpoint.handler->HandleDisconnect();
-
-    // endpoints_.erase(packet.to);
-  }
+  link->End()->HandlePacket(packet, link->GetOpposite());
 }
 
 void Network::Shutdown() {
-  servers_.clear();
-  endpoints_.clear();
-  link_layer_.Shutdown();
-  conns_.clear();
+  for (auto& link : links_) {
+    link.Shutdown();
+  }
 }
 
-void Network::SendResetPacket(Link* link, NetEndpointId dest) {
-  WHIRL_LOG("Send reset packet to endpoint " << dest);
-  link->Add({EPacketType::Reset, 0, "<reset>", dest});
+size_t Network::ServerToIndex(const HostName& hostname) const {
+  for (size_t i = 0; i < servers_.size(); ++i) {
+    if (hostname == servers_[i]->HostName()) {
+      return i;
+    }
+  }
+  WHEELS_UNREACHABLE();
 }
 
-// IFaultyNetwork
+size_t Network::GetLinkIndex(size_t i, size_t j) const {
+  return i * servers_.size() + j;
+}
+
+// Partitions
 
 void Network::Split() {
   GlobalHeapScope g;
 
+  // Generate random partition
+
   // Generate partition
-  std::vector<std::string> servers = link_layer_.Servers();
+  auto servers = servers_;
 
   Partition lhs;
+  // [1, servers.size())
   size_t lhs_size = GlobalRandomNumber(1, servers.size());
 
   for (size_t i = 0; i < lhs_size; ++i) {
     size_t k = GlobalRandomNumber(i, lhs_size);
     std::swap(servers[i], servers[k]);
-    lhs.insert(servers[i]);
+    lhs.insert(servers[i]->HostName());
   }
 
   // Print
@@ -161,14 +130,27 @@ void Network::Split() {
                 servers.size() - lhs.size());
 
   // Split
-  link_layer_.Split(lhs);
+  Split(lhs);
+}
+
+static bool Cross(const Link& link, const Partition& lhs) {
+  return lhs.count(link.StartHostName()) != lhs.count(link.EndHostName());
+}
+
+void Network::Split(const Partition& lhs) {
+  for (auto& link : links_) {
+    if (Cross(link, lhs)) {
+      link.Pause();
+    }
+  }
 }
 
 void Network::Heal() {
   GlobalHeapScope g;
 
-  link_layer_.Heal();
-  WHIRL_FMT_LOG("Network healed");
+  for (auto& link : links_) {
+    link.Resume();
+  }
 }
 
-}  // namespace whirl
+}  // namespace whirl::net

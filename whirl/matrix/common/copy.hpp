@@ -9,7 +9,6 @@ namespace whirl {
 // Only objects that make deep copy in copy ctor are allowed
 // Prefer primitive types, strings and structures
 
-
 // Use at boundaries of process/global heaps
 
 template <typename T>

@@ -2,20 +2,19 @@
 
 #include <whirl/time.hpp>
 #include <whirl/matrix/network/packet.hpp>
+#include <whirl/matrix/network/server.hpp>
 
 #include <whirl/helpers/priority_queue.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
 
-namespace whirl {
+namespace whirl::net {
 
 // One-way link
 class Link {
  private:
-  using ServerName = std::string;
-
   struct PacketEvent {
-    NetPacket packet;
+    Packet packet;
     TimePoint time;
 
     bool operator<(const PacketEvent& that) const {
@@ -26,15 +25,23 @@ class Link {
   using PacketQueue = PriorityQueue<PacketEvent>;
 
  public:
-  Link(ServerName start, ServerName end) : start_(start), end_(end) {
+  Link(INetServer* start, INetServer* end) : start_(start), end_(end) {
   }
 
-  const ServerName& Start() const {
+  INetServer* Start() {
     return start_;
   }
 
-  const ServerName& End() const {
+  INetServer* End() {
     return end_;
+  }
+
+  const std::string& StartHostName() const {
+    return start_->HostName();
+  }
+
+  const std::string& EndHostName() const {
+    return end_->HostName();
   }
 
   void SetOpposite(Link* link) {
@@ -49,7 +56,7 @@ class Link {
     return start_ == end_;
   }
 
-  void Add(NetPacket packet);
+  void Add(Packet packet);
 
   bool IsPaused() const {
     return paused_;
@@ -66,7 +73,7 @@ class Link {
     return std::nullopt;
   }
 
-  NetPacket ExtractNextPacket();
+  Packet ExtractNextPacket();
 
   void Shutdown() {
     packets_.Clear();
@@ -81,8 +88,8 @@ class Link {
   TimePoint ChoosePacketDeliveryTime() const;
 
  private:
-  ServerName start_;
-  ServerName end_;
+  INetServer* start_;
+  INetServer* end_;
 
   PacketQueue packets_;
   bool paused_{false};
@@ -92,4 +99,4 @@ class Link {
   Logger logger_{"Network"};
 };
 
-}  // namespace whirl
+}  // namespace whirl::net

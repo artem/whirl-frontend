@@ -42,8 +42,8 @@ void ServerImpl::HandleMessage(const TransportMessage& message,
       executor_);
 }
 
-void ServerImpl::HandleDisconnect() {
-  // Some client lost
+void ServerImpl::HandleDisconnect(const std::string& /*client*/) {
+  // Client disconnected
 }
 
 void ServerImpl::ProcessRequest(const TransportMessage& message,

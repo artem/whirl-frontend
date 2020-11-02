@@ -5,6 +5,6 @@
 namespace whirl {
 
 // Dirty magic
-void ReleaseFibersOnCrash(const ProcessHeap &heap);
+void ReleaseFibersOnCrash(const ProcessHeap& heap);
 
 }  // namespace whirl

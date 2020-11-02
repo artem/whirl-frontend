@@ -178,7 +178,6 @@ class WorldImpl {
 
     WHIRL_LOG("Simulation stopped");
 
-
     return ComputeDigest();
   }
 
@@ -202,7 +201,7 @@ class WorldImpl {
     return cluster_.at(index);
   }
 
-  Network& GetNetwork() {
+  net::Network& GetNetwork() {
     return network_;
   }
 
@@ -267,7 +266,8 @@ class WorldImpl {
     std::string name = type + "-" + std::to_string(servers.size() + 1);
 
     servers.emplace_back(network_, ServerConfig{id, name}, node);
-    network_.AddServer(name);
+
+    network_.AddServer(&servers.back());
     AddActor(&servers.back());
   }
 
@@ -331,7 +331,7 @@ class WorldImpl {
   Servers cluster_;
   Servers clients_;
 
-  Network network_;
+  net::Network network_;
 
   std::optional<adversary::Process> adversary_;
 

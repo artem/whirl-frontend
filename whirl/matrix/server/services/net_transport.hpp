@@ -2,8 +2,7 @@
 
 #include <whirl/rpc/impl/net_transport.hpp>
 
-#include <whirl/matrix/process/heap.hpp>
-#include <whirl/matrix/process/network.hpp>
+#include <whirl/matrix/network/transport.hpp>
 
 namespace whirl {
 
@@ -11,13 +10,15 @@ using namespace rpc;
 
 //////////////////////////////////////////////////////////////////////
 
-class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
+static const net::Port kTransportPort = 42;
+
+//////////////////////////////////////////////////////////////////////
+
+class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
  public:
-  NetTransportSocket(ProcessHeap& heap, ProcessNetwork& net, std::string peer,
+  NetTransportSocket(net::Transport& transport, std::string peer,
                      ITransportHandlerPtr handler)
-      : heap_(heap),
-        socket_(net.ConnectTo(peer, this)),
-        peer_(peer),
+      : socket_(transport.ConnectTo({peer, kTransportPort}, this)),
         handler_(handler) {
   }
 
@@ -34,7 +35,7 @@ class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
   }
 
   const std::string& Peer() const override {
-    return peer_;
+    return socket_.Peer();
   }
 
   bool IsConnected() const override {
@@ -48,52 +49,41 @@ class NetTransportSocket : public ITransportSocket, public INetSocketHandler {
   // INetSocketHandler
 
   void HandleMessage(const std::string& message,
-                     LightNetSocket /*back*/) override {
-    auto g = heap_.Use();
-
+                     net::ReplySocket /*back*/) override {
     handler_->HandleMessage(message, nullptr);
   }
 
-  void HandleDisconnect() override {
-    auto g = heap_.Use();
-
+  void HandleDisconnect(const std::string& peer) override {
     socket_.Close();
-    handler_->HandleDisconnect();
+    handler_->HandleDisconnect(peer);
   }
 
  private:
-  ProcessHeap& heap_;
-
-  ProcessSocket socket_;
-  std::string peer_;
+  net::ClientSocket socket_;
   ITransportHandlerPtr handler_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-class NetTransportServer : public ITransportServer, public INetSocketHandler {
+class NetTransportServer : public ITransportServer, public net::ISocketHandler {
  public:
-  NetTransportServer(ProcessHeap& heap, ProcessNetwork& net,
-                     ITransportHandlerPtr handler)
-      : heap_(heap), server_socket_(net.Serve(this)), handler_(handler) {
+  NetTransportServer(net::Transport& transport, ITransportHandlerPtr handler)
+      : server_socket_(transport.Serve(kTransportPort, this)), handler_(handler) {
   }
 
   void Shutdown() override {
-    // server_socket_.Close();
-    // TODO
+    server_socket_.Close();
   }
 
-  void HandleMessage(const Message& message, LightNetSocket back) override;
+  void HandleMessage(const net::Message& message,
+                     net::ReplySocket back) override;
 
-  void HandleDisconnect() override {
-    auto g = heap_.Use();
-
-    handler_->HandleDisconnect();
+  void HandleDisconnect(const std::string& client) override {
+    handler_->HandleDisconnect(client);
   }
 
  private:
-  ProcessHeap& heap_;
-  ProcessServerSocket server_socket_;
+  net::ServerSocket server_socket_;
   ITransportHandlerPtr handler_;
 };
 
@@ -101,22 +91,20 @@ class NetTransportServer : public ITransportServer, public INetSocketHandler {
 
 struct NetTransport : public ITransport {
  public:
-  NetTransport(ProcessHeap& heap, ProcessNetwork& net)
-      : heap_(heap), net_(net) {
+  NetTransport(net::Transport& impl) : impl_(impl) {
   }
 
   ITransportServerPtr Serve(ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportServer>(heap_, net_, handler);
+    return std::make_shared<NetTransportServer>(impl_, handler);
   }
 
   ITransportSocketPtr ConnectTo(const std::string& peer,
                                 ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportSocket>(heap_, net_, peer, handler);
+    return std::make_shared<NetTransportSocket>(impl_, peer, handler);
   }
 
  private:
-  ProcessHeap& heap_;
-  ProcessNetwork& net_;
+  net::Transport& impl_;
 };
 
 }  // namespace whirl

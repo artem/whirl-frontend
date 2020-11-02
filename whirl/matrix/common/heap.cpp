@@ -53,7 +53,8 @@ static void ReleaseHeapMemory(MmapAllocation heap) {
 static const size_t kZFillBlockSize = 4096;
 
 Heap::Heap() : heap_(AllocateHeapMemory()) {
-  WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0, "Choose another kZFillBlockSize");
+  WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0,
+                "Choose another kZFillBlockSize");
   Reset();
 }
 

@@ -2,8 +2,8 @@
 
 #include <string>
 
-namespace whirl {
+namespace whirl::net {
 
 using Message = std::string;
 
-}  // namespace whirl
+}  // namespace whirl::net

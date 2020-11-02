@@ -38,7 +38,7 @@ class ServerImpl : public IServer,
   void HandleMessage(const TransportMessage& message,
                      ITransportSocketPtr back) override;
 
-  void HandleDisconnect() override;
+  void HandleDisconnect(const std::string& client) override;
 
  private:
   // In separate fiber

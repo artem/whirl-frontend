@@ -1,21 +1,19 @@
 #pragma once
 
+#include <whirl/matrix/network/address.hpp>
 #include <whirl/matrix/network/message.hpp>
-#include <whirl/matrix/network/endpoint_id.hpp>
+#include <whirl/matrix/network/timestamp.hpp>
 
-namespace whirl {
+namespace whirl::net {
 
-enum class EPacketType { Data, Reset };
+enum class EPacketType { Data, Reset, Ping };
 
-struct NetPacket {
+struct Packet {
   EPacketType type;
-  NetEndpointId source;
+  Port source_port;
   Message message;
-  NetEndpointId dest;
-
-  bool IsData() const {
-    return type == EPacketType::Data;
-  }
+  Port dest_port;
+  Timestamp ts;
 };
 
-}  // namespace whirl
+}  // namespace whirl::net

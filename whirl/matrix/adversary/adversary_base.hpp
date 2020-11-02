@@ -8,7 +8,6 @@
 
 namespace whirl::adversary {
 
-
 struct AdversaryBase {
  public:
   AdversaryBase(ThreadsRuntime runtime) : runtime_(runtime) {
