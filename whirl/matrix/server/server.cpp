@@ -135,8 +135,9 @@ bool Server::IsRunnable() const {
   if (state_ != State::Running) {
     return false;
   }
-  auto g = heap_.Use();
-  WHEELS_VERIFY(events_, "Event queue is not created");
+  // No allocations here
+  //auto g = heap_.Use();
+  // WHEELS_VERIFY(events_, "Event queue is not created");
   return !events_->IsEmpty();
 }
 
