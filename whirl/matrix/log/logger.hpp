@@ -26,14 +26,13 @@ class Logger {
 
 //////////////////////////////////////////////////////////////////////
 
-//#ifndef NDEBUG
+#ifndef NDEBUG
 
 #define WHIRL_LOG(message) logger_.Log(::wheels::StringBuilder() << message)
 
 // TODO: at least one argument for format string
 #define WHIRL_FMT_LOG(...) logger_.Log(fmt::format(__VA_ARGS__))
 
-/*
 #else
 
 #define WHIRL_LOG(message)
@@ -41,6 +40,5 @@ class Logger {
 #define WHIRL_FMT_LOG(...)
 
 #endif
-*/
 
 }  // namespace whirl
