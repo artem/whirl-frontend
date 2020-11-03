@@ -72,6 +72,7 @@ void Network::AddLinkEvent(Link* link, TimePoint t) {
 }
 
 void Network::Shutdown() {
+  events_.Clear();
   for (auto& link : links_) {
     link.Shutdown();
   }
