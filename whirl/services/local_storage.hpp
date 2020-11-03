@@ -75,7 +75,7 @@ class LocalKVStorage {
 
 // Usage:
 // * local_storage.Store("epoch", 42)
-// * local_storage_.Load<int>("epoch");
+// * local_storage.Load<int>("epoch");
 
 class LocalStorage {
  public:
