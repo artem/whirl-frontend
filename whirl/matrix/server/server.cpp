@@ -136,7 +136,7 @@ bool Server::IsRunnable() const {
     return false;
   }
   // No allocations here
-  //auto g = heap_.Use();
+  // auto g = heap_.Use();
   // WHEELS_VERIFY(events_, "Event queue is not created");
   return !events_->IsEmpty();
 }

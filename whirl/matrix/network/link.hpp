@@ -28,7 +28,7 @@ class Link {
 
  public:
   Link(Network* net, INetServer* start, INetServer* end)
-    : net_(net), start_(start), end_(end) {
+      : net_(net), start_(start), end_(end) {
   }
 
   INetServer* Start() {

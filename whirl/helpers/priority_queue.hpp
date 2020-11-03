@@ -12,6 +12,7 @@ class PriorityQueue {
       return rhs < lhs;
     }
   };
+
  public:
   void Clear() {
     // No clear method in std::priority_queue

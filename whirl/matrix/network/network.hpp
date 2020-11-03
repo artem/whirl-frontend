@@ -28,7 +28,7 @@ class Network : public IActor, public IFaultyNetwork {
     TimePoint time;
     Link* link;
 
-    bool operator < (const LinkEvent& that) const {
+    bool operator<(const LinkEvent& that) const {
       return time < that.time;
     }
   };
