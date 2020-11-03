@@ -60,7 +60,7 @@ class Network : public IActor, public IFaultyNetwork {
   void Start() override;
 
   bool IsRunnable() const override;
-  TimePoint NextStepTime() override;
+  TimePoint NextStepTime() const override;
   void Step() override;
 
   void Shutdown() override;

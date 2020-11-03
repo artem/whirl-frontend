@@ -30,7 +30,7 @@ class ProcessBase : public IActor {
   }
 
   // Context: global
-  TimePoint NextStepTime() override {
+  TimePoint NextStepTime() const override {
     auto g = heap_.Use();
     return events_.NextEventTime();
   }

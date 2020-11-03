@@ -69,7 +69,7 @@ class Server : public IActor, public IFaultyServer, public net::INetServer {
   void Start() override;
 
   bool IsRunnable() const override;
-  TimePoint NextStepTime() override;
+  TimePoint NextStepTime() const override;
   void Step() override;
   void Shutdown() override;
 

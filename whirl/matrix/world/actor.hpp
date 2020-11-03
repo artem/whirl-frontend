@@ -14,7 +14,7 @@ struct IActor {
   virtual void Start() = 0;
 
   virtual bool IsRunnable() const = 0;
-  virtual TimePoint NextStepTime() = 0;
+  virtual TimePoint NextStepTime() const = 0;
   virtual void Step() = 0;
 
   virtual void Shutdown() = 0;

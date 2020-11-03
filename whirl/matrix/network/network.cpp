@@ -48,7 +48,7 @@ bool Network::IsRunnable() const {
   return !events_.IsEmpty();
 }
 
-TimePoint Network::NextStepTime() {
+TimePoint Network::NextStepTime() const {
   return events_.Smallest().time;
 }
 

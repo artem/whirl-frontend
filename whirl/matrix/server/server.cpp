@@ -135,14 +135,15 @@ bool Server::IsRunnable() const {
   if (state_ != State::Running) {
     return false;
   }
-  // No allocations here
+  // No [de]allocations here
   // auto g = heap_.Use();
   // WHEELS_VERIFY(events_, "Event queue is not created");
   return !events_->IsEmpty();
 }
 
-TimePoint Server::NextStepTime() {
-  auto g = heap_.Use();
+TimePoint Server::NextStepTime() const {
+  // No [de]allocations here
+  // auto g = heap_.Use();
   return events_->NextEventTime();
 }
 
