@@ -201,6 +201,10 @@ class WorldImpl {
     return seed_;
   }
 
+  size_t Digest() const {
+    return ComputeDigest();
+  }
+
   Server& GetServer(size_t index) {
     return cluster_.at(index);
   }

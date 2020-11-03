@@ -22,6 +22,8 @@ class World {
   World(size_t seed = kDefaultSeed);
   ~World();
 
+  size_t Seed() const;
+
   void AddServer(INodeFactoryPtr node);
   void AddServers(size_t count, INodeFactoryPtr node);
 
@@ -46,6 +48,8 @@ class World {
 
   // Returns simulation digest
   size_t Stop();
+
+  size_t Digest() const;
 
   size_t NumCompletedCalls() const;
 

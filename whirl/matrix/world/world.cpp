@@ -10,6 +10,10 @@ World::World(size_t seed) : impl_(std::make_unique<WorldImpl>(seed)) {
 World::~World() {
 }
 
+size_t World::Seed() const {
+  return impl_->Seed();
+}
+
 void World::AddServer(INodeFactoryPtr node) {
   impl_->AddServer(node);
 }
@@ -56,6 +60,10 @@ void World::MakeSteps(size_t count) {
 
 size_t World::Stop() {
   return impl_->Stop();
+}
+
+size_t World::Digest() const {
+  return impl_->Digest();
 }
 
 size_t World::NumCompletedCalls() const {
