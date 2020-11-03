@@ -90,8 +90,10 @@ class KVStoreModel {
     return out.str();
   }
 
+  using CallPrinter = KVCallPrinter<K, V>;
+
   static std::string PrintCall(const Call& call) {
-    return KVCallPrinter<K, V>::Print(call);
+    return CallPrinter::Print(call);
   }
 };
 
