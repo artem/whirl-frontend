@@ -22,6 +22,19 @@ using HostName = std::string;
 using Partition = std::set<HostName>;
 
 class Network : public IActor, public IFaultyNetwork {
+  friend class Link;
+
+  struct LinkEvent {
+    TimePoint time;
+    Link* link;
+
+    bool operator < (const LinkEvent& that) const {
+      return time < that.time;
+    }
+  };
+
+  using LinkEvents = PriorityQueue<LinkEvent>;
+
  public:
   Network() = default;
 
@@ -59,17 +72,18 @@ class Network : public IActor, public IFaultyNetwork {
   void Heal() override;
 
  private:
+  void AddLinkEvent(Link* link, TimePoint t);
+
   size_t ServerToIndex(const HostName& server) const;
   size_t GetLinkIndex(size_t i, size_t j) const;
 
   // After all `AddServer`
   void BuildLinks();
 
-  Link* FindLinkWithNextPacket();
-
  private:
   std::vector<INetServer*> servers_;
   std::vector<Link> links_;
+  LinkEvents events_;
 
   Logger logger_{"Network"};
 };

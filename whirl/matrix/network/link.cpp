@@ -1,5 +1,7 @@
 #include <whirl/matrix/network/link.hpp>
 
+#include <whirl/matrix/network/network.hpp>
+
 #include <whirl/matrix/world/global.hpp>
 #include <whirl/matrix/world/dice.hpp>
 
@@ -12,7 +14,7 @@ void Link::Add(Packet packet) {
     Address to{EndHostName(), packet.dest_port};
     WHIRL_FMT_LOG("Send packet to {}: <{}>", to, packet.message);
   }
-  packets_.Insert({packet, ChooseDeliveryTime(packet)});
+  Add(std::move(packet), ChooseDeliveryTime(packet));
 }
 
 TimePoint Link::ChooseDeliveryTime(const Packet& packet) const {
@@ -43,11 +45,14 @@ void Link::Resume() {
 
   if (!packets_.IsEmpty()) {
     while (packets_.Smallest().time < now) {
-      auto packet = packets_.Extract();
-      packet.time = now + 1;
-      packets_.Insert(packet);
+      Add(packets_.Extract().packet, now + 1);
     }
   }
+}
+
+void Link::Add(Packet&& packet, TimePoint delivery_time) {
+  packets_.Insert({packet, delivery_time});
+  net_->AddLinkEvent(this, delivery_time);
 }
 
 }  // namespace whirl::net

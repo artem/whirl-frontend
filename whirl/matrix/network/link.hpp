@@ -10,6 +10,8 @@
 
 namespace whirl::net {
 
+class Network;
+
 // One-way link
 class Link {
  private:
@@ -25,7 +27,8 @@ class Link {
   using PacketQueue = PriorityQueue<PacketEvent>;
 
  public:
-  Link(INetServer* start, INetServer* end) : start_(start), end_(end) {
+  Link(Network* net, INetServer* start, INetServer* end)
+    : net_(net), start_(start), end_(end) {
   }
 
   INetServer* Start() {
@@ -66,11 +69,8 @@ class Link {
     return !packets_.IsEmpty();
   }
 
-  std::optional<TimePoint> NextPacketTime() const {
-    if (!paused_ && HasPackets()) {
-      return packets_.Smallest().time;
-    }
-    return std::nullopt;
+  TimePoint NextPacketTime() const {
+    return packets_.Smallest().time;
   }
 
   Packet ExtractNextPacket();
@@ -87,7 +87,10 @@ class Link {
  private:
   TimePoint ChooseDeliveryTime(const Packet& packet) const;
 
+  void Add(Packet&& packet, TimePoint delivery_time);
+
  private:
+  Network* net_;
   INetServer* start_;
   INetServer* end_;
 

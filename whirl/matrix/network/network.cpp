@@ -15,7 +15,7 @@ void Network::BuildLinks() {
   // Create one-way link between each pair of servers
   for (size_t i = 0; i < servers_.size(); ++i) {
     for (size_t j = 0; j < servers_.size(); ++j) {
-      links_.emplace_back(servers_[i], servers_[j]);
+      links_.emplace_back(this, servers_[i], servers_[j]);
     }
   }
 
@@ -45,45 +45,30 @@ void Network::Start() {
 }
 
 bool Network::IsRunnable() const {
-  for (const auto& link : links_) {
-    if (!link.IsPaused() && link.HasPackets()) {
-      return true;
-    }
-  }
-  return false;
-}
-
-Link* Network::FindLinkWithNextPacket() {
-  Link* next = nullptr;
-
-  for (auto& link : links_) {
-    if (link.IsPaused() || !link.HasPackets()) {
-      continue;
-    }
-    if (!next) {
-      next = &link;
-      continue;
-    }
-
-    // i - active, next - not empty
-    if (*(link.NextPacketTime()) < *(next->NextPacketTime())) {
-      next = &link;
-    }
-  }
-
-  return next;
+  return !events_.IsEmpty();
 }
 
 TimePoint Network::NextStepTime() {
-  Link* link = FindLinkWithNextPacket();
-  return *link->NextPacketTime();
+  return events_.Smallest().time;
 }
 
 void Network::Step() {
-  Link* link = FindLinkWithNextPacket();
-  Packet packet = link->ExtractNextPacket();
+  LinkEvent event = events_.Extract();
+  Link* link = event.link;
 
+  if (link->IsPaused()) {
+    return;  // Skip this step
+  }
+
+  WHEELS_VERIFY(link->HasPackets(), "Invalid net");
+  WHEELS_VERIFY(link->NextPacketTime() == event.time, "Invalid net");
+
+  Packet packet = link->ExtractNextPacket();
   link->End()->HandlePacket(packet, link->GetOpposite());
+}
+
+void Network::AddLinkEvent(Link* link, TimePoint t) {
+  events_.Insert({t, link});
 }
 
 void Network::Shutdown() {
