@@ -48,7 +48,7 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
 
   // Network
 
-  TimePoint NetPacketDeliveryTime(const net::Packet& packet) override {
+  TimePoint FlightTime(const net::Packet& packet) override {
     if (packet.type != net::EPacketType::Data) {
       // Service packet, do not affect randomness
       return 50;

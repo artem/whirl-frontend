@@ -31,8 +31,8 @@ inline Duration TrueTimeUncertainty() {
 
 // Network
 
-inline TimePoint NetPacketDeliveryTime(const net::Packet& packet) {
-  return GetWorldBehaviour()->NetPacketDeliveryTime(packet);
+inline TimePoint FlightTime(const net::Packet& packet) {
+  return GetWorldBehaviour()->FlightTime(packet);
 }
 
 inline bool DuplicateNetPacket() {

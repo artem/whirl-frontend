@@ -29,7 +29,7 @@ struct IWorldBehaviour {
   // Network
 
   // DPI =)
-  virtual Duration NetPacketDeliveryTime(const net::Packet& packet) = 0;
+  virtual Duration FlightTime(const net::Packet& packet) = 0;
 };
 
 using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;
