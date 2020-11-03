@@ -22,14 +22,16 @@ struct TTNow {
 struct ITrueTimeService {
   virtual ~ITrueTimeService() = default;
 
-  virtual TTNow Now() = 0;
+  virtual TTNow Now() const = 0;
 
-  bool Before(TimePoint tp) {
-    return tp < Now().earliest;
+  // True if t has definitely passed
+  bool After(TimePoint t) const {
+    return t < Now().earliest;
   }
 
-  bool After(TimePoint tp) {
-    return tp > Now().latest;
+  // True if t has definitely not arrived
+  bool Before(TimePoint t) const {
+    return t > Now().latest;
   }
 };
 

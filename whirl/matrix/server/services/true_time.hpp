@@ -9,7 +9,7 @@ namespace whirl {
 
 class TrueTimeService : public ITrueTimeService {
  public:
-  TTNow Now() override {
+  TTNow Now() const override {
     // TODO: better
 
     // Access world clock
