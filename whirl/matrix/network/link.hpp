@@ -86,7 +86,6 @@ class Link {
 
  private:
   TimePoint ChooseDeliveryTime(const Packet& packet) const;
-
   void Add(Packet&& packet, TimePoint delivery_time);
 
  private:
