@@ -6,9 +6,23 @@ namespace whirl {
 
 template <typename T>
 class PriorityQueue {
-  struct TPriorityLess {
+  static bool Equal(const T& lhs, const T& rhs) {
+    return !(lhs < rhs) && !(rhs < lhs);
+  }
+
+  struct UniqueT {
+    T item;
+    size_t tie_braker;  // Unique
+
+    bool operator<(const UniqueT& that) const {
+      return item < that.item ||
+             (Equal(item, that.item) && tie_braker < that.tie_braker);
+    }
+  };
+
+  struct PriorityLess {
     // Largest priority on top
-    bool operator()(const T& lhs, const T& rhs) const {
+    bool operator()(const UniqueT& lhs, const UniqueT& rhs) const {
       return rhs < lhs;
     }
   };
@@ -25,18 +39,18 @@ class PriorityQueue {
   }
 
   const T& Smallest() const {
-    return items_.top();
+    return items_.top().item;
   }
 
   T Extract() {
     // Safe: https://en.cppreference.com/w/cpp/container/priority_queue/pop
-    auto item = std::move(const_cast<T&>(items_.top()));
+    auto top = std::move(const_cast<UniqueT&>(items_.top()));
     items_.pop();
-    return std::move(item);
+    return std::move(top.item);
   }
 
   void Insert(T value) {
-    items_.push(std::move(value));
+    items_.push(MakeUnique(std::move(value)));
   }
 
   size_t Size() const {
@@ -44,7 +58,13 @@ class PriorityQueue {
   }
 
  private:
-  std::priority_queue<T, std::vector<T>, TPriorityLess> items_;
+  UniqueT MakeUnique(T&& value) {
+    return {std::move(value), ++inserts_};
+  }
+
+ private:
+  std::priority_queue<UniqueT, std::vector<UniqueT>, PriorityLess> items_;
+  size_t inserts_{0};
 };
 
 }  // namespace whirl
