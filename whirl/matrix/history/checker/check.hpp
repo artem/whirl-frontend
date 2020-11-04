@@ -20,7 +20,9 @@ History Cleanup(const History& history) {
 
 template <typename Model>
 bool LinCheckImpl(History history) {
-  return LinCheckBrute<Model>(history);
+  // Limit search iterations
+  static const size_t kTimeLimit = 777777;
+  return LinCheckBrute<Model>(history, kTimeLimit);
 }
 
 template <typename Model>

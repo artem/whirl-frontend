@@ -9,20 +9,43 @@ namespace whirl::histories {
 
 template <typename Model>
 class LinChecker {
+ public:
+  struct Options {
+    size_t time_limit;
+
+    Options() : time_limit((size_t)-1) {
+    }
+
+    Options& SetTimeLimit(size_t searches) {
+      time_limit = searches;
+      return *this;
+    }
+  };
+
   using State = typename Model::State;
 
  public:
-  LinChecker(History history) : calls_(history), count_(history.size()) {
+  LinChecker(History history, Options options = Options())
+      : calls_(history), count_(history.size()), options_(options) {
   }
 
   bool Check() {
     return Search(Model::InitialState());
   }
 
+  size_t Time() const {
+    return time_;
+  }
+
  private:
   bool StepInto(size_t i, State next_state);
 
   bool Search(State curr_state) {
+    ++time_;
+    if (time_ > options_.time_limit) {
+      return true;  // ???
+    }
+
     // PrintSearchState(curr_state);
 
     if (count_ == 0) {
@@ -79,6 +102,9 @@ class LinChecker {
   std::vector<Call> calls_;
   std::vector<Call> linear_;
   size_t count_;
+
+  Options options_;
+  size_t time_{0};
 };
 
 template <typename State>
@@ -99,9 +125,12 @@ bool LinChecker<State>::StepInto(size_t i, State next_state) {
 //////////////////////////////////////////////////////////////////////
 
 template <typename Model>
-bool LinCheckBrute(const History& history) {
-  LinChecker<Model> checker(history);
-  return checker.Check();
+bool LinCheckBrute(const History& history, size_t time_limit) {
+  LinChecker<Model> checker(
+      history, typename LinChecker<Model>::Options().SetTimeLimit(time_limit));
+
+  bool ok = checker.Check();
+  return ok;
 }
 
 }  // namespace whirl::histories
