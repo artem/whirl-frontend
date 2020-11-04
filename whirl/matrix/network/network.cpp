@@ -108,7 +108,7 @@ void Network::Split() {
 
   // Print
   WHIRL_FMT_LOG("Network partitioned: {} / {}", lhs.size(),
-                servers.size() - lhs.size());
+                servers_.size() - lhs.size());
 
   // Split
   Split(lhs);
