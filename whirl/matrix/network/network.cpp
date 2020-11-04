@@ -98,13 +98,10 @@ void Network::Split() {
 
   // Generate random partition
 
-  // Generate partition
-  auto servers = servers_;
+  // [1, servers.size())
+  size_t lhs_size = GlobalRandomNumber(1, servers_.size());
 
   Partition lhs;
-  // [1, servers.size())
-  size_t lhs_size = GlobalRandomNumber(1, servers.size());
-
   for (auto& server : Select(servers_, lhs_size)) {
     lhs.insert(server->HostName());
   }
