@@ -7,6 +7,16 @@
 
 namespace whirl {
 
+namespace detail {
+
+struct Sink {
+  template<typename ...Args>
+  Sink(Args const & ... ) {
+  }
+};
+
+}  // namespace detail
+
 class TestReporter {
  public:
   template <typename... Args>
@@ -20,6 +30,8 @@ class TestReporter {
 #ifndef NDEBUG
     fmt::print(format, std::forward<Args>(args)...);
     std::cout << std::endl;
+#else
+    detail::Sink{format, args...};
 #endif
   }
 
@@ -38,12 +50,16 @@ class TestReporter {
               << ", time: " << world.TimeElapsed()
               << ", steps: " << world.StepCount()
               << std::endl;
+#else
+    (void)world;
 #endif
   }
 
   void PrintSimLog(const std::string& log) {
 #ifndef NDEBUG
     std::cout << "Log: " << log << std::endl;
+#else
+    (void)log;
 #endif
   }
 
