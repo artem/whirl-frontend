@@ -26,12 +26,12 @@ struct ITrueTimeService {
 
   // True if t has definitely passed
   bool After(TimePoint t) const {
-    return t < Now().earliest;
+    return Now().earliest > t;
   }
 
   // True if t has definitely not arrived
   bool Before(TimePoint t) const {
-    return t > Now().latest;
+    return Now().latest < t;
   }
 };
 
