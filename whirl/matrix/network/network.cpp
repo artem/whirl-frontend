@@ -105,10 +105,8 @@ void Network::Split() {
   // [1, servers.size())
   size_t lhs_size = GlobalRandomNumber(1, servers.size());
 
-  for (size_t i = 0; i < lhs_size; ++i) {
-    size_t k = GlobalRandomNumber(i, lhs_size);
-    std::swap(servers[i], servers[k]);
-    lhs.insert(servers[i]->HostName());
+  for (auto& server : Select(servers_, lhs_size)) {
+    lhs.insert(server->HostName());
   }
 
   // Print
