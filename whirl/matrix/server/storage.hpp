@@ -41,8 +41,10 @@ class LocalBytesStorage {
     }
   }
 
+  // Context: Global
   size_t ComputeDigest() const {
     DigestCalculator digest;
+    // NB: sorted std::map, unique keys -> deterministic order
     for (const auto& [k, v] : data_) {
       digest.EatT(k).EatT(v);
     }
