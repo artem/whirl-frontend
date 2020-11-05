@@ -3,6 +3,8 @@
 #include <whirl/matrix/common/allocator.hpp>
 #include <whirl/matrix/common/copy.hpp>
 
+#include <whirl/helpers/digest.hpp>
+
 #include <map>
 #include <string>
 
@@ -37,6 +39,14 @@ class LocalBytesStorage {
     } else {
       data_.insert(std::make_pair(key, value));  // Copy
     }
+  }
+
+  size_t ComputeDigest() const {
+    DigestCalculator digest;
+    for (const auto& [k, v] : data_) {
+      digest.EatT(k).EatT(v);
+    }
+    return digest.Get();
   }
 
  private:

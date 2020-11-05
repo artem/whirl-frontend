@@ -164,6 +164,7 @@ class WorldImpl {
 
     // Servers
     for (auto& server : cluster_) {
+      digest_.Eat(server.ComputeDigest());
       Scope(server)->Shutdown();
     }
     cluster_.clear();

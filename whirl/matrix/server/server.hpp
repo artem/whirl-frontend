@@ -73,6 +73,10 @@ class Server : public IActor, public IFaultyServer, public net::INetServer {
   void Step() override;
   void Shutdown() override;
 
+  // Digest
+
+  size_t ComputeDigest() const;
+
  private:
   NodeServices CreateNodeServices();
 

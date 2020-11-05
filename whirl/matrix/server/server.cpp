@@ -19,6 +19,8 @@
 
 #include <whirl/rpc/impl/server_impl.hpp>
 
+#include <whirl/helpers/digest.hpp>
+
 namespace whirl {
 
 Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
@@ -157,6 +159,17 @@ void Server::Shutdown() {
   if (state_ != State::Crashed) {
     Crash();
   }
+}
+
+size_t Server::ComputeDigest() const {
+  if (state_ == State::Crashed) {
+    return 0;
+  }
+
+  DigestCalculator digest;
+  digest.Eat(heap_.BytesAllocated());
+  digest.Eat(persistent_storage_.ComputeDigest());
+  return digest.Get();
 }
 
 // Private
