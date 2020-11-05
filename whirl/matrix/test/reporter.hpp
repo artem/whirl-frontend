@@ -10,8 +10,8 @@ namespace whirl {
 namespace detail {
 
 struct Sink {
-  template<typename ...Args>
-  Sink(Args const & ... ) {
+  template <typename... Args>
+  Sink(Args const&...) {
   }
 };
 
@@ -20,13 +20,13 @@ struct Sink {
 class TestReporter {
  public:
   template <typename... Args>
-  void PrintLine(const char* format, Args&& ... args) {
+  void PrintLine(const char* format, Args&&... args) {
     fmt::print(format, std::forward<Args>(args)...);
     std::cout << std::endl;
   }
 
   template <typename... Args>
-  void DebugLine(const char* format, Args&& ... args) {
+  void DebugLine(const char* format, Args&&... args) {
 #ifndef NDEBUG
     fmt::print(format, std::forward<Args>(args)...);
     std::cout << std::endl;
@@ -48,8 +48,7 @@ class TestReporter {
     std::cout << "Seed " << world.Seed() << " -> "
               << "digest: " << world.Digest()
               << ", time: " << world.TimeElapsed()
-              << ", steps: " << world.StepCount()
-              << std::endl;
+              << ", steps: " << world.StepCount() << std::endl;
 #else
     (void)world;
 #endif

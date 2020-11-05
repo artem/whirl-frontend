@@ -7,8 +7,9 @@ namespace whirl {
 
 class DigestCalculator {
   using Self = DigestCalculator;
+
  public:
-   Self& Eat(size_t hash_value) {
+  Self& Eat(size_t hash_value) {
     HashCombine(digest_, hash_value);
     return *this;
   }
