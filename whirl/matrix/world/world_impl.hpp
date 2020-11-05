@@ -13,6 +13,7 @@
 #include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/log/log.hpp>
 
+#include <whirl/helpers/digest.hpp>
 #include <whirl/helpers/untyped_dict.hpp>
 
 #include <wheels/support/id.hpp>
@@ -29,9 +30,10 @@ namespace whirl {
 struct NextStep {
   IActor* actor;
   TimePoint time;
+  size_t actor_index;
 
   static NextStep NoStep() {
-    return {nullptr, 0};
+    return {nullptr, 0, 0};
   }
 };
 
@@ -121,6 +123,8 @@ class WorldImpl {
 
     ++step_count_;
 
+    digest_.Eat(next.time).Eat(next.actor_index);
+
     clock_.MoveForwardTo(next.time);
     Scope(next.actor)->Step();
 
@@ -182,7 +186,7 @@ class WorldImpl {
 
     WHIRL_LOG("Simulation stopped");
 
-    return ComputeDigest();
+    return Digest();
   }
 
   size_t ClusterSize() const {
@@ -202,7 +206,7 @@ class WorldImpl {
   }
 
   size_t Digest() const {
-    return ComputeDigest();
+    return digest_.Get();
   }
 
   Server& GetServer(size_t index) {
@@ -302,22 +306,21 @@ class WorldImpl {
 
     auto next_step = NextStep::NoStep();
 
-    for (IActor* actor : actors_) {
+    for (size_t i = 0; i < actors_.size(); ++i) {
+      IActor* actor = actors_[i];
+
       if (actor->IsRunnable()) {
         TimePoint next_step_time = actor->NextStepTime();
 
         if (!next_step.actor || next_step_time < next_step.time) {
           next_step.actor = actor;
           next_step.time = next_step_time;
+          next_step.actor_index = i;
         }
       }
     }
 
     return next_step;
-  }
-
-  size_t ComputeDigest() const {
-    return clock_.Now() * 31007 + step_count_ * 40013;
   }
 
   void CheckNoFibersLeft() {
@@ -353,6 +356,7 @@ class WorldImpl {
 
   TimePoint start_time_;
 
+  DigestCalculator digest_;
   Log log_;
   histories::Recorder history_recorder_;
 
