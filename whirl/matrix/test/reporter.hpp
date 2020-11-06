@@ -46,7 +46,7 @@ class TestReporter {
   void PrintSimReport(const World& world) {
 #ifndef NDEBUG
     std::cout << "Seed " << world.Seed() << " -> "
-              << "digest: " << world.Digest()
+              << "digest: " << fmt::format("{:x}", world.Digest())
               << ", time: " << world.TimeElapsed()
               << ", steps: " << world.StepCount() << std::endl;
 #else
