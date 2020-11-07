@@ -7,6 +7,8 @@
 namespace whirl {
 
 class RandomSource {
+  // NB: Consistent across all platforms
+  // https://eel.is/c++draft/rand.eng.mers
   using Twister = std::mt19937;
 
  public:
