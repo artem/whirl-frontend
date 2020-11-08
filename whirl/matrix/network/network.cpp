@@ -60,8 +60,8 @@ void Network::Step() {
     return;  // Skip this step
   }
 
-  WHEELS_VERIFY(link->HasPackets(), "Invalid net");
-  WHEELS_VERIFY(link->NextPacketTime() == event.time, "Invalid net");
+  WHEELS_VERIFY(link->HasPackets(), "Broken net");
+  WHEELS_VERIFY(link->NextPacketTime() == event.time, "Broken net");
 
   Packet packet = link->ExtractNextPacket();
   digest_.EatT(packet.message);

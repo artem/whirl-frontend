@@ -107,8 +107,8 @@ class LinChecker {
   size_t time_{0};
 };
 
-template <typename State>
-bool LinChecker<State>::StepInto(size_t i, State next_state) {
+template <typename Model>
+bool LinChecker<Model>::StepInto(size_t i, State next_state) {
   linear_.push_back(calls_[i]);
   std::swap(calls_[i], calls_[count_ - 1]);
   count_--;
