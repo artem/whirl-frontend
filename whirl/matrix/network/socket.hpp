@@ -53,7 +53,7 @@ class ServerSocket {
 
 class ReplySocket {
  public:
-  ReplySocket(Link* link, const Packet& packet);
+  ReplySocket(const Packet& packet, Link* out);
 
   void Send(const Message& message);
 

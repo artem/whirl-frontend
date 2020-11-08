@@ -99,8 +99,8 @@ void ServerSocket::Close() {
 
 //////////////////////////////////////////////////////////////////////
 
-ReplySocket::ReplySocket(Link* link, const Packet& packet)
-    : link_(link),
+ReplySocket::ReplySocket(const Packet& packet, Link* out)
+    : link_(out),
       self_port_(packet.dest_port),
       peer_port_(packet.source_port),
       ts_(packet.ts) {

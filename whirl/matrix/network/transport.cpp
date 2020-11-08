@@ -116,9 +116,9 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
   Replier replier(packet, out);
 
-  auto it = endpoints_.find(packet.dest_port);
+  auto endpoint_it = endpoints_.find(packet.dest_port);
 
-  if (it == endpoints_.end()) {
+  if (endpoint_it == endpoints_.end()) {
     // Endpoint not found
 
     if (packet.type != EPacketType::Reset) {
@@ -129,7 +129,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     return;
   }
 
-  const auto& endpoint = it->second;
+  const auto& endpoint = endpoint_it->second;
 
   if (packet.ts < endpoint.ts) {
     // WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", from);
@@ -154,7 +154,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     WHIRL_FMT_LOG("Handle message from {}: <{}>", from, packet.message);
 
     auto g = heap_.Use();
-    endpoint.handler->HandleMessage(packet.message, ReplySocket(out, packet));
+    endpoint.handler->HandleMessage(packet.message, ReplySocket(packet, out));
     return;
   }
 }
