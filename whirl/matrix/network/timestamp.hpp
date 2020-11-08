@@ -10,6 +10,6 @@ namespace whirl::net {
 using Timestamp = size_t;
 
 // Non-decreasing
-Timestamp GetEndpointTimestamp();
+Timestamp GetNewEndpointTimestamp();
 
 }  // namespace whirl::net

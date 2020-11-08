@@ -21,7 +21,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
   Link* link = net_.GetLink(host_, address.host);
 
   Port port = FindFreePort();
-  Timestamp ts = GetEndpointTimestamp();
+  Timestamp ts = GetNewEndpointTimestamp();
 
   WHIRL_FMT_LOG("Connecting to {}: local port = {}", address, port);
 
@@ -43,7 +43,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
 
   WHEELS_VERIFY(endpoints_.count(port) == 0, "Port already in use");
 
-  auto ts = GetEndpointTimestamp();
+  auto ts = GetNewEndpointTimestamp();
   endpoints_.emplace(port, Endpoint{handler, ts});
 
   WHIRL_FMT_LOG("Start serving at port {}", port);

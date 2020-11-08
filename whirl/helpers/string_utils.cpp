@@ -1,5 +1,7 @@
 #include <whirl/helpers/string_utils.hpp>
 
+namespace whirl {
+
 Tokens Split(std::string str, char delimiter) {
   Tokens tokens;
   while (!str.empty()) {
@@ -13,3 +15,5 @@ Tokens Split(std::string str, char delimiter) {
   }
   return tokens;
 }
+
+}  // namespace whirl

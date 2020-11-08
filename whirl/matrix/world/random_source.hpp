@@ -29,7 +29,7 @@ class RandomSource {
   }
 
  private:
-  std::mt19937 twister_;
+  Twister twister_;
 
   Logger logger_{"Random"};
 };

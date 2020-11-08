@@ -4,6 +4,8 @@
 
 namespace whirl {
 
+// Consistent extraction order across platforms / impls
+
 template <typename T>
 class PriorityQueue {
   static bool Equal(const T& lhs, const T& rhs) {

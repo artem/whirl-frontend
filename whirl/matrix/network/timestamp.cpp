@@ -4,7 +4,7 @@
 
 namespace whirl::net {
 
-Timestamp GetEndpointTimestamp() {
+Timestamp GetNewEndpointTimestamp() {
   return WorldStepNumber();
 }
 
