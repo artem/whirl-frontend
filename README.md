@@ -1,4 +1,6 @@
-# Whirl 
+# Whirl
+
+Distributed system deterministic simulator
 
 ## Example
 
