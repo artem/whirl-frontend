@@ -35,8 +35,4 @@ inline TimePoint FlightTime(const net::Packet& packet) {
   return GetWorldBehaviour()->FlightTime(packet);
 }
 
-inline bool DuplicateNetPacket() {
-  return GlobalRandomNumber(3) == 0;
-}
-
 }  // namespace whirl
