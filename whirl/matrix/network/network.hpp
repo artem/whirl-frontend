@@ -8,6 +8,8 @@
 
 #include <whirl/matrix/log/logger.hpp>
 
+#include <whirl/helpers/digest.hpp>
+
 #include <string>
 #include <cstdlib>
 #include <vector>
@@ -71,6 +73,12 @@ class Network : public IActor, public IFaultyNetwork {
   void Split(const Partition& lhs);
   void Heal() override;
 
+  // Digest
+
+  size_t Digest() const {
+    return digest_.Get();
+  }
+
  private:
   void AddLinkEvent(Link* link, TimePoint t);
 
@@ -84,6 +92,8 @@ class Network : public IActor, public IFaultyNetwork {
   std::vector<INetServer*> servers_;
   std::vector<Link> links_;
   LinkEvents events_;
+
+  DigestCalculator digest_;
 
   Logger logger_{"Network"};
 };

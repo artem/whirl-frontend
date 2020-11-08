@@ -64,6 +64,7 @@ void Network::Step() {
   WHEELS_VERIFY(link->NextPacketTime() == event.time, "Invalid net");
 
   Packet packet = link->ExtractNextPacket();
+  digest_.EatT(packet.message);
   link->End()->HandlePacket(packet, link->GetOpposite());
 }
 

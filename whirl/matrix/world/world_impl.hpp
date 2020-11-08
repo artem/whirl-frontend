@@ -158,6 +158,7 @@ class WorldImpl {
     WHIRL_LOG("Adversary stopped");
 
     // Network
+    digest_.Eat(network_.Digest());
     Scope(network_)->Shutdown();
 
     WHIRL_LOG("Network stopped");
