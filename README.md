@@ -10,6 +10,10 @@ Distributed system deterministic simulator
 - Last-write-wins via wall clock
 - Persistent local storage
 
+Intentionally non-linearizable.
+
+Use Attiya, Bar-Noy, Dolev algorithm for linearizable behaviour.
+
 ## Inspiration
 
 - [Testing Distributed Systems w/ Deterministic Simulation](https://www.youtube.com/watch?v=4fFDFbi3toc)
