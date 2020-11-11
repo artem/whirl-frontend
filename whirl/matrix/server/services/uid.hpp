@@ -9,10 +9,17 @@
 namespace whirl {
 
 struct UidGenerator : public IUidGenerator {
-  Uid Generate() {
-    static size_t request = 0;
-    return wheels::StringBuilder() << GlobalNow() << "-" << ++request;
+  UidGenerator(size_t id) : id_(id) {
   }
+
+  Uid Generate() {
+    return wheels::StringBuilder() << GlobalRandomNumber() << "-" << id_ << "-"
+                                   << GlobalNow() << "-" << ++request_;
+  }
+
+ private:
+  const size_t id_;
+  size_t request_{0};
 };
 
 }  // namespace whirl

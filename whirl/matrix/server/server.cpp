@@ -198,7 +198,7 @@ NodeServices Server::CreateNodeServices() {
   services.rpc_client = rpc::TClient(net_transport, executor);
 
   services.random = std::make_shared<RandomService>();
-  services.uids = std::make_shared<UidGenerator>();
+  services.uids = std::make_shared<UidGenerator>(config_.id);
   services.true_time = std::make_shared<TrueTimeService>();
 
   services.logger = std::make_shared<LoggerProxy>();
