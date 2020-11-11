@@ -97,7 +97,7 @@ class NodeBase : public INode {
     return services_.true_time;
   }
 
-  const INodeLoggerPtr& NodeLogger() {
+  const INodeLoggerPtr& NodeLogger() const {
     return services_.logger;
   }
 

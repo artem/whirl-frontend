@@ -85,7 +85,7 @@ class ClientBase : public INode {
     return services_.time_service;
   }
 
-  const INodeLoggerPtr& NodeLogger() {
+  const INodeLoggerPtr& NodeLogger() const {
     return services_.logger;
   }
 
