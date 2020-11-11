@@ -44,7 +44,7 @@ class ThisNode {
 
   // TrueTime
 
-  TTNow TrueTimeNow() {
+  TTInterval TrueTimeNow() {
     return services_.true_time->Now();
   }
 

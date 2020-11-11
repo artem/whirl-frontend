@@ -12,17 +12,19 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-struct TTNow {
+struct TTInterval {
   TimePoint earliest;
   TimePoint latest;
 };
+
+using TTNow = TTInterval;
 
 //////////////////////////////////////////////////////////////////////
 
 struct ITrueTimeService {
   virtual ~ITrueTimeService() = default;
 
-  virtual TTNow Now() const = 0;
+  virtual TTInterval Now() const = 0;
 
   // True if t has definitely passed
   bool After(TimePoint t) const {
