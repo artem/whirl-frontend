@@ -238,7 +238,7 @@ class KVClient final : public ClientBase {
 //////////////////////////////////////////////////////////////////////
 
 // Sequential specification for KV storage
-// Used by linearizability cheker
+// Used by linearizability checker
 using KVStoreModel = histories::KVStoreModel<Key, Value>;
 
 //////////////////////////////////////////////////////////////////////

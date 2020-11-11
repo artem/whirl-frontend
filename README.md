@@ -1,4 +1,6 @@
-# Whirl 
+# Whirl
+
+Distributed system deterministic simulator
 
 ## Example
 
@@ -7,6 +9,10 @@
 - Quorum reads/writes
 - Last-write-wins via wall clock
 - Persistent local storage
+
+Intentionally non-linearizable.
+
+Use Attiya, Bar-Noy, Dolev algorithm for linearizable behaviour.
 
 ## Inspiration
 
