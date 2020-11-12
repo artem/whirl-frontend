@@ -8,7 +8,7 @@ namespace whirl {
 struct IFaultyServer {
   virtual ~IFaultyServer() = default;
 
-  virtual const std::string &Name() const = 0;
+  virtual const std::string& Name() const = 0;
 
   virtual bool IsAlive() const = 0;
 
@@ -25,6 +25,6 @@ struct IFaultyServer {
   virtual void AdjustWallClock() = 0;
 };
 
-IFaultyServer &AccessFaultyServer(size_t index);
+IFaultyServer& AccessFaultyServer(size_t index);
 
 }  // namespace whirl
