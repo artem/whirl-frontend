@@ -39,15 +39,11 @@ class ClientBase : public INode {
  protected:
   // Me
 
-  size_t Id() const {
+  NodeId Id() const {
     return services_.config->Id();
   }
 
   // Cluster
-
-  size_t NodeCount() const {
-    return cluster_.size();
-  }
 
   rpc::TChannel& Channel() {
     return channel_;
@@ -55,23 +51,23 @@ class ClientBase : public INode {
 
   // Shortcuts for common functions
 
-  RandomUInt RandomNumber() {
+  RandomUInt RandomNumber() const {
     return services_.random->RandomNumber();
   }
 
-  RandomUInt RandomNumber(size_t bound) {
+  RandomUInt RandomNumber(size_t bound) const {
     return RandomNumber() % bound;
   }
 
-  RandomUInt RandomNumber(size_t lo, size_t hi) {
+  RandomUInt RandomNumber(size_t lo, size_t hi) const {
     return lo + RandomNumber(hi - lo);
   }
 
-  TimePoint WallTimeNow() {
+  TimePoint WallTimeNow() const {
     return services_.time_service->WallTimeNow();
   }
 
-  TimePoint MonotonicNow() {
+  TimePoint MonotonicNow() const {
     return services_.time_service->MonotonicNow();
   }
 
@@ -81,7 +77,7 @@ class ClientBase : public INode {
     return services_.threads;
   }
 
-  const ITimeServicePtr& TimeService() {
+  const ITimeServicePtr& TimeService() const {
     return services_.time_service;
   }
 
