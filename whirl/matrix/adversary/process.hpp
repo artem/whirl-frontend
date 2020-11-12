@@ -5,7 +5,7 @@
 #include <whirl/matrix/adversary/services/executor.hpp>
 #include <whirl/matrix/adversary/services/time.hpp>
 
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 #include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/process/process_base.hpp>
 #include <whirl/services/threads.hpp>
@@ -38,11 +38,11 @@ class Process : public ProcessBase {
   }
 
   IExecutorPtr MakeExecutor() {
-    return std::make_shared<Executor>(events_);
+    return std::make_shared<Executor>(steps_);
   }
 
   ITimeServicePtr MakeTimeService() {
-    return std::make_shared<TimeService>(events_);
+    return std::make_shared<TimeService>(steps_);
   }
 
  private:

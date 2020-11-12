@@ -4,7 +4,7 @@
 #include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/crash.hpp>
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 #include <whirl/matrix/common/allocator.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
@@ -26,20 +26,20 @@ class ProcessBase : public IActor {
   // Context: global
   bool IsRunnable() const override {
     auto g = heap_.Use();
-    return !events_.IsEmpty();
+    return !steps_.IsEmpty();
   }
 
   // Context: global
   TimePoint NextStepTime() const override {
     auto g = heap_.Use();
-    return events_.NextEventTime();
+    return steps_.NextStepTime();
   }
 
   // Context: global
   void Step() override {
     auto g = heap_.Use();
-    auto event = events_.TakeNext();
-    event();
+    auto step = steps_.TakeNext();
+    step();
   }
 
   void Shutdown() override {
@@ -47,7 +47,7 @@ class ProcessBase : public IActor {
 
     {
       auto g = heap_.Use();
-      events_.Clear();
+      steps_.Clear();
       ReleaseFibersOnCrash(heap_);
     }
     heap_.Reset();
@@ -58,7 +58,7 @@ class ProcessBase : public IActor {
   Logger logger_;
 
   mutable ProcessHeap heap_;
-  EventQueue events_;
+  StepQueue steps_;
 };
 
 }  // namespace whirl

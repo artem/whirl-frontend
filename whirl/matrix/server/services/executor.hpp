@@ -2,7 +2,7 @@
 
 #include <whirl/services/executor.hpp>
 
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 #include <whirl/matrix/world/global/time.hpp>
 
 namespace whirl {
@@ -11,7 +11,7 @@ namespace whirl {
 
 class EventQueueExecutor : public IExecutor {
  public:
-  EventQueueExecutor(EventQueue& events) : events_(events) {
+  EventQueueExecutor(StepQueue& events) : events_(events) {
   }
 
   void Execute(Task&& task) override {
@@ -24,7 +24,7 @@ class EventQueueExecutor : public IExecutor {
   }
 
  private:
-  EventQueue& events_;
+  StepQueue& events_;
 };
 
 }  // namespace whirl

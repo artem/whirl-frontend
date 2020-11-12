@@ -60,7 +60,7 @@ void Server::Crash() {
   // WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
   {
     auto g = heap_.Use();
-    events_ = nullptr;
+    steps_ = nullptr;
     ReleaseFibersOnCrash(heap_);
   }
   heap_.Reset();
@@ -92,9 +92,9 @@ void Server::Resume() {
   {
     auto g = heap_.Use();
 
-    while (!events_->IsEmpty() && events_->NextEventTime() < now) {
-      auto pending_event = events_->TakeNext();
-      events_->Add(now, std::move(pending_event.action));
+    while (!steps_->IsEmpty() && steps_->NextStepTime() < now) {
+      auto step = steps_->TakeNext();
+      steps_->Add(now, std::move(step.action));
     }
   }
 
@@ -122,8 +122,8 @@ void Server::Start() {
 
   auto g = heap_.Use();
 
-  // events_ = new EventQueue() ?
-  events_ = heap_.New<EventQueue>();
+  // steps_ = new StepQueue() ?
+  steps_ = heap_.New<StepQueue>();
 
   auto services = CreateNodeServices();
   auto node = node_factory_->CreateNode(std::move(services));
@@ -139,20 +139,20 @@ bool Server::IsRunnable() const {
   }
   // No [de]allocations here
   // auto g = heap_.Use();
-  // WHEELS_VERIFY(events_, "Event queue is not created");
-  return !events_->IsEmpty();
+  // WHEELS_VERIFY(steps_, "Step queue is not created");
+  return !steps_->IsEmpty();
 }
 
 TimePoint Server::NextStepTime() const {
   // No [de]allocations here
   // auto g = heap_.Use();
-  return events_->NextEventTime();
+  return steps_->NextStepTime();
 }
 
 void Server::Step() {
   auto g = heap_.Use();
-  auto event = events_->TakeNext();
-  event();
+  auto step = steps_->TakeNext();
+  step();
 }
 
 void Server::Shutdown() {
@@ -179,9 +179,9 @@ NodeServices Server::CreateNodeServices() {
 
   services.config = std::make_shared<Config>(config_.id);
 
-  auto executor = std::make_shared<EventQueueExecutor>(*events_);
+  auto executor = std::make_shared<EventQueueExecutor>(*steps_);
   auto time_service =
-      std::make_shared<TimeService>(wall_clock_, monotonic_clock_, *events_);
+      std::make_shared<TimeService>(wall_clock_, monotonic_clock_, *steps_);
 
   services.threads = ThreadsRuntime{executor, time_service};
   services.time_service = time_service;

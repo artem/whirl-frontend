@@ -15,7 +15,7 @@
 #include <whirl/matrix/network/transport.hpp>
 
 #include <whirl/matrix/process/heap.hpp>
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
 
@@ -94,7 +94,7 @@ class Server : public IActor, public IFaultyServer, public net::INetServer {
 
   mutable ProcessHeap heap_;
   net::Transport transport_;
-  EventQueue* events_{nullptr};
+  StepQueue* steps_{nullptr};
 
   Logger logger_{"Server"};
 };

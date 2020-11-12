@@ -3,7 +3,7 @@
 #include <whirl/services/time.hpp>
 
 #include <whirl/matrix/server/clocks.hpp>
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 #include <whirl/matrix/log/logger.hpp>
 
 #include <await/futures/promise.hpp>
@@ -17,7 +17,7 @@ namespace whirl {
 class TimeService : public ITimeService {
  public:
   TimeService(WallClock& wall_clock, MonotonicClock& monotonic_clock,
-              EventQueue& events)
+              StepQueue& events)
       : wall_clock_(wall_clock),
         monotonic_clock_(monotonic_clock),
         events_(events) {
@@ -48,7 +48,7 @@ class TimeService : public ITimeService {
   WallClock& wall_clock_;
   MonotonicClock& monotonic_clock_;
 
-  EventQueue& events_;
+  StepQueue& events_;
 
   Logger logger_{"Time"};
 };

@@ -4,7 +4,7 @@
 
 #include <whirl/time.hpp>
 #include <whirl/matrix/world/clock.hpp>
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 
 #include <await/futures/helpers.hpp>
 
@@ -14,7 +14,7 @@ using namespace await::futures;
 
 class TimeService : public ITimeService {
  public:
-  TimeService(EventQueue& events) : events_(events) {
+  TimeService(StepQueue& events) : events_(events) {
   }
 
   // Adversary has access to global time
@@ -41,7 +41,7 @@ class TimeService : public ITimeService {
   }
 
  private:
-  EventQueue& events_;
+  StepQueue& events_;
 };
 
 }  // namespace whirl::adversary

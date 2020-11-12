@@ -10,13 +10,13 @@ namespace whirl {
 
 using Action = wheels::UniqueFunction<void()>;
 
-class EventQueue {
+class StepQueue {
  public:
-  struct Event {
+  struct Step {
     TimePoint time;
     Action action;
 
-    bool operator<(const Event& that) const {
+    bool operator<(const Step& that) const {
       return time < that.time;
     }
 
@@ -26,34 +26,34 @@ class EventQueue {
   };
 
  public:
-  EventQueue() = default;
+  StepQueue() = default;
 
   void Add(TimePoint time, Action action) {
-    events_.Insert({time, std::move(action)});
+    steps_.Insert({time, std::move(action)});
   }
 
   bool IsEmpty() const {
-    return events_.IsEmpty();
+    return steps_.IsEmpty();
   }
 
-  TimePoint NextEventTime() const {
-    return events_.Smallest().time;
+  TimePoint NextStepTime() const {
+    return steps_.Smallest().time;
   }
 
-  Event TakeNext() {
-    return events_.Extract();
+  Step TakeNext() {
+    return steps_.Extract();
   }
 
   void Clear() {
-    events_.Clear();
+    steps_.Clear();
   }
 
   size_t Size() const {
-    return events_.Size();
+    return steps_.Size();
   }
 
  private:
-  PriorityQueue<Event> events_;
+  PriorityQueue<Step> steps_;
 };
 
 }  // namespace whirl

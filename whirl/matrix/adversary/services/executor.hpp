@@ -4,13 +4,13 @@
 
 #include <whirl/time.hpp>
 #include <whirl/matrix/world/global/time.hpp>
-#include <whirl/matrix/common/event_queue.hpp>
+#include <whirl/matrix/process/step_queue.hpp>
 
 namespace whirl::adversary {
 
 class Executor : public IExecutor {
  public:
-  Executor(EventQueue& events) : events_(events) {
+  Executor(StepQueue& events) : events_(events) {
   }
 
   void Execute(Task&& task) override {
@@ -23,7 +23,7 @@ class Executor : public IExecutor {
   }
 
  private:
-  EventQueue& events_;
+  StepQueue& events_;
 };
 
 }  // namespace whirl::adversary
