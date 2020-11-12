@@ -20,16 +20,6 @@ RandomUInt GlobalRandomNumber() {
   return WorldImpl::Access()->RandomNumber();
 }
 
-RandomUInt GlobalRandomNumber(size_t bound) {
-  WHEELS_VERIFY(bound > 0, "bound = 0");
-  return GlobalRandomNumber() % bound;
-}
-
-RandomUInt GlobalRandomNumber(size_t lo, size_t hi) {
-  WHEELS_VERIFY(lo <= hi, "Invalid range");
-  return lo + GlobalRandomNumber(hi - lo);
-}
-
 //////////////////////////////////////////////////////////////////////
 
 TimePoint GlobalNow() {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/matrix/world/behaviour.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/random.hpp>
 
 namespace whirl {
 
