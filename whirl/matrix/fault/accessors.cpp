@@ -1,4 +1,5 @@
-#include <whirl/matrix/world/faults.hpp>
+#include <whirl/matrix/fault/server.hpp>
+#include <whirl/matrix/fault/network.hpp>
 
 #include <whirl/matrix/world/world_impl.hpp>
 

@@ -4,7 +4,7 @@
 #include <whirl/node/node.hpp>
 
 #include <whirl/matrix/world/actor.hpp>
-#include <whirl/matrix/world/faults.hpp>
+#include <whirl/matrix/fault/server.hpp>
 
 #include <whirl/matrix/server/config.hpp>
 #include <whirl/matrix/server/clocks.hpp>

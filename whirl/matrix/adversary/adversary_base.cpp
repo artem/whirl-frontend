@@ -1,7 +1,6 @@
 #include <whirl/matrix/adversary/adversary_base.hpp>
 
 #include <whirl/matrix/world/global.hpp>
-#include <whirl/matrix/world/faults.hpp>
 
 namespace whirl::adversary {
 

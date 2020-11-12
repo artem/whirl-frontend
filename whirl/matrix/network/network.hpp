@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/matrix/world/actor.hpp>
-#include <whirl/matrix/world/faults.hpp>
+#include <whirl/matrix/fault/network.hpp>
 
 #include <whirl/matrix/network/link.hpp>
 #include <whirl/matrix/network/server.hpp>
