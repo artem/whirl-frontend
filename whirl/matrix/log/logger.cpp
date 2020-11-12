@@ -1,7 +1,7 @@
 #include <whirl/matrix/log/logger.hpp>
 #include <whirl/matrix/log/event.hpp>
 
-#include <whirl/matrix/common/allocator.hpp>
+#include <whirl/matrix/memory/allocator.hpp>
 
 #include <whirl/matrix/world/global/global.hpp>
 

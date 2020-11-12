@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/matrix/common/allocator.hpp>
-#include <whirl/matrix/common/copy.hpp>
+#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/copy.hpp>
 
 #include <whirl/helpers/digest.hpp>
 

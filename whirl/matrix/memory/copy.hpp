@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/common/allocator.hpp>
+#include <whirl/matrix/memory/allocator.hpp>
 
 namespace whirl {
 

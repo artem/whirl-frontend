@@ -1,6 +1,6 @@
 #include <whirl/matrix/network/network.hpp>
 
-#include <whirl/matrix/common/allocator.hpp>
+#include <whirl/matrix/memory/allocator.hpp>
 #include <whirl/matrix/world/global/random.hpp>
 
 #include <wheels/support/assert.hpp>

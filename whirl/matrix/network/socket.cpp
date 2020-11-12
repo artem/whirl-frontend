@@ -3,7 +3,7 @@
 #include <whirl/matrix/network/link.hpp>
 #include <whirl/matrix/network/transport.hpp>
 
-#include <whirl/matrix/common/allocator.hpp>
+#include <whirl/matrix/memory/allocator.hpp>
 
 namespace whirl::net {
 

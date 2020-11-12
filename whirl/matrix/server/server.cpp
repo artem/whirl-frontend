@@ -1,7 +1,7 @@
 #include <whirl/matrix/server/server.hpp>
 
-#include <whirl/matrix/common/hide_to_heap.hpp>
-#include <whirl/matrix/common/copy.hpp>
+#include <whirl/matrix/memory/hide_to_heap.hpp>
+#include <whirl/matrix/memory/copy.hpp>
 #include <whirl/matrix/process/crash.hpp>
 
 // Services
