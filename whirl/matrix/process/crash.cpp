@@ -12,15 +12,15 @@ void ReleaseFibersOnCrash(const ProcessHeap& heap) {
   auto& alive = await::fibers::AliveFibers();
 
   // Fibers from `heap`
-  std::vector<await::fibers::Fiber*> lost;
+  std::vector<await::fibers::Fiber*> local;
 
   for (auto& fiber : alive) {
     if (heap.FromHere((char*)&fiber)) {
-      lost.push_back(&fiber);
+      local.push_back(&fiber);
     }
   }
 
-  for (auto* fiber : lost) {
+  for (auto* fiber : local) {
     // Release off-heap resources
     await::fibers::ReleaseStack(std::move(fiber->GetStack()));
     // Unlink from global alive list
