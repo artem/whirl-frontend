@@ -1,8 +1,5 @@
 #include <whirl/node/node_base.hpp>
 
-// TODO
-#include <whirl/matrix/channels/retries.hpp>
-
 #include <wheels/support/assert.hpp>
 
 namespace whirl {
@@ -12,23 +9,7 @@ void NodeBase::Start() {
 }
 
 void NodeBase::StartRPCServer() {
-  services_.rpc_server->Start();
-}
-
-void NodeBase::DiscoverCluster() {
-  cluster_ = services_.discovery->GetCluster();
-}
-
-rpc::IChannelPtr NodeBase::MakeChannel(const std::string& peer_addr) {
-  auto transport = services_.rpc_client.MakeChannel(peer_addr);
-  auto retries = WithRetries(std::move(transport), TimeService());
-  return retries;
-}
-
-void NodeBase::ConnectToPeers() {
-  for (const auto& peer_addr : cluster_) {
-    channels_.push_back(MakeChannel(peer_addr));
-  }
+  RPCServer()->Start();
 }
 
 // Main fiber routine
@@ -36,9 +17,7 @@ void NodeBase::Main() {
   await::fibers::self::SetName("main");
 
   StartRPCServer();
-  RegisterRPCServices(services_.rpc_server);
-  DiscoverCluster();
-  ConnectToPeers();
+  RegisterRPCServices(RPCServer());
   MainThread();
 }
 

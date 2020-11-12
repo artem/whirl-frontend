@@ -12,7 +12,7 @@
 #include <whirl/services/discovery.hpp>
 
 #include <whirl/rpc/impl/server.hpp>
-#include <whirl/rpc/use/client.hpp>
+#include <whirl/rpc/impl/client.hpp>
 
 namespace whirl {
 
@@ -25,7 +25,7 @@ struct NodeServices {
   IDiscoveryPtr discovery;
 
   rpc::IServerPtr rpc_server;
-  rpc::TClient rpc_client;
+  rpc::IClientPtr rpc_client;
 
   // Use to create local storages
   ILocalStorageBackendPtr storage_backend;

@@ -195,7 +195,7 @@ NodeServices Server::CreateNodeServices() {
 
   services.rpc_server =
       std::make_shared<rpc::ServerImpl>(net_transport, executor);
-  services.rpc_client = rpc::TClient(net_transport, executor);
+  services.rpc_client = rpc::MakeClient(net_transport, executor);
 
   services.random = std::make_shared<RandomService>();
   services.uids = std::make_shared<UidGenerator>(config_.id);
