@@ -39,7 +39,7 @@ class ClientBase : public INode {
  protected:
   // Me
 
-  NodeId Id() const {
+  size_t Id() const {
     return services_.config->Id();
   }
 

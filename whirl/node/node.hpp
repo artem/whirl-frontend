@@ -1,9 +1,6 @@
 #pragma once
 
-#include <whirl/node/config.hpp>
 #include <whirl/node/services.hpp>
-
-#include <vector>
 
 namespace whirl {
 
