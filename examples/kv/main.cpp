@@ -5,7 +5,7 @@
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 #include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/history/printers/kv.hpp>
 #include <whirl/matrix/history/checker/check.hpp>
