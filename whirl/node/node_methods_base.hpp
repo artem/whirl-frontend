@@ -16,7 +16,7 @@ class NodeMethodsBase {
 
   // Me
 
-  size_t Id() const {
+  NodeId Id() const {
     return services_.config->Id();
   }
 
