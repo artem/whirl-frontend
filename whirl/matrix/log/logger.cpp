@@ -3,7 +3,7 @@
 
 #include <whirl/matrix/common/allocator.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 
 #include <await/fibers/core/api.hpp>
 #include <whirl/rpc/impl/trace.hpp>

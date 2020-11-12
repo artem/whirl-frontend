@@ -1,6 +1,6 @@
 #include <whirl/matrix/network/timestamp.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 
 namespace whirl::net {
 

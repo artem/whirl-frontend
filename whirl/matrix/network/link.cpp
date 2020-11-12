@@ -2,7 +2,7 @@
 
 #include <whirl/matrix/network/network.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/time.hpp>
 #include <whirl/matrix/world/dice.hpp>
 
 #include <wheels/support/assert.hpp>

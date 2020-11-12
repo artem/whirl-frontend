@@ -1,4 +1,4 @@
-#include <whirl/matrix/world/random.hpp>
+#include <whirl/matrix/world/global/random.hpp>
 
 #include <wheels/support/assert.hpp>
 

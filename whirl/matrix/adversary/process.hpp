@@ -9,7 +9,6 @@
 #include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/process/process_base.hpp>
 #include <whirl/services/threads.hpp>
-#include <whirl/matrix/world/global.hpp>
 
 #include <functional>
 #include <deque>

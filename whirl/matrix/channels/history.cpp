@@ -4,7 +4,7 @@
 #include <whirl/rpc/impl/errors.hpp>
 #include <whirl/rpc/impl/trace.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 
 #include <await/futures/promise.hpp>
 #include <await/futures/helpers.hpp>

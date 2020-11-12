@@ -1,6 +1,6 @@
 #include <whirl/matrix/channels/random.hpp>
 
-#include <whirl/matrix/world/random.hpp>
+#include <whirl/matrix/world/global/random.hpp>
 
 namespace whirl {
 

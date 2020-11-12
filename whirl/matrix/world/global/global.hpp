@@ -1,9 +1,8 @@
 #pragma once
 
-#include <whirl/matrix/world/random.hpp>
+#include <whirl/matrix/world/global/random.hpp>
+#include <whirl/matrix/world/global/time.hpp>
 
-#include <whirl/time.hpp>
-#include <whirl/matrix/world/clock.hpp>
 #include <whirl/matrix/world/behaviour.hpp>
 #include <whirl/matrix/history/recorder.hpp>
 #include <whirl/matrix/log/log.hpp>
@@ -24,12 +23,6 @@ size_t WorldSeed();
 // Varies by simulation (seed)
 // Requirement: `randomizer` > 0
 size_t ThisWorldConst(size_t randomizer);
-
-//////////////////////////////////////////////////////////////////////
-
-// Global time
-
-TimePoint GlobalNow();
 
 //////////////////////////////////////////////////////////////////////
 

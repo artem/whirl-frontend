@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/time.hpp>
 #include <whirl/matrix/world/dice.hpp>
 
 namespace whirl {

@@ -1,4 +1,4 @@
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 
 #include <whirl/matrix/world/world_impl.hpp>
 

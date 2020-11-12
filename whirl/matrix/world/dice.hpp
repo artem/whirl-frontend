@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 #include <whirl/time.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 
 namespace whirl {
 

@@ -4,7 +4,8 @@
 
 #include <whirl/matrix/common/allocator.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+// IsThereAdversary
+#include <whirl/matrix/world/global/global.hpp>
 
 #include <wheels/support/assert.hpp>
 

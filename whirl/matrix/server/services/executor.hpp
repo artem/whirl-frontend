@@ -3,7 +3,7 @@
 #include <whirl/services/executor.hpp>
 
 #include <whirl/matrix/common/event_queue.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/time.hpp>
 
 namespace whirl {
 

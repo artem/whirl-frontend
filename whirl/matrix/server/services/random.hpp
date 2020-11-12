@@ -3,7 +3,7 @@
 #include <whirl/services/random.hpp>
 
 // Impl
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/random.hpp>
 
 namespace whirl {
 

@@ -3,7 +3,7 @@
 #include <whirl/services/executor.hpp>
 
 #include <whirl/time.hpp>
-#include <whirl/matrix/world/clock.hpp>
+#include <whirl/matrix/world/global/time.hpp>
 #include <whirl/matrix/common/event_queue.hpp>
 
 namespace whirl::adversary {

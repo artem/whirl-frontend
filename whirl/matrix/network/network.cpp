@@ -1,8 +1,9 @@
 #include <whirl/matrix/network/network.hpp>
 
 #include <whirl/matrix/common/allocator.hpp>
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/random.hpp>
 
+#include <wheels/support/assert.hpp>
 #include <wheels/support/compiler.hpp>
 
 namespace whirl::net {

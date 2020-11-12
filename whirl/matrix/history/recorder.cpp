@@ -1,6 +1,6 @@
 #include <whirl/matrix/history/recorder.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/global.hpp>
 
 #include <whirl/matrix/common/allocator.hpp>
 

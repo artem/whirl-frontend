@@ -2,7 +2,8 @@
 
 #include <whirl/services/uid.hpp>
 
-#include <whirl/matrix/world/global.hpp>
+#include <whirl/matrix/world/global/random.hpp>
+#include <whirl/matrix/world/global/time.hpp>
 
 #include <wheels/support/string_builder.hpp>
 
