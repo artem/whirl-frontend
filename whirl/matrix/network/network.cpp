@@ -104,7 +104,7 @@ void Network::Split() {
   size_t lhs_size = GlobalRandomNumber(1, servers_.size());
 
   Partition lhs;
-  for (auto& server : Select(servers_, lhs_size)) {
+  for (auto& server : GlobalRandomSelect(servers_, lhs_size)) {
     lhs.insert(server->HostName());
   }
 

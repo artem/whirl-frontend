@@ -19,7 +19,7 @@ size_t GlobalRandomNumber(size_t lo, size_t hi);
 
 // Ordered selection without repetitions
 template <typename T>
-std::vector<T> Select(std::vector<T> items, size_t k) {
+std::vector<T> GlobalRandomSelect(std::vector<T> items, size_t k) {
   WHEELS_VERIFY(k <= items.size(), "K > items.size()");
 
   std::vector<T> selected;
