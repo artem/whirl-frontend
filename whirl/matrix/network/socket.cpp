@@ -24,7 +24,7 @@ class ClientSocket::Impl {
   }
 
   const std::string& Peer() const {
-    GlobalHeapScope g;
+    // GlobalHeapScope g;
     return link_->EndHostName();
   }
 
