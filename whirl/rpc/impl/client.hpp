@@ -12,7 +12,7 @@ namespace whirl::rpc {
 struct IClient {
   virtual ~IClient() = default;
 
-  virtual IChannelPtr MakeChannel(const std::string& peer) = 0;
+  virtual IChannelPtr Dial(const std::string& peer) = 0;
 };
 
 using IClientPtr = std::shared_ptr<IClient>;
