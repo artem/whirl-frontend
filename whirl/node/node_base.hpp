@@ -4,8 +4,6 @@
 #include <whirl/node/services.hpp>
 #include <whirl/node/peer_base.hpp>
 
-#include <whirl/rpc/use/channel.hpp>
-
 namespace whirl {
 
 // Peer + Main routine

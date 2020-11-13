@@ -10,7 +10,7 @@ class NodeMethodsBase {
   }
 
  protected:
-  const NodeServices& ThisNodeServices() {
+  const NodeServices& ThisNodeServices() const {
     return services_;
   }
 
