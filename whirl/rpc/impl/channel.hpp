@@ -11,8 +11,6 @@ namespace whirl::rpc {
 
 using await::futures::Future;
 
-//////////////////////////////////////////////////////////////////////
-
 // Communication line between client and remote service
 
 struct IChannel {
@@ -27,15 +25,5 @@ struct IChannel {
 };
 
 using IChannelPtr = std::shared_ptr<IChannel>;
-
-//////////////////////////////////////////////////////////////////////
-
-struct IRPCClient {
-  virtual ~IRPCClient() = default;
-
-  virtual IChannelPtr MakeChannel(std::string peer) = 0;
-};
-
-using IRPCClientPtr = std::shared_ptr<IRPCClient>;
 
 }  // namespace whirl::rpc
