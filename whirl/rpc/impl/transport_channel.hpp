@@ -31,14 +31,14 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
                          public ITransportHandler {
  private:
   struct Request {
-    RPCId id;
+    RequestId id;
     TraceId trace_id;
     Method method;
     BytesValue input;
     Promise<BytesValue> promise;
   };
 
-  using Requests = std::map<RPCId, Request>;
+  using Requests = std::map<RequestId, Request>;
 
  public:
   TransportChannel(ITransportPtr t, IExecutorPtr e, TransportAddress peer)

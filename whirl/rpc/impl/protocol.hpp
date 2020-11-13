@@ -21,7 +21,7 @@ namespace whirl::rpc {
 // Request
 
 struct RequestMessage {
-  RPCId id;
+  RequestId id;
   TraceId trace_id;
   std::string to;  // For debugging
   Method method;
@@ -36,7 +36,7 @@ struct RequestMessage {
 // Response
 
 struct ResponseMessage {
-  RPCId request_id;
+  RequestId request_id;
   Method method;  // For debugging
   BytesValue result;
   RPCErrorCode error;

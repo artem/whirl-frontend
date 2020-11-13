@@ -4,9 +4,9 @@
 
 namespace whirl::rpc {
 
-using RPCId = size_t;
+using RequestId = size_t;
 
-RPCId GenerateRequestId();
+RequestId GenerateRequestId();
 
 void ResetIds();
 

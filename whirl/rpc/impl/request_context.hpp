@@ -13,7 +13,7 @@ class RequestContext {
   RequestContext(const RequestMessage& request) : request_(request) {
   }
 
-  RPCId GetId() const {
+  RequestId GetId() const {
     return request_.id;
   }
 

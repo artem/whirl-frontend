@@ -84,7 +84,7 @@ std::optional<TraceId> TryGetCurrentTraceId() {
   }
 }
 
-TraceId GetOrGenerateNewTraceId(RPCId request_id) {
+TraceId GetOrGenerateNewTraceId(RequestId request_id) {
   if (auto trace_id = TryGetCurrentTraceId()) {
     return *trace_id;
   }

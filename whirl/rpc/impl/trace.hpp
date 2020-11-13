@@ -40,6 +40,6 @@ IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id);
 std::optional<TraceId> TryGetCurrentTraceId();
 
 // Get current trace id or generate new based on request id
-TraceId GetOrGenerateNewTraceId(RPCId id);
+TraceId GetOrGenerateNewTraceId(RequestId id);
 
 }  // namespace whirl::rpc
