@@ -37,7 +37,7 @@ struct RequestMessage {
 
 struct ResponseMessage {
   RequestId request_id;
-  Method method;  // For debugging
+  Method method;  // For debugging, echoes that of the request
   BytesValue result;
   RPCErrorCode error;
 
