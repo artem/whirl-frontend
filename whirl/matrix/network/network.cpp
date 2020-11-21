@@ -65,7 +65,11 @@ void Network::Step() {
   WHEELS_VERIFY(link->NextPacketTime() == event.time, "Broken net");
 
   Packet packet = link->ExtractNextPacket();
-  digest_.EatT(packet.message);
+
+  // ???
+  // digest_.EatT(packet.message);
+  digest_.Eat(packet.source_port).Eat(packet.dest_port).Eat(packet.message.length());
+
   link->End()->HandlePacket(packet, link->GetOpposite());
 }
 
