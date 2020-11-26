@@ -91,7 +91,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   void Handle(Result<BytesValue> result, IExecutorPtr e) {
-    if (result.IsOk() || IsRetriableError(result.GetError())) {
+    if (result.IsOk() || !IsRetriableError(result.GetError())) {
       std::move(promise_).Set(std::move(result));
     } else {
       ScheduleRetry(std::move(e));
