@@ -48,17 +48,17 @@ class RPCErrorCategory : public std::error_category {
       case RPCErrorCode::Ok:
         return "RPC ok";
       case RPCErrorCode::ChannelClosed:
-        return "Channel closed";
+        return "RPC channel closed";
       case RPCErrorCode::TransportError:
-        return "Transport error";
+        return "RPC transport error";
       case RPCErrorCode::ExecutionError:
-        return "Execution error";
+        return "RPC execution error";
       case RPCErrorCode::ServiceNotFound:
-        return "Service not found";
+        return "RPC service not found";
       case RPCErrorCode::MethodNotFound:
-        return "Method not found";
+        return "RPC method not found";
       case RPCErrorCode::BadRequest:
-        return "Bad request";
+        return "Bad RPC request";
       default:
         return "?";
     }
