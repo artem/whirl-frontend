@@ -11,6 +11,10 @@ using wheels::MmapAllocation;
 
 //////////////////////////////////////////////////////////////////////
 
+static const size_t kHeapSizeInPages = 16 * 1024;
+
+//////////////////////////////////////////////////////////////////////
+
 class HeapsAllocator {
  public:
   MmapAllocation Allocate() {
@@ -28,8 +32,7 @@ class HeapsAllocator {
 
  private:
   MmapAllocation AllocateNewHeap() {
-    static const size_t kPages = 16 * 1024;
-    return MmapAllocation::AllocatePages(kPages);
+    return MmapAllocation::AllocatePages(kHeapSizeInPages);
   }
 
  private:
@@ -82,7 +85,7 @@ void Heap::ZeroFillTo(char* pos) {
 }
 
 char* Heap::AllocateNewBlock(size_t bytes) {
-  WHEELS_VERIFY(next_ + 8 + bytes < heap_.End(), "Heap overflow");
+  WHEELS_VERIFY(next_ + 8 + bytes < heap_.End(), "Cannot allocate " << bytes << " bytes: heap overflow");
 
   // Incrementally fill heap with zeroes
   ZeroFillTo(next_ + 8 + bytes);
