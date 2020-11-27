@@ -124,8 +124,8 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
 }
 
 void TransportChannel::Fail(Request& request, std::error_code e) {
-  WHIRL_FMT_LOG("Request {}.{} with id = {} failed", peer_, request.method,
-                request.id);
+  WHIRL_FMT_LOG("Request {}.{} (id = {}) failed: {}", peer_, request.method,
+                request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));
 }
 
