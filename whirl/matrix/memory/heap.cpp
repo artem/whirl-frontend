@@ -85,7 +85,8 @@ void Heap::ZeroFillTo(char* pos) {
 }
 
 char* Heap::AllocateNewBlock(size_t bytes) {
-  WHEELS_VERIFY(next_ + 8 + bytes < heap_.End(), "Cannot allocate " << bytes << " bytes: heap overflow");
+  WHEELS_VERIFY(next_ + 8 + bytes < heap_.End(),
+                "Cannot allocate " << bytes << " bytes: heap overflow");
 
   // Incrementally fill heap with zeroes
   ZeroFillTo(next_ + 8 + bytes);
