@@ -4,7 +4,10 @@
 
 #include <whirl/helpers/serialize.hpp>
 
+#include <fmt/core.h>
+
 #include <optional>
+#include <stdexcept>
 
 namespace whirl {
 
@@ -31,25 +34,33 @@ class LocalKVStorage {
   }
 
   bool Has(const std::string& key) const {
-    return impl_->Has(WithNamespace(key));
-  }
-
-  V Get(const std::string& key) {
-    auto value_bytes = impl_->Get(WithNamespace(key));
-    return Deserialize<V>(value_bytes);
+    std::optional<Bytes> value_bytes = impl_->TryGet(WithNamespace(key));
+    return value_bytes.has_value();
   }
 
   std::optional<V> TryGet(const std::string& key) {
-    if (Has(key)) {
-      return Get(key);
+    std::optional<Bytes> value_bytes = impl_->TryGet(WithNamespace(key));
+    if (value_bytes.has_value()) {
+      return Deserialize<V>(*value_bytes);
     } else {
       return std::nullopt;
     }
   }
 
+  V Get(const std::string& key) {
+    std::optional<V> existing_value = TryGet(key);
+    if (existing_value.has_value()) {
+      return *existing_value;
+    } else {
+      throw std::runtime_error(
+          fmt::format("Key '{}' not found in local KV storage", WithNamespace(key)));
+    }
+  }
+
   V GetOr(const std::string& key, V default_value) {
-    if (Has(key)) {
-      return Get(key);
+    std::optional<V> existing_value = TryGet(key);
+    if (existing_value.has_value()) {
+      return *existing_value;
     } else {
       return default_value;
     }
@@ -74,7 +85,7 @@ class LocalKVStorage {
 // Persistent map from string to arbitrary values
 
 // Usage:
-// * local_storage.Store("epoch", 42)
+// * local_storage.Store<int>("epoch", 42)
 // * local_storage.Load<int>("epoch");
 
 class LocalStorage {
@@ -86,20 +97,25 @@ class LocalStorage {
   LocalStorage(const LocalStorage& that) = delete;
   LocalStorage& operator=(const LocalStorage& that) = delete;
 
-  bool Has(const std::string& key) const {
-    return impl_->Has(WithNamespace(key));
-  }
-
   template <typename U>
   void Store(const std::string& key, const U& data) {
     auto data_bytes = Serialize(data);
     impl_->Set(WithNamespace(key), data_bytes);
   }
 
+  bool Has(const std::string& key) const {
+    std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
+    return data_bytes.has_value();
+  }
+
   template <typename U>
   U Load(const std::string& key) {
-    auto data_bytes = impl_->Get(WithNamespace(key));
-    return Deserialize<U>(data_bytes);
+    std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
+    if (data_bytes.has_value()) {
+      return Deserialize<U>(*data_bytes);
+    } else {
+      throw std::runtime_error(fmt::format("Key '{}' not found in local storage", WithNamespace(key)));
+    }
   }
 
  private:
