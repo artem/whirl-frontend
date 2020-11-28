@@ -118,7 +118,7 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
   if (socket_ && socket_->IsConnected()) {
     return socket_;
   }
-  WHIRL_SIM_LOG("Reconnect to {}", peer_);
+  WHIRL_SIM_LOG_DEBUG("Reconnect to {}", peer_);
   socket_ = transport_->ConnectTo(peer_, shared_from_this());
   return socket_;
 }
