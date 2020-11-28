@@ -67,7 +67,7 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
   auto request_it = requests_.find(response.request_id);
 
   if (request_it == requests_.end()) {
-    WHIRL_SIM_LOG("Request with id {} not found", response.request_id);
+    WHIRL_SIM_LOG_WARN("Request with id {} not found", response.request_id);
     return;  // Probably duplicated response message from transport layer?
   }
 
@@ -95,7 +95,7 @@ void TransportChannel::LostPeer() {
   auto requests = std::move(requests_);
   requests_.clear();
 
-  WHIRL_SIM_LOG(
+  WHIRL_SIM_LOG_WARN(
       "Transport connection to peer {} lost, fail {} pending request(s)", peer_,
       requests.size());
 
@@ -124,7 +124,7 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
 }
 
 void TransportChannel::Fail(Request& request, std::error_code e) {
-  WHIRL_SIM_LOG("Request {}.{} (id = {}) failed: {}", peer_, request.method,
+  WHIRL_SIM_LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_, request.method,
                 request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));
 }
