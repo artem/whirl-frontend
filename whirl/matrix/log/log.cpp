@@ -15,8 +15,22 @@ static std::string ToWidth(const std::string& s, size_t width) {
 
 //////////////////////////////////////////////////////////////////////
 
+static std::string LogLevelToString(const LogLevel level) {
+  switch (level) {
+    case LogLevel::Debug: return "Debug";
+    case LogLevel::Info: return "Info";
+    case LogLevel::Error: return "Error";
+    default:
+      return "?";
+  }
+}
+
+//////////////////////////////////////////////////////////////////////
+
 void Log::WriteTo(const LogEvent& event, std::ostream& out) {
   out << "[T " << event.time << " | " << event.step << "]"
+      << "\t"
+      << "[" << ToWidth(LogLevelToString(event.level), 5) << "]"
       << "\t"
       << "[" << ToWidth(event.actor, 15) << "]"
       << "\t"

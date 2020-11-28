@@ -12,10 +12,10 @@ class Logger {
  public:
   Logger(const std::string& component);
 
-  void Log(const std::string& message);
+  void Log(LogLevel level, const std::string& message);
 
  private:
-  LogEvent MakeEvent(const std::string& message) const;
+  LogEvent MakeEvent(LogLevel level, const std::string& message) const;
   void Write(const LogEvent& event);
 
  private:
@@ -27,7 +27,7 @@ class Logger {
 #ifndef NDEBUG
 
 // TODO: at least one argument for format string
-#define WHIRL_SIM_LOG(...) logger_.Log(fmt::format(__VA_ARGS__))
+#define WHIRL_SIM_LOG(...) logger_.Log(LogLevel::Info, fmt::format(__VA_ARGS__))
 
 #else
 

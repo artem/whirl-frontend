@@ -41,12 +41,12 @@ static std::string DescribeThisActor() {
 
 //////////////////////////////////////////////////////////////////////
 
-LogEvent Logger::MakeEvent(const std::string& message) const {
+LogEvent Logger::MakeEvent(LogLevel level, const std::string& message) const {
   LogEvent event;
 
   event.time = GlobalNow();
   event.step = WorldStepNumber();
-  event.level = LogLevel::Debug;
+  event.level = level;
   event.actor = DescribeThisActor();
   event.component = component_;
   event.trace_id = rpc::TryGetCurrentTraceId();
@@ -62,9 +62,9 @@ void Logger::Write(const LogEvent& event) {
 Logger::Logger(const std::string& component) : component_(component) {
 }
 
-void Logger::Log(const std::string& message) {
+void Logger::Log(LogLevel level, const std::string& message) {
   GlobalHeapScope guard;
-  Write(MakeEvent(message));
+  Write(MakeEvent(level, message));
 }
 
 }  // namespace whirl

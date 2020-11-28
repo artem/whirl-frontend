@@ -10,7 +10,7 @@ class LoggerProxy : public INodeLogger {
  public:
   // Context: Server
   void Log(const std::string& message) {
-    impl_.Log(message);
+    impl_.Log(LogLevel::Info, message);
   }
 
  private:
