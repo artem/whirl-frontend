@@ -62,7 +62,7 @@ class Transport {
   // To invoke ISocketHandler methods
   ProcessHeap& heap_;
 
-  Logger logger_;
+  Logger logger_{"Transport"};
 };
 
 }  // namespace whirl::net

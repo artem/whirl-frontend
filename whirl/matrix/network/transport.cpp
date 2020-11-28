@@ -12,7 +12,7 @@
 namespace whirl::net {
 
 Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap)
-    : net_(net), host_(host), heap_(heap), logger_{host} {
+    : net_(net), host_(host), heap_(heap) {
 }
 
 ClientSocket Transport::ConnectTo(const Address& address,
@@ -152,7 +152,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.type == EPacketType::Data) {
     // Message
 
-    WHIRL_SIM_LOG("Handle message from {}: <{}>", from, packet.message);
+    WHIRL_SIM_LOG("Handle message at {} from {}: <{}>", host_, from, packet.message);
 
     auto g = heap_.Use();
     endpoint.handler->HandleMessage(packet.message, ReplySocket(packet, out));
