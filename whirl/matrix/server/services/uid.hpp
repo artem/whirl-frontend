@@ -13,7 +13,7 @@ struct UidGenerator : public IUidGenerator {
   UidGenerator(size_t id) : id_(id) {
   }
 
-  Uid Generate() {
+  Uid Generate() override {
     return wheels::StringBuilder() << GlobalRandomNumber() << "-" << id_ << "-"
                                    << GlobalNow() << "-" << ++request_;
   }
