@@ -107,7 +107,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   ITransportSocketPtr socket_{nullptr};
   Requests requests_;
 
-  Logger logger_{"RPC channel"};
+  Logger logger_{"RPC-Channel"};
 };
 
 }  // namespace whirl::rpc

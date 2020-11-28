@@ -59,7 +59,7 @@ class ServerImpl : public IServer,
 
   std::map<std::string, IServicePtr> services_;
 
-  Logger logger_{"RPC server"};
+  Logger logger_{"RPC-Server"};
 };
 
 }  // namespace whirl::rpc
