@@ -110,7 +110,7 @@ class WorldImpl {
       Scope(*adversary_)->Start();
     }
 
-    WHIRL_LOG("World started");
+    WHIRL_FMT_LOG("World started");
   }
 
   bool Step() {
@@ -155,13 +155,13 @@ class WorldImpl {
       Scope(*adversary_)->Shutdown();
     }
 
-    WHIRL_LOG("Adversary stopped");
+    WHIRL_FMT_LOG("Adversary stopped");
 
     // Network
     digest_.Eat(network_.Digest());
     Scope(network_)->Shutdown();
 
-    WHIRL_LOG("Network stopped");
+    WHIRL_FMT_LOG("Network stopped");
 
     // Servers
     for (auto& server : cluster_) {
@@ -170,7 +170,7 @@ class WorldImpl {
     }
     cluster_.clear();
 
-    WHIRL_LOG("Servers stopped");
+    WHIRL_FMT_LOG("Servers stopped");
 
     // Clients
     for (auto& client : clients_) {
@@ -178,7 +178,7 @@ class WorldImpl {
     }
     clients_.clear();
 
-    WHIRL_LOG("Clients stopped");
+    WHIRL_FMT_LOG("Clients stopped");
 
     actors_.clear();
 
@@ -186,7 +186,7 @@ class WorldImpl {
 
     history_recorder_.Finalize();
 
-    WHIRL_LOG("Simulation stopped");
+    WHIRL_FMT_LOG("Simulation stopped");
 
     return Digest();
   }
