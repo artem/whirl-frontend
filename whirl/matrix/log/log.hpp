@@ -15,6 +15,10 @@ class Log {
     out_ = out;
   }
 
+  LogLevel GetMinLevel(const std::string& /*component*/) const {
+    return LogLevel::All;
+  }
+
   void Write(const LogEvent& event) {
     WriteTo(event, *out_);
     *out_ << std::endl;

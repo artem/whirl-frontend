@@ -62,6 +62,10 @@ void Logger::Write(const LogEvent& event) {
 Logger::Logger(const std::string& component) : component_(component) {
 }
 
+bool Logger::IsLevelEnabled(LogLevel level) const {
+  return level >= GetLog().GetMinLevel(component_);
+}
+
 void Logger::Log(LogLevel level, const std::string& message) {
   GlobalHeapScope guard;
   Write(MakeEvent(level, message));

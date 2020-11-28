@@ -12,6 +12,7 @@ class Logger {
  public:
   Logger(const std::string& component);
 
+  bool IsLevelEnabled(LogLevel level) const;
   void Log(LogLevel level, const std::string& message);
 
  private:
@@ -26,7 +27,12 @@ class Logger {
 
 #ifndef NDEBUG
 
-#define WHIRL_SIM_LOG_IMPL(level, ...) logger_.Log(level, fmt::format(__VA_ARGS__))
+#define WHIRL_SIM_LOG_IMPL(level, ...)              \
+  do {                                              \
+    if (logger_.IsLevelEnabled(level)) {            \
+      logger_.Log(level, fmt::format(__VA_ARGS__)); \
+    }                                               \
+  } while (false)
 
 #else
 

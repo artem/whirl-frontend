@@ -7,8 +7,7 @@ std::string LogLevelToString(LogLevel level) {
     case LogLevel::Debug: return "Debug";
     case LogLevel::Info: return "Info";
     case LogLevel::Error: return "Error";
-    default:
-      return "?";
+    default: return "?";
   }
 }
 
