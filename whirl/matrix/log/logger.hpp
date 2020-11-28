@@ -39,6 +39,10 @@ class Logger {
 
 #else
 
+#define WHIRL_SIM_LOG_DEBUG(...)
+#define WHIRL_SIM_LOG_INFO(...)
+#define WHIRL_SIM_LOG_ERROR(...)
+
 #define WHIRL_SIM_LOG(...)
 
 #endif
