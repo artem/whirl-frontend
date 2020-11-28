@@ -46,6 +46,7 @@ LogEvent Logger::MakeEvent(const std::string& message) const {
 
   event.time = GlobalNow();
   event.step = WorldStepNumber();
+  event.level = LogLevel::Debug;
   event.actor = DescribeThisActor();
   event.component = component_;
   event.trace_id = rpc::TryGetCurrentTraceId();
