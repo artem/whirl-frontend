@@ -10,7 +10,8 @@ enum class LogLevel {
   All = 0,  // Do not format
   Debug = 1,
   Info = 2,
-  Error = 3,
+  Warning = 3,
+  Error = 4,
   Off = 100500
 };
 

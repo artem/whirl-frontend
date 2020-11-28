@@ -24,7 +24,7 @@ static std::string ToWidth(const std::string& s, size_t width) {
 void Log::WriteTo(const LogEvent& event, std::ostream& out) {
   out << "[T " << event.time << " | " << event.step << "]"
       << "\t"
-      << "[" << ToWidth(LogLevelToString(event.level), 5) << "]"
+      << "[" << ToWidth(LogLevelToString(event.level), 7) << "]"
       << "\t"
       << "[" << ToWidth(event.actor, 15) << "]"
       << "\t"
