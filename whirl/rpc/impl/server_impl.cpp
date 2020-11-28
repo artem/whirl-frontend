@@ -74,12 +74,12 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   try {
     result = service->Invoke(request.method.name, request.input);
   } catch (rpc::BadRequest& e) {
-    WHIRL_SIM_LOG("Bad RPC request {} (id = {}): {}", request.method,
+    WHIRL_SIM_LOG_ERROR("Bad RPC request {} (id = {}): {}", request.method,
                   request.id, e.what());
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
-    WHIRL_SIM_LOG("Exception in {} (id = {}): {}", request.method, request.id,
+    WHIRL_SIM_LOG_ERROR("Exception in {} (id = {}): {}", request.method, request.id,
                   wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;
