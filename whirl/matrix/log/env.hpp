@@ -10,6 +10,7 @@ namespace whirl {
 // Component -> Min log level
 using LogLevels = std::map<std::string, LogLevel>;
 
+// Usage: WHIRL_LOG_LEVELS=Network=Off,Server=Off
 LogLevels GetLogLevelsFromEnv();
 
 }  // namespace whirl
