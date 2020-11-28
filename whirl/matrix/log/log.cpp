@@ -1,5 +1,11 @@
 #include <whirl/matrix/log/log.hpp>
 
+#include <whirl/helpers/string_utils.hpp>
+
+#include <wheels/support/assert.hpp>
+
+#include <iostream>
+
 namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
@@ -30,6 +36,21 @@ void Log::WriteTo(const LogEvent& event, std::ostream& out) {
   }
 
   out << "\t" << event.message;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+static LogLevel kDefaultMinLogLevel = LogLevel::Info;
+
+void Log::InitLevels() {
+  levels_ = GetLogLevelsFromEnv();
+}
+
+LogLevel Log::GetMinLevel(const std::string& component) const {
+  if (auto it = levels_.find(component); it != levels_.end()) {
+    return it->second;
+  }
+  return kDefaultMinLogLevel;
 }
 
 }  // namespace whirl

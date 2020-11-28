@@ -18,4 +18,6 @@ enum class LogLevel {
 
 std::string LogLevelToString(LogLevel level);
 
+LogLevel ParseLogLevel(const std::string& level_str);
+
 }  // namespace whirl
