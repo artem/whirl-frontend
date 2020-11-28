@@ -71,7 +71,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
  private:
   void Retry() {
-    WHIRL_FMT_LOG("Retry {}.{} request, attempt {}", channel_->Peer(), method_,
+    WHIRL_SIM_LOG("Retry {}.{} request, attempt {}", channel_->Peer(), method_,
                   attempt_);
 
     ++attempt_;
@@ -105,7 +105,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
   void ScheduleRetry(IExecutorPtr e) {
     if (IsExpired(scope_)) {
-      WHIRL_FMT_LOG("Context for {}.{} expired, stop retrying",
+      WHIRL_SIM_LOG("Context for {}.{} expired, stop retrying",
                     channel_->Peer(), method_);
       std::move(promise_).SetError(Error(RPCErrorCode::TransportError));
       return;

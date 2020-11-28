@@ -27,11 +27,11 @@ class Logger {
 #ifndef NDEBUG
 
 // TODO: at least one argument for format string
-#define WHIRL_FMT_LOG(...) logger_.Log(fmt::format(__VA_ARGS__))
+#define WHIRL_SIM_LOG(...) logger_.Log(fmt::format(__VA_ARGS__))
 
 #else
 
-#define WHIRL_FMT_LOG(...)
+#define WHIRL_SIM_LOG(...)
 
 #endif
 

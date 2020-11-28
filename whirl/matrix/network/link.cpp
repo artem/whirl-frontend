@@ -12,7 +12,7 @@ namespace whirl::net {
 void Link::Add(Packet packet) {
   if (packet.type == EPacketType::Data) {
     Address to{EndHostName(), packet.dest_port};
-    WHIRL_FMT_LOG("Send packet to {}: <{}>", to, packet.message);
+    WHIRL_SIM_LOG("Send packet to {}: <{}>", to, packet.message);
   }
   Add(std::move(packet), ChooseDeliveryTime(packet));
 }

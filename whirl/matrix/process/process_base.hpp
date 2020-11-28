@@ -43,7 +43,7 @@ class ProcessBase : public IActor {
   }
 
   void Shutdown() override {
-    WHIRL_FMT_LOG("Bytes allocated: {}", heap_.BytesAllocated());
+    WHIRL_SIM_LOG("Bytes allocated: {}", heap_.BytesAllocated());
 
     {
       auto g = heap_.Use();

@@ -53,7 +53,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   SetThisFiberTraceId(request.trace_id);
   SetRequestContext(request);
 
-  WHIRL_FMT_LOG("Process {} request from {}, id = {}", request.method,
+  WHIRL_SIM_LOG("Process {} request from {}, id = {}", request.method,
                 back->Peer(), request.id);
 
   auto service_it = services_.find(request.method.service);
@@ -74,12 +74,12 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   try {
     result = service->Invoke(request.method.name, request.input);
   } catch (rpc::BadRequest& e) {
-    WHIRL_FMT_LOG("Bad RPC request {} (id = {}): {}", request.method,
+    WHIRL_SIM_LOG("Bad RPC request {} (id = {}): {}", request.method,
                   request.id, e.what());
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
-    WHIRL_FMT_LOG("Exception in {} (id = {}): {}", request.method, request.id,
+    WHIRL_SIM_LOG("Exception in {} (id = {}): {}", request.method, request.id,
                   wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;

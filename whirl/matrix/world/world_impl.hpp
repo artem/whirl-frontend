@@ -88,16 +88,16 @@ class WorldImpl {
     AddActor(&network_);
     Scope(network_)->Start();
 
-    WHIRL_FMT_LOG("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
+    WHIRL_SIM_LOG("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
 
-    WHIRL_FMT_LOG("Starting cluster...");
+    WHIRL_SIM_LOG("Starting cluster...");
 
     // Start servers
     for (auto& server : cluster_) {
       Scope(server)->Start();
     }
 
-    WHIRL_FMT_LOG("Starting clients...");
+    WHIRL_SIM_LOG("Starting clients...");
 
     // Start clients
     for (auto& client : clients_) {
@@ -106,11 +106,11 @@ class WorldImpl {
 
     // Start adversary
     if (adversary_.has_value()) {
-      WHIRL_FMT_LOG("Starting adversary...");
+      WHIRL_SIM_LOG("Starting adversary...");
       Scope(*adversary_)->Start();
     }
 
-    WHIRL_FMT_LOG("World started");
+    WHIRL_SIM_LOG("World started");
   }
 
   bool Step() {
@@ -155,13 +155,13 @@ class WorldImpl {
       Scope(*adversary_)->Shutdown();
     }
 
-    WHIRL_FMT_LOG("Adversary stopped");
+    WHIRL_SIM_LOG("Adversary stopped");
 
     // Network
     digest_.Eat(network_.Digest());
     Scope(network_)->Shutdown();
 
-    WHIRL_FMT_LOG("Network stopped");
+    WHIRL_SIM_LOG("Network stopped");
 
     // Servers
     for (auto& server : cluster_) {
@@ -170,7 +170,7 @@ class WorldImpl {
     }
     cluster_.clear();
 
-    WHIRL_FMT_LOG("Servers stopped");
+    WHIRL_SIM_LOG("Servers stopped");
 
     // Clients
     for (auto& client : clients_) {
@@ -178,7 +178,7 @@ class WorldImpl {
     }
     clients_.clear();
 
-    WHIRL_FMT_LOG("Clients stopped");
+    WHIRL_SIM_LOG("Clients stopped");
 
     actors_.clear();
 
@@ -186,7 +186,7 @@ class WorldImpl {
 
     history_recorder_.Finalize();
 
-    WHIRL_FMT_LOG("Simulation stopped");
+    WHIRL_SIM_LOG("Simulation stopped");
 
     return Digest();
   }

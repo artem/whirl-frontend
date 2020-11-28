@@ -41,7 +41,7 @@ TransportChannel::Request TransportChannel::MakeRequest(
 void TransportChannel::SendRequest(Request request) {
   TLTraceContext tg{request.trace_id};
 
-  WHIRL_FMT_LOG("Request {}.{}", peer_, request.method);
+  WHIRL_SIM_LOG("Request {}.{}", peer_, request.method);
 
   ITransportSocketPtr& socket = GetTransportSocket();
 
@@ -60,14 +60,14 @@ void TransportChannel::SendRequest(Request request) {
 }
 
 void TransportChannel::ProcessResponse(const TransportMessage& message) {
-  WHIRL_FMT_LOG("Process response message from {}", peer_);
+  WHIRL_SIM_LOG("Process response message from {}", peer_);
 
   auto response = ParseResponse(message);
 
   auto request_it = requests_.find(response.request_id);
 
   if (request_it == requests_.end()) {
-    WHIRL_FMT_LOG("Request with id {} not found", response.request_id);
+    WHIRL_SIM_LOG("Request with id {} not found", response.request_id);
     return;  // Probably duplicated response message from transport layer?
   }
 
@@ -77,7 +77,7 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
   TLTraceContext tg{request.trace_id};
 
   if (response.IsOk()) {
-    WHIRL_FMT_LOG("Request {}.{} with id = {} completed", peer_, request.method,
+    WHIRL_SIM_LOG("Request {}.{} with id = {} completed", peer_, request.method,
                   response.request_id);
     std::move(request.promise).SetValue(response.result);
   } else {
@@ -95,7 +95,7 @@ void TransportChannel::LostPeer() {
   auto requests = std::move(requests_);
   requests_.clear();
 
-  WHIRL_FMT_LOG(
+  WHIRL_SIM_LOG(
       "Transport connection to peer {} lost, fail {} pending request(s)", peer_,
       requests.size());
 
@@ -118,13 +118,13 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
   if (socket_ && socket_->IsConnected()) {
     return socket_;
   }
-  WHIRL_FMT_LOG("Reconnect to {}", peer_);
+  WHIRL_SIM_LOG("Reconnect to {}", peer_);
   socket_ = transport_->ConnectTo(peer_, shared_from_this());
   return socket_;
 }
 
 void TransportChannel::Fail(Request& request, std::error_code e) {
-  WHIRL_FMT_LOG("Request {}.{} (id = {}) failed: {}", peer_, request.method,
+  WHIRL_SIM_LOG("Request {}.{} (id = {}) failed: {}", peer_, request.method,
                 request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));
 }
