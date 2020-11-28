@@ -18,6 +18,8 @@ struct KVCallPrinter {
       PrintSet(call, out);
     } else if (call.method == "Get") {
       PrintGet(call, out);
+    } else if (call.method == "CompareAndSet") {
+      PrintCas(call, out);
     }
 
     return out.str();
@@ -49,6 +51,22 @@ struct KVCallPrinter {
     // Return value
     if (call.IsCompleted()) {
       out << ": " << call.result.As<V>();
+    } else {
+      out << "?";
+    }
+  }
+
+  static void PrintCas(const Call& call, std::ostream& out) {
+    out << call.method;
+
+    // Arguments
+    auto [key, expected_value, target_value] = call.arguments.As<K, V, V>();
+    out << "(" << key << "," << expected_value << ", " << target_value << ")";
+
+    // Return value
+    if (call.IsCompleted()) {
+      bool succeeded = call.result.As<bool>();
+      out << ": " << (succeeded ? "True" : "False");
     } else {
       out << "?";
     }
