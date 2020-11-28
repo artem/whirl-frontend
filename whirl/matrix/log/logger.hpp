@@ -28,7 +28,7 @@ class Logger {
 
 // TODO: at least one argument for format string
 
-#define WHIRL_SIM_LOG_IMPL(level, ...) logger_.Log(LogLevel::Info, fmt::format(__VA_ARGS__))
+#define WHIRL_SIM_LOG_IMPL(level, ...) logger_.Log(level, fmt::format(__VA_ARGS__))
 
 #define WHIRL_SIM_LOG_DEBUG(...) WHIRL_SIM_LOG_IMPL(LogLevel::Debug, __VA_ARGS__)
 #define WHIRL_SIM_LOG_INFO(...)  WHIRL_SIM_LOG_IMPL(LogLevel::Info, __VA_ARGS__)
