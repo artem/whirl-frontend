@@ -6,15 +6,15 @@
 
 namespace whirl {
 
-#define LEVEL_TO_STR_CASE(level) \
+#define LEVEL_TO_STRING_CASE(level) \
   case LogLevel::level: return TO_STRING(level)
 
 std::string LogLevelToString(LogLevel level) {
   switch (level) {
-    LEVEL_TO_STR_CASE(Debug);
-    LEVEL_TO_STR_CASE(Info);
-    LEVEL_TO_STR_CASE(Warning);
-    LEVEL_TO_STR_CASE(Error);
+    LEVEL_TO_STRING_CASE(Debug);
+    LEVEL_TO_STRING_CASE(Info);
+    LEVEL_TO_STRING_CASE(Warning);
+    LEVEL_TO_STRING_CASE(Error);
     default: return "?";
   }
 }
