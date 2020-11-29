@@ -9,6 +9,15 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
+/* Value \in [-99, +inf]
+ * Effect:
+ * 0 - world time rate
+ * -75 - x0.25
+ * -50 - x0.5
+ * +100 - x2
+ * +200 - x3
+ */
+
 class Drift {
  public:
   Drift(int value) : drift_(value) {
