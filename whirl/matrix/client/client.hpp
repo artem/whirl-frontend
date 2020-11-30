@@ -71,6 +71,10 @@ class ClientBase : public INode {
     return services_.time_service->MonotonicNow();
   }
 
+  Uid GenerateUid() const {
+    return services_.uids->Generate();
+  }
+
   // Local services
 
   ThreadsRuntime& Threads() {
