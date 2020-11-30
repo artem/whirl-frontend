@@ -22,13 +22,42 @@ int KVDefaultValue<int>() {
 
 //////////////////////////////////////////////////////////////////////
 
+template <typename K, typename V>
+class KVStoreState {
+ public:
+  void Set(K k, V v) {
+    map_.insert_or_assign(k, v);
+  }
+
+  V Get(K k) const {
+    auto it = map_.find(k);
+    if (it != map_.end()) {
+      return it->second;
+    }
+    return KVDefaultValue<V>();
+  }
+
+  V Cas(K k, V expected_v, V target_v) {
+    V old = Get(k);
+    if (old == expected_v) {
+      Set(k, target_v);
+    }
+    return old;
+  }
+
+ private:
+  std::map<K, V> map_;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 // KV Store sequential specification
 // --InitialState-> S_0 --Apply--> S_1 --Apply-> S_2 ...
 
 template <typename K, typename V>
 class KVStoreModel {
  public:
-  using State = std::map<K, V>;
+  using State = KVStoreState<K, V>;
 
   static State InitialState() {
     return {};
@@ -48,27 +77,30 @@ class KVStoreModel {
       auto [k, v] = arguments.As<K, V>();
 
       State next{current};
-      next.insert_or_assign(k, v);
+      next.Set(k, v);
       return {true, Value::Void(), std::move(next)};
 
     } else if (method == "Get") {
       // Get
 
       auto [k] = arguments.As<K>();
+      V v = current.Get(k);
+      return {true, Value::Make(v), current};
 
-      auto k_it = current.find(k);
-      if (k_it == current.end()) {
-        return {true, Value::Make(KVDefaultValue<V>()), current};
-      } else {
-        return {true, Value::Make(k_it->second), current};
-      }
+    } else if (method == "Cas") {
+      // Cas aka Compare-And-Set
+
+      auto [k, expected_v, target_v] = arguments.As<K, V, V>();
+      State next{current};
+      V old = next.Cas(k, expected_v, target_v);
+      return {true, Value::Make(old), std::move(next)};
     }
 
     WHEELS_UNREACHABLE();
   }
 
   static bool IsMutation(const Call& call) {
-    return call.method == "Set";
+    return call.method == "Set" || call.method == "Cas";
   }
 
   static bool IsReadOnly(const Call& call) {
