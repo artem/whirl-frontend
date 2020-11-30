@@ -41,7 +41,7 @@ TransportChannel::Request TransportChannel::MakeRequest(
 void TransportChannel::SendRequest(Request request) {
   TLTraceContext tg{request.trace_id};
 
-  WHIRL_SIM_LOG("Request {}.{}", peer_, request.method);
+  WHIRL_SIM_LOG_INFO("Request {}.{}", peer_, request.method);
 
   ITransportSocketPtr& socket = GetTransportSocket();
 
@@ -60,7 +60,7 @@ void TransportChannel::SendRequest(Request request) {
 }
 
 void TransportChannel::ProcessResponse(const TransportMessage& message) {
-  WHIRL_SIM_LOG("Process response message from {}", peer_);
+  WHIRL_SIM_LOG_DEBUG("Process response message from {}", peer_);
 
   auto response = ParseResponse(message);
 
