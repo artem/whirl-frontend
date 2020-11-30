@@ -2,6 +2,8 @@
 
 #include <whirl/matrix/history/history.hpp>
 
+#include <whirl/matrix/history/printers/kv.hpp>
+
 #include <map>
 
 namespace whirl::histories {
