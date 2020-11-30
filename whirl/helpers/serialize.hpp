@@ -79,4 +79,6 @@ T Deserialize(const std::string& bytes) {
     a(__VA_ARGS__);            \
   };
 
+#define WHIRL_SERIALIZE(...) SERIALIZE(__VA_ARGS__)
+
 }  // namespace whirl
