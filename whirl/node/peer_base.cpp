@@ -14,6 +14,12 @@ rpc::TChannel& PeerBase::PeerChannel(size_t index) const {
   return channels_.at(index);
 }
 
+rpc::TChannel& PeerBase::SelfChannel() const {
+  // TODO: more reliable impl
+  size_t self_index = Id() - 1;
+  return PeerChannel(self_index);
+}
+
 const std::string& PeerBase::PeerName(size_t index) const {
   return PeerChannel(index).Peer();
 }
