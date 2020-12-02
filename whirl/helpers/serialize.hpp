@@ -73,12 +73,12 @@ T Deserialize(const std::string& bytes) {
 
 //////////////////////////////////////////////////////////////////////
 
-#define SERIALIZE(...)         \
+#define WHIRL_SERIALIZE(...)         \
   template <typename Archive>  \
   void serialize(Archive& a) { \
     a(__VA_ARGS__);            \
   };
 
-#define WHIRL_SERIALIZE(...) SERIALIZE(__VA_ARGS__)
+#define SERIALIZE(...) WHIRL_SERIALIZE(__VA_ARGS__)
 
 }  // namespace whirl
