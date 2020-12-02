@@ -21,8 +21,7 @@ class LoggerProxy : public INodeLogger {
       case NodeLogLevel::Debug: return LogLevel::Debug;
       case NodeLogLevel::Info: return LogLevel::Info;
       case NodeLogLevel::Error: return LogLevel::Error;
-      default:
-        WHEELS_PANIC("Node log level not supported");
+      default: WHEELS_PANIC("Node log level not supported");
     }
   }
 
