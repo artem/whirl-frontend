@@ -48,7 +48,7 @@ struct StampedValue {
   }
 
   // Serialization support for local storage and RPC
-  SERIALIZE(value, ts)
+  WHIRL_SERIALIZE(CEREAL_NVP(value), CEREAL_NVP(ts))
 };
 
 // For logging
@@ -92,7 +92,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   void Set(Key k, Value v) {
     Timestamp write_ts = ChooseWriteTimestamp();
-    NODE_LOG("Write timestamp: {}", write_ts);
+    NODE_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
@@ -116,7 +116,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     auto values = Await(Quorum(std::move(reads), Majority())).Value();
 
     for (size_t i = 0; i < values.size(); ++i) {
-      NODE_LOG("{}-th value in read quorum: {}", i + 1, values[i]);
+      NODE_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
     }
 
     auto winner = FindMostRecentValue(values);
@@ -140,7 +140,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   }
 
   void Update(Key k, StampedValue v) {
-    NODE_LOG("Write '{}' -> {}", k, v);
+    NODE_LOG_INFO("Write '{}' -> {}", k, v);
     kv_.Set(k, v);
   }
 
@@ -219,14 +219,14 @@ class KVClient final : public ClientBase {
       if (RandomNumber() % 2 == 0) {
         Key key = ChooseKey();
         Value value = RandomNumber(1, 100);
-        NODE_LOG("Execute Set({}, {})", key, value);
+        NODE_LOG_INFO("Execute Set({}, {})", key, value);
         kv_store.Set(key, value);
-        NODE_LOG("Set completed");
+        NODE_LOG_INFO("Set completed");
       } else {
         Key key = ChooseKey();
-        NODE_LOG("Execute Get({})", key);
+        NODE_LOG_INFO("Execute Get({})", key);
         Value result = kv_store.Get(key);
-        NODE_LOG("Get({}) -> {}", key, result);
+        NODE_LOG_INFO("Get({}) -> {}", key, result);
       }
 
       // Sleep for some time
