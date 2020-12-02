@@ -68,6 +68,10 @@ class NodeMethodsBase {
     return services_.threads;
   }
 
+  void Spawn(ThreadRoutine routine) {
+    Threads().Spawn(std::move(routine));
+  }
+
   void SleepFor(Duration delay) {
     Threads().SleepFor(delay);
   }
