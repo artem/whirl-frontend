@@ -59,6 +59,7 @@ std::string CurrentActorName();
 namespace detail {
 
 std::any GetGlobal(const std::string& name);
+void SetGlobal(const std::string& name, std::any value);
 
 }  // namespace detail
 
@@ -66,6 +67,47 @@ template <typename T>
 T GetGlobal(const std::string& name) {
   return std::any_cast<T>(detail::GetGlobal(name));
 }
+
+template <typename T>
+void SetGlobal(const std::string& name, T value) {
+  detail::SetGlobal(name, std::any{std::move(value)});
+}
+
+template <typename T>
+class GlobalVar {
+ public:
+  GlobalVar(const std::string name)
+    : name_(std::move(name)) {
+  }
+
+  void Set(T value) {
+    SetGlobal(name_, std::move(value));
+  }
+
+  T Get() const {
+    return GetGlobal<T>(name_);
+  }
+
+ private:
+  std::string name_;
+};
+
+class GlobalCounter : protected GlobalVar<size_t> {
+ public:
+  GlobalCounter(std::string name)
+    : GlobalVar(name) {
+  }
+
+  size_t Increment() {
+    size_t old = Get();
+    Set(old + 1);
+    return old + 1;
+  }
+
+  size_t Get() const {
+    return GlobalVar::Get();
+  }
+};
 
 //////////////////////////////////////////////////////////////////////
 

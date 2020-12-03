@@ -80,6 +80,10 @@ std::any GetGlobal(const std::string& name) {
   return WorldImpl::Access()->GetGlobal(name);
 }
 
+void SetGlobal(const std::string& name, std::any value) {
+  return WorldImpl::Access()->SetGlobal(name, std::move(value));
+}
+
 }  // namespace detail
 
 }  // namespace whirl
