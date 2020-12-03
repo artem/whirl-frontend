@@ -13,6 +13,4 @@ struct IFaultyNetwork {
   virtual void Heal() = 0;
 };
 
-IFaultyNetwork& AccessFaultyNetwork();
-
 }  // namespace whirl

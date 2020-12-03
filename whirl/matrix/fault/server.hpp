@@ -25,6 +25,4 @@ struct IFaultyServer {
   virtual void AdjustWallClock() = 0;
 };
 
-IFaultyServer& AccessFaultyServer(size_t index);
-
 }  // namespace whirl
