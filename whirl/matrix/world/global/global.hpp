@@ -98,10 +98,14 @@ class GlobalCounter : protected GlobalVar<size_t> {
     : GlobalVar(name) {
   }
 
-  size_t Increment() {
+  size_t Add(size_t d) {
     size_t old = Get();
-    Set(old + 1);
-    return old + 1;
+    Set(old + d);
+    return old;
+  }
+
+  size_t Increment() {
+    return Add(1);
   }
 
   size_t Get() const {
