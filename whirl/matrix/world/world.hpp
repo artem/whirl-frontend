@@ -39,6 +39,12 @@ class World {
     SetGlobalImpl(key, value);
   }
 
+  template <typename T>
+  T GetGlobal(const std::string& key) {
+    auto value = GetGlobalImpl(key);
+    return std::any_cast<T>(value);
+  }
+
   void WriteLogTo(std::ostream& out);
 
   void Start();
@@ -60,6 +66,7 @@ class World {
 
  private:
   void SetGlobalImpl(const std::string& key, std::any value);
+  std::any GetGlobalImpl(const std::string& key);
 
  private:
   std::unique_ptr<WorldImpl> impl_;

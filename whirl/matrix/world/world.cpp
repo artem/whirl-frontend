@@ -86,4 +86,8 @@ void World::SetGlobalImpl(const std::string& key, std::any value) {
   impl_->SetGlobal(key, value);
 }
 
+std::any World::GetGlobalImpl(const std::string& key) {
+  return impl_->GetGlobal(key);
+}
+
 }  // namespace whirl
