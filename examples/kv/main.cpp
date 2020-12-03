@@ -10,6 +10,7 @@
 #include <whirl/matrix/history/printers/kv.hpp>
 #include <whirl/matrix/history/checker/check.hpp>
 #include <whirl/matrix/history/models/kv.hpp>
+#include <whirl/matrix/test/random.hpp>
 
 #include <await/fibers/core/id.hpp>
 #include <whirl/rpc/impl/id.hpp>
@@ -253,22 +254,23 @@ void FailTest() {
 
 //////////////////////////////////////////////////////////////////////
 
-// [3, 5]
-size_t NumberOfReplicas(size_t seed) {
-  return 3 + seed % 3;
-}
-
-// [1, 2]
-size_t NumberOfKeys(size_t seed) {
-  return 1 + seed % 2;
-}
-
 // Seed -> simulation digest
 size_t RunSimulation(size_t seed) {
   static const size_t kTimeLimit = 10000;
-  static const size_t kCompletedCalls = 7;
+  static const size_t kRequestsThreshold = 7;
+
+  Random random{seed};
+
+  const size_t replicas = random.Get(3, 5);
+  const size_t clients = random.Get(2, 3);
+  const size_t keys = random.Get(1, 2);
 
   std::cout << "Simulation seed: " << seed << std::endl;
+
+  std::cout << "Parameters: "
+    << "replicas = " << replicas << ", "
+    << "clients = " << clients << ", "
+    << "keys = " << keys << std::endl;
 
   // Reset RPC and fiber ids
   await::fibers::ResetIds();
@@ -278,23 +280,23 @@ size_t RunSimulation(size_t seed) {
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
-  world.AddServers(NumberOfReplicas(seed), node);
+  world.AddServers(replicas, node);
 
   // Clients
   auto client = MakeNode<KVClient>();
-  world.AddClients(3, client);
+  world.AddClients(clients, client);
 
   // Log
   std::stringstream log;
   world.WriteLogTo(log);
 
   // Globals
-  world.SetGlobal("num_keys", NumberOfKeys(seed));
+  world.SetGlobal("num_keys", keys);
   world.InitCounter("requests");
 
   // Run simulation
   world.Start();
-  while (world.GetCounter("requests") < kCompletedCalls &&
+  while (world.GetCounter("requests") < kRequestsThreshold &&
          world.TimeElapsed() < kTimeLimit) {
     world.Step();
   }
@@ -308,7 +310,7 @@ size_t RunSimulation(size_t seed) {
             << ", steps: " << world.StepCount() << std::endl;
 
   // Time limit exceeded
-  if (world.GetCounter("requests") < kCompletedCalls) {
+  if (world.GetCounter("requests") < kRequestsThreshold) {
     // Log
     std::cout << "Log:" << std::endl << log.str() << std::endl;
     std::cout << "Simulation time limit exceeded" << std::endl;
