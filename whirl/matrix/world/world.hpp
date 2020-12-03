@@ -34,16 +34,29 @@ class World {
 
   void SetAdversary(adversary::Strategy strategy);
 
+  // Globals
+
   template <typename T>
   void SetGlobal(const std::string& key, T value) {
     SetGlobalImpl(key, value);
   }
 
   template <typename T>
-  T GetGlobal(const std::string& key) {
+  T GetGlobal(const std::string& key) const {
     auto value = GetGlobalImpl(key);
     return std::any_cast<T>(value);
   }
+
+  // Global counters
+
+  void InitCounter(const std::string& name) {
+    SetGlobal(name, size_t{0});
+  }
+
+  size_t GetCounter(const std::string& name) const {
+    return GetGlobal<size_t>(name);
+  }
+
 
   void WriteLogTo(std::ostream& out);
 
@@ -66,7 +79,7 @@ class World {
 
  private:
   void SetGlobalImpl(const std::string& key, std::any value);
-  std::any GetGlobalImpl(const std::string& key);
+  std::any GetGlobalImpl(const std::string& key) const;
 
  private:
   std::unique_ptr<WorldImpl> impl_;

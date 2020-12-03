@@ -229,6 +229,8 @@ class KVClient final : public ClientBase {
         NODE_LOG_INFO("Get({}) -> {}", key, result);
       }
 
+      GlobalCounter{"requests"}.Increment();
+
       // Sleep for some time
       Threads().SleepFor(RandomNumber(1, 100));
     }
@@ -288,10 +290,11 @@ size_t RunSimulation(size_t seed) {
 
   // Globals
   world.SetGlobal("num_keys", NumberOfKeys(seed));
+  world.InitCounter("requests");
 
   // Run simulation
   world.Start();
-  while (world.NumCompletedCalls() < kCompletedCalls &&
+  while (world.GetCounter("requests") < kCompletedCalls &&
          world.TimeElapsed() < kTimeLimit) {
     world.Step();
   }
@@ -305,12 +308,15 @@ size_t RunSimulation(size_t seed) {
             << ", steps: " << world.StepCount() << std::endl;
 
   // Time limit exceeded
-  if (world.NumCompletedCalls() < kCompletedCalls) {
+  if (world.GetCounter("requests") < kCompletedCalls) {
     // Log
     std::cout << "Log:" << std::endl << log.str() << std::endl;
     std::cout << "Simulation time limit exceeded" << std::endl;
     std::exit(1);
   }
+
+  std::cout << "Requests completed: "
+            << world.GetCounter("requests") << std::endl;
 
   // Check linearizability
   const auto history = world.History();
