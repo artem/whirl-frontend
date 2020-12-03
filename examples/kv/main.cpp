@@ -5,11 +5,12 @@
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/world/global/global.hpp>
 #include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/history/printers/kv.hpp>
 #include <whirl/matrix/history/checker/check.hpp>
 #include <whirl/matrix/history/models/kv.hpp>
+#include <whirl/matrix/world/global/random.hpp>
+#include <whirl/matrix/world/global/vars.hpp>
 #include <whirl/matrix/test/random.hpp>
 
 #include <await/fibers/core/id.hpp>
