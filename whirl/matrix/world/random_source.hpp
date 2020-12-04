@@ -2,8 +2,6 @@
 
 #include <random>
 
-#include <whirl/matrix/log/logger.hpp>
-
 namespace whirl {
 
 class RandomSource {
@@ -24,14 +22,11 @@ class RandomSource {
   }
 
   ResultType Next() {
-    // WHIRL_LLOG("Random number generated");
     return twister_();
   }
 
  private:
   Twister twister_;
-
-  Logger logger_{"Random"};
 };
 
 }  // namespace whirl
