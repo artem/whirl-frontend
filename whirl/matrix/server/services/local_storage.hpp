@@ -10,7 +10,7 @@ namespace whirl {
 
 class LocalStorageBackend : public ILocalStorageBackend {
  public:
-  LocalStorageBackend(LocalBytesStorage& impl) : impl_(impl) {
+  LocalStorageBackend(PersistentStorage& impl) : impl_(impl) {
   }
 
   void Set(const std::string& key, const Bytes& value) override {
@@ -22,7 +22,7 @@ class LocalStorageBackend : public ILocalStorageBackend {
   }
 
  private:
-  LocalBytesStorage& impl_;
+  PersistentStorage& impl_;
 };
 
 }  // namespace whirl

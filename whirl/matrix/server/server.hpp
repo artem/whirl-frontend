@@ -88,7 +88,7 @@ class Server : public IActor, public IFaultyServer, public net::INetServer {
 
   WallClock wall_clock_;
   MonotonicClock monotonic_clock_;
-  LocalBytesStorage persistent_storage_;
+  PersistentStorage persistent_storage_;
 
   // Node process
 
