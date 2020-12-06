@@ -81,6 +81,8 @@ class WorldImpl {
   void Start() {
     WorldGuard g(this);
 
+    WHIRL_SIM_LOG("Seed: {}", seed_);
+
     SetStartTime();
     start_time_ = clock_.Now();
 
