@@ -49,7 +49,9 @@ class ClientBase : public INode {
     return channel_;
   }
 
-  // Shortcuts for common functions
+  // Common functions
+
+  // Randomness
 
   RandomUInt RandomNumber() const {
     return services_.random->RandomNumber();
@@ -63,6 +65,8 @@ class ClientBase : public INode {
     return lo + RandomNumber(hi - lo);
   }
 
+  // Time
+
   TimePoint WallTimeNow() const {
     return services_.time_service->WallTimeNow();
   }
@@ -70,6 +74,22 @@ class ClientBase : public INode {
   TimePoint MonotonicNow() const {
     return services_.time_service->MonotonicNow();
   }
+
+  // Threads
+
+  void Spawn(ThreadRoutine routine) {
+    Threads().Spawn(std::move(routine));
+  }
+
+  void Yield() {
+    Threads().Yield();
+  }
+
+  void SleepFor(Duration d) {
+    Threads().SleepFor(d);
+  }
+
+  // Uids
 
   Uid GenerateUid() const {
     return services_.uids->Generate();
