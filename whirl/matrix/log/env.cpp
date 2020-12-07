@@ -38,4 +38,13 @@ LogLevels GetLogLevelsFromEnv() {
   return ParseLogLevels(levels_env);
 }
 
+
+std::optional<std::string> GetLogPathFromEnv() {
+  char* path = std::getenv("WHIRL_LOG_FILE");
+  if (!path) {
+    return std::nullopt;
+  }
+  return std::string(path);
+}
+
 }  // namespace whirl

@@ -1,7 +1,5 @@
 #include <whirl/matrix/log/log.hpp>
 
-#include <whirl/helpers/string_utils.hpp>
-
 #include <wheels/support/assert.hpp>
 
 #include <iostream>
@@ -21,7 +19,7 @@ static std::string ToWidth(const std::string& s, size_t width) {
 
 //////////////////////////////////////////////////////////////////////
 
-void Log::WriteTo(const LogEvent& event, std::ostream& out) {
+static void WriteTo(const LogEvent& event, std::ostream& out) {
   out << "[T " << event.time << " | " << event.step << "]"
       << "\t"
       << "[" << ToWidth(LogLevelToString(event.level), 7) << "]"
@@ -36,6 +34,27 @@ void Log::WriteTo(const LogEvent& event, std::ostream& out) {
   }
 
   out << "\t" << event.message;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+Log::Log() : out_(&std::cout) {
+#ifndef NDEBUG
+  file_ = GetLogFile();
+#endif
+  InitLevels();
+}
+
+void Log::Write(const LogEvent& event) {
+  std::ostringstream event_out;
+  WriteTo(event, event_out);
+  std::string event_str = event_out.str();
+
+  *out_ << event_str << std::endl;
+
+#ifndef NDEBUG
+  file_ << event_str << std::endl;
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////
