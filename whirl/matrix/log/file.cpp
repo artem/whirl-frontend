@@ -21,9 +21,13 @@ class LogFileManager {
   }
 
   std::ofstream NextLog() {
-    if (++sims_ % 10 == 0) {
+    static const size_t kSimsPerLogFile = 10;
+
+    if (++sims_ % kSimsPerLogFile == 0) {
       ResetLogFile();
     }
+
+    // Open for append
     std::ofstream log{log_path_, std::ofstream::out | std::ofstream::app};
     // Write simulation separator
     log << std::string(80, '-') << std::endl;
@@ -45,10 +49,9 @@ class LogFileManager {
     }
 
     // Write header
-    std::ofstream fout(log_path_);
-    fout << "Whirl simulator log" << std::endl;
-    // TODO: date/time
-    fout.close();
+    std::ofstream log(log_path_);
+    log << "Whirl simulator log" << std::endl;
+    log.close();
   }
 
   static fs::path LogPath() {
