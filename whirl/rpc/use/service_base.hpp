@@ -17,16 +17,18 @@ class ServiceBase : public IService {
   // See RPC_REGISTER_METHOD macro
   using ThisService = TService;
 
+  using MethodName = std::string;
+
  public:
-  bool Has(const std::string& method) const override {
-    return methods_.find(method) != methods_.end();
+  bool Has(const MethodName& name) const override {
+    return methods_.find(name) != methods_.end();
   }
 
-  BytesValue Invoke(const std::string& method,
+  BytesValue Invoke(const MethodName& name,
                     const BytesValue& input) override {
-    auto method_it = methods_.find(method);
+    auto method_it = methods_.find(name);
     WHEELS_VERIFY(method_it != methods_.end(),
-                  "RPC method not found: " << method);
+                  "RPC method not found: " << name);
 
     auto& invoker = method_it->second;
     return invoker(input);
@@ -43,7 +45,7 @@ class ServiceBase : public IService {
   }
 
   template <typename R, typename... Args>
-  void RegisterRPCMethod(const std::string& name,
+  void RegisterRPCMethod(const MethodName& name,
                          R (TService::*method)(Args...)) {
     TService* self = static_cast<TService*>(this);
 
@@ -62,7 +64,7 @@ class ServiceBase : public IService {
  private:
   using MethodInvoker = std::function<BytesValue(BytesValue)>;
 
-  std::map<std::string, MethodInvoker> methods_;
+  std::map<MethodName, MethodInvoker> methods_;
 };
 
 }  // namespace whirl::rpc
