@@ -1,8 +1,7 @@
 #pragma once
 
 #include <whirl/rpc/impl/channel.hpp>
-
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/rpc/impl/input.hpp>
 
 #include <await/futures/helpers.hpp>
 
@@ -60,9 +59,7 @@ class TChannel {
   detail::TCallResult Call(const std::string& method_str,
                            Arguments&&... arguments) {
     auto method = Method::Parse(method_str);
-    auto packed_arguments =
-        std::make_tuple(std::forward<Arguments>(arguments)...);
-    auto input = Serialize(packed_arguments);
+    auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
     return detail::TCallResult{impl_->Call(method, input)};
   }
 

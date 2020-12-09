@@ -1,37 +1,22 @@
 #pragma once
 
-#include <whirl/rpc/impl/bytes_value.hpp>
-#include <whirl/rpc/impl/exceptions.hpp>
+#include <whirl/rpc/impl/input.hpp>
+
+#include <whirl/helpers/serialize.hpp>
+
+#include <tuple>
 
 namespace whirl::rpc {
-
-//////////////////////////////////////////////////////////////////////
 
 // Typed method helpers
 
 namespace detail {
 
-template <typename ArgsTuple>
-ArgsTuple DeserializeInput(const BytesValue& input) {
-  try {
-    return Deserialize<ArgsTuple>(input);
-  } catch (...) {
-    throw BadRequest("Arguments mismatch");
-  }
-}
-
-template <typename... Types>
-struct Pack {
-  using Tuple = std::tuple<typename std::decay<Types>::type...>;
-};
-
 template <typename Result, typename... Args>
 struct InvokeHelper {
   template <typename F>
   static BytesValue Invoke(F f, const BytesValue& input) {
-    using ArgsTuple = typename Pack<Args...>::Tuple;
-
-    auto args = DeserializeInput<ArgsTuple>(input);
+    auto args = DeserializeInput<Args...>(input);
     Result result = std::apply(std::move(f), std::move(args));
     return Serialize(result);
   }
@@ -41,9 +26,7 @@ template <typename... Args>
 struct InvokeHelper<void, Args...> {
   template <typename F>
   static BytesValue Invoke(F f, const BytesValue& input) {
-    using ArgsTuple = typename Pack<Args...>::Tuple;
-
-    auto args = DeserializeInput<ArgsTuple>(input);
+    auto args = DeserializeInput<Args...>(input);
     std::apply(std::move(f), std::move(args));
     return "";
   }
