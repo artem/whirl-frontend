@@ -22,6 +22,15 @@ target_include_directories(whirl PUBLIC ${cereal_INCLUDE_DIR})
 
 # --------------------------------------------------------------------
 
+# Workaround for std::filesystem
+
+if(WHIRL_NO_FS)
+    message(STATUS "No std::filesystem")
+    target_compile_definitions(whirl PUBLIC WHIRL_NO_FS=1)
+endif()
+
+# --------------------------------------------------------------------
+
 # Linters
 
 if(WHIRL_DEVELOPER)

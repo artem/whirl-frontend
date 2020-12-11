@@ -2,7 +2,9 @@
 
 #include <whirl/matrix/log/env.hpp>
 
-#include <wheels/support/panic.hpp>
+#include <wheels/support/assert.hpp>
+
+#if !defined(WHIRL_NO_FS)
 
 #include <filesystem>
 #include <cstdlib>
@@ -78,3 +80,17 @@ std::ofstream GetLogFile() {
 }
 
 }  // namespace whirl
+
+#else
+
+namespace whirl {
+
+std::ofstream GetLogFile() {
+  auto log_path = GetLogPathFromEnv();
+  WHEELS_VERIFY(log_path.has_value(), "Set simulator log path via WHIRL_LOG_FILE env var");
+  return std::ofstream(*log_path, std::ofstream::out);
+}
+
+}  // namespace whirl
+
+#endif
