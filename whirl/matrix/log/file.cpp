@@ -4,11 +4,12 @@
 
 #include <wheels/support/assert.hpp>
 
+#include <iostream>
+
 #if !defined(WHIRL_NO_FS)
 
 #include <filesystem>
 #include <cstdlib>
-#include <iostream>
 
 namespace fs = std::filesystem;
 
