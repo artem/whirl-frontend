@@ -53,9 +53,9 @@ struct AdversaryBase {
 template <typename TAdversary>
 Strategy MakeStrategy() {
   auto strategy = [](ThreadsRuntime& runtime) {
-    TAdversary instance{runtime};
-    instance.Start();
-    runtime.SleepFor(100500);
+    // Intentional memory leak
+    auto* instance = new TAdversary{runtime};
+    instance->Start();
   };
 
   return strategy;
