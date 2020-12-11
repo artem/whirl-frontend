@@ -12,6 +12,8 @@
 
 namespace whirl {
 
+//////////////////////////////////////////////////////////////////////
+
 class ClientBase : public INode {
  public:
   ClientBase(NodeServices services) : services_(std::move(services)) {
@@ -21,15 +23,17 @@ class ClientBase : public INode {
     Threads().Spawn([this]() { Main(); });
   }
 
- private:
-  void RandomPause() {
-    Threads().SleepFor(RandomNumber(50));
-  }
-
-  rpc::IChannelPtr MakeClientChannel();
+ protected:
+  rpc::IChannelPtr MakeTransportChannel(const std::string& peer);
+  virtual rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
     cluster_ = services_.discovery->GetCluster();
+  }
+
+ private:
+  void RandomPause() {
+    Threads().SleepFor(RandomNumber(50));
   }
 
   void ConnectToClusterNodes() {
@@ -109,6 +113,16 @@ class ClientBase : public INode {
     return services_.logger;
   }
 
+  const rpc::IClientPtr& RPCClient() const {
+    return services_.rpc_client;
+  }
+
+  // Cluster
+
+  const std::vector<std::string>& Cluster() const {
+    return cluster_;
+  }
+
  protected:
   // Override this methods
 
@@ -126,6 +140,13 @@ class ClientBase : public INode {
 
  protected:
   Logger logger_{"Client"};
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class ExactlyOnceClientBase : public ClientBase {
+ protected:
+  rpc::IChannelPtr MakeClientChannel() override;
 };
 
 }  // namespace whirl
