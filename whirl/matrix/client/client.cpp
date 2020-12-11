@@ -52,7 +52,7 @@ rpc::IChannelPtr ExactlyOnceClientBase::MakeClientChannel() {
   auto retries = WithRetries(std::move(random), TimeService());
   auto history = MakeHistoryChannel(std::move(retries));
 
-  return retries;
+  return history;
 }
 
 }  // namespace whirl
