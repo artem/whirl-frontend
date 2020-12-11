@@ -231,7 +231,7 @@ class KVClient final : public ClientBase {
         NODE_LOG_INFO("Get({}) -> {}", key, result);
       }
 
-      GlobalCounter{"requests"}.Increment();
+      GlobalCounter("requests").Increment();
 
       // Sleep for some time
       Threads().SleepFor(RandomNumber(1, 100));
