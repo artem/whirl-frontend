@@ -8,6 +8,11 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
+// Set before first simulation
+void SetHeapSize(size_t bytes);
+
+//////////////////////////////////////////////////////////////////////
+
 class Block {
  public:
   char* UserAddr() const {
@@ -61,6 +66,7 @@ class Heap {
  private:
   void ZeroFillTo(char* pos);
   char* AllocateNewBlock(size_t bytes);
+  bool Overflow(size_t bytes) const;
   static char* WriteBlockHeader(char* addr, size_t size);
 
  private:

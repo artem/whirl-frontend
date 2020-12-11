@@ -2,12 +2,19 @@
 
 #include <wheels/support/assert.hpp>
 
+// TODO: remove
+#include <whirl/matrix/memory/allocator.hpp>
+
 #include <cstring>
 #include <vector>
 
 namespace whirl {
 
 using wheels::MmapAllocation;
+
+//////////////////////////////////////////////////////////////////////
+
+static const size_t kPageSize = 4096;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -30,12 +37,18 @@ class HeapsAllocator {
     pool_.push_back(std::move(heap));
   }
 
- private:
-  MmapAllocation AllocateNewHeap() {
-    return MmapAllocation::AllocatePages(kHeapSizeInPages);
+  void SetHeapSize(size_t bytes) {
+    size_t pages = (bytes / kPageSize) + 1;
+    heap_size_pages_ = pages;
   }
 
  private:
+  MmapAllocation AllocateNewHeap() {
+    return MmapAllocation::AllocatePages(heap_size_pages_);
+  }
+
+ private:
+  size_t heap_size_pages_{kHeapSizeInPages};
   std::vector<MmapAllocation> pool_;
 };
 
@@ -49,6 +62,11 @@ static MmapAllocation AllocateHeapMemory() {
 
 static void ReleaseHeapMemory(MmapAllocation heap) {
   heaps.Release(std::move(heap));
+}
+
+// Set before first simulation
+void SetHeapSize(size_t bytes) {
+  heaps.SetHeapSize(bytes);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -85,8 +103,10 @@ void Heap::ZeroFillTo(char* pos) {
 }
 
 char* Heap::AllocateNewBlock(size_t bytes) {
-  WHEELS_VERIFY(next_ + 8 + bytes < heap_.End(),
-                "Cannot allocate " << bytes << " bytes: heap overflow");
+  if (Overflow(bytes)) {
+    GlobalHeapScope g;
+    WHEELS_PANIC("Cannot allocate " << bytes << " bytes: heap overflow");
+  }
 
   // Incrementally fill heap with zeroes
   ZeroFillTo(next_ + 8 + bytes);
@@ -95,6 +115,10 @@ char* Heap::AllocateNewBlock(size_t bytes) {
   char* user_addr = WriteBlockHeader(next_, bytes);
   next_ = user_addr + bytes;
   return user_addr;
+}
+
+bool Heap::Overflow(size_t bytes) const {
+  return next_ + 8 + bytes >= heap_.End();
 }
 
 char* Heap::WriteBlockHeader(char* addr, size_t size) {
