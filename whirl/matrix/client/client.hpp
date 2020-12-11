@@ -145,6 +145,11 @@ class ClientBase : public INode {
 //////////////////////////////////////////////////////////////////////
 
 class ExactlyOnceClientBase : public ClientBase {
+ public:
+  ExactlyOnceClientBase(NodeServices services)
+      : ClientBase(std::move(services)) {
+  }
+
  protected:
   rpc::IChannelPtr MakeClientChannel() override;
 };
