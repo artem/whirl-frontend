@@ -9,7 +9,6 @@
 #include <whirl/matrix/history/printers/kv.hpp>
 #include <whirl/matrix/history/checker/check.hpp>
 #include <whirl/matrix/history/models/kv.hpp>
-#include <whirl/matrix/world/global/random.hpp>
 #include <whirl/matrix/world/global/vars.hpp>
 #include <whirl/matrix/test/random.hpp>
 
@@ -202,10 +201,6 @@ class KVBlockingStub {
 
 static const std::vector<std::string> kKeys({"a", "b", "c"});
 
-const std::string& ChooseKey() {
-  return kKeys.at(GlobalRandomNumber(GetGlobal<size_t>("num_keys")));
-}
-
 //////////////////////////////////////////////////////////////////////
 
 class KVClient final : public ClientBase {
@@ -234,8 +229,13 @@ class KVClient final : public ClientBase {
       GlobalCounter("requests").Increment();
 
       // Sleep for some time
-      Threads().SleepFor(RandomNumber(1, 100));
+      SleepFor(RandomNumber(1, 100));
     }
+  }
+
+ private:
+  const std::string& ChooseKey() const {
+    return kKeys.at(RandomNumber(GetGlobal<size_t>("keys")));
   }
 };
 
@@ -292,7 +292,7 @@ size_t RunSimulation(size_t seed) {
   world.WriteLogTo(log);
 
   // Globals
-  world.SetGlobal("num_keys", keys);
+  world.SetGlobal("keys", keys);
   world.InitCounter("requests", 0);
 
   // Run simulation
