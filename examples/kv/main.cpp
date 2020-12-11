@@ -66,8 +66,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
                      public NodeBase,
                      public std::enable_shared_from_this<KVNode> {
  public:
-  KVNode(NodeServices services)
-      : NodeBase(std::move(services)), kv_(StorageBackend(), "kv") {
+  KVNode(NodeServices runtime)
+      : NodeBase(std::move(runtime)), kv_(StorageBackend(), "kv") {
   }
 
  protected:
@@ -205,7 +205,7 @@ static const std::vector<std::string> kKeys({"a", "b", "c"});
 
 class KVClient final : public ClientBase {
  public:
-  KVClient(NodeServices services) : ClientBase(std::move(services)) {
+  KVClient(NodeServices runtime) : ClientBase(std::move(runtime)) {
   }
 
  protected:
@@ -299,7 +299,9 @@ size_t RunSimulation(size_t seed) {
   world.Start();
   while (world.GetCounter("requests") < kRequestsThreshold &&
          world.TimeElapsed() < kTimeLimit) {
-    world.Step();
+    if (!world.Step()) {
+      break;  // Deadlock
+    }
   }
 
   // Stop and compute simulation digest
@@ -314,7 +316,11 @@ size_t RunSimulation(size_t seed) {
   if (world.GetCounter("requests") < kRequestsThreshold) {
     // Log
     std::cout << "Log:" << std::endl << log.str() << std::endl;
-    std::cout << "Simulation time limit exceeded" << std::endl;
+    if (world.TimeElapsed() < kTimeLimit) {
+      std::cout << "Deadlock in simulation" << std::endl;
+    } else {
+      std::cout << "Simulation time limit exceeded" << std::endl;
+    }
     std::exit(1);
   }
 
