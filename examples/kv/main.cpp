@@ -19,6 +19,7 @@
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/futures/combine/quorum.hpp>
+#include <await/fibers/sync/mutex.hpp>
 
 #include <cereal/types/string.hpp>
 #include <fmt/ostream.h>
@@ -127,6 +128,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Internal storage methods
 
   void Write(Key k, StampedValue v) {
+    std::lock_guard guard(mutex_);
+
     std::optional<StampedValue> local = kv_.TryGet(k);
 
     if (!local.has_value()) {
@@ -146,6 +149,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   }
 
   StampedValue Read(Key k) {
+    std::lock_guard guard(mutex_);
     return kv_.GetOr(k, StampedValue::NoValue());
   }
 
@@ -176,6 +180,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Local persistent K/V storage
   // strings -> StampedValues
   LocalKVStorage<StampedValue> kv_;
+  Mutex mutex_;  // Guards kv_
 };
 
 //////////////////////////////////////////////////////////////////////
