@@ -293,7 +293,7 @@ size_t RunSimulation(size_t seed) {
 
   // Globals
   world.SetGlobal("num_keys", keys);
-  world.InitCounter("requests");
+  world.InitCounter("requests", 0);
 
   // Run simulation
   world.Start();

@@ -49,8 +49,8 @@ class World {
 
   // Global counters
 
-  void InitCounter(const std::string& name) {
-    SetGlobal(name, size_t{0});
+  void InitCounter(const std::string& name, size_t value = 0) {
+    SetGlobal(name, value);
   }
 
   size_t GetCounter(const std::string& name) const {
