@@ -79,7 +79,7 @@ class ClientNode final: public ClientBase {
       */
 
       Future<std::string> future = Channel().Call("Echo.Echo", std::string("Hello"));
-      auto result = Await(WithTimeout(std::move(future), 256));
+      auto result = Await(WithTimeout(std::move(future), 256_jiffies));
 
       if (result.IsOk()) {
         NODE_LOG("Echo response: '{}'", *result);
