@@ -5,12 +5,18 @@
 
 #include <whirl/rpc/use/channel.hpp>
 
+#include <whirl/helpers/errors.hpp>
+
 // TODO!
 #include <whirl/matrix/log/logger.hpp>
+
+#include <await/futures/helpers.hpp>
 
 #include <wheels/support/assert.hpp>
 
 namespace whirl {
+
+using await::futures::Future;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -77,6 +83,18 @@ class ClientBase : public INode {
 
   TimePoint MonotonicNow() const {
     return services_.time_service->MonotonicNow();
+  }
+
+  // Timeouts
+
+  Future<void> After(Duration d) {
+    return TimeService()->After(d);
+  }
+
+  template <typename T>
+  Future<T> WithTimeout(Future<T> f, Duration timeout) {
+    return await::futures::WithInterrupt(
+        std::move(f), After(timeout), TimeOutError());
   }
 
   // Threads

@@ -72,13 +72,19 @@ class ClientNode final: public ClientBase {
       // Фьючу дожидаемся синхронно с помощью функции Await
       // Она распаковывает фьючу в Result<std::string>
       // См. <await/fibers/sync/future.hpp>
+
+      /*
       auto result = Await(
           Channel().Call("Echo.Echo", std::string("Hello!")).As<std::string>());
+      */
+
+      Future<std::string> future = Channel().Call("Echo.Echo", std::string("Hello"));
+      auto result = Await(WithTimeout(std::move(future), 256));
 
       if (result.IsOk()) {
         NODE_LOG("Echo response: '{}'", *result);
       } else {
-        NODE_LOG("Echo request failed");
+        NODE_LOG("Echo request failed: {}", result.GetError().GetErrorCode().message());
       }
 
       // Threads() - рантайм, с помощью которого можно запускать новые потоки

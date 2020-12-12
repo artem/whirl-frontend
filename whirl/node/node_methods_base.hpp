@@ -2,7 +2,13 @@
 
 #include <whirl/node/services.hpp>
 
+#include <whirl/helpers/errors.hpp>
+
+#include <await/futures/helpers.hpp>
+
 namespace whirl {
+
+using await::futures::Future;
 
 class NodeMethodsBase {
  public:
@@ -48,6 +54,18 @@ class NodeMethodsBase {
 
   TimePoint MonotonicNow() const {
     return services_.time_service->MonotonicNow();
+  }
+
+  // Timeouts
+
+  Future<void> After(Duration d) {
+    return TimeService()->After(d);
+  }
+
+  template <typename T>
+  Future<T> WithTimeout(Future<T> f, Duration timeout) {
+    return await::futures::WithInterrupt(
+        std::move(f), After(timeout), TimeOutError());
   }
 
   // TrueTime
