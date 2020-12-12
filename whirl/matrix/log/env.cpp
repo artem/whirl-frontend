@@ -39,12 +39,21 @@ LogLevels GetLogLevelsFromEnv() {
 }
 
 
-std::optional<std::string> GetLogPathFromEnv() {
-  char* path = std::getenv("WHIRL_LOG_FILE");
-  if (!path) {
+static std::optional<std::string> GetEnvVar(const char* name) {
+  char* value = std::getenv(name);
+  if (value) {
+    return std::string(value);
+  } else {
     return std::nullopt;
   }
-  return std::string(path);
+}
+
+std::optional<std::string> GetLogPathFromEnv() {
+  return GetEnvVar("WHIRL_LOG_FILE");
+}
+
+std::optional<std::string> GetUser() {
+  return GetEnvVar("USER");
 }
 
 }  // namespace whirl

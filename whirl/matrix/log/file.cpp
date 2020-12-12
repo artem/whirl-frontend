@@ -8,6 +8,8 @@
 
 #if !defined(WHIRL_NO_FS)
 
+#include <fmt/core.h>
+
 #include <filesystem>
 #include <cstdlib>
 
@@ -66,7 +68,15 @@ class LogFileManager {
   }
 
   static fs::path TempLogPath() {
-    return fs::temp_directory_path() / "whirl.log";
+    auto tmp_path = fs::temp_directory_path();
+
+    // Workaround for CLion remote build / manual build conflict
+    auto user = GetUser();
+    if (user.has_value()) {
+      return tmp_path / fmt::format("whirl-{}.log", *user);
+    } else {
+      return tmp_path / "whirl.log";
+    }
   }
 
  private:

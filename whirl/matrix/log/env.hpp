@@ -17,4 +17,6 @@ LogLevels GetLogLevelsFromEnv();
 // Usage: WHIRL_LOG_FILE=/path/to/log/file
 std::optional<std::string> GetLogPathFromEnv();
 
+std::optional<std::string> GetUser();
+
 }  // namespace whirl
