@@ -123,8 +123,9 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     // Endpoint not found
 
     if (packet.type != EPacketType::Reset) {
-      // WHIRL_FMT_LOG("Endpoint {} not found, send reset packet to {}", to,
-      // from);
+      if (packet.type == EPacketType::Data) {
+        WHIRL_SIM_LOG_WARN("Endpoint {} not found, drop incoming packet from {}", to, from);
+      }
       replier.Reset();
     }
     return;
