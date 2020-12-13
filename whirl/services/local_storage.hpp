@@ -118,6 +118,16 @@ class LocalStorage {
     }
   }
 
+  template <typename U>
+  std::optional<U> TryLoad(const std::string& key) {
+    std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
+    if (data_bytes.has_value()) {
+      return Deserialize<U>(*data_bytes);
+    } else {
+      return std::nullopt;
+    }
+  }
+
  private:
   std::string WithNamespace(const std::string& user_key) const {
     static const std::string kNamespace = "local:";
