@@ -5,6 +5,11 @@
 
 namespace whirl::rpc {
 
+TransportChannel::~TransportChannel() {
+  // NB: strand is empty (each task in strand holds strong reference to channel!
+  // Close();
+}
+
 Future<BytesValue> TransportChannel::Call(const Method& method,
                                           const BytesValue& input) {
   auto request = MakeRequest(method, input);
