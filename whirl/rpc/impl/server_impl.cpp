@@ -12,7 +12,7 @@
 namespace whirl::rpc {
 
 void ServerImpl::Start() {
-  server_ = transport_->Serve(shared_from_this());
+  server_ = transport_->Serve(weak_from_this());
 }
 
 void ServerImpl::RegisterService(const std::string& name, IServicePtr service) {

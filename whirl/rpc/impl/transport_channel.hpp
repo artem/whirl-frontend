@@ -53,7 +53,8 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   }
 
   ~TransportChannel() {
-    Close();
+    // NB: strand is empty (each task in strand holds strong reference to channel!
+    // Close();
   }
 
   // IChannel

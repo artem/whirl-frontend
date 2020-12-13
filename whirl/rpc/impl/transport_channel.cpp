@@ -10,6 +10,8 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
   auto request = MakeRequest(method, input);
   auto trace_id = request.trace_id;
 
+  auto e = MakeTracingExecutor(executor_, trace_id);
+
   auto future = request.promise.MakeFuture();
 
   strand_->Execute(
@@ -17,11 +19,11 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
         self->SendRequest(std::move(request));
       });
 
-  auto e = MakeTracingExecutor(executor_, trace_id);
   return std::move(future).Via(std::move(e));
 }
 
 void TransportChannel::Close() {
+  // Do we need strong ref?
   auto close = [self = shared_from_this()]() { self->DoClose(); };
   await::futures::SyncVia(strand_, std::move(close));
 }
@@ -109,6 +111,7 @@ void TransportChannel::LostPeer() {
 }
 
 void TransportChannel::DoClose() {
+  WHIRL_SIM_LOG("Close transport socket");
   if (socket_ && socket_->IsConnected()) {
     socket_->Close();
   }
@@ -119,7 +122,7 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
     return socket_;
   }
   WHIRL_SIM_LOG_DEBUG("Reconnect to {}", peer_);
-  socket_ = transport_->ConnectTo(peer_, shared_from_this());
+  socket_ = transport_->ConnectTo(peer_, weak_from_this());
   return socket_;
 }
 

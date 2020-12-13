@@ -33,8 +33,10 @@ class ReplyTransportSocket : public ITransportSocket {
 
 void NetTransportServer::HandleMessage(const net::Message& message,
                                        net::ReplySocket back) {
-  handler_->HandleMessage(message,
-                          std::make_shared<ReplyTransportSocket>(back));
+  if (auto handler = handler_.lock()) {
+    handler->HandleMessage(message,
+                            std::make_shared<ReplyTransportSocket>(back));
+  }
 }
 
 }  // namespace whirl

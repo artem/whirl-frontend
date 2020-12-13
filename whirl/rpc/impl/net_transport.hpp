@@ -36,7 +36,7 @@ struct ITransportHandler {
   virtual void HandleDisconnect(const std::string& peer) = 0;
 };
 
-using ITransportHandlerPtr = std::shared_ptr<ITransportHandler>;
+using ITransportHandlerPtr = std::weak_ptr<ITransportHandler>;
 
 //////////////////////////////////////////////////////////////////////
 
