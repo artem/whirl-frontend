@@ -23,7 +23,7 @@ class Bytes {
     return bytes_;
   }
 
-  WHIRL_SERIALIZE(bytes_);
+  WHIRL_SERIALIZE(bytes_)
 
  private:
   std::string bytes_;
