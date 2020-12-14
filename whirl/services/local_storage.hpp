@@ -2,7 +2,7 @@
 
 #include <whirl/services/local_storage_backend.hpp>
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/helpers/bytes.hpp>
 
 #include <fmt/core.h>
 
@@ -29,7 +29,7 @@ class LocalKVStorage {
   LocalKVStorage& operator=(const LocalKVStorage& that) = delete;
 
   void Set(const std::string& key, const V& value) {
-    auto value_bytes = Serialize(value);
+    auto value_bytes = Bytes::Serialize(value);
     impl_->Set(WithNamespace(key), value_bytes);
   }
 
@@ -41,7 +41,7 @@ class LocalKVStorage {
   std::optional<V> TryGet(const std::string& key) {
     std::optional<Bytes> value_bytes = impl_->TryGet(WithNamespace(key));
     if (value_bytes.has_value()) {
-      return Deserialize<V>(*value_bytes);
+      return value_bytes->As<V>();
     } else {
       return std::nullopt;
     }
@@ -103,7 +103,7 @@ class LocalStorage {
 
   template <typename U>
   void Store(const std::string& key, const U& data) {
-    auto data_bytes = Serialize(data);
+    auto data_bytes = Bytes::Serialize(data);
     impl_->Set(WithNamespace(key), data_bytes);
   }
 
@@ -113,22 +113,22 @@ class LocalStorage {
   }
 
   template <typename U>
-  U Load(const std::string& key) {
+  std::optional<U> TryLoad(const std::string& key) {
     std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
     if (data_bytes.has_value()) {
-      return Deserialize<U>(*data_bytes);
+      return data_bytes->As<U>();
     } else {
-      throw std::runtime_error(fmt::format("Key '{}' not found in local storage", WithNamespace(key)));
+      return std::nullopt;
     }
   }
 
   template <typename U>
-  std::optional<U> TryLoad(const std::string& key) {
-    std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
-    if (data_bytes.has_value()) {
-      return Deserialize<U>(*data_bytes);
+  U Load(const std::string& key) {
+    std::optional<U> value = TryLoad<U>(key);
+    if (value.has_value()) {
+      return *value;
     } else {
-      return std::nullopt;
+      throw std::runtime_error(fmt::format("Key '{}' not found in local storage", WithNamespace(key)));
     }
   }
 

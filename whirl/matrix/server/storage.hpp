@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/helpers/bytes.hpp>
+
 #include <map>
 #include <optional>
 #include <string>
@@ -9,8 +11,6 @@ namespace whirl {
 //////////////////////////////////////////////////////////////////////
 
 class PersistentStorage {
-  using Bytes = std::string;
-
  public:
   // Context: Server
   void Set(const std::string& key, const Bytes& value);
