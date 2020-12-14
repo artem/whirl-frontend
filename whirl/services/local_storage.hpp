@@ -66,6 +66,10 @@ class LocalKVStorage {
     }
   }
 
+  void Remove(const std::string& key) {
+    impl_->Remove(WithNamespace(key));
+  }
+
  private:
   static std::string MakeNamespace(const std::string& name) {
     return std::string("kv:") + name + ":";
@@ -126,6 +130,10 @@ class LocalStorage {
     } else {
       return std::nullopt;
     }
+  }
+
+  void Remove(const std::string& key) {
+    impl_->Remove(WithNamespace(key));
   }
 
  private:

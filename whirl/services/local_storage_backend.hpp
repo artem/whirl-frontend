@@ -17,6 +17,7 @@ struct ILocalStorageBackend {
 
   virtual void Set(const std::string& key, const Bytes& value) = 0;
   virtual std::optional<Bytes> TryGet(const std::string& key) = 0;
+  virtual void Remove(const std::string& key) = 0;
 };
 
 using ILocalStorageBackendPtr = std::shared_ptr<ILocalStorageBackend>;

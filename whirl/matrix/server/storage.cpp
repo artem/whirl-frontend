@@ -27,6 +27,11 @@ std::optional<PersistentStorage::Bytes> PersistentStorage::TryGet(const std::str
   }
 }
 
+void PersistentStorage::Remove(const std::string& key) {
+  GlobalHeapScope g;
+  data_.erase(key);
+}
+
 // Context: Global
 size_t PersistentStorage::ComputeDigest() const {
   DigestCalculator digest;

@@ -21,6 +21,10 @@ class LocalStorageBackend : public ILocalStorageBackend {
     return impl_.TryGet(key);
   }
 
+  void Remove(const std::string& key) override {
+    impl_.Remove(key);
+  }
+
  private:
   PersistentStorage& impl_;
 };
