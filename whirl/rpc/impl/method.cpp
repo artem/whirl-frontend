@@ -8,7 +8,7 @@ namespace whirl::rpc {
 
 Method Method::Parse(std::string method) {
   auto parts = Split(method, '.');
-  WHEELS_VERIFY(parts.size() == 2, "Invalid method format: '" << method << "'");
+  WHEELS_VERIFY(parts.size() == 2, "Invalid method format: '" << method << "', expected {service}.{method_name}");
   return {parts[0], parts[1]};
 }
 
