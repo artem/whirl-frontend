@@ -9,6 +9,8 @@ class Bytes {
   Bytes(std::string bytes) : bytes_(std::move(bytes)) {
   }
 
+  Bytes() = default;
+
   template <typename T>
   static Bytes Serialize(const T& value) {
     return {::whirl::Serialize<T>(value)};
