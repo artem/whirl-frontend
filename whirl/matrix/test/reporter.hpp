@@ -2,6 +2,8 @@
 
 #include <whirl/matrix/world/world.hpp>
 
+#include <whirl/matrix/history/printers/print.hpp>
+
 #include <iostream>
 #include <string>
 
@@ -88,7 +90,7 @@ class TestReporter {
 
   void CompleteSim() {
 #ifdef NDEBUG
-    if (sims_ > 0 && sims_ % 1000 == 0) {
+    if (sims_ > 0 && sims_ % 128 == 0) {
       std::cout << "Simulations completed: " << sims_ << std::endl;
     }
 #endif
