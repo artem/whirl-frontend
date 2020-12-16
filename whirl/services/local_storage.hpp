@@ -58,12 +58,7 @@ class LocalKVStorage {
   }
 
   V GetOr(const std::string& key, V default_value) const {
-    std::optional<V> existing_value = TryGet(key);
-    if (existing_value.has_value()) {
-      return *existing_value;
-    } else {
-      return default_value;
-    }
+    return TryGet(key).value_or(default_value);
   }
 
   void Remove(const std::string& key) {
@@ -123,6 +118,11 @@ class LocalStorage {
   }
 
   template <typename U>
+  U LoadOr(const std::string& key, U default_value) const {
+    return TryLoad<U>(key).value_or(default_value);
+  }
+
+  template <typename U>
   U Load(const std::string& key) const {
     std::optional<U> value = TryLoad<U>(key);
     if (value.has_value()) {
@@ -131,6 +131,8 @@ class LocalStorage {
       throw std::runtime_error(fmt::format("Key '{}' not found in local storage", WithNamespace(key)));
     }
   }
+
+
 
   void Remove(const std::string& key) {
     impl_->Remove(WithNamespace(key));
