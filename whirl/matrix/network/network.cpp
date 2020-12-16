@@ -101,29 +101,55 @@ size_t Network::GetLinkIndex(size_t i, size_t j) const {
 
 // Partitions
 
-void Network::Split() {
-  GlobalHeapScope g;
-
-  // Generate random partition
-
-  // [1, servers.size())
-  size_t lhs_size = GlobalRandomNumber(1, servers_.size());
-
-  Partition lhs;
-  for (auto& server : GlobalRandomSelect(servers_, lhs_size)) {
-    lhs.insert(server->HostName());
-  }
-
-  // Print
-  WHIRL_SIM_LOG("Network partitioned: {} / {}", lhs.size(),
-                servers_.size() - lhs.size());
-
-  // Split
-  Split(lhs);
+static bool IsClient(INetServer* server) {
+  return server->HostName()[0] == 'C';  // TODO
 }
 
 static bool Cross(const Link& link, const Partition& lhs) {
   return lhs.count(link.StartHostName()) != lhs.count(link.EndHostName());
+}
+
+void Network::Split() {
+  GlobalHeapScope g;
+
+  std::vector<std::string> servers;
+
+  // Exclude clients
+
+  for (INetServer* server : servers_) {
+    if (!IsClient(server)) {
+      servers.push_back(server->HostName());
+    }
+  }
+
+  // Generate random partition
+
+  // [1, servers.size())
+  size_t lhs_size = GlobalRandomNumber(1, servers.size());
+
+  Partition lhs;
+  for (auto& hostname : GlobalRandomSelect(servers, lhs_size)) {
+    lhs.insert(hostname);
+  }
+
+  // Print
+  WHIRL_SIM_LOG("Network partitioned: {} / {}", lhs.size(),
+                servers.size() - lhs.size());
+
+  // Split
+
+  for (auto& link : links_) {
+    if (link.IsLoopBack()) {
+      continue;
+    }
+    if (IsClient(link.Start()) || IsClient(link.End())) {
+      continue;
+    }
+    if (Cross(link, lhs)) {
+      WHIRL_SIM_LOG_WARN("Pause link {} - {}", link.StartHostName(), link.EndHostName());
+      link.Pause();
+    }
+  }
 }
 
 void Network::Split(const Partition& lhs) {
