@@ -67,7 +67,7 @@ class LocalKVStorage {
 
  private:
   static std::string MakeNamespace(const std::string& name) {
-    return std::string("kv:") + name + ":";
+    return fmt::format("kv:{}:", name);
   }
 
   std::string WithNamespace(const std::string& user_key) const {
@@ -89,7 +89,8 @@ class LocalKVStorage {
 
 class LocalStorage {
  public:
-  LocalStorage(ILocalStorageBackendPtr impl) : impl_(impl) {
+  LocalStorage(ILocalStorageBackendPtr impl, const std::string& name = "default")
+  : impl_(impl), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
@@ -132,20 +133,22 @@ class LocalStorage {
     }
   }
 
-
-
   void Remove(const std::string& key) {
     impl_->Remove(WithNamespace(key));
   }
 
  private:
+  static std::string MakeNamespace(const std::string& name) {
+    return fmt::format("local:{}:", name);
+  }
+
   std::string WithNamespace(const std::string& user_key) const {
-    static const std::string kNamespace = "local:";
-    return kNamespace + user_key;
+    return namespace_ + user_key;
   }
 
  private:
   ILocalStorageBackendPtr impl_;
+  std::string namespace_;
 };
 
 }  // namespace whirl
