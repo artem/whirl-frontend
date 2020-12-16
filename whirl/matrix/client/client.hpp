@@ -135,6 +135,14 @@ class ClientBase : public INode {
     return services_.rpc_client;
   }
 
+  const IRandomServicePtr& RandomService() const {
+    return services_.random;
+  }
+
+  const IUidGeneratorPtr& UidsGenerator() const {
+    return services_.uids;
+  }
+
   // Cluster
 
   const std::vector<std::string>& Cluster() const {

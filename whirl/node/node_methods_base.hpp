@@ -120,6 +120,16 @@ class NodeMethodsBase {
     return services_.rpc_client;
   }
 
+  // Local services
+
+  const IRandomServicePtr& RandomService() const {
+    return services_.random;
+  }
+
+  const IUidGeneratorPtr& UidsGenerator() const {
+    return services_.uids;
+  }
+
   // Logger
   // Usage: NODE_LOG(format, values...)
 
