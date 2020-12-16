@@ -2,7 +2,7 @@
 
 #include <whirl/services/local_storage_backend.hpp>
 
-#include <whirl/helpers/bytes.hpp>
+#include <whirl/cereal/bytes.hpp>
 
 #include <fmt/core.h>
 

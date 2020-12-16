@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/cereal/serialize.hpp>
 
 #include <tuple>
 #include <utility>

@@ -2,7 +2,7 @@
 
 #include <whirl/time.hpp>
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/cereal/serialize.hpp>
 
 #include <string>
 #include <vector>

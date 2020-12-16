@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/helpers/bytes.hpp>
+#include <whirl/cereal/bytes.hpp>
 
 #include <map>
 #include <optional>

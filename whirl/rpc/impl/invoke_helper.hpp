@@ -2,7 +2,7 @@
 
 #include <whirl/rpc/impl/input.hpp>
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/cereal/serialize.hpp>
 
 #include <tuple>
 

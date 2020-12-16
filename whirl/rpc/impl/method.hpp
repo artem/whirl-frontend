@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/cereal/serialize.hpp>
 
 #include <fmt/ostream.h>
 

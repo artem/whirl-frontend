@@ -6,7 +6,7 @@
 #include <whirl/rpc/impl/trace.hpp>
 #include <whirl/rpc/impl/errors.hpp>
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/cereal/serialize.hpp>
 
 #include <cereal/types/string.hpp>
 
