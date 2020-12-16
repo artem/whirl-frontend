@@ -16,6 +16,7 @@
 #include <cstdlib>
 
 using namespace await::fibers;
+using namespace whirl::time_literals;
 using namespace whirl;
 
 //////////////////////////////////////////////////////////////////////
