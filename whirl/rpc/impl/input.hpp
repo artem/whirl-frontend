@@ -3,7 +3,7 @@
 #include <whirl/rpc/impl/bytes_value.hpp>
 #include <whirl/rpc/impl/exceptions.hpp>
 
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/helpers/tuple.hpp>
 
 #include <tuple>
 
@@ -13,22 +13,13 @@ namespace detail {
 
 template<typename ... Types>
 BytesValue SerializeInput(Types &&... arguments) {
-  auto packed_values =
-      std::make_tuple(std::forward<Types>(arguments)...);
-  return Serialize(packed_values);
-};
-
-template<typename... Types>
-struct Packer {
-  using ValuesTuple = std::tuple<typename std::decay<Types>::type...>;
+  return SerializeValues(std::forward<Types>(arguments)...);
 };
 
 template<typename ... Types>
-auto DeserializeInput(BytesValue input) {
-  using ValuesTuple = typename Packer<Types...>::ValuesTuple;
-
+auto DeserializeInput(const BytesValue& input) {
   try {
-    return Deserialize<ValuesTuple>(input);
+    return DeserializeValues<Types...>(input);
   } catch (...) {
     throw BadRequest("Arguments mismatch");
   }
