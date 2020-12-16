@@ -14,7 +14,7 @@ class PersistentStorage {
  public:
   // Context: Server
   void Set(const std::string& key, const Bytes& value);
-  std::optional<Bytes> TryGet(const std::string& key);
+  std::optional<Bytes> TryGet(const std::string& key) const;
   void Remove(const std::string& key);
 
   // Context: Global

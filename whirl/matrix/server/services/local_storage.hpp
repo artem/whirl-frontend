@@ -17,7 +17,7 @@ class LocalStorageBackend : public ILocalStorageBackend {
     impl_.Set(key, value);
   }
 
-  std::optional<Bytes> TryGet(const std::string& key) override {
+  std::optional<Bytes> TryGet(const std::string& key) const override {
     return impl_.TryGet(key);
   }
 

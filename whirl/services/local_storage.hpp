@@ -38,7 +38,7 @@ class LocalKVStorage {
     return value_bytes.has_value();
   }
 
-  std::optional<V> TryGet(const std::string& key) {
+  std::optional<V> TryGet(const std::string& key) const {
     std::optional<Bytes> value_bytes = impl_->TryGet(WithNamespace(key));
     if (value_bytes.has_value()) {
       return value_bytes->As<V>();
@@ -47,7 +47,7 @@ class LocalKVStorage {
     }
   }
 
-  V Get(const std::string& key) {
+  V Get(const std::string& key) const {
     std::optional<V> existing_value = TryGet(key);
     if (existing_value.has_value()) {
       return *existing_value;
@@ -57,7 +57,7 @@ class LocalKVStorage {
     }
   }
 
-  V GetOr(const std::string& key, V default_value) {
+  V GetOr(const std::string& key, V default_value) const {
     std::optional<V> existing_value = TryGet(key);
     if (existing_value.has_value()) {
       return *existing_value;
@@ -113,7 +113,7 @@ class LocalStorage {
   }
 
   template <typename U>
-  std::optional<U> TryLoad(const std::string& key) {
+  std::optional<U> TryLoad(const std::string& key) const {
     std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
     if (data_bytes.has_value()) {
       return data_bytes->As<U>();
@@ -123,7 +123,7 @@ class LocalStorage {
   }
 
   template <typename U>
-  U Load(const std::string& key) {
+  U Load(const std::string& key) const {
     std::optional<U> value = TryLoad<U>(key);
     if (value.has_value()) {
       return *value;

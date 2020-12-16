@@ -19,7 +19,7 @@ void PersistentStorage::Set(const std::string& key, const Bytes& value) {
 }
 
 // Context: Server
-std::optional<Bytes> PersistentStorage::TryGet(const std::string& key) {
+std::optional<Bytes> PersistentStorage::TryGet(const std::string& key) const {
   if (auto found = data_.find(key); found != data_.end()) {
     return MakeCopy(found->second);  // Copy
   } else {
