@@ -16,6 +16,7 @@ using await::futures::Future;
 struct IChannel {
   virtual ~IChannel() = default;
 
+  // Unary RPC call
   virtual Future<BytesValue> Call(const Method& method,
                                   const BytesValue& input) = 0;
 
