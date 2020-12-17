@@ -227,7 +227,7 @@ class KVClient final : public ClientBase {
       } else {
         Key key = ChooseKey();
         NODE_LOG_INFO("Execute Get({})", key);
-        Value result = kv_store.Get(key);
+        [[maybe_unused]] Value result = kv_store.Get(key);
         NODE_LOG_INFO("Get({}) -> {}", key, result);
       }
 

@@ -65,7 +65,7 @@ void Transport::RemoveEndpoint(Port port) {
 void Transport::Reset() {
   GlobalHeapScope g;
 
-  for (const auto& [port, _] : endpoints_) {
+  for ([[maybe_unused]] const auto& [port, _] : endpoints_) {
     WHIRL_SIM_LOG("Remove endpoint at port {}", port);
   }
   endpoints_.clear();
