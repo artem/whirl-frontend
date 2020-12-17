@@ -1,7 +1,7 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/node/logging.hpp>
 #include <whirl/rpc/use/service_base.hpp>
-#include <whirl/helpers/serialize.hpp>
+#include <whirl/cereal/serialize.hpp>
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>
