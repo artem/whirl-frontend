@@ -3,8 +3,10 @@
 namespace whirl {
 
 struct EmptyMessage {
+  // No fields
+
   template <typename Archive>
-  void serialize(Archive& /*a*/) {
+  void serialize(Archive& /*unused*/) {
   }
 };
 
