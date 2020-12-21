@@ -19,7 +19,7 @@ namespace whirl {
 struct NodeServices {
   IConfigPtr config;
 
-  ThreadsRuntime threads;
+  IExecutorPtr executor;
   ITimeServicePtr time_service;
 
   IDiscoveryPtr discovery;

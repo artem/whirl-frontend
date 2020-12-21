@@ -5,7 +5,7 @@
 namespace whirl {
 
 void NodeBase::Start() {
-  Threads().Spawn([this]() { Main(); });
+  Spawn([this]() { Main(); });
 }
 
 void NodeBase::StartRPCServer() {

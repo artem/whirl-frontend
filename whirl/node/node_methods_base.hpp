@@ -82,12 +82,13 @@ class NodeMethodsBase {
 
   // Threads
 
-  ThreadsRuntime& Threads() {
-    return services_.threads;
+  // TODO: remove
+  ThreadsRuntime Threads() {
+    return ThreadsRuntime{services_.executor, services_.time_service};
   }
 
   void Spawn(ThreadRoutine routine) {
-    Threads().Spawn(std::move(routine));
+    await::fibers::Spawn(std::move(routine), services_.executor);
   }
 
   void SleepFor(Duration delay) {
@@ -96,6 +97,10 @@ class NodeMethodsBase {
 
   void Yield() {
     Threads().Yield();
+  }
+
+  const await::executors::IExecutorPtr& GetExecutor() {
+    return services_.executor;
   }
 
   // Uids

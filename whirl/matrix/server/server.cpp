@@ -183,7 +183,7 @@ NodeServices Server::CreateNodeServices() {
   auto time_service =
       std::make_shared<TimeService>(wall_clock_, monotonic_clock_, *steps_);
 
-  services.threads = ThreadsRuntime{executor, time_service};
+  services.executor = executor;
   services.time_service = time_service;
 
   services.storage_backend =

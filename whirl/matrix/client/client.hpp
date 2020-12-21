@@ -119,8 +119,8 @@ class ClientBase : public INode {
 
   // Local services
 
-  ThreadsRuntime& Threads() {
-    return services_.threads;
+  ThreadsRuntime Threads() {
+    return {services_.executor, services_.time_service};
   }
 
   const ITimeServicePtr& TimeService() const {
