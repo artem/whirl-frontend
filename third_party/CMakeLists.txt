@@ -51,3 +51,14 @@ FetchContent_Declare(
 
 set(FETCHCONTENT_QUIET OFF)
 FetchContent_MakeAvailable(fmtlib)
+
+# --------------------------------------------------------------------
+
+FetchContent_Declare(
+        ctti
+        GIT_REPOSITORY https://github.com/Manu343726/ctti
+        GIT_TAG master
+)
+
+set(FETCHCONTENT_QUIET OFF)
+FetchContent_MakeAvailable(ctti)

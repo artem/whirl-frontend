@@ -15,7 +15,7 @@ target_include_directories(whirl PUBLIC ${LIB_INCLUDE_PATH})
 
 # Dependencies
 
-target_link_libraries(whirl PUBLIC wheels await fmt)
+target_link_libraries(whirl PUBLIC wheels await fmt ctti)
 
 # Be silent, cereal
 target_include_directories(whirl PUBLIC ${cereal_INCLUDE_DIR})
