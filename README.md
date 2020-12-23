@@ -30,6 +30,7 @@ Use Attiya, Bar-Noy, Dolev algorithm for linearizable behaviour.
 - [await](https://gitlab.com/Lipovsky/await) - Concurrency: fibers and futures with customizable runtime
 - [cereal](https://github.com/USCiLab/cereal) - Serialization
 - [fmt](https://github.com/fmtlib/fmt)
+- [ctti](https://github.com/Manu343726/ctti)
 
 ## Build
 
