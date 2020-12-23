@@ -3,6 +3,7 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 
+#include <cereal/types/string.hpp>
 #include <ctti/type_id.hpp>
 
 #include <fmt/core.h>
