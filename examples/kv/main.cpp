@@ -121,8 +121,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
       NODE_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
     }
 
-    auto winner = FindMostRecentValue(values);
-    return winner.value;
+    auto most_recent = FindMostRecentValue(values);
+    return most_recent.value;
   }
 
   // Internal storage methods
@@ -162,13 +162,13 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Find value with largest timestamp
   StampedValue FindMostRecentValue(
       const std::vector<StampedValue>& values) const {
-    auto winner = values[0];
+    auto candidate = values[0];
     for (size_t i = 1; i < values.size(); ++i) {
-      if (values[i].ts > winner.ts) {
-        winner = values[i];
+      if (values[i].ts > candidate.ts) {
+        candidate = values[i];
       }
     }
-    return winner;
+    return candidate;
   }
 
   // Quorum size
@@ -292,10 +292,6 @@ size_t RunSimulation(size_t seed) {
   auto client = MakeNode<KVClient>();
   world.AddClients(clients, client);
 
-  // Log
-  std::stringstream log;
-  world.WriteLogTo(log);
-
   // Globals
   world.SetGlobal("keys", keys);
   world.InitCounter("requests", 0);
@@ -317,10 +313,12 @@ size_t RunSimulation(size_t seed) {
             << "digest: " << digest << ", time: " << world.TimeElapsed()
             << ", steps: " << world.StepCount() << std::endl;
 
+  const auto text_log = world.TextLog();
+
   // Time limit exceeded
   if (world.GetCounter("requests") < kRequestsThreshold) {
     // Log
-    std::cout << "Log:" << std::endl << log.str() << std::endl;
+    std::cout << "Log:" << std::endl << text_log << std::endl;
     if (world.TimeElapsed() < kTimeLimit) {
       std::cout << "Deadlock in simulation" << std::endl;
     } else {
@@ -338,7 +336,7 @@ size_t RunSimulation(size_t seed) {
 
   if (!linearizable) {
     // Log
-    std::cout << "Log:" << std::endl << log.str() << std::endl;
+    std::cout << "Log:" << std::endl << text_log << std::endl;
     // History
     std::cout << "History (seed = " << seed
               << ") is NOT LINEARIZABLE:" << std::endl;

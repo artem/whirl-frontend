@@ -57,7 +57,7 @@ class World {
     return GetGlobal<size_t>(name);
   }
 
-
+  // Deprecated
   void WriteLogTo(std::ostream& out);
 
   void Start();
@@ -75,6 +75,7 @@ class World {
   size_t StepCount() const;
   Duration TimeElapsed() const;
 
+  std::string TextLog() const;
   const histories::History& History() const;
 
  private:

@@ -40,7 +40,7 @@ static void WriteTo(const LogEvent& event, std::ostream& out) {
 
 //////////////////////////////////////////////////////////////////////
 
-Log::Log() : out_(&std::cout) {
+Log::Log() {
 #if defined(WHIRL_LOGGING_ENABLED)
   file_ = GetLogFile();
 #endif
@@ -52,7 +52,7 @@ void Log::Write(const LogEvent& event) {
   WriteTo(event, event_out);
   std::string event_str = event_out.str();
 
-  *out_ << event_str << std::endl;
+  memory_ << event_str << std::endl;
 
 #if defined(WHIRL_LOGGING_ENABLED)
   file_ << event_str << std::endl;

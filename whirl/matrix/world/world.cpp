@@ -70,6 +70,10 @@ size_t World::NumCompletedCalls() const {
   return impl_->HistoryRecorder().NumCompletedCalls();
 }
 
+std::string World::TextLog() const {
+  return impl_->GetLog().TextLog();
+}
+
 const histories::History& World::History() const {
   return impl_->History();
 }
