@@ -15,7 +15,7 @@
 
 namespace whirl {
 
-static Logger logger_{"Retries channel"};
+static Logger logger_{"Retries-Channel"};
 
 using namespace rpc;
 using wheels::Result;
