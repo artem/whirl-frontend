@@ -85,8 +85,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     RPC_REGISTER_METHOD(Get);
 
     // TODO: split coordinator / storage roles to different RPC services
-    RPC_REGISTER_METHOD(Write);
-    RPC_REGISTER_METHOD(Read);
+    RPC_REGISTER_METHOD(LocalWrite);
+    RPC_REGISTER_METHOD(LocalRead);
   }
 
   // RPC method handlers
@@ -100,7 +100,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          PeerChannel(i).Call("KV.Write", k, StampedValue{v, write_ts}));
+          PeerChannel(i).Call("KV.LocalWrite", k, StampedValue{v, write_ts}));
     }
 
     // Await acks from majority of replicas
@@ -110,20 +110,24 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   Value Get(Key k) {
     std::vector<Future<StampedValue>> reads;
 
-    // Broadcast KV.Read request
+    // Broadcast KV.LocalRead request
     for (size_t i = 0; i < PeerCount(); ++i) {
-      reads.push_back(PeerChannel(i).Call("KV.Read", k));
+      reads.push_back(PeerChannel(i).Call("KV.LocalRead", k));
     }
 
     // Await responses from majority of replicas
 
     // Steps:
     // 1) Combine futures from read RPC-s to single quorum future
-    Future<std::vector<StampedValue>> quorum_reads = Quorum(std::move(reads), Majority());
+    Future<std::vector<StampedValue>> quorum_reads =
+        Quorum(std::move(reads), Majority());
     // 2) Block current fiber until quorum collected
     Result<std::vector<StampedValue>> results = Await(std::move(quorum_reads));
     // 3) Unpack vector or throw error
     auto values = results.Value();
+
+    // Or just combine all steps to:
+    // auto values = Await(Quorum(std::move(reads), Majority())).Value()
 
     for (size_t i = 0; i < values.size(); ++i) {
       NODE_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
@@ -135,7 +139,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   // Internal storage methods
 
-  void Write(Key k, StampedValue v) {
+  void LocalWrite(Key k, StampedValue v) {
     std::lock_guard guard(mutex_);
 
     std::optional<StampedValue> local = kv_.TryGet(k);
@@ -156,7 +160,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     kv_.Set(k, v);
   }
 
-  StampedValue Read(Key k) {
+  StampedValue LocalRead(Key k) {
     std::lock_guard guard(mutex_);
     return kv_.GetOr(k, StampedValue::NoValue());
   }
@@ -188,7 +192,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Local persistent K/V storage
   // strings -> StampedValues
   LocalKVStorage<StampedValue> kv_;
-  Mutex mutex_;  // Guards kv_
+  // Fiber-aware mutex
+  await::fibers::Mutex mutex_;  // Guards accesses to kv_
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -282,9 +287,9 @@ size_t RunSimulation(size_t seed) {
   std::cout << "Simulation seed: " << seed << std::endl;
 
   std::cout << "Parameters: "
-    << "replicas = " << replicas << ", "
-    << "clients = " << clients << ", "
-    << "keys = " << keys << std::endl;
+            << "replicas = " << replicas << ", "
+            << "clients = " << clients << ", "
+            << "keys = " << keys << std::endl;
 
   // Reset RPC and fiber ids
   await::fibers::ResetIds();
@@ -335,8 +340,8 @@ size_t RunSimulation(size_t seed) {
     std::exit(1);
   }
 
-  std::cout << "Requests completed: "
-            << world.GetCounter("requests") << std::endl;
+  std::cout << "Requests completed: " << world.GetCounter("requests")
+            << std::endl;
 
   // Check linearizability
   const auto history = world.History();
