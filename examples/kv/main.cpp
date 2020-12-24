@@ -28,6 +28,7 @@
 
 using namespace await::fibers;
 using namespace whirl;
+using namespace whirl::time_literals;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -115,7 +116,14 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     }
 
     // Await responses from majority of replicas
-    auto values = Await(Quorum(std::move(reads), Majority())).Value();
+
+    // Steps:
+    // 1) Combine futures from read RPC-s to single quorum future
+    Future<std::vector<StampedValue>> quorum_reads = Quorum(std::move(reads), Majority());
+    // 2) Block current fiber until quorum collected
+    Result<std::vector<StampedValue>> results = Await(std::move(quorum_reads));
+    // 3) Unpack vector or throw error
+    auto values = results.Value();
 
     for (size_t i = 0; i < values.size(); ++i) {
       NODE_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
