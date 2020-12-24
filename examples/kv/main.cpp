@@ -95,26 +95,26 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   // Public methods: Set and Get
 
-  void Set(Key k, Value v) {
+  void Set(Key key, Value value) {
     Timestamp write_ts = ChooseWriteTimestamp();
     NODE_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          PeerChannel(i).Call("KV.LocalWrite", k, StampedValue{v, write_ts}));
+          PeerChannel(i).Call("KV.LocalWrite", key, StampedValue{value, write_ts}));
     }
 
     // Await acks from majority of replicas
     Await(Quorum(std::move(writes), Majority())).ExpectOk();
   }
 
-  Value Get(Key k) {
+  Value Get(Key key) {
     std::vector<Future<StampedValue>> reads;
 
     // Broadcast KV.LocalRead request
     for (size_t i = 0; i < PeerCount(); ++i) {
-      reads.push_back(PeerChannel(i).Call("KV.LocalRead", k));
+      reads.push_back(PeerChannel(i).Call("KV.LocalRead", key));
     }
 
     // Await responses from majority of replicas
@@ -141,30 +141,30 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   // Internal storage methods
 
-  void LocalWrite(Key k, StampedValue v) {
+  void LocalWrite(Key key, StampedValue stamped_value) {
     std::lock_guard guard(mutex_);
 
-    std::optional<StampedValue> local = kv_.TryGet(k);
+    std::optional<StampedValue> local = kv_.TryGet(key);
 
     if (!local.has_value()) {
       // First write for this key
-      Update(k, v);
+      LocalUpdate(key, stamped_value);
     } else {
       // Write timestamp > timestamp of locally stored value
-      if (v.ts > local->ts) {
-        Update(k, v);
+      if (stamped_value.ts > local->ts) {
+        LocalUpdate(key, stamped_value);
       }
     }
   }
 
-  void Update(Key k, StampedValue v) {
-    NODE_LOG_INFO("Write '{}' -> {}", k, v);
-    kv_.Set(k, v);
+  void LocalUpdate(Key key, StampedValue stamped_value) {
+    NODE_LOG_INFO("Write '{}' -> {}", key, stamped_value);
+    kv_.Set(key, stamped_value);
   }
 
-  StampedValue LocalRead(Key k) {
+  StampedValue LocalRead(Key key) {
     std::lock_guard guard(mutex_);  // Blocks fiber, not thread!
-    return kv_.GetOr(k, StampedValue::NoValue());
+    return kv_.GetOr(key, StampedValue::NoValue());
   }
 
   Timestamp ChooseWriteTimestamp() {
