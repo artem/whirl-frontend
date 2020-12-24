@@ -80,11 +80,13 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   // ServiceBase
   void RegisterRPCMethods() override {
-    // Public
+    // TODO: split coordinator / storage roles to different RPC services
+
+    // Coordinator RPC handlers
     RPC_REGISTER_METHOD(Set);
     RPC_REGISTER_METHOD(Get);
 
-    // TODO: split coordinator / storage roles to different RPC services
+    // Storage replica RPC handlers
     RPC_REGISTER_METHOD(LocalWrite);
     RPC_REGISTER_METHOD(LocalRead);
   }
@@ -161,7 +163,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   }
 
   StampedValue LocalRead(Key k) {
-    std::lock_guard guard(mutex_);
+    std::lock_guard guard(mutex_);  // Blocks fiber, not thread!
     return kv_.GetOr(k, StampedValue::NoValue());
   }
 
