@@ -1,12 +1,15 @@
 #pragma once
 
+// TODO: Remove
+#include <whirl/matrix/log/enabled.hpp>
+
 #include <whirl/services/logger.hpp>
 
 #include <fmt/core.h>
 
 namespace whirl {
 
-#ifndef NDEBUG
+#if defined(WHIRL_LOGGING_ENABLED)
 
 #define NODE_LOG_IMPL(level, ...) \
   NodeLogger()->Log(level, fmt::format(__VA_ARGS__))

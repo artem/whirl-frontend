@@ -1,5 +1,7 @@
 #include <whirl/matrix/log/log.hpp>
 
+#include <whirl/matrix/log/enabled.hpp>
+
 #include <wheels/support/assert.hpp>
 
 #include <iostream>
@@ -39,7 +41,7 @@ static void WriteTo(const LogEvent& event, std::ostream& out) {
 //////////////////////////////////////////////////////////////////////
 
 Log::Log() : out_(&std::cout) {
-#ifndef NDEBUG
+#if defined(WHIRL_LOGGING_ENABLED)
   file_ = GetLogFile();
 #endif
   InitLevels();
@@ -52,7 +54,7 @@ void Log::Write(const LogEvent& event) {
 
   *out_ << event_str << std::endl;
 
-#ifndef NDEBUG
+#if defined(WHIRL_LOGGING_ENABLED)
   file_ << event_str << std::endl;
 #endif
 }

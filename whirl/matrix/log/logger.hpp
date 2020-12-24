@@ -1,5 +1,6 @@
 #pragma once
 
+#include <whirl/matrix/log/enabled.hpp>
 #include <whirl/matrix/log/event.hpp>
 
 #include <fmt/core.h>
@@ -25,7 +26,7 @@ class Logger {
 
 //////////////////////////////////////////////////////////////////////
 
-#ifndef NDEBUG
+#if defined(WHIRL_LOGGING_ENABLED)
 
 #define WHIRL_SIM_LOG_IMPL(level, ...)              \
   do {                                              \

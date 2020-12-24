@@ -29,6 +29,13 @@ if(WHIRL_NO_FS)
     target_compile_definitions(whirl PUBLIC WHIRL_NO_FS=1)
 endif()
 
+# Force logging
+
+if(WHIRL_FORCE_LOGGING)
+    message(STATUS "Force logging")
+    target_compile_definitions(whirl PUBLIC WHIRL_FORCE_LOGGING=1)
+endif()
+
 # --------------------------------------------------------------------
 
 # Linters
