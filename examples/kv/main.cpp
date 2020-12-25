@@ -34,7 +34,7 @@ using namespace whirl::time_literals;
 
 // string -> int
 using Key = std::string;
-using Value = int;
+using Value = int32_t;
 
 //////////////////////////////////////////////////////////////////////
 
