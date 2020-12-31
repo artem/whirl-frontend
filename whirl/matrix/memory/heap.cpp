@@ -71,6 +71,14 @@ void SetHeapSize(size_t bytes) {
 
 //////////////////////////////////////////////////////////////////////
 
+static const size_t kAlignment = 8;
+
+static size_t RoundUpTo8(size_t bytes) {
+  return (bytes + 7) & ~7;
+}
+
+static const size_t kBlockHeaderSize = 8;
+
 static const size_t kZFillBlockSize = 4096;
 
 Heap::Heap() : heap_(AllocateHeapMemory()) {
@@ -103,7 +111,9 @@ void Heap::ZeroFillTo(char* pos) {
 }
 
 char* Heap::AllocateNewBlock(size_t bytes) {
-  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % 8 == 0, "Broken heap allocator");
+  bytes = RoundUpTo8(bytes);
+
+  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kAlignment == 0, "Broken heap allocator");
 
   if (Overflow(bytes)) {
     GlobalHeapScope g;
@@ -111,27 +121,21 @@ char* Heap::AllocateNewBlock(size_t bytes) {
   }
 
   // Incrementally fill heap with zeroes
-  ZeroFillTo(next_ + 8 + bytes);
+  ZeroFillTo(next_ + kBlockHeaderSize + bytes);
 
   // printf("Allocate %zu bytes\n", bytes);
   char* user_addr = WriteBlockHeader(next_, bytes);
   next_ = user_addr + bytes;
-
-  // Align next
-  next_ = user_addr + 8 + ((bytes >> 3) << 3);
-
-  WHEELS_VERIFY(next_ >= user_addr + bytes, "Broken heap allocator");
-
   return user_addr;
 }
 
 bool Heap::Overflow(size_t bytes) const {
-  return next_ + 8 + bytes >= heap_.End();
+  return next_ + kBlockHeaderSize + bytes >= heap_.End();
 }
 
 char* Heap::WriteBlockHeader(char* addr, size_t size) {
   *reinterpret_cast<size_t*>(addr) = size;
-  return addr + 8;
+  return addr + kBlockHeaderSize;
 };
 
 }  // namespace whirl
