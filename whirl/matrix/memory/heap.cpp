@@ -103,6 +103,8 @@ void Heap::ZeroFillTo(char* pos) {
 }
 
 char* Heap::AllocateNewBlock(size_t bytes) {
+  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % 8 == 0, "Broken heap allocator");
+
   if (Overflow(bytes)) {
     GlobalHeapScope g;
     WHEELS_PANIC("Cannot allocate " << bytes << " bytes: heap overflow");
@@ -114,6 +116,12 @@ char* Heap::AllocateNewBlock(size_t bytes) {
   // printf("Allocate %zu bytes\n", bytes);
   char* user_addr = WriteBlockHeader(next_, bytes);
   next_ = user_addr + bytes;
+
+  // Align next
+  next_ = user_addr + 8 + ((bytes >> 3) << 3);
+
+  WHEELS_VERIFY(next_ >= user_addr + bytes, "Broken heap allocator");
+
   return user_addr;
 }
 
