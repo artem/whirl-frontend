@@ -2,6 +2,7 @@
 
 #include <wheels/support/panic.hpp>
 #include <wheels/support/assert.hpp>
+#include <wheels/support/env.hpp>
 #include <wheels/support/string_utils.hpp>
 
 #include <cstdlib>
@@ -37,22 +38,8 @@ LogLevels GetLogLevelsFromEnv() {
   return ParseLogLevels(levels_env);
 }
 
-
-static std::optional<std::string> GetEnvVar(const char* name) {
-  char* value = std::getenv(name);
-  if (value) {
-    return std::string(value);
-  } else {
-    return std::nullopt;
-  }
-}
-
 std::optional<std::string> GetLogPathFromEnv() {
-  return GetEnvVar("WHIRL_LOG_FILE");
-}
-
-std::optional<std::string> GetUser() {
-  return GetEnvVar("USER");
+  return wheels::GetEnvVar("WHIRL_LOG_FILE");
 }
 
 }  // namespace whirl

@@ -3,6 +3,7 @@
 #include <whirl/matrix/log/env.hpp>
 
 #include <wheels/support/assert.hpp>
+#include <wheels/support/env.hpp>
 
 #include <iostream>
 
@@ -71,7 +72,7 @@ class LogFileManager {
     auto tmp_path = fs::temp_directory_path();
 
     // Workaround for CLion remote build / manual build conflict
-    auto user = GetUser();
+    auto user = wheels::GetUser();
     if (user.has_value()) {
       return tmp_path / fmt::format("whirl-{}.log", *user);
     } else {
