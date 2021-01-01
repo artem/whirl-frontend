@@ -1,13 +1,12 @@
 #include <whirl/rpc/impl/method.hpp>
 
-#include <whirl/helpers/string_utils.hpp>
-
 #include <wheels/support/assert.hpp>
+#include <wheels/support/string_utils.hpp>
 
 namespace whirl::rpc {
 
 Method Method::Parse(std::string method) {
-  auto parts = Split(method, '.');
+  auto parts = wheels::Split(method, '.');
   WHEELS_VERIFY(parts.size() == 2, "Invalid method format: '" << method << "', expected {service}.{method_name}");
   return {parts[0], parts[1]};
 }

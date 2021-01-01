@@ -1,9 +1,8 @@
 #include <whirl/matrix/log/env.hpp>
 
-#include <whirl/helpers/string_utils.hpp>
-
 #include <wheels/support/panic.hpp>
 #include <wheels/support/assert.hpp>
+#include <wheels/support/string_utils.hpp>
 
 #include <cstdlib>
 
@@ -16,9 +15,9 @@ static LogLevels ParseLogLevels(const std::string& levels_str) {
 
   LogLevels levels;
 
-  auto components = Split(levels_str, ',');
+  auto components = wheels::Split(levels_str, ',');
   for (auto component_level : components) {
-    auto parts = Split(component_level, '=');
+    auto parts = wheels::Split(component_level, '=');
     WHEELS_VERIFY(parts.size() == 2, "Invalid " << kLevelsEnvVar << " format");
     std::string component = parts[0];
     std::string level = parts[1];
