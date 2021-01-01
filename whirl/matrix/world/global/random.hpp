@@ -9,6 +9,8 @@ namespace whirl {
 
 // Deterministic randomness
 
+size_t StepRandomNumber();
+
 size_t GlobalRandomNumber();
 
 // [0, bound)

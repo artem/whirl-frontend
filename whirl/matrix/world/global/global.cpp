@@ -12,6 +12,10 @@ size_t WorldSeed() {
 
 //////////////////////////////////////////////////////////////////////
 
+size_t StepRandomNumber() {
+  return WorldImpl::Access()->StepRandomNumber();
+}
+
 RandomUInt GlobalRandomNumber() {
   return WorldImpl::Access()->RandomNumber();
 }

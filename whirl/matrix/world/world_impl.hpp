@@ -127,6 +127,8 @@ class WorldImpl {
 
     digest_.Eat(next.time).Eat(next.actor_index);
 
+    step_random_number_ = random_source_.Next();
+
     clock_.MoveForwardTo(next.time);
     Scope(next.actor)->Step();
 
@@ -256,6 +258,10 @@ class WorldImpl {
     return clock_.Now() - start_time_;
   }
 
+  size_t StepRandomNumber() const {
+    return step_random_number_;
+  }
+
   RandomSource::ResultType RandomNumber() {
     return random_source_.Next();
   }
@@ -359,6 +365,8 @@ class WorldImpl {
   Logger logger_{"World"};
 
   TimePoint start_time_;
+
+  size_t step_random_number_{0};
 
   DigestCalculator digest_;
   Log log_;
