@@ -122,8 +122,7 @@ void Server::Start() {
 
   auto g = heap_.Use();
 
-  // steps_ = new StepQueue() ?
-  steps_ = heap_.New<StepQueue>();
+  steps_ = new StepQueue();
 
   auto services = CreateNodeServices();
   auto node = node_factory_->CreateNode(std::move(services));

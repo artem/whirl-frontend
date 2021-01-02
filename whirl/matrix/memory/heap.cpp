@@ -71,13 +71,19 @@ void SetHeapSize(size_t bytes) {
 
 //////////////////////////////////////////////////////////////////////
 
-static const size_t kAlignment = 8;
+// Fundamental alignment
+// https://eel.is/c++draft/basic.align
+static const size_t kRequiredAlignment = alignof(std::max_align_t);
 
-static size_t RoundUpTo8(size_t bytes) {
-  return (bytes + 7) & ~7;
+static_assert(kRequiredAlignment == 16, "Unexpected!");
+
+//////////////////////////////////////////////////////////////////////
+
+static size_t RoundUpTo16(size_t bytes) {
+  return (bytes + 15) & ~15;
 }
 
-static const size_t kBlockHeaderSize = 8;
+static const size_t kBlockHeaderSize = kRequiredAlignment;
 
 static const size_t kZFillBlockSize = 4096;
 
@@ -111,9 +117,9 @@ void Heap::ZeroFillTo(char* pos) {
 }
 
 char* Heap::AllocateNewBlock(size_t bytes) {
-  bytes = RoundUpTo8(bytes);
+  bytes = RoundUpTo16(bytes);
 
-  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kAlignment == 0, "Broken heap allocator");
+  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0, "Broken heap allocator");
 
   if (Overflow(bytes)) {
     GlobalHeapScope g;
