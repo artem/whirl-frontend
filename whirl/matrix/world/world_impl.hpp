@@ -343,7 +343,7 @@ class WorldImpl {
   WorldClock clock_;
   RandomSource random_source_;
 
-  wheels::support::IdGenerator ids_;
+  wheels::IdGenerator ids_;
 
   IWorldBehaviourPtr behaviour_;
 

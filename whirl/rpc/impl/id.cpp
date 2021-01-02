@@ -4,7 +4,7 @@
 
 namespace whirl::rpc {
 
-static wheels::support::IdGenerator ids_;
+static wheels::IdGenerator ids_;
 
 RequestId GenerateRequestId() {
   return ids_.NextId();
