@@ -9,7 +9,7 @@
 #include <whirl/matrix/server/services/config.hpp>
 #include <whirl/matrix/server/services/executor.hpp>
 #include <whirl/matrix/server/services/time.hpp>
-#include <whirl/matrix/server/services/local_storage.hpp>
+#include <whirl/matrix/server/services/database.hpp>
 #include <whirl/matrix/server/services/true_time.hpp>
 #include <whirl/matrix/server/services/uid.hpp>
 #include <whirl/matrix/server/services/random.hpp>
@@ -185,8 +185,8 @@ NodeServices Server::CreateNodeServices() {
   services.executor = executor;
   services.time_service = time_service;
 
-  services.storage_backend =
-      std::make_shared<LocalStorageBackend>(persistent_storage_);
+  services.database =
+      std::make_shared<Database>(persistent_storage_);
 
   auto net_transport = std::make_shared<NetTransport>(transport_);
 

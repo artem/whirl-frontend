@@ -13,9 +13,9 @@ namespace whirl {
 class PersistentStorage {
  public:
   // Context: Server
-  void Set(const std::string& key, const Bytes& value);
+  void Put(const std::string& key, const Bytes& value);
   std::optional<Bytes> TryGet(const std::string& key) const;
-  void Remove(const std::string& key);
+  void Delete(const std::string& key);
 
   // Context: Global
   size_t ComputeDigest() const;

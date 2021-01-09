@@ -76,8 +76,8 @@ class NodeMethodsBase {
 
   // Local storage backend
 
-  const ILocalStorageBackendPtr& StorageBackend() const {
-    return services_.storage_backend;
+  const IDatabasePtr& StorageBackend() const {
+    return services_.database;
   }
 
   // Threads

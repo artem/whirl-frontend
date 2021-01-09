@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/local_storage_backend.hpp>
+#include <whirl/services/database.hpp>
 
 #include <whirl/cereal/bytes.hpp>
 
@@ -20,8 +20,8 @@ namespace whirl {
 template <typename V>
 class LocalKVStorage {
  public:
-  LocalKVStorage(ILocalStorageBackendPtr kv, const std::string& name)
-      : impl_(kv), namespace_(MakeNamespace(name)) {
+  LocalKVStorage(IDatabasePtr db, const std::string& name)
+      : db_(db), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
@@ -30,16 +30,16 @@ class LocalKVStorage {
 
   void Set(const std::string& key, const V& value) {
     auto value_bytes = Bytes::Serialize(value);
-    impl_->Set(WithNamespace(key), value_bytes);
+    db_->Put(WithNamespace(key), value_bytes);
   }
 
   bool Has(const std::string& key) const {
-    std::optional<Bytes> value_bytes = impl_->TryGet(WithNamespace(key));
+    std::optional<Bytes> value_bytes = db_->TryGet(WithNamespace(key));
     return value_bytes.has_value();
   }
 
   std::optional<V> TryGet(const std::string& key) const {
-    std::optional<Bytes> value_bytes = impl_->TryGet(WithNamespace(key));
+    std::optional<Bytes> value_bytes = db_->TryGet(WithNamespace(key));
     if (value_bytes.has_value()) {
       return value_bytes->As<V>();
     } else {
@@ -61,8 +61,8 @@ class LocalKVStorage {
     return TryGet(key).value_or(default_value);
   }
 
-  void Remove(const std::string& key) {
-    impl_->Remove(WithNamespace(key));
+  void Delete(const std::string& key) {
+    db_->Delete(WithNamespace(key));
   }
 
  private:
@@ -75,7 +75,7 @@ class LocalKVStorage {
   }
 
  private:
-  ILocalStorageBackendPtr impl_;
+  IDatabasePtr db_;
   std::string namespace_;
 };
 
@@ -89,8 +89,8 @@ class LocalKVStorage {
 
 class LocalStorage {
  public:
-  LocalStorage(ILocalStorageBackendPtr impl, const std::string& name = "default")
-  : impl_(impl), namespace_(MakeNamespace(name)) {
+  LocalStorage(IDatabasePtr db, const std::string& name = "default")
+  : db_(db), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
@@ -100,17 +100,17 @@ class LocalStorage {
   template <typename U>
   void Store(const std::string& key, const U& data) {
     auto data_bytes = Bytes::Serialize(data);
-    impl_->Set(WithNamespace(key), data_bytes);
+    db_->Put(WithNamespace(key), data_bytes);
   }
 
   bool Has(const std::string& key) const {
-    std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
+    std::optional<Bytes> data_bytes = db_->TryGet(WithNamespace(key));
     return data_bytes.has_value();
   }
 
   template <typename U>
   std::optional<U> TryLoad(const std::string& key) const {
-    std::optional<Bytes> data_bytes = impl_->TryGet(WithNamespace(key));
+    std::optional<Bytes> data_bytes = db_->TryGet(WithNamespace(key));
     if (data_bytes.has_value()) {
       return data_bytes->As<U>();
     } else {
@@ -133,8 +133,8 @@ class LocalStorage {
     }
   }
 
-  void Remove(const std::string& key) {
-    impl_->Remove(WithNamespace(key));
+  void Delete(const std::string& key) {
+    db_->Delete(WithNamespace(key));
   }
 
  private:
@@ -147,7 +147,7 @@ class LocalStorage {
   }
 
  private:
-  ILocalStorageBackendPtr impl_;
+  IDatabasePtr db_;
   std::string namespace_;
 };
 
