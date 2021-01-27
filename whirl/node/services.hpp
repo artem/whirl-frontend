@@ -3,7 +3,7 @@
 #include <whirl/services/config.hpp>
 #include <whirl/services/threads.hpp>
 #include <whirl/services/time.hpp>
-#include <whirl/services/local_storage.hpp>
+#include <whirl/services/database.hpp>
 #include <whirl/services/random.hpp>
 #include <whirl/services/uid.hpp>
 #include <whirl/services/true_time.hpp>

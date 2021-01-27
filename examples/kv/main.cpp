@@ -1,4 +1,5 @@
 #include <whirl/node/node_base.hpp>
+#include <whirl/node/local_storage.hpp>
 #include <whirl/node/logging.hpp>
 #include <whirl/rpc/use/service_base.hpp>
 #include <whirl/cereal/serialize.hpp>
