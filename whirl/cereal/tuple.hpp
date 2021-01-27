@@ -2,6 +2,8 @@
 
 #include <whirl/cereal/serialize.hpp>
 
+#include <cereal/types/tuple.hpp>
+
 #include <tuple>
 #include <utility>
 
