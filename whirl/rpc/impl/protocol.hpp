@@ -27,8 +27,7 @@ struct RequestMessage {
   Method method;
   BytesValue input;
 
-  SERIALIZE(CEREAL_NVP(id), CEREAL_NVP(trace_id), CEREAL_NVP(to),
-            CEREAL_NVP(method), CEREAL_NVP(input))
+  WHIRL_SERIALIZE(id, trace_id, to, method, input)
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -41,8 +40,7 @@ struct ResponseMessage {
   BytesValue result;
   RPCErrorCode error;
 
-  SERIALIZE(CEREAL_NVP(request_id), CEREAL_NVP(method), CEREAL_NVP(result),
-            CEREAL_NVP(error))
+  WHIRL_SERIALIZE(request_id, method, result, error)
 
   bool IsOk() const {
     return error == RPCErrorCode::Ok;

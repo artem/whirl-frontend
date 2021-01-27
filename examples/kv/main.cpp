@@ -52,7 +52,7 @@ struct StampedValue {
   }
 
   // Serialization support for local storage and RPC
-  WHIRL_SERIALIZE(CEREAL_NVP(value), CEREAL_NVP(ts))
+  WHIRL_SERIALIZE(value, ts)
 };
 
 // For logging

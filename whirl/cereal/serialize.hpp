@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/cereal/macro.hpp>
+
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 
@@ -115,13 +117,5 @@ T Deserialize(const std::string& bytes) {
 }
 
 //////////////////////////////////////////////////////////////////////
-
-#define WHIRL_SERIALIZE(...)   \
-  template <typename Archive>  \
-  void serialize(Archive& a) { \
-    a(__VA_ARGS__);            \
-  };
-
-#define SERIALIZE(...) WHIRL_SERIALIZE(__VA_ARGS__)
 
 }  // namespace whirl

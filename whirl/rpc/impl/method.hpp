@@ -15,7 +15,7 @@ struct Method {
   // Format: "{service}.{name}"
   static Method Parse(std::string method);
 
-  SERIALIZE(CEREAL_NVP(service), CEREAL_NVP(name))
+  WHIRL_SERIALIZE(service, name)
 };
 
 std::ostream& operator<<(std::ostream& out, const Method& method);
