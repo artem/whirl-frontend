@@ -11,12 +11,12 @@ namespace whirl::rpc {
 
 namespace detail {
 
-template<typename ... Types>
-BytesValue SerializeInput(Types &&... arguments) {
+template <typename... Types>
+BytesValue SerializeInput(Types&&... arguments) {
   return SerializeValues(std::forward<Types>(arguments)...);
 };
 
-template<typename ... Types>
+template <typename... Types>
 auto DeserializeInput(const BytesValue& input) {
   try {
     return DeserializeValues<Types...>(input);

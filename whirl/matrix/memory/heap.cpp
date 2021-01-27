@@ -119,7 +119,8 @@ void Heap::ZeroFillTo(char* pos) {
 char* Heap::AllocateNewBlock(size_t bytes) {
   bytes = RoundUpTo16(bytes);
 
-  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0, "Broken heap allocator");
+  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0,
+                "Broken heap allocator");
 
   if (Overflow(bytes)) {
     GlobalHeapScope g;

@@ -52,8 +52,8 @@ class LocalKVStorage {
     if (existing_value.has_value()) {
       return *existing_value;
     } else {
-      throw std::runtime_error(
-          fmt::format("Key '{}' not found in local KV storage", WithNamespace(key)));
+      throw std::runtime_error(fmt::format(
+          "Key '{}' not found in local KV storage", WithNamespace(key)));
     }
   }
 
@@ -90,7 +90,7 @@ class LocalKVStorage {
 class LocalStorage {
  public:
   LocalStorage(IDatabasePtr db, const std::string& name = "default")
-  : db_(db), namespace_(MakeNamespace(name)) {
+      : db_(db), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
@@ -129,7 +129,8 @@ class LocalStorage {
     if (value.has_value()) {
       return *value;
     } else {
-      throw std::runtime_error(fmt::format("Key '{}' not found in local storage", WithNamespace(key)));
+      throw std::runtime_error(fmt::format(
+          "Key '{}' not found in local storage", WithNamespace(key)));
     }
   }
 

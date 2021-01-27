@@ -93,8 +93,8 @@ class ClientBase : public INode {
 
   template <typename T>
   Future<T> WithTimeout(Future<T> f, Duration timeout) {
-    return await::futures::WithInterrupt(
-        std::move(f), After(timeout), TimeOutError());
+    return await::futures::WithInterrupt(std::move(f), After(timeout),
+                                         TimeOutError());
   }
 
   // Threads

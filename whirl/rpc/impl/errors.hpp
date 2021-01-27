@@ -45,22 +45,14 @@ class RPCErrorCategory : public std::error_category {
 
   std::string message(int c) const override final {
     switch (static_cast<RPCErrorCode>(c)) {
-      case RPCErrorCode::Ok:
-        return "RPC ok";
-      case RPCErrorCode::ChannelClosed:
-        return "RPC channel closed";
-      case RPCErrorCode::TransportError:
-        return "RPC transport error";
-      case RPCErrorCode::ExecutionError:
-        return "RPC execution error";
-      case RPCErrorCode::ServiceNotFound:
-        return "RPC service not found";
-      case RPCErrorCode::MethodNotFound:
-        return "RPC method not found";
-      case RPCErrorCode::BadRequest:
-        return "Bad RPC request";
-      default:
-        return "?";
+      case RPCErrorCode::Ok: return "RPC ok";
+      case RPCErrorCode::ChannelClosed: return "RPC channel closed";
+      case RPCErrorCode::TransportError: return "RPC transport error";
+      case RPCErrorCode::ExecutionError: return "RPC execution error";
+      case RPCErrorCode::ServiceNotFound: return "RPC service not found";
+      case RPCErrorCode::MethodNotFound: return "RPC method not found";
+      case RPCErrorCode::BadRequest: return "Bad RPC request";
+      default: return "?";
     }
   }
 

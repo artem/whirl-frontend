@@ -4,10 +4,8 @@ namespace whirl::rpc {
 
 bool IsRetriableError(RPCErrorCode e) {
   switch (e) {
-    case RPCErrorCode::TransportError:
-      return true;
-    default:
-      return false;
+    case RPCErrorCode::TransportError: return true;
+    default: return false;
   }
 }
 

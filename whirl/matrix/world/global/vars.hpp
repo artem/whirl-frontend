@@ -31,11 +31,10 @@ void SetGlobal(const std::string& name, T value) {
 
 namespace detail {
 
-template<typename T>
+template <typename T>
 class GlobalVar {
  public:
-  explicit GlobalVar(const std::string name)
-      : name_(std::move(name)) {
+  explicit GlobalVar(const std::string name) : name_(std::move(name)) {
   }
 
   void Set(T value) {
@@ -43,7 +42,7 @@ class GlobalVar {
   }
 
   T Get() const {
-    return ::whirl::GetGlobal<T> (name_);
+    return ::whirl::GetGlobal<T>(name_);
   }
 
  private:
@@ -63,8 +62,7 @@ namespace detail {
 
 class GlobalCounter : protected GlobalVar<size_t> {
  public:
-  explicit GlobalCounter(std::string name)
-      : GlobalVar(name) {
+  explicit GlobalCounter(std::string name) : GlobalVar(name) {
   }
 
   size_t Add(size_t d) {

@@ -185,8 +185,7 @@ NodeServices Server::CreateNodeServices() {
   services.executor = executor;
   services.time_service = time_service;
 
-  services.database =
-      std::make_shared<Database>(persistent_storage_);
+  services.database = std::make_shared<Database>(persistent_storage_);
 
   auto net_transport = std::make_shared<NetTransport>(transport_);
 

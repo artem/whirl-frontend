@@ -19,10 +19,10 @@ std::string LogLevelToString(LogLevel level) {
   }
 }
 
-#define PARSE_LEVEL(level) \
-if (level_str == TO_STRING(level)) { \
-  return LogLevel::level; \
-}
+#define PARSE_LEVEL(level)             \
+  if (level_str == TO_STRING(level)) { \
+    return LogLevel::level;            \
+  }
 
 LogLevel ParseLogLevel(const std::string& level_str) {
   PARSE_LEVEL(Debug);

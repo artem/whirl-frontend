@@ -20,10 +20,8 @@ namespace whirl {
 
 class LogFileManager {
  public:
-  LogFileManager()
-    : log_path_(LogPath()) {
+  LogFileManager() : log_path_(LogPath()) {
     Init();
-
   }
 
   std::ofstream NextLog() {
@@ -99,7 +97,8 @@ namespace whirl {
 
 std::ofstream GetLogFile() {
   auto log_path = GetLogPathFromEnv();
-  WHEELS_VERIFY(log_path.has_value(), "Set simulator log path via WHIRL_LOG_FILE env var");
+  WHEELS_VERIFY(log_path.has_value(),
+                "Set simulator log path via WHIRL_LOG_FILE env var");
   return std::ofstream(*log_path, std::ofstream::out);
 }
 

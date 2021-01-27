@@ -6,8 +6,7 @@ namespace whirl {
 
 class Random {
  public:
-  Random(size_t seed)
-    : twister_(seed) {
+  Random(size_t seed) : twister_(seed) {
   }
 
   // Random number in range [from, to]

@@ -35,7 +35,7 @@ void NetTransportServer::HandleMessage(const net::Message& message,
                                        net::ReplySocket back) {
   if (auto handler = handler_.lock()) {
     handler->HandleMessage(message,
-                            std::make_shared<ReplyTransportSocket>(back));
+                           std::make_shared<ReplyTransportSocket>(back));
   }
 }
 

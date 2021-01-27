@@ -146,7 +146,8 @@ void Network::Split() {
       continue;
     }
     if (Cross(link, lhs)) {
-      WHIRL_SIM_LOG_WARN("Pause link {} - {}", link.StartHostName(), link.EndHostName());
+      WHIRL_SIM_LOG_WARN("Pause link {} - {}", link.StartHostName(),
+                         link.EndHostName());
       link.Pause();
     }
   }

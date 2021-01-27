@@ -22,6 +22,7 @@ class ProcessHeap {
   void Reset() {
     impl_.Reset();
   }
+
  private:
   Heap impl_;
 };

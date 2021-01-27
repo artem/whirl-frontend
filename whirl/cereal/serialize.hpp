@@ -101,7 +101,9 @@ T Deserialize(const std::string& bytes) {
 
     if (header.type_name != type_name) {
       throw std::runtime_error(
-          fmt::format("Cannot deserialize value of type '{}', serialized value has type '{}'", type_name, header.type_name));
+          fmt::format("Cannot deserialize value of type '{}', serialized value "
+                      "has type '{}'",
+                      type_name, header.type_name));
     }
 
     iarchive(object);  // Read the data from the archive
@@ -114,7 +116,7 @@ T Deserialize(const std::string& bytes) {
 
 //////////////////////////////////////////////////////////////////////
 
-#define WHIRL_SERIALIZE(...)         \
+#define WHIRL_SERIALIZE(...)   \
   template <typename Archive>  \
   void serialize(Archive& a) { \
     a(__VA_ARGS__);            \

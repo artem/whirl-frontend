@@ -41,10 +41,13 @@ class Logger {
 
 #endif
 
-#define WHIRL_SIM_LOG_DEBUG(...) WHIRL_SIM_LOG_IMPL(LogLevel::Debug, __VA_ARGS__)
-#define WHIRL_SIM_LOG_INFO(...)  WHIRL_SIM_LOG_IMPL(LogLevel::Info, __VA_ARGS__)
-#define WHIRL_SIM_LOG_WARN(...)  WHIRL_SIM_LOG_IMPL(LogLevel::Warning, __VA_ARGS__)
-#define WHIRL_SIM_LOG_ERROR(...) WHIRL_SIM_LOG_IMPL(LogLevel::Error, __VA_ARGS__)
+#define WHIRL_SIM_LOG_DEBUG(...) \
+  WHIRL_SIM_LOG_IMPL(LogLevel::Debug, __VA_ARGS__)
+#define WHIRL_SIM_LOG_INFO(...) WHIRL_SIM_LOG_IMPL(LogLevel::Info, __VA_ARGS__)
+#define WHIRL_SIM_LOG_WARN(...) \
+  WHIRL_SIM_LOG_IMPL(LogLevel::Warning, __VA_ARGS__)
+#define WHIRL_SIM_LOG_ERROR(...) \
+  WHIRL_SIM_LOG_IMPL(LogLevel::Error, __VA_ARGS__)
 
 // Backward compatibility
 #define WHIRL_SIM_LOG(...) WHIRL_SIM_LOG_INFO(__VA_ARGS__)

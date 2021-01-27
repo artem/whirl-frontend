@@ -124,7 +124,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     if (packet.type != EPacketType::Reset) {
       if (packet.type == EPacketType::Data) {
-        WHIRL_SIM_LOG_WARN("Endpoint {} not found, drop incoming packet from {}", to, from);
+        WHIRL_SIM_LOG_WARN(
+            "Endpoint {} not found, drop incoming packet from {}", to, from);
       }
       replier.Reset();
     }
@@ -153,7 +154,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.type == EPacketType::Data) {
     // Message
 
-    WHIRL_SIM_LOG("Handle message at {} from {}: <{}>", host_, from, packet.message);
+    WHIRL_SIM_LOG("Handle message at {} from {}: <{}>", host_, from,
+                  packet.message);
 
     auto g = heap_.Use();
     endpoint.handler->HandleMessage(packet.message, ReplySocket(packet, out));

@@ -50,7 +50,7 @@ class TCallResult {
 
 template <typename... Arguments>
 detail::TCallResult Call(const IChannelPtr& channel,
-    const std::string& method_str,
+                         const std::string& method_str,
                          Arguments&&... arguments) {
   auto method = Method::Parse(method_str);
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
