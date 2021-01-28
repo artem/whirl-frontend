@@ -1,5 +1,7 @@
 #pragma once
 
+#include <wheels/support/hash_combine.hpp>
+
 #include <cstdlib>
 #include <functional>
 
@@ -10,7 +12,7 @@ class DigestCalculator {
 
  public:
   Self& Eat(size_t hash_value) {
-    HashCombine(digest_, hash_value);
+    wheels::HashCombine(digest_, hash_value);
     return *this;
   }
 
@@ -21,12 +23,6 @@ class DigestCalculator {
 
   size_t Get() const {
     return digest_;
-  }
-
- private:
-  void HashCombine(size_t& digest, size_t hash_value) {
-    // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
-    digest ^= (hash_value + 0x9e3779b9 + (digest << 6) + (digest >> 2));
   }
 
  private:
