@@ -8,6 +8,7 @@ using RequestId = size_t;
 
 RequestId GenerateRequestId();
 
+// Workaround for deterministic simulation
 void ResetIds();
 
 }  // namespace whirl::rpc
