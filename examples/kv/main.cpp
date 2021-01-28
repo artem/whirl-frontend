@@ -107,6 +107,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     }
 
     // Await acks from majority of replicas
+    // Await(std::move(future)).ExpectOk() ~ future.await? in Rust
     Await(Quorum(std::move(writes), Majority())).ExpectOk();
   }
 
