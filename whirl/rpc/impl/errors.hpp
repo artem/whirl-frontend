@@ -14,6 +14,7 @@ enum class RPCErrorCode {
   ServiceNotFound = 4,
   MethodNotFound = 5,
   BadRequest = 6,
+  InternalError = 7,
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -52,6 +53,7 @@ class RPCErrorCategory : public std::error_category {
       case RPCErrorCode::ServiceNotFound: return "RPC service not found";
       case RPCErrorCode::MethodNotFound: return "RPC method not found";
       case RPCErrorCode::BadRequest: return "Bad RPC request";
+      case RPCErrorCode::InternalError: return "RPC internal error";
       default: return "?";
     }
   }
