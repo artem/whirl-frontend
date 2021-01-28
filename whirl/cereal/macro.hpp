@@ -4,6 +4,15 @@
 
 #include <cereal/cereal.hpp>
 
+/* Usage:
+ * struct MyMessage {
+ *   int a;
+ *   std::string b;
+ *
+ *   WHIRL_SERIALIZE(a, b)
+ * };
+ */
+
 #define WHIRL_SERIALIZE(...)              \
   template <typename Archive>             \
   void serialize(Archive& a) {            \
