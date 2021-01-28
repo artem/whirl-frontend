@@ -94,7 +94,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   // RPC method handlers
 
-  // Public methods: Set and Get
+  // Coordinator role
 
   void Set(Key key, Value value) {
     Timestamp write_ts = ChooseWriteTimestamp();
@@ -141,7 +141,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     return most_recent.value;
   }
 
-  // Internal storage methods
+  // Storage replica role
 
   void LocalWrite(Key key, StampedValue stamped_value) {
     std::lock_guard guard(mutex_);
@@ -197,7 +197,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // strings -> StampedValues
   LocalKVStorage<StampedValue> kv_;
   // Fiber-aware mutex
-  await::fibers::Mutex mutex_;  // Guards accesses to kv_
+  await::fibers::Mutex mutex_;  // Guards access to kv_
 };
 
 //////////////////////////////////////////////////////////////////////
