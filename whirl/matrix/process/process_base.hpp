@@ -48,7 +48,7 @@ class ProcessBase : public IActor {
     {
       auto g = heap_.Use();
       steps_.Clear();
-      ReleaseFibersOnCrash(heap_);
+      ReleaseFiberResourcesOnCrash(heap_);
     }
     heap_.Reset();
   }

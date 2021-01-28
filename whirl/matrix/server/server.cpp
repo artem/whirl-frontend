@@ -61,7 +61,7 @@ void Server::Crash() {
   {
     auto g = heap_.Use();
     steps_ = nullptr;
-    ReleaseFibersOnCrash(heap_);
+    ReleaseFiberResourcesOnCrash(heap_);
   }
   heap_.Reset();
 

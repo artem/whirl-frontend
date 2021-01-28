@@ -8,7 +8,7 @@
 
 namespace whirl {
 
-void ReleaseFibersOnCrash(const ProcessHeap& heap) {
+void ReleaseFiberResourcesOnCrash(const ProcessHeap& heap) {
   auto& alive = await::fibers::AliveFibers();
 
   // Fibers from `heap`
