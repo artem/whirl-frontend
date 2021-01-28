@@ -1,7 +1,6 @@
 #pragma once
 
 #include <whirl/services/config.hpp>
-#include <whirl/services/threads.hpp>
 #include <whirl/services/time.hpp>
 #include <whirl/services/database.hpp>
 #include <whirl/services/random.hpp>

@@ -2,6 +2,7 @@
 
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
+#include <whirl/node/threads.hpp>
 
 #include <whirl/rpc/use/channel.hpp>
 

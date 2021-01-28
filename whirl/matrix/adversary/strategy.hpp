@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/threads.hpp>
+#include <whirl/node/threads.hpp>
 
 #include <functional>
 
