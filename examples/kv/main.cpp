@@ -19,13 +19,16 @@
 // Concurrency
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
-#include <await/futures/combine/quorum.hpp>
 #include <await/fibers/sync/mutex.hpp>
+#include <await/futures/combine/quorum.hpp>
 
+// Support std::string serialization
 #include <cereal/types/string.hpp>
+
 #include <fmt/ostream.h>
 
 #include <random>
+#include <algorithm>
 
 using namespace await::fibers;
 using namespace whirl;
@@ -101,9 +104,12 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     NODE_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
+    // TODO: iterate over configuration
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          PeerChannel(i).Call("KV.LocalWrite", key, StampedValue{value, write_ts}));
+          // TODO: replace by rpc::Call
+          PeerChannel(i).Call("KV.LocalWrite", key,
+                              StampedValue{value, write_ts}));
     }
 
     // Await acks from majority of replicas
@@ -169,7 +175,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     return kv_.GetOr(key, StampedValue::NoValue());
   }
 
-  Timestamp ChooseWriteTimestamp() {
+  Timestamp ChooseWriteTimestamp() const {
     // Local wall clock may be out of sync with other replicas
     // Use TrueTime (TrueTime() method)
     return WallTimeNow();
@@ -178,13 +184,11 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Find value with largest timestamp
   StampedValue FindMostRecentValue(
       const std::vector<StampedValue>& values) const {
-    auto candidate = values[0];
-    for (size_t i = 1; i < values.size(); ++i) {
-      if (values[i].ts > candidate.ts) {
-        candidate = values[i];
-      }
-    }
-    return candidate;
+    return *std::max_element(
+        values.begin(), values.end(),
+        [](const StampedValue& lhs, const StampedValue& rhs) {
+          return lhs.ts < rhs.ts;
+        });
   }
 
   // Quorum size
@@ -250,7 +254,7 @@ class KVClient final : public ClientBase {
 
       GlobalCounter("requests").Increment();
 
-      // Sleep for some time
+      // Random pause
       SleepFor(RandomNumber(1, 100));
     }
   }
