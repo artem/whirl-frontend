@@ -17,4 +17,4 @@
   template <typename Archive>             \
   void serialize(Archive& a) {            \
     a(MAP_LIST(CEREAL_NVP, __VA_ARGS__)); \
-  };
+  }
