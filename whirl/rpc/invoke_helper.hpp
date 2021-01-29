@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/input.hpp>
+#include <whirl/rpc/input.hpp>
 
 #include <whirl/cereal/serialize.hpp>
 

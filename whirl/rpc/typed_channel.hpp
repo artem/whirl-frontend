@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/call.hpp>
+#include <whirl/rpc/call.hpp>
 
 namespace whirl::rpc {
 

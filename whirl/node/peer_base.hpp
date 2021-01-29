@@ -2,7 +2,7 @@
 
 #include <whirl/node/node_methods_base.hpp>
 
-#include <whirl/rpc/use/channel.hpp>
+#include <whirl/rpc/typed_channel.hpp>
 
 #include <vector>
 

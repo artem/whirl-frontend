@@ -1,4 +1,4 @@
-#include <whirl/rpc/impl/trace.hpp>
+#include <whirl/rpc/trace.hpp>
 
 #include <await/fibers/core/api.hpp>
 #include <await/fibers/core/fls.hpp>

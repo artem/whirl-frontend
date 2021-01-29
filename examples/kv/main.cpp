@@ -1,7 +1,7 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/node/local_storage.hpp>
 #include <whirl/node/logging.hpp>
-#include <whirl/rpc/use/service_base.hpp>
+#include <whirl/rpc/service_base.hpp>
 #include <whirl/cereal/serializable.hpp>
 
 // Simulation
@@ -14,7 +14,7 @@
 #include <whirl/matrix/test/random.hpp>
 
 #include <await/fibers/core/id.hpp>
-#include <whirl/rpc/impl/id.hpp>
+#include <whirl/rpc/id.hpp>
 
 // Concurrency
 #include <await/fibers/sync/future.hpp>

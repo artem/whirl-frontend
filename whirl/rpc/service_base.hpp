@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/rpc/impl/service.hpp>
-#include <whirl/rpc/impl/invoke_helper.hpp>
+#include <whirl/rpc/service.hpp>
+#include <whirl/rpc/invoke_helper.hpp>
 
 #include <wheels/support/preprocessor.hpp>
 

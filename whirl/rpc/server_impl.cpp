@@ -1,8 +1,8 @@
-#include <whirl/rpc/impl/server_impl.hpp>
+#include <whirl/rpc/server_impl.hpp>
 
-#include <whirl/rpc/impl/trace.hpp>
-#include <whirl/rpc/impl/request_context.hpp>
-#include <whirl/rpc/impl/exceptions.hpp>
+#include <whirl/rpc/trace.hpp>
+#include <whirl/rpc/request_context.hpp>
+#include <whirl/rpc/exceptions.hpp>
 
 #include <whirl/cereal/serialize.hpp>
 

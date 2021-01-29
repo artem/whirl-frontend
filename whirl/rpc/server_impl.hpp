@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/rpc/impl/bytes_value.hpp>
-#include <whirl/rpc/impl/protocol.hpp>
-#include <whirl/rpc/impl/net_transport.hpp>
-#include <whirl/rpc/impl/server.hpp>
+#include <whirl/rpc/bytes_value.hpp>
+#include <whirl/rpc/protocol.hpp>
+#include <whirl/rpc/net_transport.hpp>
+#include <whirl/rpc/server.hpp>
 
 #include <await/executors/executor.hpp>
 

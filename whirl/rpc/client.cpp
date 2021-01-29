@@ -1,6 +1,6 @@
-#include <whirl/rpc/impl/client.hpp>
+#include <whirl/rpc/client.hpp>
 
-#include <whirl/rpc/impl/transport_channel.hpp>
+#include <whirl/rpc/transport_channel.hpp>
 
 namespace whirl::rpc {
 

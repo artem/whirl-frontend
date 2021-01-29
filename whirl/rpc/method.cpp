@@ -1,4 +1,4 @@
-#include <whirl/rpc/impl/method.hpp>
+#include <whirl/rpc/method.hpp>
 
 #include <wheels/support/assert.hpp>
 #include <wheels/support/string_utils.hpp>

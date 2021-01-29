@@ -17,7 +17,7 @@
 #include <whirl/matrix/server/services/logger.hpp>
 #include <whirl/matrix/server/services/discovery.hpp>
 
-#include <whirl/rpc/impl/server_impl.hpp>
+#include <whirl/rpc/server_impl.hpp>
 
 #include <whirl/helpers/digest.hpp>
 

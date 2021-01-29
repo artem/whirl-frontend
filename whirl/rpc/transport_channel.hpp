@@ -1,11 +1,11 @@
 #pragma once
 
-#include <whirl/rpc/impl/method.hpp>
-#include <whirl/rpc/impl/id.hpp>
-#include <whirl/rpc/impl/protocol.hpp>
-#include <whirl/rpc/impl/channel.hpp>
-#include <whirl/rpc/impl/trace.hpp>
-#include <whirl/rpc/impl/net_transport.hpp>
+#include <whirl/rpc/method.hpp>
+#include <whirl/rpc/id.hpp>
+#include <whirl/rpc/protocol.hpp>
+#include <whirl/rpc/channel.hpp>
+#include <whirl/rpc/trace.hpp>
+#include <whirl/rpc/net_transport.hpp>
 
 #include <await/executors/executor.hpp>
 #include <await/executors/strand.hpp>

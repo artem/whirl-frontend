@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/protocol.hpp>
+#include <whirl/rpc/protocol.hpp>
 
 #include <memory>
 

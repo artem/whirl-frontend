@@ -1,4 +1,4 @@
-#include <whirl/rpc/impl/id.hpp>
+#include <whirl/rpc/id.hpp>
 
 #include <wheels/support/id.hpp>
 

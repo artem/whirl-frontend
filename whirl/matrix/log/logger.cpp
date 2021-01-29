@@ -6,7 +6,7 @@
 #include <whirl/matrix/world/global/global.hpp>
 
 #include <await/fibers/core/api.hpp>
-#include <whirl/rpc/impl/trace.hpp>
+#include <whirl/rpc/trace.hpp>
 
 #include <wheels/support/string_builder.hpp>
 

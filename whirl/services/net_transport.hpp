@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/net_transport.hpp>
+#include <whirl/rpc/net_transport.hpp>
 
 namespace whirl {
 

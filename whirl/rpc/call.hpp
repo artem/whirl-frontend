@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/rpc/impl/channel.hpp>
-#include <whirl/rpc/impl/bytes_value.hpp>
-#include <whirl/rpc/impl/method.hpp>
-#include <whirl/rpc/impl/input.hpp>
+#include <whirl/rpc/channel.hpp>
+#include <whirl/rpc/bytes_value.hpp>
+#include <whirl/rpc/method.hpp>
+#include <whirl/rpc/input.hpp>
 
 #include <whirl/cereal/serialize.hpp>
 

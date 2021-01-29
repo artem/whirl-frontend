@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/rpc/impl/method.hpp>
-#include <whirl/rpc/impl/bytes_value.hpp>
+#include <whirl/rpc/method.hpp>
+#include <whirl/rpc/bytes_value.hpp>
 
 #include <await/futures/future.hpp>
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <whirl/rpc/impl/method.hpp>
-#include <whirl/rpc/impl/id.hpp>
-#include <whirl/rpc/impl/bytes_value.hpp>
-#include <whirl/rpc/impl/trace.hpp>
-#include <whirl/rpc/impl/errors.hpp>
+#include <whirl/rpc/method.hpp>
+#include <whirl/rpc/id.hpp>
+#include <whirl/rpc/bytes_value.hpp>
+#include <whirl/rpc/trace.hpp>
+#include <whirl/rpc/errors.hpp>
 
 #include <whirl/cereal/serializable.hpp>
 

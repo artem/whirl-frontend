@@ -1,4 +1,4 @@
-#include <whirl/rpc/impl/errors.hpp>
+#include <whirl/rpc/errors.hpp>
 
 namespace whirl::rpc {
 

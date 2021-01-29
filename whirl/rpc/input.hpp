@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/rpc/impl/bytes_value.hpp>
-#include <whirl/rpc/impl/exceptions.hpp>
+#include <whirl/rpc/bytes_value.hpp>
+#include <whirl/rpc/exceptions.hpp>
 
 #include <whirl/cereal/tuple.hpp>
 

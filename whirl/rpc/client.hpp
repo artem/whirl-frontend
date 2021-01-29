@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/rpc/impl/channel.hpp>
+#include <whirl/rpc/channel.hpp>
 
 #include <whirl/services/executor.hpp>
-#include <whirl/rpc/impl/net_transport.hpp>
+#include <whirl/rpc/net_transport.hpp>
 
 #include <memory>
 

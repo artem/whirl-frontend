@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/channel.hpp>
+#include <whirl/rpc/channel.hpp>
 
 #include <whirl/services/time.hpp>
 

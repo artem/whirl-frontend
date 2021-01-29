@@ -10,8 +10,8 @@
 #include <whirl/services/logger.hpp>
 #include <whirl/services/discovery.hpp>
 
-#include <whirl/rpc/impl/server.hpp>
-#include <whirl/rpc/impl/client.hpp>
+#include <whirl/rpc/server.hpp>
+#include <whirl/rpc/client.hpp>
 
 namespace whirl {
 

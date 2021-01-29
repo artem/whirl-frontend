@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/bytes_value.hpp>
+#include <whirl/rpc/bytes_value.hpp>
 
 namespace whirl::rpc {
 

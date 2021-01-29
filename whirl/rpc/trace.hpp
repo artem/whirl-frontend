@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/impl/id.hpp>
+#include <whirl/rpc/id.hpp>
 
 #include <await/executors/executor.hpp>
 

@@ -1,7 +1,7 @@
 #include <whirl/matrix/channels/retries.hpp>
 
-#include <whirl/rpc/impl/request_context.hpp>
-#include <whirl/rpc/impl/errors.hpp>
+#include <whirl/rpc/request_context.hpp>
+#include <whirl/rpc/errors.hpp>
 
 #include <whirl/services/time.hpp>
 
