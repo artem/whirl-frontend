@@ -12,7 +12,18 @@ Distributed system deterministic simulator
 
 Intentionally non-linearizable.
 
-Use Attiya, Bar-Noy, Dolev algorithm for linearizable behaviour.
+Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour.
+
+## Features
+
+* Rich set of concurrency primitives
+* Communication via RPC
+* Deterministic execution, deterministic randomness
+* Persistent storage and node restarts
+* Local clock skew and drift
+* Google TrueTime simulation
+* Pluggable asynchrony and fault injection strategy
+* Logging, RPC tracing
 
 ## Inspiration
 
