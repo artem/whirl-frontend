@@ -1,6 +1,7 @@
 #pragma once
 
 #include <whirl/cereal/serialize.hpp>
+#include <whirl/cereal/serializable.hpp>
 
 namespace whirl {
 

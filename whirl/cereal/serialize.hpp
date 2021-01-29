@@ -1,7 +1,5 @@
 #pragma once
 
-#include <whirl/cereal/macro.hpp>
-
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 

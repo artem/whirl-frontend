@@ -2,7 +2,7 @@
 #include <whirl/node/local_storage.hpp>
 #include <whirl/node/logging.hpp>
 #include <whirl/rpc/use/service_base.hpp>
-#include <whirl/cereal/serialize.hpp>
+#include <whirl/cereal/serializable.hpp>
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>

@@ -4,6 +4,8 @@
 #include <whirl/rpc/impl/request_context.hpp>
 #include <whirl/rpc/impl/exceptions.hpp>
 
+#include <whirl/cereal/serialize.hpp>
+
 #include <await/fibers/core/api.hpp>
 
 #include <wheels/support/exception.hpp>

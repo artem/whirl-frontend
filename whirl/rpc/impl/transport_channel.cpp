@@ -1,5 +1,7 @@
 #include <whirl/rpc/impl/transport_channel.hpp>
 
+#include <whirl/cereal/serialize.hpp>
+
 #include <await/futures/helpers.hpp>
 #include <await/futures/await.hpp>
 
