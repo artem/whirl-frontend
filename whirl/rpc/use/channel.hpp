@@ -18,8 +18,8 @@ class TChannel {
   }
 
   template <typename... Arguments>
-  detail::TCallResult Call(const std::string& method_str,
-                           Arguments&&... arguments) {
+  detail::CallResult Call(const std::string& method_str,
+                          Arguments&&... arguments) {
     return rpc::Call(impl_, method_str, std::forward<Arguments>(arguments)...);
   }
 

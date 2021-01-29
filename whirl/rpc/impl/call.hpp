@@ -15,9 +15,9 @@ namespace whirl::rpc {
 
 namespace detail {
 
-class TCallResult {
+class CallResult {
  public:
-  explicit TCallResult(Future<BytesValue>&& raw_result)
+  explicit CallResult(Future<BytesValue>&& raw_result)
       : raw_result_(std::move(raw_result)) {
   }
 
@@ -49,12 +49,12 @@ class TCallResult {
 // 2) auto f = Call(channel, "Echo.Echo", data).As<std::string>()
 
 template <typename... Arguments>
-detail::TCallResult Call(const IChannelPtr& channel,
-                         const std::string& method_str,
-                         Arguments&&... arguments) {
+detail::CallResult Call(const IChannelPtr& channel,
+                        const std::string& method_str,
+                        Arguments&&... arguments) {
   auto method = Method::Parse(method_str);
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
-  return detail::TCallResult{channel->Call(method, input)};
+  return detail::CallResult{channel->Call(method, input)};
 }
 
 }  // namespace whirl::rpc
