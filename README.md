@@ -38,8 +38,8 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour.
 
 ## Dependencies
 
-- [await](https://gitlab.com/Lipovsky/await) - Concurrency: fibers and futures with customizable runtime
-- [cereal](https://github.com/USCiLab/cereal) - Serialization
+- [await](https://gitlab.com/Lipovsky/await) – concurrency: fibers + futures with customizable runtime
+- [cereal](https://github.com/USCiLab/cereal) – serialization
 - [fmt](https://github.com/fmtlib/fmt)
 - [ctti](https://github.com/Manu343726/ctti)
 
