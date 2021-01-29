@@ -4,6 +4,8 @@
 
 namespace whirl::rpc {
 
+// TODO: Remove this, replace by rpc::Call
+
 // T stands for Typed
 
 //////////////////////////////////////////////////////////////////////
