@@ -19,6 +19,7 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour.
 * Rich set of concurrency primitives
 * Communication via RPC
 * Deterministic execution, deterministic randomness
+* Time compression
 * Persistent storage and node restarts
 * Local clock skew and drift
 * Google TrueTime simulation
