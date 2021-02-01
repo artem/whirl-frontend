@@ -1,8 +1,8 @@
 #pragma once
 
-#include <whirl/matrix/history/history.hpp>
+#include <whirl/history/history.hpp>
 
-#include <whirl/matrix/history/printers/kv.hpp>
+#include <whirl/history/printers/kv.hpp>
 
 #include <map>
 

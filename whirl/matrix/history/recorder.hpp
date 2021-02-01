@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/history/history.hpp>
+#include <whirl/history/history.hpp>
 
 #include <map>
 #include <vector>

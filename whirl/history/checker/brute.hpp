@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/matrix/history/history.hpp>
-#include <whirl/matrix/history/checker/real_time_order.hpp>
+#include <whirl/history/history.hpp>
+#include <whirl/history/checker/real_time_order.hpp>
 
 namespace whirl::histories {
 

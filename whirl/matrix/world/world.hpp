@@ -2,7 +2,7 @@
 
 #include <whirl/matrix/world/behaviour.hpp>
 #include <whirl/matrix/adversary/strategy.hpp>
-#include <whirl/matrix/history/history.hpp>
+#include <whirl/history/history.hpp>
 #include <whirl/node/node.hpp>
 
 #include <memory>

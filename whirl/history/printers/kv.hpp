@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/matrix/history/history.hpp>
-#include <whirl/matrix/history/printers/print.hpp>
+#include <whirl/history/history.hpp>
+#include <whirl/history/printers/print.hpp>
 
 #include <sstream>
 
