@@ -3,6 +3,7 @@
 #include <whirl/rpc/input.hpp>
 
 #include <whirl/cereal/serialize.hpp>
+#include <whirl/cereal/unit.hpp>
 
 #include <tuple>
 
@@ -28,7 +29,7 @@ struct InvokeHelper<void, Args...> {
   static BytesValue Invoke(F f, const BytesValue& input) {
     auto args = DeserializeInput<Args...>(input);
     std::apply(std::move(f), std::move(args));
-    return "";
+    return SerializedUnit();
   }
 };
 

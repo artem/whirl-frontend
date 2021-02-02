@@ -6,8 +6,6 @@
 #include <whirl/cereal/tuple.hpp>
 #include <whirl/cereal/unit.hpp>
 
-#include <wheels/support/unit.hpp>
-
 #include <string>
 #include <vector>
 #include <optional>
@@ -23,7 +21,7 @@ class Value {
 
   // For functions that return void
   static Value MakeUnit() {
-    return Serialize(wheels::Unit{});
+    return SerializedUnit();
   }
 
   template <typename T>

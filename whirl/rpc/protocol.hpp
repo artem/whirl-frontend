@@ -25,8 +25,7 @@ struct RequestMessage {
   TraceId trace_id;
   std::string to;  // For debugging
   Method method;
-  BytesValue input;
-
+  BytesValue input;  // std::tuple
   WHIRL_SERIALIZE(id, trace_id, to, method, input)
 };
 
@@ -36,8 +35,8 @@ struct RequestMessage {
 
 struct ResponseMessage {
   RequestId request_id;
-  Method method;  // For debugging, echoes that of the request
-  BytesValue result;
+  Method method;      // For debugging, echoes that of the request
+  BytesValue result;  // wheels::Unit for handlers with void return type
   RPCErrorCode error;
 
   WHIRL_SERIALIZE(request_id, method, result, error)
