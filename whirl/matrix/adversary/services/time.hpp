@@ -31,7 +31,9 @@ class TimeService : public ITimeService {
     auto tp = AfterWorldTime(d);
 
     auto [f, p] = MakeContract<void>();
-    events_.Add(tp, [p = std::move(p)]() mutable { std::move(p).Set(); });
+    events_.Add(tp, [p = std::move(p)]() mutable {
+      std::move(p).Set();
+    });
     return std::move(f);
   }
 

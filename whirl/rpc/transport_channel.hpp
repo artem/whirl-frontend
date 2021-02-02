@@ -75,7 +75,9 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   }
 
   void HandleDisconnect(const std::string& /*peer*/) override {
-    strand_->Execute([self = shared_from_this()]() { self->LostPeer(); });
+    strand_->Execute([self = shared_from_this()]() {
+      self->LostPeer();
+    });
   }
 
  private:

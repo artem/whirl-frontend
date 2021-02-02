@@ -111,7 +111,9 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
       return;
     }
 
-    auto retry = [self = shared_from_this()](Result<void>) { self->Retry(); };
+    auto retry = [self = shared_from_this()](Result<void>) {
+      self->Retry();
+    };
 
     auto after = time_->After(backoff_.Next());
     std::move(after).Via(e).Subscribe(retry);

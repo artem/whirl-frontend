@@ -27,7 +27,9 @@ class ClientBase : public INode {
   }
 
   void Start() override {
-    Threads().Spawn([this]() { Main(); });
+    Threads().Spawn([this]() {
+      Main();
+    });
   }
 
  protected:

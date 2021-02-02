@@ -5,7 +5,9 @@
 namespace whirl {
 
 void NodeBase::Start() {
-  Spawn([this]() { Main(); });
+  Spawn([this]() {
+    Main();
+  });
 }
 
 void NodeBase::StartRPCServer() {

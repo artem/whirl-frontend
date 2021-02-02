@@ -31,7 +31,9 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
 
 void TransportChannel::Close() {
   // Do we need strong ref?
-  auto close = [self = shared_from_this()]() { self->DoClose(); };
+  auto close = [self = shared_from_this()]() {
+    self->DoClose();
+  };
   await::futures::SyncVia(strand_, std::move(close));
 }
 
