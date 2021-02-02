@@ -10,16 +10,10 @@ namespace whirl {
 // Spanner: Google's Globally-Distributed Database"
 // https://research.google/pubs/pub39966/
 
-//////////////////////////////////////////////////////////////////////
-
 struct TTInterval {
   TimePoint earliest;
   TimePoint latest;
 };
-
-using TTNow = TTInterval;
-
-//////////////////////////////////////////////////////////////////////
 
 struct ITrueTimeService {
   virtual ~ITrueTimeService() = default;
