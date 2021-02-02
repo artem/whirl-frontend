@@ -14,7 +14,7 @@ Call Recorder::Complete(const RunningCall& call, Value result) {
 }
 
 Call Recorder::Lost(const RunningCall& call) {
-  return Call{call.method,     call.arguments, Value::Void(),
+  return Call{call.method,     call.arguments, std::nullopt,
               call.start_time, std::nullopt,   call.labels};
 }
 

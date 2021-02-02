@@ -50,7 +50,7 @@ struct KVCallPrinter {
 
     // Return value
     if (call.IsCompleted()) {
-      out << ": " << call.result.As<V>();
+      out << ": " << call.result->As<V>();
     } else {
       out << "?";
     }
@@ -65,7 +65,7 @@ struct KVCallPrinter {
 
     // Return value
     if (call.IsCompleted()) {
-      V old_value = call.result.As<V>();
+      V old_value = call.result->As<V>();
       out << ": " << old_value;
     } else {
       out << "?";

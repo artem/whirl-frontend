@@ -80,7 +80,7 @@ class KVStoreModel {
 
       State next{current};
       next.Set(k, v);
-      return {true, Value::Void(), std::move(next)};
+      return {true, Value::MakeUnit(), std::move(next)};
 
     } else if (method == "Get") {
       // Get

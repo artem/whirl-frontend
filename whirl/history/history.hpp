@@ -3,6 +3,10 @@
 #include <whirl/time.hpp>
 
 #include <whirl/cereal/serialize.hpp>
+#include <whirl/cereal/tuple.hpp>
+#include <whirl/cereal/unit.hpp>
+
+#include <wheels/support/unit.hpp>
 
 #include <string>
 #include <vector>
@@ -17,8 +21,9 @@ class Value {
   Value(std::string bytes) : bytes_(std::move(bytes)) {
   }
 
-  static Value Void() {
-    return Value{""};
+  // For functions that return void
+  static Value MakeUnit() {
+    return Serialize(wheels::Unit{});
   }
 
   template <typename T>
@@ -46,8 +51,9 @@ class Arguments {
   Arguments(std::string bytes) : bytes_(std::move(bytes)) {
   }
 
-  static Arguments EmptyList() {
-    return Arguments{""};
+  // Empty std::tuple
+  static Arguments MakeEmpty() {
+    return SerializeValues();
   }
 
   template <typename... Args>
@@ -68,7 +74,9 @@ using CallLabels = std::vector<std::string>;
 struct Call {
   std::string method;
   Arguments arguments;
-  Value result;
+  // std::nullopt - incomplete call,
+  // wheels::Unit (std::monostate) - void
+  std::optional<Value> result;
   TimePoint start_time;
   std::optional<TimePoint> end_time;
   CallLabels labels;
