@@ -5,11 +5,11 @@
 
 #include <whirl/cereal/tuple.hpp>
 
-#include <tuple>
-
 namespace whirl::rpc {
 
 namespace detail {
+
+// Encode RPC arguments as std::tuple
 
 template <typename... Types>
 BytesValue SerializeInput(Types&&... arguments) {
