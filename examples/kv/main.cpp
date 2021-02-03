@@ -60,8 +60,8 @@ struct StampedValue {
 };
 
 // For logging
-std::ostream& operator<<(std::ostream& out, const StampedValue& v) {
-  out << "{" << v.value << ", ts: " << v.ts << "}";
+std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
+  out << "{" << stamped_value.value << ", ts: " << stamped_value.ts << "}";
   return out;
 }
 
@@ -202,7 +202,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // strings -> StampedValues
   LocalKVStorage<StampedValue> kv_;
   // Fiber-aware mutex
-  await::fibers::Mutex mutex_;  // Guards access to kv_
+  // Guards access to kv_ from RPC handlers
+  await::fibers::Mutex mutex_;
 };
 
 //////////////////////////////////////////////////////////////////////
