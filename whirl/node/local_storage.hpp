@@ -57,8 +57,8 @@ class LocalKVStorage {
     }
   }
 
-  V GetOr(const std::string& key, V default_value) const {
-    return TryGet(key).value_or(default_value);
+  V GetOr(const std::string& key, V or_value) const {
+    return TryGet(key).value_or(or_value);
   }
 
   void Delete(const std::string& key) {
@@ -119,8 +119,8 @@ class LocalStorage {
   }
 
   template <typename U>
-  U LoadOr(const std::string& key, U default_value) const {
-    return TryLoad<U>(key).value_or(default_value);
+  U LoadOr(const std::string& key, U or_value) const {
+    return TryLoad<U>(key).value_or(or_value);
   }
 
   template <typename U>
