@@ -44,6 +44,7 @@ class CallResult {
 
 }  // namespace detail
 
+// Unary RPC
 // Usage:
 // 1) Future<std::string> f = Call(channel, "Echo.Echo", data);
 // 2) auto f = Call(channel, "Echo.Echo", data).As<std::string>()
