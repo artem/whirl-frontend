@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
 message(STATUS "Echo example")
 
 add_executable(whirl_example_echo main.cpp)
