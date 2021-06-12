@@ -6,7 +6,7 @@
 
 /* Usage:
  * struct MyMessage {
- *   int a;
+ *   int32_t a;
  *   std::string b;
  *
  *   WHIRL_SERIALIZE(a, b)

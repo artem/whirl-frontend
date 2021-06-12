@@ -26,6 +26,7 @@ struct RequestMessage {
   std::string to;  // For debugging
   Method method;
   BytesValue input;  // std::tuple
+
   WHIRL_SERIALIZE(id, trace_id, to, method, input)
 };
 
