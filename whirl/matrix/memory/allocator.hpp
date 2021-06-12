@@ -9,6 +9,8 @@ whirl::Heap* GetHeap();
 
 void PrintAllocDebugInfo();
 
+uintptr_t GlobalAllocsCheckSum();
+
 //////////////////////////////////////////////////////////////////////
 
 class HeapScopeGuard {
