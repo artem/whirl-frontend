@@ -1,6 +1,6 @@
 #include <whirl/matrix/server/storage.hpp>
 
-#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/new.hpp>
 #include <whirl/matrix/memory/helpers.hpp>
 
 #include <whirl/helpers/digest.hpp>

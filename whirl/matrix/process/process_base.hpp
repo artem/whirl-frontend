@@ -5,7 +5,7 @@
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/crash.hpp>
 #include <whirl/matrix/process/step_queue.hpp>
-#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/new.hpp>
 
 #include <whirl/matrix/log/logger.hpp>
 

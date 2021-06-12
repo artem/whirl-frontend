@@ -3,7 +3,7 @@
 #include <wheels/support/assert.hpp>
 
 // TODO: remove
-#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/new.hpp>
 
 #include <cstring>
 #include <vector>

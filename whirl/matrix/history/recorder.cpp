@@ -2,7 +2,7 @@
 
 #include <whirl/matrix/world/global/global.hpp>
 
-#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/new.hpp>
 
 namespace whirl::histories {
 

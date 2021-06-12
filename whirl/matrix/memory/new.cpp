@@ -1,4 +1,4 @@
-#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/new.hpp>
 
 #include <cstdlib>
 #include <cstdio>

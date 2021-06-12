@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/matrix/memory/heap.hpp>
-#include <whirl/matrix/memory/allocator.hpp>
+#include <whirl/matrix/memory/new.hpp>
 
 namespace whirl {
 
