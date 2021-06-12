@@ -31,6 +31,7 @@
 #include <random>
 #include <algorithm>
 
+using wheels::Result;
 using namespace await::fibers;
 using namespace whirl;
 using namespace whirl::time_literals;
@@ -241,7 +242,7 @@ class KVClient final : public ClientBase {
     KVBlockingStub kv_store{Channel()};
 
     for (size_t i = 1;; ++i) {
-      if (RandomNumber() % 2 == 0) {
+      if (Either()) {
         Key key = ChooseKey();
         Value value = RandomNumber(1, 100);
         NODE_LOG_INFO("Execute Set({}, {})", key, value);

@@ -78,6 +78,10 @@ class ClientBase : public INode {
     return lo + RandomNumber(hi - lo);
   }
 
+  bool Either() const {
+    return RandomNumber(2) == 1;
+  }
+
   // Time
 
   TimePoint WallTimeNow() const {
