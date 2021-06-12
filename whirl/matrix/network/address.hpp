@@ -8,7 +8,7 @@
 
 namespace whirl::net {
 
-using Port = size_t;
+using Port = uint16_t;
 
 struct Address {
   std::string host;
