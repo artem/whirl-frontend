@@ -57,6 +57,7 @@ class ServerImpl : public IServer,
 
   ITransportServerPtr server_;
 
+  // Names -> Services
   std::map<std::string, IServicePtr> services_;
 
   Logger logger_{"RPC-Server"};
