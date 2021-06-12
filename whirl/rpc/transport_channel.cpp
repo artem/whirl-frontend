@@ -3,7 +3,7 @@
 #include <whirl/cereal/serialize.hpp>
 
 #include <await/futures/helpers.hpp>
-#include <await/futures/await.hpp>
+#include <await/futures/util/await.hpp>
 
 namespace whirl::rpc {
 

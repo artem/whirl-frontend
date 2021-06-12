@@ -3,7 +3,7 @@
 #include <whirl/rpc/method.hpp>
 #include <whirl/rpc/bytes_value.hpp>
 
-#include <await/futures/future.hpp>
+#include <await/futures/core/future.hpp>
 
 #include <memory>
 

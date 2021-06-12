@@ -6,7 +6,7 @@
 #include <whirl/matrix/process/step_queue.hpp>
 #include <whirl/matrix/log/logger.hpp>
 
-#include <await/futures/promise.hpp>
+#include <await/futures/core/future.hpp>
 
 namespace whirl {
 

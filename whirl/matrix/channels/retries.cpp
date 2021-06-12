@@ -9,7 +9,7 @@
 
 #include <whirl/helpers/weak_ptr.hpp>
 
-#include <await/futures/promise.hpp>
+#include <await/futures/util/promise.hpp>
 
 #include <algorithm>
 
@@ -56,7 +56,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   Future<BytesValue> Start() {
-    auto with_retries = std::move(promise_).MakeFuture();
+    auto f_with_retries = promise_.MakeFuture();
 
     auto self = shared_from_this();
 
@@ -66,7 +66,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     SubscribeToResult(std::move(f));
 
     // Forward executor
-    return std::move(with_retries).Via(e);
+    return std::move(f_with_retries).Via(e);
   }
 
  private:
@@ -98,7 +98,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     }
   }
 
-  static bool IsRetriableError(const Error& error) {
+  static bool IsRetriableError(const wheels::Error& error) {
     return error.HasErrorCode() &&
            error.GetErrorCode() == RPCErrorCode::TransportError;
   }
@@ -107,7 +107,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     if (IsExpired(scope_)) {
       WHIRL_SIM_LOG("Context for {}.{} expired, stop retrying",
                     channel_->Peer(), method_);
-      std::move(promise_).SetError(Error(RPCErrorCode::TransportError));
+      std::move(promise_).SetError(wheels::Error(RPCErrorCode::TransportError));
       return;
     }
 
@@ -120,7 +120,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
  private:
-  Promise<BytesValue> promise_;
+  await::futures::LazyPromise<BytesValue> promise_;
 
   IChannelPtr channel_;
   Method method_;

@@ -2,7 +2,7 @@
 
 #include <await/fibers/core/fiber.hpp>
 #include <await/fibers/core/guts.hpp>
-#include <await/fibers/core/stack.hpp>
+#include <await/fibers/core/stacks.hpp>
 
 #include <vector>
 

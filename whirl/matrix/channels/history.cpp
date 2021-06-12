@@ -6,7 +6,7 @@
 
 #include <whirl/matrix/world/global/global.hpp>
 
-#include <await/futures/promise.hpp>
+#include <await/futures/core/future.hpp>
 #include <await/futures/helpers.hpp>
 
 namespace whirl {

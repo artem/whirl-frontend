@@ -2,7 +2,7 @@
 
 #include <whirl/time.hpp>
 
-#include <await/futures/future.hpp>
+#include <await/futures/core/future.hpp>
 
 #include <memory>
 

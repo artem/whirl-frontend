@@ -10,7 +10,7 @@
 #include <await/executors/executor.hpp>
 #include <await/executors/strand.hpp>
 
-#include <await/futures/promise.hpp>
+#include <await/futures/util/promise.hpp>
 
 // TODO: abstract logger
 #include <whirl/matrix/log/logger.hpp>
@@ -35,7 +35,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
     TraceId trace_id;
     Method method;
     BytesValue input;
-    Promise<BytesValue> promise;
+    await::futures::LazyPromise<BytesValue> promise;
   };
 
   using Requests = std::map<RequestId, Request>;
