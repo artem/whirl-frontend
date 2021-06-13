@@ -63,7 +63,7 @@ char* MemoryAllocator::AllocateNewBlock(size_t bytes) {
                 "Broken heap allocator");
 
   if (Overflow(bytes)) {
-    GlobalHeapScope g;
+    GlobalAllocatorGuard g;
     WHEELS_PANIC("Cannot allocate " << bytes << " bytes: heap overflow");
   }
 

@@ -7,8 +7,8 @@ namespace whirl {
 
 class ProcessHeap {
  public:
-  HeapScopeGuard Use() {
-    return HeapScopeGuard(&impl_);
+  AllocatorGuard Use() {
+    return AllocatorGuard(&impl_);
   }
 
   size_t BytesAllocated() const {

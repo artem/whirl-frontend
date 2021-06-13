@@ -17,7 +17,7 @@ Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap)
 
 ClientSocket Transport::ConnectTo(const Address& address,
                                   ISocketHandler* handler) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   Link* link = net_.GetLink(host_, address.host);
 
@@ -40,7 +40,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
 };
 
 ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   WHEELS_VERIFY(endpoints_.count(port) == 0, "Port already in use");
 
@@ -56,14 +56,14 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
 };
 
 void Transport::RemoveEndpoint(Port port) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   WHIRL_SIM_LOG("Remove endpoint at port {}", port);
   endpoints_.erase(port);
 }
 
 void Transport::Reset() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   for ([[maybe_unused]] const auto& [port, _] : endpoints_) {
     WHIRL_SIM_LOG("Remove endpoint at port {}", port);
@@ -104,7 +104,7 @@ class Replier {
 };
 
 void Transport::HandlePacket(const Packet& packet, Link* out) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   Address from{out->EndHostName(), packet.source_port};
   Address to{host_, packet.dest_port};

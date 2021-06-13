@@ -67,7 +67,7 @@ bool Logger::IsLevelEnabled(LogLevel level) const {
 }
 
 void Logger::Log(LogLevel level, const std::string& message) {
-  GlobalHeapScope guard;
+  GlobalAllocatorGuard guard;
   if (IsLevelEnabled(level)) {
     Write(MakeEvent(level, message));
   }

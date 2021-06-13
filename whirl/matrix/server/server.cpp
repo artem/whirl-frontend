@@ -47,7 +47,7 @@ bool Server::IsAlive() const {
 }
 
 void Server::Crash() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   WHEELS_VERIFY(state_ != State::Crashed, "Server already crashed");
 
@@ -69,21 +69,21 @@ void Server::Crash() {
 }
 
 void Server::FastReboot() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   Crash();
   Start();
 }
 
 void Server::Pause() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   WHEELS_VERIFY(state_ != State::Paused, "Server already paused");
   state_ = State::Paused;
 }
 
 void Server::Resume() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   WHEELS_VERIFY(state_ == State::Paused, "Server is not paused");
 
@@ -102,7 +102,7 @@ void Server::Resume() {
 }
 
 void Server::AdjustWallClock() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
   wall_clock_.AdjustOffset();
 }
 

@@ -13,9 +13,9 @@ uintptr_t GlobalAllocsCheckSum();
 
 //////////////////////////////////////////////////////////////////////
 
-class HeapScopeGuard {
+class AllocatorGuard {
  public:
-  HeapScopeGuard(whirl::MemoryAllocator* a) {
+  AllocatorGuard(whirl::MemoryAllocator* a) {
     saved_ = GetAllocator();
     SetAllocator(a);
   }
@@ -24,7 +24,7 @@ class HeapScopeGuard {
     return saved_;
   }
 
-  ~HeapScopeGuard() {
+  ~AllocatorGuard() {
     SetAllocator(saved_);
   }
 
@@ -34,8 +34,8 @@ class HeapScopeGuard {
 
 //////////////////////////////////////////////////////////////////////
 
-class GlobalHeapScope : public HeapScopeGuard {
+class GlobalAllocatorGuard : public AllocatorGuard {
  public:
-  GlobalHeapScope() : HeapScopeGuard(nullptr) {
+  GlobalAllocatorGuard() : AllocatorGuard(nullptr) {
   }
 };

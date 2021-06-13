@@ -110,7 +110,7 @@ static bool Cross(const Link& link, const Partition& lhs) {
 }
 
 void Network::Split() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   std::vector<std::string> servers;
 
@@ -162,7 +162,7 @@ void Network::Split(const Partition& lhs) {
 }
 
 void Network::Heal() {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   for (auto& link : links_) {
     link.Resume();

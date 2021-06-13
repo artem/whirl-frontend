@@ -29,7 +29,7 @@ class ClientSocket::Impl {
   }
 
   void Send(const Message& message) {
-    GlobalHeapScope g;
+    GlobalAllocatorGuard g;
     link_->Add(MakePacket(message));
   }
 
@@ -111,7 +111,7 @@ Packet ReplySocket::MakePacket(const Message& message) {
 }
 
 void ReplySocket::Send(const Message& message) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
   link_->Add(MakePacket(message));
 }
 

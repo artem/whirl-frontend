@@ -22,7 +22,7 @@ Call Recorder::Lost(const RunningCall& call) {
 
 Recorder::Cookie Recorder::CallStarted(const std::string& method,
                                        const std::string& input) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   Cookie id = ++next_id_;
   running_calls_.emplace(
@@ -31,7 +31,7 @@ Recorder::Cookie Recorder::CallStarted(const std::string& method,
 }
 
 void Recorder::AddLabel(Cookie id, const std::string& label) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   auto it = running_calls_.find(id);
   WHEELS_VERIFY(it != running_calls_.end(), "Call not found");
@@ -39,7 +39,7 @@ void Recorder::AddLabel(Cookie id, const std::string& label) {
 }
 
 void Recorder::CallCompleted(Cookie id, const std::string& output) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   auto it = running_calls_.find(id);
 
@@ -50,7 +50,7 @@ void Recorder::CallCompleted(Cookie id, const std::string& output) {
 }
 
 void Recorder::CallLost(Cookie id) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   auto it = running_calls_.find(id);
 
@@ -61,7 +61,7 @@ void Recorder::CallLost(Cookie id) {
 }
 
 void Recorder::RemoveCall(Cookie id) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   running_calls_.erase(id);
 }

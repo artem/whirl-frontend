@@ -9,7 +9,7 @@ namespace whirl {
 
 // Context: Server
 void PersistentStorage::Put(const std::string& key, const Bytes& value) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
 
   if (auto found = data_.find(key); found != data_.end()) {
     found->second = value;  // Copy
@@ -28,7 +28,7 @@ std::optional<Bytes> PersistentStorage::TryGet(const std::string& key) const {
 }
 
 void PersistentStorage::Delete(const std::string& key) {
-  GlobalHeapScope g;
+  GlobalAllocatorGuard g;
   data_.erase(key);
 }
 
