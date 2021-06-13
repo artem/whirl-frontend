@@ -4,14 +4,13 @@
 
 //////////////////////////////////////////////////////////////////////
 
+// nullptr - global allocator
 void SetAllocator(whirl::MemoryAllocator* allocator);
 whirl::MemoryAllocator* GetAllocator();
 
-void PrintAllocDebugInfo();
-
-uintptr_t GlobalAllocsCheckSum();
-
 //////////////////////////////////////////////////////////////////////
+
+// Scope guards
 
 class AllocatorGuard {
  public:
@@ -32,10 +31,12 @@ class AllocatorGuard {
   whirl::MemoryAllocator* saved_;
 };
 
-//////////////////////////////////////////////////////////////////////
-
 class GlobalAllocatorGuard : public AllocatorGuard {
  public:
   GlobalAllocatorGuard() : AllocatorGuard(nullptr) {
   }
 };
+
+//////////////////////////////////////////////////////////////////////
+
+uintptr_t GlobalAllocsCheckSum();
