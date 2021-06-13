@@ -10,13 +10,14 @@ struct BlockHeader {
   uint32_t size;  // Power of 2
   uint32_t canary;
 
-  BlockHeader* next_;
+  BlockHeader* next;
 };
 
+// Intrusive
 class BlockList {
  public:
   void Push(BlockHeader* block) {
-    block->next_ = head_;
+    block->next = head_;
     head_ = block;
   }
 
@@ -25,7 +26,7 @@ class BlockList {
       return nullptr;
     }
     BlockHeader* block = head_;
-    head_ = head_->next_;
+    head_ = head_->next;
     return block;
   }
 
@@ -56,7 +57,6 @@ class MemoryAllocator {
 
   // And initialize with zeroes
   void* Allocate(size_t bytes);
-
   void Free(void* addr);
 
   bool FromHere(void* addr) const;
