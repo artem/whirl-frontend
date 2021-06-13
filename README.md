@@ -4,7 +4,7 @@ Distributed system deterministic simulator
 
 ## Example
 
-[KV](/examples/kv/main.cpp) - simple replicated KV store
+[KV](/examples/kv/main.cpp) – simple replicated KV store
 
 - Quorum reads/writes
 - Last-write-wins via wall clock
