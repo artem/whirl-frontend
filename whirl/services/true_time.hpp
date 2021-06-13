@@ -10,6 +10,7 @@ namespace whirl {
 // Spanner: Google's Globally-Distributed Database"
 // https://research.google/pubs/pub39966/
 
+// [earliest, latest]
 struct TTInterval {
   TimePoint earliest;
   TimePoint latest;
@@ -20,12 +21,12 @@ struct ITrueTimeService {
 
   virtual TTInterval Now() const = 0;
 
-  // True if t has definitely passed
+  // True if `t` has definitely passed
   bool After(TimePoint t) const {
     return Now().earliest > t;
   }
 
-  // True if t has definitely not arrived
+  // True if `t` has definitely not arrived
   bool Before(TimePoint t) const {
     return Now().latest < t;
   }
