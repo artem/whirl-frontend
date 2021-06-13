@@ -9,6 +9,7 @@
 #include <whirl/matrix/client/client.hpp>
 #include <whirl/matrix/world/global/vars.hpp>
 #include <whirl/matrix/test/random.hpp>
+#include <whirl/matrix/memory/new.hpp>
 
 #include <whirl/history/printers/kv.hpp>
 #include <whirl/history/checker/check.hpp>
@@ -136,10 +137,10 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // 2) Block current fiber until quorum collected
     Result<std::vector<StampedValue>> results = Await(std::move(quorum_reads));
     // 3) Unpack vector or throw error
-    auto values = results.Value();
+    auto values = results.ValueOrThrow();
 
     // Or just combine all steps to:
-    // auto values = Await(Quorum(std::move(reads), Majority())).Value()
+    // auto values = Await(Quorum(std::move(reads), Majority())).ValueOrThrow()
 
     for (size_t i = 0; i < values.size(); ++i) {
       NODE_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
@@ -219,7 +220,7 @@ class KVBlockingStub {
   }
 
   Value Get(Key k) {
-    return Await(channel_.Call("KV.Get", k).As<Value>()).Value();
+    return Await(channel_.Call("KV.Get", k).As<Value>()).ValueOrThrow();
   }
 
  private:
@@ -377,10 +378,10 @@ void TestDeterminism() {
 
   std::cout << "Test determinism:" << std::endl;
 
-  size_t digest = RunSimulation(kSeed);
+  size_t digest1 = RunSimulation(kSeed);
+  size_t digest2 = RunSimulation(kSeed);
 
-  // Repeat with the same seed
-  if (RunSimulation(kSeed) != digest) {
+  if (digest1 != digest2) {
     std::cout << "Impl is not deterministic" << std::endl;
     FailTest();
   }
