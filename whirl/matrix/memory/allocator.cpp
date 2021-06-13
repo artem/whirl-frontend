@@ -5,7 +5,64 @@
 
 #include <wheels/support/assert.hpp>
 
+#include <wheels/support/bithacks.hpp>
+
+
+#define WHIRL_ALLOC_PANIC(error) \
+  do { \
+    GlobalAllocatorGuard g;      \
+    WHEELS_PANIC(error);         \
+  } while (false)
+
+#define WHIRL_ALLOC_VERIFY(cond, error) \
+  do {                            \
+    if (!(cond)) {                \
+      WHIRL_ALLOC_PANIC(error);                              \
+    } \
+  } while(false)
+
+
 namespace whirl {
+
+static size_t AllocToPowerOf2(size_t bytes) {
+  size_t pow2 = RoundUpToNextPowerOfTwo(bytes);
+  if (pow2 >= 16) {
+    return pow2;
+  } else {
+    return 16;
+  }
+}
+
+static const size_t kLargeAllocClass = 0;
+
+static size_t GetAllocClass(size_t bytes_pow2) {
+  WHIRL_ALLOC_VERIFY(IsPowerOfTwo(bytes_pow2), "Memory allocator internal error: GetAllocClass expected ^2, value = " << bytes_pow2);
+
+  switch (bytes_pow2) {
+    case 16:
+      return 1;
+    case 32:
+      return 2;
+    case 64:
+      return 3;
+    case 128:
+      return 4;
+    case 256:
+      return 5;
+    case 512:
+      return 6;
+    case 1024:
+      return 7;
+    case 2048:
+      return 8;
+    case 4096:
+      return 9;
+    case 8192:
+      return 10;
+    default:
+      return kLargeAllocClass;
+  }
+}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -17,60 +74,95 @@ static_assert(kRequiredAlignment == 16, "Unexpected!");
 
 //////////////////////////////////////////////////////////////////////
 
-struct BlockHeader {
-  uint32_t size;
-  uint32_t canary;
+static_assert(sizeof(BlockHeader) % kRequiredAlignment == 0);
 
-  uint64_t padding_;
-};
+//////////////////////////////////////////////////////////////////////
 
-static const size_t kBlockHeaderSize = sizeof(BlockHeader);
 
-static_assert(kBlockHeaderSize % kRequiredAlignment == 0);
+BlockHeader* BlockCache::TryAcquire(size_t class_index) {
+  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex, "Memory allocator internal error");
+  return block_lists_[class_index].TryPop();
+}
+
+void BlockCache::Release(BlockHeader* block) {
+  size_t class_index = GetAllocClass(block->size);
+  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex, "Memory allocator internal error");
+  block_lists_[class_index].Push(block);
+}
 
 //////////////////////////////////////////////////////////////////////
 
 // NB: No dynamic allocations here!
 
-static size_t RoundUpTo16(size_t bytes) {
-  return (bytes + 15) & ~15;
-}
-
 static const size_t kZFillBlockSize = 4096;
 
 static const uint32_t kCanary = 23911147;
 
-MemoryAllocator::MemoryAllocator() : heap_(AcquireHeap()) {
-  WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0,
+MemoryAllocator::MemoryAllocator() : arena_(AcquireHeap()) {
+  WHEELS_VERIFY(arena_.Size() % kZFillBlockSize == 0,
                 "Choose another kZFillBlockSize");
   Reset();
 }
 
 MemoryAllocator::~MemoryAllocator() {
-  ReleaseHeap(std::move(heap_));
+  ReleaseHeap(std::move(arena_));
+}
+
+static bool IsAllocationTooLarge(size_t bytes) {
+  return bytes > std::numeric_limits<uint32_t>::max();
 }
 
 void* MemoryAllocator::Allocate(size_t bytes) {
-  if (bytes > std::numeric_limits<uint32_t>::max()) {
-    WHEELS_PANIC("Allocation is too large: " << bytes);
+  if (IsAllocationTooLarge(bytes)) {
+    WHIRL_ALLOC_PANIC("Allocation is too large: " << bytes);
   }
 
-  return AllocateNewBlock(bytes);
+  void* user_addr = DoAllocate(bytes);
+
+  WHIRL_ALLOC_VERIFY(((uintptr_t)user_addr) % kRequiredAlignment == 0,
+                     "Memory allocator internal error: allocated block is not aligned");
+
+  return user_addr;
+}
+
+void* MemoryAllocator::DoAllocate(size_t bytes) {
+  size_t bytes_pow2 = AllocToPowerOf2(bytes);
+
+  size_t alloc_class = GetAllocClass(bytes_pow2);
+
+  // Large allocation
+  if (alloc_class == kLargeAllocClass) {
+    return AllocateNewBlock(bytes_pow2);
+  }
+
+  // Try cache
+  BlockHeader* block = cache_.TryAcquire(alloc_class);
+  if (block != nullptr) {
+    return (char*)block + sizeof(BlockHeader);
+  }
+
+  return AllocateNewBlock(bytes_pow2);
 }
 
 static BlockHeader* LocateBlockHeader(void* user_addr) {
-  char* header_addr =(char*)user_addr - kBlockHeaderSize;
+  char* header_addr =(char*)user_addr - sizeof(BlockHeader);
   return (BlockHeader*)header_addr;
 }
 
 void MemoryAllocator::Free(void* addr) {
-  WHEELS_VERIFY(FromHere(addr), "Do not mess with heaps");
+  WHIRL_ALLOC_VERIFY(FromHere(addr), "Do not mess with heaps");
   BlockHeader* header = LocateBlockHeader(addr);
-  WHEELS_VERIFY(header->canary == kCanary, "Memory allocator is broken");
+  WHIRL_ALLOC_VERIFY(header->canary == kCanary, "Memory allocator is broken");
+
+  size_t alloc_class = GetAllocClass(header->size);
+
+  if (alloc_class != kLargeAllocClass) {
+    cache_.Release(header);
+  }
 }
 
 void MemoryAllocator::Reset() {
-  next_ = zfilled_ = heap_.Start();
+  next_ = zfilled_ = arena_.Start();
 }
 
 void MemoryAllocator::ZeroFillTo(char* pos) {
@@ -81,18 +173,13 @@ void MemoryAllocator::ZeroFillTo(char* pos) {
 }
 
 char* MemoryAllocator::AllocateNewBlock(size_t bytes) {
-  bytes = RoundUpTo16(bytes);
+  WHIRL_ALLOC_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0,
+                "Memory allocator internal error: bump-pointer is not aligned");
 
-  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0,
-                "Broken heap allocator");
-
-  if (Overflow(bytes)) {
-    GlobalAllocatorGuard g;
-    WHEELS_PANIC("Cannot allocate " << bytes << " bytes: heap overflow");
-  }
+  WHIRL_ALLOC_VERIFY(!Overflow(bytes), "Cannot allocate " << bytes << " bytes: arena overflow");
 
   // Incrementally fill heap with zeroes
-  ZeroFillTo(next_ + kBlockHeaderSize + bytes);
+  ZeroFillTo(next_ + sizeof(BlockHeader) + bytes);
 
   // printf("Allocate %zu bytes\n", bytes);
   char* user_addr = WriteBlockHeader(next_, bytes);
@@ -101,7 +188,7 @@ char* MemoryAllocator::AllocateNewBlock(size_t bytes) {
 }
 
 bool MemoryAllocator::Overflow(size_t bytes) const {
-  return next_ + kBlockHeaderSize + bytes >= heap_.End();
+  return next_ + sizeof(BlockHeader) + bytes >= arena_.End();
 }
 
 char* MemoryAllocator::WriteBlockHeader(char* addr, size_t size) {
@@ -112,12 +199,11 @@ char* MemoryAllocator::WriteBlockHeader(char* addr, size_t size) {
 };
 
 bool MemoryAllocator::FromHere(void* addr) const {
-  // Best effort
-  return addr >= heap_.Start() && addr < heap_.End();
+  return addr >= arena_.Start() && addr < arena_.End();
 }
 
 size_t MemoryAllocator::BytesAllocated() const {
-  return next_ - heap_.Start();
+  return next_ - arena_.Start();
 }
 
 }  // namespace whirl
