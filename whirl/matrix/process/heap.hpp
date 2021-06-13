@@ -15,7 +15,7 @@ class ProcessHeap {
     return impl_.BytesAllocated();
   }
 
-  bool FromHere(char* addr) const {
+  bool FromHere(void* addr) const {
     return impl_.FromHere(addr);
   }
 
