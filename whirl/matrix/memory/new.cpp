@@ -4,22 +4,22 @@
 #include <cstdio>
 #include <new>
 
-static thread_local whirl::Heap* heap{nullptr};
+static thread_local whirl::MemoryAllocator* allocator{nullptr};
 
 static int global_allocs_balance = 0;
 static uintptr_t global_allocs_checksum = 0;
 
-void SetHeap(whirl::Heap* h) {
-  heap = h;
+void SetAllocator(whirl::MemoryAllocator* a) {
+  allocator = a;
 }
 
-whirl::Heap* GetHeap() {
-  return heap;
+whirl::MemoryAllocator* GetAllocator() {
+  return allocator;
 }
 
 void* operator new(size_t size) {
-  if (heap) {
-    return heap->Allocate(size);
+  if (allocator != nullptr) {
+    return allocator->Allocate(size);
   }
 
   if (void* addr = std::malloc(size)) {
@@ -32,8 +32,8 @@ void* operator new(size_t size) {
 }
 
 void operator delete(void* addr) noexcept {
-  if (heap) {
-    heap->Free((char*)addr);
+  if (allocator != nullptr) {
+    allocator->Free(addr);
     return;
   }
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <whirl/matrix/memory/heap.hpp>
+#include <whirl/matrix/memory/allocator.hpp>
 
 //////////////////////////////////////////////////////////////////////
 
-void SetHeap(whirl::Heap* heap);
-whirl::Heap* GetHeap();
+void SetAllocator(whirl::MemoryAllocator* allocator);
+whirl::MemoryAllocator* GetAllocator();
 
 void PrintAllocDebugInfo();
 
@@ -15,21 +15,21 @@ uintptr_t GlobalAllocsCheckSum();
 
 class HeapScopeGuard {
  public:
-  HeapScopeGuard(whirl::Heap* h) {
-    saved_ = GetHeap();
-    SetHeap(h);
+  HeapScopeGuard(whirl::MemoryAllocator* a) {
+    saved_ = GetAllocator();
+    SetAllocator(a);
   }
 
-  whirl::Heap* ParentScopeHeap() {
+  whirl::MemoryAllocator* ParentScopeHeap() {
     return saved_;
   }
 
   ~HeapScopeGuard() {
-    SetHeap(saved_);
+    SetAllocator(saved_);
   }
 
  private:
-  whirl::Heap* saved_;
+  whirl::MemoryAllocator* saved_;
 };
 
 //////////////////////////////////////////////////////////////////////

@@ -56,11 +56,11 @@ class HeapsAllocator {
 
 static HeapsAllocator heaps;
 
-static MmapAllocation AllocateHeapMemory() {
+MmapAllocation AcquireHeap() {
   return heaps.Allocate();
 }
 
-static void ReleaseHeapMemory(MmapAllocation heap) {
+void ReleaseHeap(MmapAllocation heap) {
   heaps.Release(std::move(heap));
 }
 
@@ -68,81 +68,5 @@ static void ReleaseHeapMemory(MmapAllocation heap) {
 void SetHeapSize(size_t bytes) {
   heaps.SetHeapSize(bytes);
 }
-
-//////////////////////////////////////////////////////////////////////
-
-// Fundamental alignment
-// https://eel.is/c++draft/basic.align
-static const size_t kRequiredAlignment = alignof(std::max_align_t);
-
-static_assert(kRequiredAlignment == 16, "Unexpected!");
-
-//////////////////////////////////////////////////////////////////////
-
-static size_t RoundUpTo16(size_t bytes) {
-  return (bytes + 15) & ~15;
-}
-
-static const size_t kBlockHeaderSize = kRequiredAlignment;
-
-static const size_t kZFillBlockSize = 4096;
-
-Heap::Heap() : heap_(AllocateHeapMemory()) {
-  WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0,
-                "Choose another kZFillBlockSize");
-  Reset();
-}
-
-Heap::~Heap() {
-  ReleaseHeapMemory(std::move(heap_));
-}
-
-char* Heap::Allocate(size_t bytes) {
-  return AllocateNewBlock(bytes);
-}
-
-void Heap::Free(char* addr) {
-  WHEELS_VERIFY(FromHere(addr), "Do not mess with heaps");
-}
-
-void Heap::Reset() {
-  next_ = zfilled_ = heap_.Start();
-}
-
-void Heap::ZeroFillTo(char* pos) {
-  while (pos >= zfilled_) {
-    std::memset(zfilled_, 0, kZFillBlockSize);
-    zfilled_ += kZFillBlockSize;
-  }
-}
-
-char* Heap::AllocateNewBlock(size_t bytes) {
-  bytes = RoundUpTo16(bytes);
-
-  WHEELS_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0,
-                "Broken heap allocator");
-
-  if (Overflow(bytes)) {
-    GlobalHeapScope g;
-    WHEELS_PANIC("Cannot allocate " << bytes << " bytes: heap overflow");
-  }
-
-  // Incrementally fill heap with zeroes
-  ZeroFillTo(next_ + kBlockHeaderSize + bytes);
-
-  // printf("Allocate %zu bytes\n", bytes);
-  char* user_addr = WriteBlockHeader(next_, bytes);
-  next_ = user_addr + bytes;
-  return user_addr;
-}
-
-bool Heap::Overflow(size_t bytes) const {
-  return next_ + kBlockHeaderSize + bytes >= heap_.End();
-}
-
-char* Heap::WriteBlockHeader(char* addr, size_t size) {
-  *reinterpret_cast<size_t*>(addr) = size;
-  return addr + kBlockHeaderSize;
-};
 
 }  // namespace whirl
