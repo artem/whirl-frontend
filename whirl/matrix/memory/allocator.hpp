@@ -29,6 +29,10 @@ class BlockList {
     return block;
   }
 
+  void HardReset() {
+    head_ = nullptr;
+  }
+
  private:
   BlockHeader* head_{nullptr};
 };
@@ -38,6 +42,8 @@ class BlockCache {
  public:
   BlockHeader* TryAcquire(size_t class_index);
   void Release(BlockHeader* block);
+
+  void HardReset();
 
  private:
   BlockList block_lists_[kMaxClassIndex + 1];

@@ -90,6 +90,12 @@ void BlockCache::Release(BlockHeader* block) {
   block_lists_[class_index].Push(block);
 }
 
+void BlockCache::HardReset() {
+  for (size_t i = 0; i <= kMaxClassIndex; ++i) {
+    block_lists_[i].HardReset();
+  }
+}
+
 //////////////////////////////////////////////////////////////////////
 
 // NB: No dynamic allocations here!
@@ -163,6 +169,7 @@ void MemoryAllocator::Free(void* addr) {
 
 void MemoryAllocator::Reset() {
   next_ = zfilled_ = arena_.Start();
+  cache_.HardReset();
 }
 
 void MemoryAllocator::ZeroFillTo(char* pos) {
