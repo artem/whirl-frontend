@@ -12,7 +12,7 @@ class MemoryAllocator {
   ~MemoryAllocator();
 
   // And initialize with zeroes
-  char* Allocate(size_t bytes);
+  void* Allocate(size_t bytes);
 
   void Free(void* addr);
 

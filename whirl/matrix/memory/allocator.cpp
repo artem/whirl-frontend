@@ -37,7 +37,7 @@ MemoryAllocator::~MemoryAllocator() {
   ReleaseHeap(std::move(heap_));
 }
 
-char* MemoryAllocator::Allocate(size_t bytes) {
+void* MemoryAllocator::Allocate(size_t bytes) {
   return AllocateNewBlock(bytes);
 }
 
