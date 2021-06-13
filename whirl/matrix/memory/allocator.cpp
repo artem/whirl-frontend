@@ -7,20 +7,18 @@
 
 #include <wheels/support/bithacks.hpp>
 
-
 #define WHIRL_ALLOC_PANIC(error) \
-  do { \
+  do {                           \
     GlobalAllocatorGuard g;      \
     WHEELS_PANIC(error);         \
   } while (false)
 
 #define WHIRL_ALLOC_VERIFY(cond, error) \
-  do {                            \
-    if (!(cond)) {                \
-      WHIRL_ALLOC_PANIC(error);                              \
-    } \
-  } while(false)
-
+  do {                                  \
+    if (!(cond)) {                      \
+      WHIRL_ALLOC_PANIC(error);         \
+    }                                   \
+  } while (false)
 
 namespace whirl {
 
@@ -36,31 +34,23 @@ static size_t AllocToPowerOf2(size_t bytes) {
 static const size_t kLargeAllocClass = 0;
 
 static size_t GetAllocClass(size_t bytes_pow2) {
-  WHIRL_ALLOC_VERIFY(IsPowerOfTwo(bytes_pow2), "Memory allocator internal error: GetAllocClass expected ^2, value = " << bytes_pow2);
+  WHIRL_ALLOC_VERIFY(
+      IsPowerOfTwo(bytes_pow2),
+      "Memory allocator internal error: GetAllocClass expected ^2, value = "
+          << bytes_pow2);
 
   switch (bytes_pow2) {
-    case 16:
-      return 1;
-    case 32:
-      return 2;
-    case 64:
-      return 3;
-    case 128:
-      return 4;
-    case 256:
-      return 5;
-    case 512:
-      return 6;
-    case 1024:
-      return 7;
-    case 2048:
-      return 8;
-    case 4096:
-      return 9;
-    case 8192:
-      return 10;
-    default:
-      return kLargeAllocClass;
+    case 16: return 1;
+    case 32: return 2;
+    case 64: return 3;
+    case 128: return 4;
+    case 256: return 5;
+    case 512: return 6;
+    case 1024: return 7;
+    case 2048: return 8;
+    case 4096: return 9;
+    case 8192: return 10;
+    default: return kLargeAllocClass;
   }
 }
 
@@ -78,15 +68,16 @@ static_assert(sizeof(BlockHeader) % kRequiredAlignment == 0);
 
 //////////////////////////////////////////////////////////////////////
 
-
 BlockHeader* BlockCache::TryAcquire(size_t class_index) {
-  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex, "Memory allocator internal error");
+  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex,
+                     "Memory allocator internal error");
   return block_lists_[class_index].TryPop();
 }
 
 void BlockCache::Release(BlockHeader* block) {
   size_t class_index = GetAllocClass(block->size);
-  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex, "Memory allocator internal error");
+  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex,
+                     "Memory allocator internal error");
   block_lists_[class_index].Push(block);
 }
 
@@ -125,8 +116,9 @@ void* MemoryAllocator::Allocate(size_t bytes) {
 
   void* user_addr = DoAllocate(bytes);
 
-  WHIRL_ALLOC_VERIFY(((uintptr_t)user_addr) % kRequiredAlignment == 0,
-                     "Memory allocator internal error: allocated block is not aligned");
+  WHIRL_ALLOC_VERIFY(
+      ((uintptr_t)user_addr) % kRequiredAlignment == 0,
+      "Memory allocator internal error: allocated block is not aligned");
 
   return user_addr;
 }
@@ -151,7 +143,7 @@ void* MemoryAllocator::DoAllocate(size_t bytes) {
 }
 
 static BlockHeader* LocateBlockHeader(void* user_addr) {
-  char* header_addr =(char*)user_addr - sizeof(BlockHeader);
+  char* header_addr = (char*)user_addr - sizeof(BlockHeader);
   return (BlockHeader*)header_addr;
 }
 
@@ -180,10 +172,12 @@ void MemoryAllocator::ZeroFillTo(char* pos) {
 }
 
 char* MemoryAllocator::AllocateNewBlock(size_t bytes) {
-  WHIRL_ALLOC_VERIFY(reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0,
-                "Memory allocator internal error: bump-pointer is not aligned");
+  WHIRL_ALLOC_VERIFY(
+      reinterpret_cast<uintptr_t>(next_) % kRequiredAlignment == 0,
+      "Memory allocator internal error: bump-pointer is not aligned");
 
-  WHIRL_ALLOC_VERIFY(!Overflow(bytes), "Cannot allocate " << bytes << " bytes: arena overflow");
+  WHIRL_ALLOC_VERIFY(!Overflow(bytes),
+                     "Cannot allocate " << bytes << " bytes: arena overflow");
 
   // Incrementally fill heap with zeroes
   ZeroFillTo(next_ + sizeof(BlockHeader) + bytes);

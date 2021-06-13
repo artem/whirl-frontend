@@ -40,6 +40,7 @@ class BlockList {
 
 class BlockCache {
   static const size_t kMaxClassIndex = 10;
+
  public:
   BlockHeader* TryAcquire(size_t class_index);
   void Release(BlockHeader* block);
