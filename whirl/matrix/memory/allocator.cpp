@@ -17,15 +17,28 @@ static_assert(kRequiredAlignment == 16, "Unexpected!");
 
 //////////////////////////////////////////////////////////////////////
 
+struct BlockHeader {
+  uint32_t size;
+  uint32_t canary;
+
+  uint64_t padding_;
+};
+
+static const size_t kBlockHeaderSize = sizeof(BlockHeader);
+
+static_assert(kBlockHeaderSize % kRequiredAlignment == 0);
+
+//////////////////////////////////////////////////////////////////////
+
 // NB: No dynamic allocations here!
 
 static size_t RoundUpTo16(size_t bytes) {
   return (bytes + 15) & ~15;
 }
 
-static const size_t kBlockHeaderSize = kRequiredAlignment;
-
 static const size_t kZFillBlockSize = 4096;
+
+static const uint32_t kCanary = 23911147;
 
 MemoryAllocator::MemoryAllocator() : heap_(AcquireHeap()) {
   WHEELS_VERIFY(heap_.Size() % kZFillBlockSize == 0,
@@ -38,11 +51,22 @@ MemoryAllocator::~MemoryAllocator() {
 }
 
 void* MemoryAllocator::Allocate(size_t bytes) {
+  if (bytes > std::numeric_limits<uint32_t>::max()) {
+    WHEELS_PANIC("Allocation is too large: " << bytes);
+  }
+
   return AllocateNewBlock(bytes);
+}
+
+static BlockHeader* LocateBlockHeader(void* user_addr) {
+  char* header_addr =(char*)user_addr - kBlockHeaderSize;
+  return (BlockHeader*)header_addr;
 }
 
 void MemoryAllocator::Free(void* addr) {
   WHEELS_VERIFY(FromHere(addr), "Do not mess with heaps");
+  BlockHeader* header = LocateBlockHeader(addr);
+  WHEELS_VERIFY(header->canary == kCanary, "Memory allocator is broken");
 }
 
 void MemoryAllocator::Reset() {
@@ -81,8 +105,10 @@ bool MemoryAllocator::Overflow(size_t bytes) const {
 }
 
 char* MemoryAllocator::WriteBlockHeader(char* addr, size_t size) {
-  *reinterpret_cast<size_t*>(addr) = size;
-  return addr + kBlockHeaderSize;
+  BlockHeader* header = (BlockHeader*)(addr);
+  header->size = size;
+  header->canary = kCanary;
+  return addr + sizeof(BlockHeader);
 };
 
 bool MemoryAllocator::FromHere(void* addr) const {
