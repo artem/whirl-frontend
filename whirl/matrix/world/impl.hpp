@@ -294,7 +294,7 @@ class WorldImpl {
   }
 
   void SetStartTime() {
-    time_.MoveForwardTo(GlobalStartTime());
+    time_.AdvanceTo(GlobalStartTime());
   }
 
   ActorContext::ScopeGuard Scope(IActor& actor) {
