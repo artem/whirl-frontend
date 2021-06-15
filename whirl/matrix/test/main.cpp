@@ -62,11 +62,11 @@ static void CLI(wheels::ArgumentParser& parser) {
 
   parser.Add("seed")
       .ValueDescr("uint")
-      .WithDefault("-");  // TODO
+      .Optional();
 
   parser.Add("log")
       .ValueDescr("path")
-      .WithDefault("-");  // TODO
+      .Optional();
 }
 
 template <typename T>
@@ -83,16 +83,15 @@ int MatrixMain(int argc, const char** argv, Simulation sim) {
 
   wheels::ParsedArgs args = parser.Parse(argc, argv);
 
-  auto log_path_opt = args.Get("log");
-  if (log_path_opt != "-") {
-    whirl::SetLogFile(log_path_opt);
+  if (args.Has("log")) {
+    std::string log_fpath = args.Get("log");
+    whirl::SetLogFile(log_fpath);
   }
   // Initialize
   whirl::GetLogFile();
 
-  auto seed_opt = args.Get("seed");
-  if (seed_opt != "-") {
-    RunSimulation(sim, FromString<size_t>(seed_opt));
+  if (args.Has("seed")) {
+    RunSimulation(sim, FromString<size_t>(args.Get("seed")));
     return 0;
   }
 
