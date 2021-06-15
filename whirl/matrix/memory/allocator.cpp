@@ -102,6 +102,7 @@ MemoryAllocator::MemoryAllocator() : arena_(AcquireHeap()) {
 }
 
 MemoryAllocator::~MemoryAllocator() {
+  cache_.HardReset();
   ReleaseHeap(std::move(arena_));
 }
 
