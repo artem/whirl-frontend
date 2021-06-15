@@ -13,12 +13,12 @@ class WorldClock {
   WorldClock() = default;
 
   // Non-copyable
-  WorldClock(const WorldClock& that) = delete;
-  WorldClock& operator=(const WorldClock& that) = delete;
+  WorldClock(const WorldClock&) = delete;
+  WorldClock& operator=(const WorldClock&) = delete;
 
-  void MoveForwardTo(TimePoint tp) {
-    WHEELS_VERIFY(tp >= now_, "Cannot move world clock backward");
-    now_ = tp;
+  void MoveForwardTo(TimePoint future) {
+    WHEELS_VERIFY(future >= now_, "Cannot move world clock backward: now = " << now_ << " -> " << future);
+    now_ = future;
   }
 
   TimePoint Now() const {
