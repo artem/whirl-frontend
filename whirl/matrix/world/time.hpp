@@ -17,7 +17,7 @@ class WorldTime {
   WorldTime& operator=(const WorldTime&) = delete;
 
   void AdvanceTo(TimePoint future) {
-    WHEELS_VERIFY(future >= now_, "Cannot move world clock backward: now = " << now_ << " -> " << future);
+    WHEELS_VERIFY(future >= now_, "Cannot move world time backward: now = " << now_ << " -> " << future);
     now_ = future;
   }
 
