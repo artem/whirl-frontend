@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/matrix/world/clock.hpp>
+#include <whirl/matrix/world/time.hpp>
 #include <whirl/matrix/server/server.hpp>
 #include <whirl/matrix/network/network.hpp>
 #include <whirl/matrix/world/actor.hpp>
@@ -84,7 +84,7 @@ class WorldImpl {
     WHIRL_SIM_LOG("Seed: {}", seed_);
 
     SetStartTime();
-    start_time_ = clock_.Now();
+    start_time_ = time_.Now();
 
     // Start network:
     AddActor(&network_);
@@ -129,7 +129,7 @@ class WorldImpl {
 
     step_random_number_ = random_source_.Next();
 
-    clock_.MoveForwardTo(next.time);
+    time_.AdvanceTo(next.time);
     Scope(next.actor)->Step();
 
     return true;
@@ -251,11 +251,11 @@ class WorldImpl {
   }
 
   TimePoint Now() const {
-    return clock_.Now();
+    return time_.Now();
   }
 
   Duration TimeElapsed() const {
-    return clock_.Now() - start_time_;
+    return time_.Now() - start_time_;
   }
 
   size_t StepRandomNumber() const {
@@ -294,7 +294,7 @@ class WorldImpl {
   }
 
   void SetStartTime() {
-    clock_.MoveForwardTo(GlobalStartTime());
+    time_.MoveForwardTo(GlobalStartTime());
   }
 
   ActorContext::ScopeGuard Scope(IActor& actor) {
@@ -340,7 +340,7 @@ class WorldImpl {
  private:
   size_t seed_;
 
-  WorldClock clock_;
+  WorldTime time_;
   RandomSource random_source_;
 
   wheels::IdGenerator ids_;

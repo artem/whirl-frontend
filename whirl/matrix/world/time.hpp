@@ -8,15 +8,15 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class WorldClock {
+class WorldTime {
  public:
-  WorldClock() = default;
+  WorldTime() = default;
 
   // Non-copyable
-  WorldClock(const WorldClock&) = delete;
-  WorldClock& operator=(const WorldClock&) = delete;
+  WorldTime(const WorldTime&) = delete;
+  WorldTime& operator=(const WorldTime&) = delete;
 
-  void MoveForwardTo(TimePoint future) {
+  void AdvanceTo(TimePoint future) {
     WHEELS_VERIFY(future >= now_, "Cannot move world clock backward: now = " << now_ << " -> " << future);
     now_ = future;
   }

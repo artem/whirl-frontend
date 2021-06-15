@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/matrix/world/actor.hpp>
-#include <whirl/matrix/world/clock.hpp>
+#include <whirl/matrix/world/time.hpp>
 #include <whirl/matrix/process/heap.hpp>
 #include <whirl/matrix/process/crash.hpp>
 #include <whirl/matrix/process/step_queue.hpp>
