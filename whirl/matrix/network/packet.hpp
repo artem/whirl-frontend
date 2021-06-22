@@ -9,11 +9,15 @@ namespace whirl::net {
 enum class EPacketType { Data, Reset, Ping };
 
 struct Packet {
-  EPacketType type;
-  Port source_port;
+  struct Header {
+    EPacketType type;
+    Port source_port;
+    Port dest_port;
+    Timestamp ts;
+  };
+
+  Header header;
   Message message;
-  Port dest_port;
-  Timestamp ts;
 };
 
 }  // namespace whirl::net

@@ -30,7 +30,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
 
   if (IsThereAdversary()) {
     // Init ping-pong for detecting crashes / reboots
-    link->Add({EPacketType::Ping, port, "<ping>", address.port, ts});
+    link->Add({{EPacketType::Ping, port, address.port, ts}, "<ping>"});
   }
 
   {
@@ -94,8 +94,8 @@ class Replier {
   }
 
   void Reply(EPacketType type, Message payload) {
-    Send({type, packet_.dest_port, std::move(payload), packet_.source_port,
-          packet_.ts});
+    Send({{type, packet_.header.dest_port, packet_.header.source_port,
+          packet_.header.ts}, std::move(payload)});
   }
 
  private:
@@ -106,8 +106,8 @@ class Replier {
 void Transport::HandlePacket(const Packet& packet, Link* out) {
   GlobalAllocatorGuard g;
 
-  Address from{out->EndHostName(), packet.source_port};
-  Address to{host_, packet.dest_port};
+  Address from{out->EndHostName(), packet.header.source_port};
+  Address to{host_, packet.header.dest_port};
 
   /*
   if (packet.type != EPacketType::Ping) {
@@ -117,13 +117,13 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
   Replier replier(packet, out);
 
-  auto endpoint_it = endpoints_.find(packet.dest_port);
+  auto endpoint_it = endpoints_.find(packet.header.dest_port);
 
   if (endpoint_it == endpoints_.end()) {
     // Endpoint not found
 
-    if (packet.type != EPacketType::Reset) {
-      if (packet.type == EPacketType::Data) {
+    if (packet.header.type != EPacketType::Reset) {
+      if (packet.header.type == EPacketType::Data) {
         WHIRL_SIM_LOG_WARN(
             "Endpoint {} not found, drop incoming packet from {}", to, from);
       }
@@ -134,24 +134,24 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
   const auto& endpoint = endpoint_it->second;
 
-  if (packet.ts < endpoint.ts) {
+  if (packet.header.ts < endpoint.ts) {
     // WHIRL_FMT_LOG("Outdated packet, send <reset> packet to {}", from);
     replier.Reset();
     return;
 
-  } else if (packet.type == EPacketType::Ping) {
+  } else if (packet.header.type == EPacketType::Ping) {
     // Ping
     // WHIRL_FMT_LOG("Send ping back to {}", source);
     replier.Ping();
     return;
 
-  } else if (packet.type == EPacketType::Reset) {
+  } else if (packet.header.type == EPacketType::Reset) {
     // Disconnect
     auto g = heap_.Use();
     endpoint.handler->HandleDisconnect(from.host);
     return;
 
-  } else if (packet.type == EPacketType::Data) {
+  } else if (packet.header.type == EPacketType::Data) {
     // Message
 
     WHIRL_SIM_LOG("Handle message at {} from {}: <{}>", host_, from,

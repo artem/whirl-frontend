@@ -34,8 +34,12 @@ class ClientSocket::Impl {
   }
 
  private:
-  Packet MakePacket(const Message& message) {
-    return {EPacketType::Data, self_port_, message, server_port_, ts_};
+  Packet MakePacket(const Message& message) const {
+    return {MakeHeader(message), message};
+  }
+
+  Packet::Header MakeHeader(const Message& /*message*/) const {
+    return {EPacketType::Data, self_port_, server_port_, ts_};
   }
 
  private:
@@ -101,13 +105,17 @@ void ServerSocket::Close() {
 
 ReplySocket::ReplySocket(const Packet& packet, Link* out)
     : link_(out),
-      self_port_(packet.dest_port),
-      peer_port_(packet.source_port),
-      ts_(packet.ts) {
+      self_port_(packet.header.dest_port),
+      peer_port_(packet.header.source_port),
+      ts_(packet.header.ts) {
 }
 
-Packet ReplySocket::MakePacket(const Message& message) {
-  return {EPacketType::Data, self_port_, message, peer_port_, ts_};
+Packet ReplySocket::MakePacket(const Message& message) const {
+  return {MakeHeader(message), message};
+}
+
+Packet::Header ReplySocket::MakeHeader(const Message& /*message*/) const {
+  return {EPacketType::Data, self_port_, peer_port_, ts_};
 }
 
 void ReplySocket::Send(const Message& message) {

@@ -60,7 +60,8 @@ class ReplySocket {
   const std::string& Peer() const;
 
  private:
-  Packet MakePacket(const Message& message);
+  Packet MakePacket(const Message& message) const;
+  Packet::Header MakeHeader(const Message& message) const;
 
  private:
   Link* link_;
