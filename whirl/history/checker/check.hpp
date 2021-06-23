@@ -5,6 +5,7 @@
 
 namespace whirl::histories {
 
+// Remove not completed read-only calls
 template <typename Model>
 History Cleanup(const History& history) {
   History result;
