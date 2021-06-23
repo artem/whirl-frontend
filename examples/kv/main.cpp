@@ -6,12 +6,12 @@
 #include <whirl/cereal/serializable.hpp>
 
 // Simulation
-#include <whirl/matrix/world/world.hpp>
-#include <whirl/matrix/client/client.hpp>
-#include <whirl/matrix/world/global/vars.hpp>
-#include <whirl/matrix/test/random.hpp>
-#include <whirl/matrix/memory/new.hpp>
-#include <whirl/matrix/test/main.hpp>
+#include <whirl/engines/matrix/world/world.hpp>
+#include <whirl/engines/matrix/client/client.hpp>
+#include <whirl/engines/matrix/world/global/vars.hpp>
+#include <whirl/engines/matrix/test/random.hpp>
+#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/test/main.hpp>
 
 #include <whirl/history/printers/kv.hpp>
 #include <whirl/history/checker/check.hpp>
