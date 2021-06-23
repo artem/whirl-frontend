@@ -70,14 +70,4 @@ class ReplySocket {
   Timestamp ts_;
 };
 
-//////////////////////////////////////////////////////////////////////
-
-struct ISocketHandler {
-  virtual ~ISocketHandler() = default;
-
-  virtual void HandleMessage(const Message& message, ReplySocket back) = 0;
-
-  virtual void HandleDisconnect(const std::string& peer) = 0;
-};
-
 }  // namespace whirl::net

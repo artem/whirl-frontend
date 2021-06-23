@@ -18,6 +18,18 @@ namespace whirl::net {
 class Network;
 class Link;
 
+//////////////////////////////////////////////////////////////////////
+
+struct ISocketHandler {
+  virtual ~ISocketHandler() = default;
+
+  virtual void HandleMessage(const Message& message, ReplySocket back) = 0;
+
+  virtual void HandleDisconnect(const std::string& peer) = 0;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 // ~ TCP, Per-server
 class Transport {
   struct Endpoint {
