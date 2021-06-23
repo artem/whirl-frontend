@@ -112,8 +112,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // TODO: iterate over configuration
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          rpc::Call(PeerChannel(i), "KV.LocalWrite",
-                    key, StampedValue{value, write_ts}));
+          rpc::Call("KV.LocalWrite", key, StampedValue{value, write_ts})
+              .Via(PeerChannel(i)));
     }
 
     // Await acks from majority of replicas
@@ -127,7 +127,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // Broadcast KV.LocalRead request
     for (size_t i = 0; i < PeerCount(); ++i) {
       reads.push_back(
-          rpc::Call(PeerChannel(i), "KV.LocalRead", key));
+          rpc::Call("KV.LocalRead", key).Via(PeerChannel(i)));
     }
 
     // Await responses from majority of replicas
@@ -218,11 +218,11 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(rpc::Call(channel_, "KV.Set", k, v).As<void>()).ExpectOk();
+    Await(rpc::Call("KV.Set", k, v).Via(channel_).As<void>()).ExpectOk();
   }
 
   Value Get(Key k) {
-    return Await(rpc::Call(channel_, "KV.Get", k).As<Value>()).ValueOrThrow();
+    return Await(rpc::Call("KV.Get", k).Via(channel_).As<Value>()).ValueOrThrow();
   }
 
  private:

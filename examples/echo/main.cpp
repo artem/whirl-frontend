@@ -77,10 +77,10 @@ class ClientNode final: public ClientBase {
 
       /*
       auto result = Await(
-          rpc::Call(Channel(), "Echo.Echo", std::string("Hello!")).As<std::string>());
+          rpc::Call("Echo.Echo", std::string("Hello!")).Via(Chnanel()).As<std::string>());
       */
 
-      Future<std::string> future = rpc::Call(Channel(), "Echo.Echo", std::string("Hello"));
+      Future<std::string> future = rpc::Call("Echo.Echo", std::string("Hello")).Via(Channel());
       auto result = Await(WithTimeout(std::move(future), 256_jiffies));
 
       if (result.IsOk()) {

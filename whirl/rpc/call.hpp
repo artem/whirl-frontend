@@ -15,31 +15,51 @@ namespace whirl::rpc {
 
 namespace detail {
 
-class CallResult {
+template <typename T>
+Future<T> As(Future<BytesValue> f_raw) {
+  return std::move(f_raw).Then([](BytesValue raw) {
+    return Deserialize<T>(raw);
+  });
+}
+
+template <>
+Future<void> As(Future<BytesValue> f_raw) {
+  return await::futures::JustStatus(std::move(f_raw));
+}
+
+
+class [[nodiscard]] Caller {
  public:
-  explicit CallResult(Future<BytesValue>&& raw_result)
-      : raw_result_(std::move(raw_result)) {
+  Caller(Method method, BytesValue input)
+      : method_(method), input_(std::move(input)) {
+  }
+
+  Caller& Via(IChannelPtr channel) {
+    channel_ = channel;
+    return *this;
+  }
+
+  // TODO: WithContext
+
+  template <typename T>
+  Future<T> As() {
+    return detail::As<T>(Call());
   }
 
   template <typename T>
-  Future<T> As() && {
-    return std::move(raw_result_).Then([](const std::string& raw) {
-      return Deserialize<T>(raw);
-    });
-  }
-
-  template <>
-  Future<void> As<void>() && {
-    return await::futures::JustStatus(std::move(raw_result_));
-  }
-
-  template <typename T>
-  operator Future<T>() && {
-    return std::move(*this).As<T>();
+  operator Future<T>() {
+    return detail::As<T>(Call());
   }
 
  private:
-  Future<BytesValue> raw_result_;
+  Future<BytesValue> Call() {
+    return channel_->Call(method_, input_);
+  }
+
+ private:
+  Method method_;
+  BytesValue input_;
+  IChannelPtr channel_{nullptr};
 };
 
 }  // namespace detail
@@ -49,15 +69,15 @@ class CallResult {
 // 1) Future<std::string> f = Call(channel, "EchoService.Echo", data);
 // 2) auto f = Call(channel, "EchoService.Echo", data).As<std::string>()
 
+// TODO: Typestate correctness
+
 template <typename... Arguments>
-detail::CallResult Call(const IChannelPtr& channel,
-                        const std::string& method_str,
-                        Arguments&&... arguments) {
+detail::Caller Call(const std::string& method_str,
+                    Arguments&&... arguments) {
   auto method = Method::Parse(method_str);
   // Erase argument types
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
-  auto output_future = channel->Call(method, input);
-  return detail::CallResult{std::move(output_future)};
+  return detail::Caller{method, input};
 }
 
 }  // namespace whirl::rpc
