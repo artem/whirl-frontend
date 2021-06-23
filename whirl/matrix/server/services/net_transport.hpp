@@ -10,15 +10,11 @@ using namespace rpc;
 
 //////////////////////////////////////////////////////////////////////
 
-static const net::Port kTransportPort = 42;
-
-//////////////////////////////////////////////////////////////////////
-
 class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
  public:
-  NetTransportSocket(net::Transport& transport, std::string peer,
+  NetTransportSocket(net::Transport& transport, std::string peer, net::Port port,
                      ITransportHandlerPtr handler)
-      : socket_(transport.ConnectTo({peer, kTransportPort}, this)),
+      : socket_(transport.ConnectTo({peer, port}, this)),
         handler_(handler) {
   }
 
@@ -71,8 +67,8 @@ class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
 
 class NetTransportServer : public ITransportServer, public net::ISocketHandler {
  public:
-  NetTransportServer(net::Transport& transport, ITransportHandlerPtr handler)
-      : server_socket_(transport.Serve(kTransportPort, this)),
+  NetTransportServer(net::Transport& transport, net::Port port, ITransportHandlerPtr handler)
+      : server_socket_(transport.Serve(port, this)),
         handler_(handler) {
   }
 
@@ -98,20 +94,21 @@ class NetTransportServer : public ITransportServer, public net::ISocketHandler {
 
 struct NetTransport : public ITransport {
  public:
-  NetTransport(net::Transport& impl) : impl_(impl) {
+  NetTransport(net::Transport& impl, net::Port port) : impl_(impl), port_(port) {
   }
 
   ITransportServerPtr Serve(ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportServer>(impl_, handler);
+    return std::make_shared<NetTransportServer>(impl_, port_, handler);
   }
 
   ITransportSocketPtr ConnectTo(const std::string& peer,
                                 ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportSocket>(impl_, peer, handler);
+    return std::make_shared<NetTransportSocket>(impl_, peer, port_, handler);
   }
 
  private:
   net::Transport& impl_;
+  net::Port port_;
 };
 
 }  // namespace whirl

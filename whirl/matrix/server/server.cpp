@@ -187,7 +187,8 @@ NodeServices Server::CreateNodeServices() {
 
   services.database = std::make_shared<Database>(persistent_storage_);
 
-  auto net_transport = std::make_shared<NetTransport>(transport_);
+  static const net::Port kTransportPort = 42;
+  auto net_transport = std::make_shared<NetTransport>(transport_, kTransportPort);
 
   services.discovery = std::make_shared<DiscoveryService>();
 
