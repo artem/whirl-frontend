@@ -29,9 +29,18 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour.
 
 ## Inspiration
 
+### Simulation
+
+#### FoundationDB
 - [Testing Distributed Systems w/ Deterministic Simulation](https://www.youtube.com/watch?v=4fFDFbi3toc)
 - [FoundationDB or: How I Learned to Stop Worrying and Trust the Database](https://www.youtube.com/watch?v=OJb8A6h9jQQ&list=PLSE8ODhjZXjagqlf1NxuBQwaMkrHXi-iz&index=22)
+
+
+- https://github.com/jepsen-io/maelstrom
+
+### Model checking
 - [Teaching Rigorous Distributed Systems With Efficient Model Checking](https://ellismichael.com/papers/dslabs-eurosys19.pdf)
+- https://github.com/stateright/stateright
 
 ## Requirements
 
