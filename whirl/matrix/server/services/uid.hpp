@@ -10,16 +10,17 @@
 namespace whirl {
 
 struct UidGenerator : public IUidGenerator {
-  UidGenerator(size_t id) : id_(id) {
+  UidGenerator(size_t server_id) : server_id_(server_id) {
   }
 
+  // {random-number}-{server-id}-{global-time}-{uid-request}
   Uid Generate() override {
-    return wheels::StringBuilder() << GlobalRandomNumber() << "-" << id_ << "-"
+    return wheels::StringBuilder() << GlobalRandomNumber() << "-" << server_id_ << "-"
                                    << GlobalNow() << "-" << ++request_;
   }
 
  private:
-  const size_t id_;
+  const size_t server_id_;
   size_t request_{0};
 };
 
