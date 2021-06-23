@@ -236,7 +236,11 @@ class WorldImpl {
   }
 
   // Context: Server
-  std::vector<std::string> GetCluster() {
+  std::vector<std::string> GetPool(const std::string& name) {
+    if (name != "cluster") {
+      WHEELS_PANIC("Custom pools are not supported yet!");
+    }
+
     std::vector<std::string> cluster;
     cluster.reserve(cluster_.size());
 

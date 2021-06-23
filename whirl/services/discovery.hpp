@@ -7,12 +7,17 @@
 namespace whirl {
 
 struct IDiscoveryService {
+
   virtual ~IDiscoveryService() = default;
 
-  virtual size_t GetClusterSize() const = 0;
+  using Pool = std::vector<std::string>;
 
-  // List addresses of cluster servers
-  virtual std::vector<std::string> GetCluster() = 0;
+  virtual Pool GetPool(const std::string& name) = 0;
+
+  // Backward compatibility
+  Pool GetCluster() {
+    return GetPool("cluster");
+  }
 };
 
 using IDiscoveryPtr = std::shared_ptr<IDiscoveryService>;

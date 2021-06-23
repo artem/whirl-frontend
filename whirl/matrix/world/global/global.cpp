@@ -46,12 +46,8 @@ histories::Recorder& GetHistoryRecorder() {
 
 //////////////////////////////////////////////////////////////////////
 
-size_t GetClusterSize() {
-  return WorldImpl::Access()->ClusterSize();
-}
-
-std::vector<std::string> GetCluster() {
-  return WorldImpl::Access()->GetCluster();
+std::vector<std::string> GetPool(const std::string& name) {
+  return WorldImpl::Access()->GetPool(name);
 }
 
 //////////////////////////////////////////////////////////////////////

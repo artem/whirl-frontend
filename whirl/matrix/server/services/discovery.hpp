@@ -8,12 +8,8 @@ namespace whirl {
 
 class DiscoveryService : public IDiscoveryService {
  public:
-  size_t GetClusterSize() const override {
-    return whirl::GetClusterSize();
-  }
-
-  std::vector<std::string> GetCluster() override {
-    return whirl::GetCluster();
+  std::vector<std::string> GetPool(const std::string& name) override {
+    return whirl::GetPool(name);
   }
 };
 
