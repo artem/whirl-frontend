@@ -56,8 +56,8 @@ detail::CallResult Call(const IChannelPtr& channel,
   auto method = Method::Parse(method_str);
   // Erase argument types
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
-  auto output = channel->Call(method, input);
-  return {output};
+  auto output_future = channel->Call(method, input);
+  return detail::CallResult{std::move(output_future)};
 }
 
 }  // namespace whirl::rpc
