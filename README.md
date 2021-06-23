@@ -10,9 +10,11 @@ Distributed system deterministic simulator
 - Last-write-wins via wall clock
 - Persistent local storage
 
-Intentionally non-linearizable.
+Implementation intentionally violates linearizability!
 
-Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour.
+Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
+- [Original paper](https://groups.csail.mit.edu/tds/papers/Attiya/TM-423.pdf)
+- [Notes on Theory of Distributed Systems](https://www.cs.yale.edu/homes/aspnes/classes/465/notes.pdf) – Chapter 16 – _Distributed Shared Memory_
 
 ## Features
 
