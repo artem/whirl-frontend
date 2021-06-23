@@ -4,7 +4,7 @@
 #include <whirl/node/services.hpp>
 #include <whirl/node/threads.hpp>
 
-#include <whirl/rpc/typed_channel.hpp>
+#include <whirl/rpc/channel.hpp>
 
 #include <whirl/helpers/errors.hpp>
 
@@ -46,7 +46,7 @@ class ClientBase : public INode {
   }
 
   void ConnectToClusterNodes() {
-    channel_ = rpc::TChannel(MakeClientChannel());
+    channel_ = MakeClientChannel();
   }
 
  protected:
@@ -58,7 +58,7 @@ class ClientBase : public INode {
 
   // Cluster
 
-  rpc::TChannel& Channel() {
+  rpc::IChannelPtr Channel() {
     return channel_;
   }
 
@@ -169,7 +169,7 @@ class ClientBase : public INode {
   NodeServices services_;
 
   std::vector<std::string> cluster_;
-  rpc::TChannel channel_;
+  rpc::IChannelPtr channel_;
 
  protected:
   Logger logger_{"Client"};

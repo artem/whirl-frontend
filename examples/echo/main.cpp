@@ -2,6 +2,7 @@
 #include <whirl/node/logging.hpp>
 
 #include <whirl/rpc/service_base.hpp>
+#include <whirl/rpc/call.hpp>
 
 // Simulation
 #include <whirl/matrix/world/world.hpp>
@@ -76,10 +77,10 @@ class ClientNode final: public ClientBase {
 
       /*
       auto result = Await(
-          Channel().Call("Echo.Echo", std::string("Hello!")).As<std::string>());
+          rpc::Call(Channel(), "Echo.Echo", std::string("Hello!")).As<std::string>());
       */
 
-      Future<std::string> future = Channel().Call("Echo.Echo", std::string("Hello"));
+      Future<std::string> future = rpc::Call(Channel(), "Echo.Echo", std::string("Hello"));
       auto result = Await(WithTimeout(std::move(future), 256_jiffies));
 
       if (result.IsOk()) {

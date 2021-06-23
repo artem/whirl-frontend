@@ -2,6 +2,7 @@
 #include <whirl/node/local_storage.hpp>
 #include <whirl/node/logging.hpp>
 #include <whirl/rpc/service_base.hpp>
+#include <whirl/rpc/call.hpp>
 #include <whirl/cereal/serializable.hpp>
 
 // Simulation
@@ -10,6 +11,7 @@
 #include <whirl/matrix/world/global/vars.hpp>
 #include <whirl/matrix/test/random.hpp>
 #include <whirl/matrix/memory/new.hpp>
+#include <whirl/matrix/test/main.hpp>
 
 #include <whirl/history/printers/kv.hpp>
 #include <whirl/history/checker/check.hpp>
@@ -110,9 +112,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // TODO: iterate over configuration
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          // TODO: replace by rpc::Call
-          PeerChannel(i).Call("KV.LocalWrite", key,
-                              StampedValue{value, write_ts}));
+          rpc::Call(PeerChannel(i), "KV.LocalWrite",
+                    key, StampedValue{value, write_ts}));
     }
 
     // Await acks from majority of replicas
@@ -125,7 +126,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
     // Broadcast KV.LocalRead request
     for (size_t i = 0; i < PeerCount(); ++i) {
-      reads.push_back(PeerChannel(i).Call("KV.LocalRead", key));
+      reads.push_back(
+          rpc::Call(PeerChannel(i), "KV.LocalRead", key));
     }
 
     // Await responses from majority of replicas
@@ -212,19 +214,19 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
 class KVBlockingStub {
  public:
-  KVBlockingStub(rpc::TChannel& channel) : channel_(channel) {
+  KVBlockingStub(rpc::IChannelPtr channel) : channel_(channel) {
   }
 
   void Set(Key k, Value v) {
-    Await(channel_.Call("KV.Set", k, v).As<void>()).ExpectOk();
+    Await(rpc::Call(channel_, "KV.Set", k, v).As<void>()).ExpectOk();
   }
 
   Value Get(Key k) {
-    return Await(channel_.Call("KV.Get", k).As<Value>()).ValueOrThrow();
+    return Await(rpc::Call(channel_, "KV.Get", k).As<Value>()).ValueOrThrow();
   }
 
  private:
-  rpc::TChannel& channel_;
+  rpc::IChannelPtr channel_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -373,36 +375,7 @@ size_t RunSimulation(size_t seed) {
   return digest;
 }
 
-void TestDeterminism() {
-  static const size_t kSeed = 104107713;
-
-  std::cout << "Test determinism:" << std::endl;
-
-  size_t digest1 = RunSimulation(kSeed);
-  size_t digest2 = RunSimulation(kSeed);
-
-  if (digest1 != digest2) {
-    std::cout << "Impl is not deterministic" << std::endl;
-    FailTest();
-  }
-}
-
-void RunSimulations(size_t count) {
-  std::mt19937 seeds{42};
-
-  std::cout << "Run simulations:" << std::endl;
-
-  for (size_t i = 1; i <= count; ++i) {
-    std::cout << "Simulation " << i << "..." << std::endl;
-    RunSimulation(seeds());
-  }
-}
-
-int main() {
-  TestDeterminism();
-  RunSimulations(12345);
-
-  std::cout << std::endl << "Looks good! ヽ(‘ー`)ノ" << std::endl;
-
-  return 0;
+// Usage: --det --sims 12345
+int main(int argc, const char** argv) {
+  return whirl::MatrixMain(argc, argv, RunSimulation);
 }
