@@ -31,7 +31,7 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 
 ## Inspiration
 
-### Simulation
+### Simulation + Fault Injection
 
 #### FoundationDB
 - [Testing Distributed Systems w/ Deterministic Simulation](https://www.youtube.com/watch?v=4fFDFbi3toc)
