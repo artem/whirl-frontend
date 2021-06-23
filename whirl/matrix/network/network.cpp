@@ -106,7 +106,7 @@ static bool IsClient(INetServer* server) {
 }
 
 static bool Cross(const Link& link, const Partition& lhs) {
-  return lhs.count(link.StartHostName()) != lhs.count(link.EndHostName());
+  return lhs.count(link.Start()->HostName()) != lhs.count(link.End()->HostName());
 }
 
 void Network::Split() {
@@ -146,8 +146,8 @@ void Network::Split() {
       continue;
     }
     if (Cross(link, lhs)) {
-      WHIRL_SIM_LOG_WARN("Pause link {} - {}", link.StartHostName(),
-                         link.EndHostName());
+      WHIRL_SIM_LOG_WARN("Pause link {} - {}", link.Start()->HostName(),
+                         link.End()->HostName());
       link.Pause();
     }
   }

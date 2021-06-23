@@ -106,7 +106,7 @@ class Replier {
 void Transport::HandlePacket(const Packet& packet, Link* out) {
   GlobalAllocatorGuard g;
 
-  Address from{out->EndHostName(), packet.header.source_port};
+  Address from{out->End()->HostName(), packet.header.source_port};
   Address to{host_, packet.header.dest_port};
 
   /*
@@ -158,7 +158,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
                   packet.message);
 
     auto g = heap_.Use();
-    endpoint.handler->HandleMessage(packet.message, ReplySocket(packet, out));
+    endpoint.handler->HandleMessage(packet.message, ReplySocket(packet.header, out));
     return;
   }
 }

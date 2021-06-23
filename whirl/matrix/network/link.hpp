@@ -31,20 +31,12 @@ class Link {
       : net_(net), start_(start), end_(end) {
   }
 
-  INetServer* Start() {
+  INetServer* Start() const {
     return start_;
   }
 
-  INetServer* End() {
+  INetServer* End() const {
     return end_;
-  }
-
-  const std::string& StartHostName() const {
-    return start_->HostName();
-  }
-
-  const std::string& EndHostName() const {
-    return end_->HostName();
   }
 
   void SetOpposite(Link* link) {

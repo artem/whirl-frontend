@@ -25,7 +25,7 @@ class ClientSocket::Impl {
 
   const std::string& Peer() const {
     // GlobalHeapScope g;
-    return link_->EndHostName();
+    return link_->End()->HostName();
   }
 
   void Send(const Message& message) {
@@ -103,11 +103,11 @@ void ServerSocket::Close() {
 
 //////////////////////////////////////////////////////////////////////
 
-ReplySocket::ReplySocket(const Packet& packet, Link* out)
+ReplySocket::ReplySocket(const Packet::Header& incoming, Link* out)
     : link_(out),
-      self_port_(packet.header.dest_port),
-      peer_port_(packet.header.source_port),
-      ts_(packet.header.ts) {
+      self_port_(incoming.dest_port),
+      peer_port_(incoming.source_port),
+      ts_(incoming.ts) {
 }
 
 Packet ReplySocket::MakePacket(const Message& message) const {
@@ -124,7 +124,7 @@ void ReplySocket::Send(const Message& message) {
 }
 
 const std::string& ReplySocket::Peer() const {
-  return link_->EndHostName();
+  return link_->End()->HostName();
 }
 
 }  // namespace whirl::net
