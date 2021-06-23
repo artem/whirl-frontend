@@ -46,6 +46,11 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 
 ### Model checking
 
+#### Microsoft Coyote
+
+- https://microsoft.github.io/coyote
+- https://github.com/microsoft/coyote
+
 #### DSLabs
 - [Teaching Rigorous Distributed Systems With Efficient Model Checking](https://ellismichael.com/papers/dslabs-eurosys19.pdf)
 - https://github.com/emichael/dslabs  
