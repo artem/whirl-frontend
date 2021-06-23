@@ -375,7 +375,10 @@ size_t RunSimulation(size_t seed) {
   return digest;
 }
 
-// Usage: --det --sims 12345
+// Usage:
+// 1) --det --sims 12345 - check determinism and run 12345 simulations
+// 2) --seed 54321 - run single simulation with seed 54321
+
 int main(int argc, const char** argv) {
   return whirl::MatrixMain(argc, argv, RunSimulation);
 }
