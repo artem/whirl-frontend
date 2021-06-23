@@ -360,10 +360,11 @@ class WorldImpl {
 
   std::optional<adversary::Process> adversary_;
 
-  // Theatre
+  // Event loop
 
   std::vector<IActor*> actors_;
   ActorContext active_;
+
   size_t step_count_{0};
 
   Logger logger_{"World"};
