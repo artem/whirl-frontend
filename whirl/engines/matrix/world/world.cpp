@@ -66,10 +66,6 @@ size_t World::Digest() const {
   return impl_->Digest();
 }
 
-size_t World::NumCompletedCalls() const {
-  return impl_->HistoryRecorder().NumCompletedCalls();
-}
-
 std::string World::TextLog() const {
   return impl_->GetLog().TextLog();
 }

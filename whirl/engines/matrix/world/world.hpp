@@ -70,8 +70,6 @@ class World {
 
   size_t Digest() const;
 
-  size_t NumCompletedCalls() const;
-
   size_t StepCount() const;
   Duration TimeElapsed() const;
 
