@@ -10,7 +10,7 @@ Distributed system deterministic simulator
 - Last-write-wins via wall clock
 - Persistent local storage
 
-Implementation intentionally violates linearizability!
+Note: Implementation _intentionally_ violates [linearizability](https://jepsen.io/consistency/models/linearizable)!
 
 Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 - [Original paper](https://groups.csail.mit.edu/tds/papers/Attiya/TM-423.pdf)
@@ -36,7 +36,6 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 #### FoundationDB
 - [Testing Distributed Systems w/ Deterministic Simulation](https://www.youtube.com/watch?v=4fFDFbi3toc)
 - [FoundationDB or: How I Learned to Stop Worrying and Trust the Database](https://www.youtube.com/watch?v=OJb8A6h9jQQ&list=PLSE8ODhjZXjagqlf1NxuBQwaMkrHXi-iz&index=22)
-
 
 - https://github.com/jepsen-io/maelstrom
 
