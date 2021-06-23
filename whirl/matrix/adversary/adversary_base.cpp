@@ -9,8 +9,10 @@ namespace whirl::adversary {
 void AdversaryBase::Start() {
   Initialize();
 
+  size_t cluster_size = GetPool("cluster").size();
+
   std::vector<IFaultyServer*> servers;
-  for (size_t i = 0; i < GetClusterSize(); ++i) {
+  for (size_t i = 0; i < cluster_size; ++i) {
     servers.push_back(&AccessFaultyServer(i));
 
     Threads().Spawn([this, i]() {
