@@ -72,9 +72,13 @@ class NetTransportServer : public ITransportServer, public net::ISocketHandler {
         handler_(handler) {
   }
 
+  // ITransportServer
+
   void Shutdown() override {
     server_socket_.Close();
   }
+
+  // net::ISocketHandler
 
   void HandleMessage(const net::Message& message,
                      net::ReplySocket back) override;
