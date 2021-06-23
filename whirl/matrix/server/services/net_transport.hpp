@@ -12,9 +12,9 @@ using namespace rpc;
 
 class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
  public:
-  NetTransportSocket(net::Transport& transport, std::string peer, net::Port port,
+  NetTransportSocket(net::Transport& transport, std::string host, net::Port port,
                      ITransportHandlerPtr handler)
-      : socket_(transport.ConnectTo({peer, port}, this)),
+      : socket_(transport.ConnectTo({host, port}, this)),
         handler_(handler) {
   }
 
@@ -83,9 +83,9 @@ class NetTransportServer : public ITransportServer, public net::ISocketHandler {
   void HandleMessage(const net::Message& message,
                      net::ReplySocket back) override;
 
-  void HandleDisconnect(const std::string& client) override {
+  void HandleDisconnect(const std::string& host) override {
     if (auto handler = handler_.lock()) {
-      handler->HandleDisconnect(client);
+      handler->HandleDisconnect(host);
     }
   }
 
@@ -105,9 +105,9 @@ struct NetTransport : public ITransport {
     return std::make_shared<NetTransportServer>(impl_, port_, handler);
   }
 
-  ITransportSocketPtr ConnectTo(const std::string& peer,
+  ITransportSocketPtr ConnectTo(const TransportAddress& host,
                                 ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportSocket>(impl_, peer, port_, handler);
+    return std::make_shared<NetTransportSocket>(impl_, host, port_, handler);
   }
 
  private:
