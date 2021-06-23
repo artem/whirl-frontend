@@ -15,6 +15,9 @@ class PeerBase : public NodeMethodsBase {
 
  protected:
   size_t PeerCount() const;
+
+  const std::vector<std::string>& Peers();
+
   rpc::IChannelPtr& PeerChannel(size_t index) const;
   rpc::IChannelPtr& SelfChannel() const;
   const std::string& PeerName(size_t index) const;

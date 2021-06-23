@@ -1,7 +1,7 @@
 #pragma once
 
 // TODO: Remove
-#include <whirl/matrix/log/enabled.hpp>
+#include <whirl/engines/matrix/log/enabled.hpp>
 
 #include <whirl/services/logger.hpp>
 

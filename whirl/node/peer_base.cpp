@@ -1,6 +1,6 @@
 #include <whirl/node/peer_base.hpp>
 
-#include <whirl/matrix/channels/retries.hpp>
+#include <whirl/engines/matrix/channels/retries.hpp>
 
 namespace whirl {
 

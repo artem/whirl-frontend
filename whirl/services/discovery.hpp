@@ -7,7 +7,6 @@
 namespace whirl {
 
 struct IDiscoveryService {
-
   virtual ~IDiscoveryService() = default;
 
   using Pool = std::vector<std::string>;
