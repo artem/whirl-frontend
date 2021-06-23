@@ -23,7 +23,7 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-class Server : public IActor, public IFaultyServer, public net::INetServer {
+class Server : public IActor, public IFaultyServer, public net::IServer {
  private:
   enum class State {
     Initial,

@@ -27,15 +27,15 @@ class Link {
   using PacketQueue = PriorityQueue<PacketEvent>;
 
  public:
-  Link(Network* net, INetServer* start, INetServer* end)
+  Link(Network* net, IServer* start, IServer* end)
       : net_(net), start_(start), end_(end) {
   }
 
-  INetServer* Start() const {
+  IServer* Start() const {
     return start_;
   }
 
-  INetServer* End() const {
+  IServer* End() const {
     return end_;
   }
 
@@ -82,8 +82,8 @@ class Link {
 
  private:
   Network* net_;
-  INetServer* start_;
-  INetServer* end_;
+  IServer* start_;
+  IServer* end_;
 
   PacketQueue packets_;
   bool paused_{false};

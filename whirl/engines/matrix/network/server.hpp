@@ -8,8 +8,8 @@ namespace whirl::net {
 
 class Link;
 
-struct INetServer {
-  virtual ~INetServer() = default;
+struct IServer {
+  virtual ~IServer() = default;
 
   virtual const std::string& HostName() const = 0;
 

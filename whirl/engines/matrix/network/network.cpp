@@ -8,7 +8,7 @@
 
 namespace whirl::net {
 
-void Network::AddServer(INetServer* server) {
+void Network::AddServer(IServer* server) {
   servers_.push_back(server);
 }
 
@@ -101,7 +101,7 @@ size_t Network::GetLinkIndex(size_t i, size_t j) const {
 
 // Partitions
 
-static bool IsClient(INetServer* server) {
+static bool IsClient(IServer* server) {
   return server->HostName()[0] == 'C';  // TODO
 }
 
@@ -116,7 +116,7 @@ void Network::Split() {
 
   // Exclude clients
 
-  for (INetServer* server : servers_) {
+  for (IServer* server : servers_) {
     if (!IsClient(server)) {
       servers.push_back(server->HostName());
     }

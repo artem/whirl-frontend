@@ -46,7 +46,7 @@ class Network : public IActor, public IFaultyNetwork {
 
   // Build network
 
-  void AddServer(INetServer* server);
+  void AddServer(IServer* server);
 
   // After `BuildLinks`
   Link* GetLink(const HostName& start, const HostName& end);
@@ -89,7 +89,7 @@ class Network : public IActor, public IFaultyNetwork {
   void BuildLinks();
 
  private:
-  std::vector<INetServer*> servers_;
+  std::vector<IServer*> servers_;
   std::vector<Link> links_;
   LinkEvents events_;
 
