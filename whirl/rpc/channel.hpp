@@ -12,6 +12,7 @@ namespace whirl::rpc {
 using await::futures::Future;
 
 // Communication line between client and remote service
+// Untyped
 
 struct IChannel {
   virtual ~IChannel() = default;
