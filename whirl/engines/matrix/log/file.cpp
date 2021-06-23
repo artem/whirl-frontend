@@ -50,7 +50,8 @@ class LogFileManager {
     log_path_.emplace(path);
 
     if (!fs::exists(log_path_->parent_path())) {
-      WHEELS_PANIC("Log directory does not exist: " << log_path_->parent_path());
+      WHEELS_PANIC(
+          "Log directory does not exist: " << log_path_->parent_path());
     }
 
     ResetLogFile();
@@ -94,7 +95,6 @@ class LogFileManager {
 };
 
 static LogFileManager log_file_manager;
-
 
 void SetLogFile(const std::string& path) {
   log_file_manager.SetFile(path);

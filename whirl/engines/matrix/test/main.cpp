@@ -25,7 +25,8 @@ void TestDeterminism(Simulation sim) {
   size_t digest2 = sim(kSeed);
 
   if (digest1 != digest2) {
-    std::cout << "Impl is not deterministic: digest1 = " << digest1 << ", digest2 = " << digest2 << std::endl;
+    std::cout << "Impl is not deterministic: digest1 = " << digest1
+              << ", digest2 = " << digest2 << std::endl;
     FailTest();
   }
 }
@@ -52,21 +53,10 @@ void RunSimulation(Simulation sim, size_t seed) {
 static void CLI(wheels::ArgumentParser& parser) {
   parser.AddHelpFlag();
 
-  parser.Add("det")
-      .Flag()
-      .Help("Test determinism");
-
-  parser.Add("sims")
-      .ValueDescr("uint")
-      .Help("Number of simulations to run");
-
-  parser.Add("seed")
-      .ValueDescr("uint")
-      .Optional();
-
-  parser.Add("log")
-      .ValueDescr("path")
-      .Optional();
+  parser.Add("det").Flag().Help("Test determinism");
+  parser.Add("sims").ValueDescr("uint").Help("Number of simulations to run");
+  parser.Add("seed").ValueDescr("uint").Optional();
+  parser.Add("log").ValueDescr("path").Optional();
 }
 
 template <typename T>

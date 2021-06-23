@@ -12,10 +12,9 @@ using namespace rpc;
 
 class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
  public:
-  NetTransportSocket(net::Transport& transport, std::string host, net::Port port,
-                     ITransportHandlerPtr handler)
-      : socket_(transport.ConnectTo({host, port}, this)),
-        handler_(handler) {
+  NetTransportSocket(net::Transport& transport, std::string host,
+                     net::Port port, ITransportHandlerPtr handler)
+      : socket_(transport.ConnectTo({host, port}, this)), handler_(handler) {
   }
 
   ~NetTransportSocket() {
@@ -67,9 +66,9 @@ class NetTransportSocket : public ITransportSocket, public net::ISocketHandler {
 
 class NetTransportServer : public ITransportServer, public net::ISocketHandler {
  public:
-  NetTransportServer(net::Transport& transport, net::Port port, ITransportHandlerPtr handler)
-      : server_socket_(transport.Serve(port, this)),
-        handler_(handler) {
+  NetTransportServer(net::Transport& transport, net::Port port,
+                     ITransportHandlerPtr handler)
+      : server_socket_(transport.Serve(port, this)), handler_(handler) {
   }
 
   // ITransportServer
@@ -98,7 +97,8 @@ class NetTransportServer : public ITransportServer, public net::ISocketHandler {
 
 struct NetTransport : public ITransport {
  public:
-  NetTransport(net::Transport& impl, net::Port port) : impl_(impl), port_(port) {
+  NetTransport(net::Transport& impl, net::Port port)
+      : impl_(impl), port_(port) {
   }
 
   ITransportServerPtr Serve(ITransportHandlerPtr handler) override {

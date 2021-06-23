@@ -95,7 +95,8 @@ class Replier {
 
   void Reply(Packet::Type type, Message payload) {
     Send({{type, packet_.header.dest_port, packet_.header.source_port,
-          packet_.header.ts}, std::move(payload)});
+           packet_.header.ts},
+          std::move(payload)});
   }
 
  private:
@@ -158,7 +159,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
                   packet.message);
 
     auto g = heap_.Use();
-    endpoint.handler->HandleMessage(packet.message, ReplySocket(packet.header, out));
+    endpoint.handler->HandleMessage(packet.message,
+                                    ReplySocket(packet.header, out));
     return;
   }
 }

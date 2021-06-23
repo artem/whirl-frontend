@@ -15,8 +15,8 @@ struct UidGenerator : public IUidGenerator {
 
   // {random-number}-{server-id}-{global-time}-{uid-request}
   Uid Generate() override {
-    return wheels::StringBuilder() << GlobalRandomNumber() << "-" << server_id_ << "-"
-                                   << GlobalNow() << "-" << ++request_;
+    return wheels::StringBuilder() << GlobalRandomNumber() << "-" << server_id_
+                                   << "-" << GlobalNow() << "-" << ++request_;
   }
 
  private:

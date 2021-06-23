@@ -8,9 +8,9 @@ namespace whirl::net {
 
 struct Packet {
   enum class Type {
-    Data,  // User message
+    Data,   // User message
     Reset,  // Connection reset by peer
-    Ping  // Keep-alive
+    Ping    // Keep-alive
   };
 
   struct Header {
