@@ -39,7 +39,7 @@ class ClientSocket::Impl {
   }
 
   Packet::Header MakeHeader(const Message& /*message*/) const {
-    return {EPacketType::Data, self_port_, server_port_, ts_};
+    return {Packet::Type::Data, self_port_, server_port_, ts_};
   }
 
  private:
@@ -115,7 +115,7 @@ Packet ReplySocket::MakePacket(const Message& message) const {
 }
 
 Packet::Header ReplySocket::MakeHeader(const Message& /*message*/) const {
-  return {EPacketType::Data, self_port_, peer_port_, ts_};
+  return {Packet::Type::Data, self_port_, peer_port_, ts_};
 }
 
 void ReplySocket::Send(const Message& message) {

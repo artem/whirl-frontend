@@ -10,7 +10,7 @@
 namespace whirl::net {
 
 void Link::Add(Packet packet) {
-  if (packet.header.type == EPacketType::Data) {
+  if (packet.header.type == Packet::Type::Data) {
     Address to{End()->HostName(), packet.header.dest_port};
     WHIRL_SIM_LOG("Send packet to {}: <{}>", to, packet.message);
   }

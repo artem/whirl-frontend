@@ -30,7 +30,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
 
   if (IsThereAdversary()) {
     // Init ping-pong for detecting crashes / reboots
-    link->Add({{EPacketType::Ping, port, address.port, ts}, "<ping>"});
+    link->Add({{Packet::Type::Ping, port, address.port, ts}, "<ping>"});
   }
 
   {
@@ -77,15 +77,15 @@ class Replier {
   }
 
   void Ping() {
-    Reply(EPacketType::Ping, "<ping>");
+    Reply(Packet::Type::Ping, "<ping>");
   }
 
   void Reset() {
-    Reply(EPacketType::Reset, "<reset>");
+    Reply(Packet::Type::Reset, "<reset>");
   }
 
   void Data(const Message& message) {
-    Reply(EPacketType::Data, message);
+    Reply(Packet::Type::Data, message);
   }
 
  private:
@@ -93,7 +93,7 @@ class Replier {
     out_->Add(packet);
   }
 
-  void Reply(EPacketType type, Message payload) {
+  void Reply(Packet::Type type, Message payload) {
     Send({{type, packet_.header.dest_port, packet_.header.source_port,
           packet_.header.ts}, std::move(payload)});
   }
@@ -122,8 +122,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   if (endpoint_it == endpoints_.end()) {
     // Endpoint not found
 
-    if (packet.header.type != EPacketType::Reset) {
-      if (packet.header.type == EPacketType::Data) {
+    if (packet.header.type != Packet::Type::Reset) {
+      if (packet.header.type == Packet::Type::Data) {
         WHIRL_SIM_LOG_WARN(
             "Endpoint {} not found, drop incoming packet from {}", to, from);
       }
@@ -139,19 +139,19 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     replier.Reset();
     return;
 
-  } else if (packet.header.type == EPacketType::Ping) {
+  } else if (packet.header.type == Packet::Type::Ping) {
     // Ping
     // WHIRL_FMT_LOG("Send ping back to {}", source);
     replier.Ping();
     return;
 
-  } else if (packet.header.type == EPacketType::Reset) {
+  } else if (packet.header.type == Packet::Type::Reset) {
     // Disconnect
     auto g = heap_.Use();
     endpoint.handler->HandleDisconnect(from.host);
     return;
 
-  } else if (packet.header.type == EPacketType::Data) {
+  } else if (packet.header.type == Packet::Type::Data) {
     // Message
 
     WHIRL_SIM_LOG("Handle message at {} from {}: <{}>", host_, from,
