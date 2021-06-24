@@ -6,6 +6,8 @@
 
 #include <await/fibers/core/api.hpp>
 
+#include <wheels/support/string_builder.hpp>
+
 namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
@@ -13,7 +15,7 @@ namespace whirl::matrix {
 // Current context
 
 static std::string ThisFiberServiceName() {
-  return wheels::StringBuilder() << "T" << await::fibers::self::GetId();
+  return wheels::StringBuilder() << 'T' << await::fibers::self::GetId();
 }
 
 static std::string ThisFiberName() {
@@ -40,6 +42,7 @@ static std::string DescribeThisActor() {
   if (await::fibers::AmIFiber()) {
     descr << " /" << ThisFiberName();
   }
+
   return descr;
 }
 
