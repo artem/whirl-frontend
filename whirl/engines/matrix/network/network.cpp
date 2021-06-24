@@ -135,8 +135,8 @@ void Network::Split() {
   }
 
   // Print
-  WHIRL_LOG("Network partitioned: {} / {}", lhs.size(),
-            servers.size() - lhs.size());
+  WHIRL_LOG_INFO("Network partitioned: {} / {}", lhs.size(),
+                 servers.size() - lhs.size());
 
   // Split
 

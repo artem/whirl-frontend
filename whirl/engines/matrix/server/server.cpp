@@ -50,7 +50,7 @@ void Server::Crash() {
 
   WHEELS_VERIFY(state_ != State::Crashed, "Server already crashed");
 
-  WHIRL_LOG("Crash server {}", HostName());
+  WHIRL_LOG_INFO("Crash server {}", HostName());
 
   // 1) Remove all network endpoints
   transport_.Reset();
@@ -117,7 +117,7 @@ void Server::Start() {
 
   monotonic_clock_.Reset();
 
-  WHIRL_LOG("Start node at server {}", HostName());
+  WHIRL_LOG_INFO("Start node at server {}", HostName());
 
   auto g = heap_.Use();
 

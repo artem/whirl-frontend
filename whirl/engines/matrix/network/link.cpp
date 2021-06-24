@@ -12,7 +12,7 @@ namespace whirl::net {
 void Link::Add(Packet packet) {
   if (packet.header.type == Packet::Type::Data) {
     Address to{End()->HostName(), packet.header.dest_port};
-    WHIRL_LOG("Send packet to {}: <{}>", to, packet.message);
+    WHIRL_LOG_INFO("Send packet to {}: <{}>", to, packet.message);
   }
   Add(std::move(packet), ChooseDeliveryTime(packet));
 }

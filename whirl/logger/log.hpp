@@ -45,7 +45,4 @@ class Logger {
 #define WHIRL_LOG_WARN(...) WHIRL_LOG_IMPL(LogLevel::Warning, __VA_ARGS__)
 #define WHIRL_LOG_ERROR(...) WHIRL_LOG_IMPL(LogLevel::Error, __VA_ARGS__)
 
-// Backward compatibility
-#define WHIRL_LOG(...) WHIRL_LOG_INFO(__VA_ARGS__)
-
 }  // namespace whirl

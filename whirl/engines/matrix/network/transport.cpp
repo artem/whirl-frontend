@@ -24,7 +24,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
   Port port = FindFreePort();
   Timestamp ts = GetNewEndpointTimestamp();
 
-  WHIRL_LOG("Connecting to {}: local port = {}", address, port);
+  WHIRL_LOG_INFO("Connecting to {}: local port = {}", address, port);
 
   endpoints_.emplace(port, Endpoint{handler, ts});
 
@@ -47,7 +47,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
   auto ts = GetNewEndpointTimestamp();
   endpoints_.emplace(port, Endpoint{handler, ts});
 
-  WHIRL_LOG("Start serving at port {}", port);
+  WHIRL_LOG_INFO("Start serving at port {}", port);
 
   {
     auto g = heap_.Use();
@@ -58,7 +58,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
 void Transport::RemoveEndpoint(Port port) {
   GlobalAllocatorGuard g;
 
-  WHIRL_LOG("Remove endpoint at port {}", port);
+  WHIRL_LOG_INFO("Remove endpoint at port {}", port);
   endpoints_.erase(port);
 }
 
@@ -66,7 +66,7 @@ void Transport::Reset() {
   GlobalAllocatorGuard g;
 
   for ([[maybe_unused]] const auto& [port, _] : endpoints_) {
-    WHIRL_LOG("Remove endpoint at port {}", port);
+    WHIRL_LOG_INFO("Remove endpoint at port {}", port);
   }
   endpoints_.clear();
 }
@@ -155,8 +155,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.header.type == Packet::Type::Data) {
     // Message
 
-    WHIRL_LOG("Handle message at {} from {}: <{}>", host_, from,
-              packet.message);
+    WHIRL_LOG_INFO("Handle message at {} from {}: <{}>", host_, from,
+                   packet.message);
 
     auto g = heap_.Use();
     endpoint.handler->HandleMessage(packet.message,

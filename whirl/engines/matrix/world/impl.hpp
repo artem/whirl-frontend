@@ -83,7 +83,7 @@ class WorldImpl {
 
     SetLoggerBackend(&log_);
 
-    WHIRL_LOG("Seed: {}", seed_);
+    WHIRL_LOG_INFO("Seed: {}", seed_);
 
     SetStartTime();
     start_time_ = time_.Now();
@@ -92,16 +92,17 @@ class WorldImpl {
     AddActor(&network_);
     Scope(network_)->Start();
 
-    WHIRL_LOG("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
+    WHIRL_LOG_INFO("Cluster: {}, clients: {}", cluster_.size(),
+                   clients_.size());
 
-    WHIRL_LOG("Starting cluster...");
+    WHIRL_LOG_INFO("Starting cluster...");
 
     // Start servers
     for (auto& server : cluster_) {
       Scope(server)->Start();
     }
 
-    WHIRL_LOG("Starting clients...");
+    WHIRL_LOG_INFO("Starting clients...");
 
     // Start clients
     for (auto& client : clients_) {
@@ -110,11 +111,11 @@ class WorldImpl {
 
     // Start adversary
     if (adversary_.has_value()) {
-      WHIRL_LOG("Starting adversary...");
+      WHIRL_LOG_INFO("Starting adversary...");
       Scope(*adversary_)->Start();
     }
 
-    WHIRL_LOG("World started");
+    WHIRL_LOG_INFO("World started");
   }
 
   bool Step() {
@@ -161,13 +162,13 @@ class WorldImpl {
       Scope(*adversary_)->Shutdown();
     }
 
-    WHIRL_LOG("Adversary stopped");
+    WHIRL_LOG_INFO("Adversary stopped");
 
     // Network
     digest_.Combine(network_.Digest());
     Scope(network_)->Shutdown();
 
-    WHIRL_LOG("Network stopped");
+    WHIRL_LOG_INFO("Network stopped");
 
     // Servers
     for (auto& server : cluster_) {
@@ -176,7 +177,7 @@ class WorldImpl {
     }
     cluster_.clear();
 
-    WHIRL_LOG("Servers stopped");
+    WHIRL_LOG_INFO("Servers stopped");
 
     // Clients
     for (auto& client : clients_) {
@@ -184,7 +185,7 @@ class WorldImpl {
     }
     clients_.clear();
 
-    WHIRL_LOG("Clients stopped");
+    WHIRL_LOG_INFO("Clients stopped");
 
     actors_.clear();
 
@@ -192,7 +193,7 @@ class WorldImpl {
 
     history_recorder_.Finalize();
 
-    WHIRL_LOG("Simulation stopped");
+    WHIRL_LOG_INFO("Simulation stopped");
 
     SetLoggerBackend(nullptr);
 
