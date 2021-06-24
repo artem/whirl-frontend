@@ -9,9 +9,9 @@
 #include <whirl/engines/matrix/world/random_source.hpp>
 #include <whirl/engines/matrix/world/behaviour.hpp>
 #include <whirl/engines/matrix/history/recorder.hpp>
-
-#include <whirl/engines/matrix/log/logger.hpp>
 #include <whirl/engines/matrix/log/log.hpp>
+
+#include <whirl/logger/log.hpp>
 
 #include <whirl/helpers/digest.hpp>
 #include <whirl/helpers/untyped_dict.hpp>
@@ -83,7 +83,7 @@ class WorldImpl {
 
     SetLoggerBackend(&log_);
 
-    WHIRL_SIM_LOG("Seed: {}", seed_);
+    WHIRL_LOG("Seed: {}", seed_);
 
     SetStartTime();
     start_time_ = time_.Now();
@@ -92,16 +92,16 @@ class WorldImpl {
     AddActor(&network_);
     Scope(network_)->Start();
 
-    WHIRL_SIM_LOG("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
+    WHIRL_LOG("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
 
-    WHIRL_SIM_LOG("Starting cluster...");
+    WHIRL_LOG("Starting cluster...");
 
     // Start servers
     for (auto& server : cluster_) {
       Scope(server)->Start();
     }
 
-    WHIRL_SIM_LOG("Starting clients...");
+    WHIRL_LOG("Starting clients...");
 
     // Start clients
     for (auto& client : clients_) {
@@ -110,11 +110,11 @@ class WorldImpl {
 
     // Start adversary
     if (adversary_.has_value()) {
-      WHIRL_SIM_LOG("Starting adversary...");
+      WHIRL_LOG("Starting adversary...");
       Scope(*adversary_)->Start();
     }
 
-    WHIRL_SIM_LOG("World started");
+    WHIRL_LOG("World started");
   }
 
   bool Step() {
@@ -161,13 +161,13 @@ class WorldImpl {
       Scope(*adversary_)->Shutdown();
     }
 
-    WHIRL_SIM_LOG("Adversary stopped");
+    WHIRL_LOG("Adversary stopped");
 
     // Network
     digest_.Eat(network_.Digest());
     Scope(network_)->Shutdown();
 
-    WHIRL_SIM_LOG("Network stopped");
+    WHIRL_LOG("Network stopped");
 
     // Servers
     for (auto& server : cluster_) {
@@ -176,7 +176,7 @@ class WorldImpl {
     }
     cluster_.clear();
 
-    WHIRL_SIM_LOG("Servers stopped");
+    WHIRL_LOG("Servers stopped");
 
     // Clients
     for (auto& client : clients_) {
@@ -184,7 +184,7 @@ class WorldImpl {
     }
     clients_.clear();
 
-    WHIRL_SIM_LOG("Clients stopped");
+    WHIRL_LOG("Clients stopped");
 
     actors_.clear();
 
@@ -192,7 +192,7 @@ class WorldImpl {
 
     history_recorder_.Finalize();
 
-    WHIRL_SIM_LOG("Simulation stopped");
+    WHIRL_LOG("Simulation stopped");
 
     SetLoggerBackend(nullptr);
 

@@ -17,7 +17,7 @@
 #include <whirl/engines/matrix/process/heap.hpp>
 #include <whirl/engines/matrix/process/step_queue.hpp>
 
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 namespace whirl {
 

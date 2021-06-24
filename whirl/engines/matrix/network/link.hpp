@@ -6,7 +6,7 @@
 
 #include <whirl/helpers/priority_queue.hpp>
 
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 namespace whirl::net {
 

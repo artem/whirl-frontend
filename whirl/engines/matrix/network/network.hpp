@@ -6,7 +6,7 @@
 #include <whirl/engines/matrix/network/link.hpp>
 #include <whirl/engines/matrix/network/server.hpp>
 
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 #include <whirl/helpers/digest.hpp>
 

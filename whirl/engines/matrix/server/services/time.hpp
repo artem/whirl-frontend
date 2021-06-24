@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/server/clocks.hpp>
 #include <whirl/engines/matrix/process/step_queue.hpp>
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 #include <await/futures/core/future.hpp>
 

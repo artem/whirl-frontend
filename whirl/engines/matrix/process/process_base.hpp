@@ -7,7 +7,7 @@
 #include <whirl/engines/matrix/process/step_queue.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 namespace whirl {
 
@@ -43,7 +43,7 @@ class ProcessBase : public IActor {
   }
 
   void Shutdown() override {
-    WHIRL_SIM_LOG("Bytes allocated: {}", heap_.BytesAllocated());
+    WHIRL_LOG("Bytes allocated: {}", heap_.BytesAllocated());
 
     {
       auto g = heap_.Use();

@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/fault/network.hpp>
 #include <whirl/engines/matrix/fault/server.hpp>
 #include <whirl/engines/matrix/adversary/strategy.hpp>
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 #include <vector>
 

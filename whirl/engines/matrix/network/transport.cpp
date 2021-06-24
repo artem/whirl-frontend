@@ -24,7 +24,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
   Port port = FindFreePort();
   Timestamp ts = GetNewEndpointTimestamp();
 
-  WHIRL_SIM_LOG("Connecting to {}: local port = {}", address, port);
+  WHIRL_LOG("Connecting to {}: local port = {}", address, port);
 
   endpoints_.emplace(port, Endpoint{handler, ts});
 
@@ -47,7 +47,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
   auto ts = GetNewEndpointTimestamp();
   endpoints_.emplace(port, Endpoint{handler, ts});
 
-  WHIRL_SIM_LOG("Start serving at port {}", port);
+  WHIRL_LOG("Start serving at port {}", port);
 
   {
     auto g = heap_.Use();
@@ -58,7 +58,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
 void Transport::RemoveEndpoint(Port port) {
   GlobalAllocatorGuard g;
 
-  WHIRL_SIM_LOG("Remove endpoint at port {}", port);
+  WHIRL_LOG("Remove endpoint at port {}", port);
   endpoints_.erase(port);
 }
 
@@ -66,7 +66,7 @@ void Transport::Reset() {
   GlobalAllocatorGuard g;
 
   for ([[maybe_unused]] const auto& [port, _] : endpoints_) {
-    WHIRL_SIM_LOG("Remove endpoint at port {}", port);
+    WHIRL_LOG("Remove endpoint at port {}", port);
   }
   endpoints_.clear();
 }
@@ -125,7 +125,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     if (packet.header.type != Packet::Type::Reset) {
       if (packet.header.type == Packet::Type::Data) {
-        WHIRL_SIM_LOG_WARN(
+        WHIRL_LOG_WARN(
             "Endpoint {} not found, drop incoming packet from {}", to, from);
       }
       replier.Reset();
@@ -155,7 +155,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.header.type == Packet::Type::Data) {
     // Message
 
-    WHIRL_SIM_LOG("Handle message at {} from {}: <{}>", host_, from,
+    WHIRL_LOG("Handle message at {} from {}: <{}>", host_, from,
                   packet.message);
 
     auto g = heap_.Use();
