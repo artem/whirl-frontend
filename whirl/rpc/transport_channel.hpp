@@ -7,13 +7,12 @@
 #include <whirl/rpc/trace.hpp>
 #include <whirl/rpc/net_transport.hpp>
 
+#include <whirl/logger/log.hpp>
+
 #include <await/executors/executor.hpp>
 #include <await/executors/strand.hpp>
 
 #include <await/futures/util/promise.hpp>
-
-// TODO: abstract logger
-#include <whirl/engines/matrix/log/logger.hpp>
 
 #include <map>
 

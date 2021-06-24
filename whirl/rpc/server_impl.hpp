@@ -5,10 +5,9 @@
 #include <whirl/rpc/net_transport.hpp>
 #include <whirl/rpc/server.hpp>
 
-#include <await/executors/executor.hpp>
+#include <whirl/logger/log.hpp>
 
-// TODO: abstract logger
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <await/executors/executor.hpp>
 
 #include <functional>
 #include <memory>
