@@ -25,8 +25,8 @@ class LocalKVStorage {
   }
 
   // Non-copyable
-  LocalKVStorage(const LocalKVStorage& that) = delete;
-  LocalKVStorage& operator=(const LocalKVStorage& that) = delete;
+  LocalKVStorage(const LocalKVStorage&) = delete;
+  LocalKVStorage& operator=(const LocalKVStorage&) = delete;
 
   void Set(const std::string& key, const V& value) {
     auto value_bytes = Bytes::Serialize(value);
@@ -94,8 +94,8 @@ class LocalStorage {
   }
 
   // Non-copyable
-  LocalStorage(const LocalStorage& that) = delete;
-  LocalStorage& operator=(const LocalStorage& that) = delete;
+  LocalStorage(const LocalStorage&) = delete;
+  LocalStorage& operator=(const LocalStorage&) = delete;
 
   template <typename U>
   void Store(const std::string& key, const U& data) {

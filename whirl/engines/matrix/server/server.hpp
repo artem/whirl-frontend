@@ -36,8 +36,8 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   Server(net::Network& network, ServerConfig config, INodeFactoryPtr factory);
 
   // Non-copyable
-  Server(const Server& that) = delete;
-  Server& operator=(const Server& that) = delete;
+  Server(const Server&) = delete;
+  Server& operator=(const Server&) = delete;
 
   ~Server();
 
