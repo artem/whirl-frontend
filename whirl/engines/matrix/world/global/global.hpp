@@ -6,7 +6,7 @@
 
 #include <whirl/engines/matrix/world/behaviour.hpp>
 #include <whirl/engines/matrix/history/recorder.hpp>
-#include <whirl/engines/matrix/log/log.hpp>
+#include <whirl/engines/matrix/log/backend.hpp>
 
 #include <cstdlib>
 #include <vector>

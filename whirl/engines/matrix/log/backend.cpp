@@ -1,4 +1,4 @@
-#include <whirl/engines/matrix/log/log.hpp>
+#include <whirl/engines/matrix/log/backend.hpp>
 
 #include <whirl/logger/enabled.hpp>
 
