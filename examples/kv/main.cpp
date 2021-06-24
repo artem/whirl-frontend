@@ -71,9 +71,9 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 //////////////////////////////////////////////////////////////////////
 
-// KV storage node
+// KV storage / bunch of atomic R/W registers
 
-// Services / roles
+// RPC services / algorithm roles
 
 class Coordinator : public rpc::ServiceBase<Coordinator>,
                     public PeerBase {
@@ -117,16 +117,15 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
     // Await responses from majority of replicas
 
-    // Steps:
     // 1) Combine futures from read RPC-s to single quorum future
     Future<std::vector<StampedValue>> quorum_reads =
-        Quorum(std::move(reads), Majority());
+        Quorum(std::move(reads), /*threshold=*/Majority());
     // 2) Block current fiber until quorum collected
     Result<std::vector<StampedValue>> results = Await(std::move(quorum_reads));
     // 3) Unpack vector or throw error
     auto values = results.ValueOrThrow();
 
-    // Or just combine all steps to:
+    // Or combine all steps into:
     // auto values = Await(Quorum(std::move(reads), Majority())).ValueOrThrow()
 
     for (size_t i = 0; i < values.size(); ++i) {
@@ -223,7 +222,6 @@ class KVNode final : public NodeBase {
 
  protected:
   void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
-    // Public
     rpc_server->RegisterService("KV", MakeCoordinatorService());
     rpc_server->RegisterService("Replica", MakeReplicaService());
   }

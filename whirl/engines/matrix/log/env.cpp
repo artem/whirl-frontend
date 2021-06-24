@@ -23,7 +23,7 @@ static LogLevels ParseLogLevels(const std::string& levels_str) {
     std::string component = parts[0];
     std::string level = parts[1];
 
-    levels.emplace(component, ParseLogLevel(level));
+    levels.emplace(component, LogLevelFromString(level));
   }
   return levels;
 }

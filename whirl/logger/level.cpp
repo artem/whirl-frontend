@@ -24,7 +24,7 @@ std::string LogLevelToString(LogLevel level) {
     return LogLevel::level;            \
   }
 
-LogLevel ParseLogLevel(const std::string& level_str) {
+LogLevel LogLevelFromString(const std::string& level_str) {
   PARSE_LEVEL(Debug);
   PARSE_LEVEL(Info);
   PARSE_LEVEL(Warning);
