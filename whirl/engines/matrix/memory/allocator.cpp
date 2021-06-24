@@ -137,7 +137,9 @@ void* MemoryAllocator::DoAllocate(size_t bytes) {
   // Try cache
   BlockHeader* block = cache_.TryAcquire(alloc_class);
   if (block != nullptr) {
-    return (char*)block + sizeof(BlockHeader);
+    auto span = GetSpan(block);
+    memset(span.Data(), 0, span.Size());
+    return span.Data();
   }
 
   return AllocateNewBlock(bytes_pow2);
@@ -199,6 +201,11 @@ char* MemoryAllocator::WriteBlockHeader(char* addr, size_t size) {
   header->canary = kCanary;
   return addr + sizeof(BlockHeader);
 };
+
+wheels::MemSpan MemoryAllocator::GetSpan(BlockHeader* block) {
+  char* start = (char*)block + sizeof(BlockHeader);
+  return {start, block->size};
+}
 
 bool MemoryAllocator::FromHere(void* addr) const {
   return addr >= arena_.Start() && addr < arena_.End();
