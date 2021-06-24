@@ -167,7 +167,7 @@ size_t Server::ComputeDigest() const {
   DigestCalculator digest;
   digest.Eat(heap_.BytesAllocated());
   digest.Combine(persistent_storage_.ComputeDigest());
-  return digest.Get();
+  return digest.GetValue();
 }
 
 // Private

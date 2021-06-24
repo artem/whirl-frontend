@@ -76,7 +76,7 @@ class Network : public IActor, public IFaultyNetwork {
   // Digest
 
   size_t Digest() const {
-    return digest_.Get();
+    return digest_.GetValue();
   }
 
  private:

@@ -216,7 +216,7 @@ class WorldImpl {
   }
 
   size_t Digest() const {
-    return digest_.Get();
+    return digest_.GetValue();
   }
 
   Server& GetServer(size_t index) {

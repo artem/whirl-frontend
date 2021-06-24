@@ -21,7 +21,7 @@ class DigestCalculator {
     return Combine(std::hash<T>()(object));
   }
 
-  size_t Get() const {
+  size_t GetValue() const {
     return digest_;
   }
 

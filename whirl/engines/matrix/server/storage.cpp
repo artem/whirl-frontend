@@ -39,7 +39,7 @@ size_t PersistentStorage::ComputeDigest() const {
   for (const auto& [k, v] : data_) {
     digest.Eat(k).Eat(v.Raw());
   }
-  return digest.Get();
+  return digest.GetValue();
 }
 
 }  // namespace whirl
