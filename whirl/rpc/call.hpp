@@ -69,6 +69,7 @@ class [[nodiscard]] Caller {
 // 2) auto f = Call(channel, "EchoService.Echo", data).As<std::string>()
 
 // TODO: Typestate correctness
+// TODO: BlockingCall
 
 template <typename... Arguments>
 detail::Caller Call(const std::string& method_str, Arguments&&... arguments) {
