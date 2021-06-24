@@ -15,10 +15,6 @@ class LogBackend : public ILoggerBackend {
  public:
   LogBackend();
 
-  void SetOutput(std::ostream* /*ignored*/) {
-    // out_ = out;
-  }
-
   // Context: Server
   LogLevel GetMinLevel(const std::string& component) const;
 
