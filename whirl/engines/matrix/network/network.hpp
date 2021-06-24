@@ -41,8 +41,8 @@ class Network : public IActor, public IFaultyNetwork {
   Network() = default;
 
   // Non-copyable
-  Network(const Network& that) = delete;
-  Network& operator=(const Network& that) = delete;
+  Network(const Network&) = delete;
+  Network& operator=(const Network&) = delete;
 
   // Build network
 

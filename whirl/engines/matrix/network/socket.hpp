@@ -49,7 +49,7 @@ class ServerSocket {
 
 //////////////////////////////////////////////////////////////////////
 
-// Just throws messages to network, does not own net endpoint
+// Just throws messages to network, does not own network endpoint
 
 class ReplySocket {
  public:
