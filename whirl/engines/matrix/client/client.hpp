@@ -8,8 +8,7 @@
 
 #include <whirl/helpers/errors.hpp>
 
-// TODO!
-#include <whirl/engines/matrix/log/logger.hpp>
+#include <whirl/logger/log.hpp>
 
 #include <await/futures/helpers.hpp>
 
