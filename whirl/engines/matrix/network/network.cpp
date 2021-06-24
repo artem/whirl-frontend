@@ -135,7 +135,7 @@ void Network::Split() {
 
   // Print
   WHIRL_LOG("Network partitioned: {} / {}", lhs.size(),
-                servers.size() - lhs.size());
+            servers.size() - lhs.size());
 
   // Split
 
@@ -148,7 +148,7 @@ void Network::Split() {
     }
     if (Cross(link, lhs)) {
       WHIRL_LOG_WARN("Pause link {} - {}", link.Start()->HostName(),
-                         link.End()->HostName());
+                     link.End()->HostName());
       link.Pause();
     }
   }

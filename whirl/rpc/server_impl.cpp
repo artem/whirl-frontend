@@ -56,7 +56,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   SetRequestContext(request);
 
   WHIRL_LOG_INFO("Process {} request from {}, id = {}", request.method,
-                back->Peer(), request.id);
+                 back->Peer(), request.id);
 
   auto service_it = services_.find(request.method.service);
 
@@ -77,12 +77,12 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
     result = service->Invoke(request.method.name, request.input);
   } catch (rpc::BadRequest& e) {
     WHIRL_LOG_ERROR("Bad RPC request {} (id = {}): {}", request.method,
-                        request.id, e.what());
+                    request.id, e.what());
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
-    WHIRL_LOG_ERROR("Exception in {} (id = {}): {}", request.method,
-                        request.id, wheels::CurrentExceptionMessage());
+    WHIRL_LOG_ERROR("Exception in {} (id = {}): {}", request.method, request.id,
+                    wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;
   }

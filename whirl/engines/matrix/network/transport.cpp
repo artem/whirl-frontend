@@ -125,8 +125,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     if (packet.header.type != Packet::Type::Reset) {
       if (packet.header.type == Packet::Type::Data) {
-        WHIRL_LOG_WARN(
-            "Endpoint {} not found, drop incoming packet from {}", to, from);
+        WHIRL_LOG_WARN("Endpoint {} not found, drop incoming packet from {}",
+                       to, from);
       }
       replier.Reset();
     }
@@ -156,7 +156,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     // Message
 
     WHIRL_LOG("Handle message at {} from {}: <{}>", host_, from,
-                  packet.message);
+              packet.message);
 
     auto g = heap_.Use();
     endpoint.handler->HandleMessage(packet.message,

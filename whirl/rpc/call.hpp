@@ -27,7 +27,6 @@ Future<void> As(Future<BytesValue> f_raw) {
   return await::futures::JustStatus(std::move(f_raw));
 }
 
-
 class [[nodiscard]] Caller {
  public:
   Caller(Method method, BytesValue input)
@@ -72,8 +71,7 @@ class [[nodiscard]] Caller {
 // TODO: Typestate correctness
 
 template <typename... Arguments>
-detail::Caller Call(const std::string& method_str,
-                    Arguments&&... arguments) {
+detail::Caller Call(const std::string& method_str, Arguments&&... arguments) {
   auto method = Method::Parse(method_str);
   // Erase argument types
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);

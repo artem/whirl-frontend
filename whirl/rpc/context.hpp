@@ -38,8 +38,7 @@ struct Context {
 // Holder
 class NewContext {
  public:
-  NewContext()
-    : state_(std::make_shared<detail::ContextState>()) {
+  NewContext() : state_(std::make_shared<detail::ContextState>()) {
   }
 
   Context Get() const {

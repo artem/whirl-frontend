@@ -108,12 +108,14 @@ LogLevel LogBackend::GetMinLevel(const std::string& component) const {
   return kDefaultMinLogLevel;
 }
 
-void LogBackend::Log(const std::string& component, LogLevel level, const std::string& message) {
+void LogBackend::Log(const std::string& component, LogLevel level,
+                     const std::string& message) {
   GlobalAllocatorGuard g;
   Write(MakeEvent(component, level, message));
 }
 
-LogEvent LogBackend::MakeEvent(const std::string& component, LogLevel level, const std::string& message) const {
+LogEvent LogBackend::MakeEvent(const std::string& component, LogLevel level,
+                               const std::string& message) const {
   LogEvent event;
 
   event.time = GlobalNow();

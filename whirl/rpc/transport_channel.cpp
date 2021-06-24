@@ -88,8 +88,8 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
   TLTraceContext tg{request.trace_id};
 
   if (response.IsOk()) {
-    WHIRL_LOG_INFO("Request {}.{} with id = {} completed", peer_, request.method,
-                  response.request_id);
+    WHIRL_LOG_INFO("Request {}.{} with id = {} completed", peer_,
+                   request.method, response.request_id);
     std::move(request.promise).SetValue(response.result);
   } else {
     // TODO: better error
@@ -136,8 +136,8 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
 }
 
 void TransportChannel::Fail(Request& request, std::error_code e) {
-  WHIRL_LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_,
-                     request.method, request.id, e.message());
+  WHIRL_LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_, request.method,
+                 request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));
 }
 

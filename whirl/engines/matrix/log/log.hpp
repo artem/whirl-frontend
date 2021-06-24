@@ -23,9 +23,8 @@ class LogBackend : public ILoggerBackend {
   LogLevel GetMinLevel(const std::string& component) const;
 
   // Context: Server
-  void Log(const std::string& component,
-                   LogLevel level,
-                   const std::string& message);
+  void Log(const std::string& component, LogLevel level,
+           const std::string& message);
 
   std::string TextLog() const {
     return memory_.str();
@@ -33,8 +32,8 @@ class LogBackend : public ILoggerBackend {
 
  private:
   void Write(const LogEvent& event);
-  LogEvent MakeEvent(const std::string& component,
-                     LogLevel level, const std::string& message) const;
+  LogEvent MakeEvent(const std::string& component, LogLevel level,
+                     const std::string& message) const;
 
   void InitLevels();
 
