@@ -2,7 +2,7 @@
 
 namespace whirl::matrix {
 
-inline void ThreadFault() {
+inline void ThreadPause() {
   // TODO
 }
 

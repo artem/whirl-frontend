@@ -69,8 +69,8 @@ class MonotonicClock {
   }
 
   void Reset() {
-    start_ = GlobalNow();
     init_ = ResetMonotonicClock();
+    last_reset_ = GlobalNow();
   }
 
   TimePoint Now() const {
@@ -85,12 +85,12 @@ class MonotonicClock {
  private:
   // Global time
   Duration ElapsedSinceLastReset() const {
-    return GlobalNow() - start_;
+    return GlobalNow() - last_reset_;
   }
 
  private:
   Drift drift_;
-  TimePoint start_;
+  TimePoint last_reset_;
   TimePoint init_;
 };
 
