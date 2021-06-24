@@ -4,7 +4,7 @@
 
 #include <cstdlib>
 
-namespace whirl {
+namespace whirl::matrix {
 
 struct BlockHeader {
   uint32_t size;  // Power of 2
@@ -81,4 +81,4 @@ class MemoryAllocator {
   char* zfilled_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -2,7 +2,7 @@
 
 #include <whirl/services/config.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class Config : public IConfig {
  public:
@@ -17,4 +17,4 @@ class Config : public IConfig {
   size_t id_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

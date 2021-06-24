@@ -39,7 +39,7 @@ void PeerBase::ConnectToPeers() const {
 
 rpc::IChannelPtr PeerBase::MakeChannel(const std::string& peer) const {
   auto transport = RPCClient()->Dial(peer);
-  auto retries = WithRetries(std::move(transport), TimeService());
+  auto retries = matrix::WithRetries(std::move(transport), TimeService());
   return retries;
 }
 

@@ -6,7 +6,7 @@
 #include <wheels/support/assert.hpp>
 #include <wheels/support/compiler.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 void Network::AddServer(IServer* server) {
   servers_.push_back(server);
@@ -171,4 +171,4 @@ void Network::Heal() {
   }
 }
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

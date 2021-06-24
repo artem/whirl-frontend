@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 class Link;
 
@@ -16,4 +16,4 @@ struct IServer {
   virtual void HandlePacket(const Packet& packet, Link* out) = 0;
 };
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/world/impl.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -40,8 +40,8 @@ bool IsThereAdversary() {
 
 //////////////////////////////////////////////////////////////////////
 
-histories::Recorder& GetHistoryRecorder() {
-  return WorldImpl::Access()->HistoryRecorder();
+HistoryRecorder& GetHistoryRecorder() {
+  return WorldImpl::Access()->GetHistoryRecorder();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -82,4 +82,4 @@ void SetGlobal(const std::string& name, std::any value) {
 
 }  // namespace detail
 
-}  // namespace whirl
+}  // namespace whirl::matrix

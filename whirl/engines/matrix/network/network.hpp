@@ -15,7 +15,7 @@
 #include <vector>
 #include <set>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 // Link layer
 
@@ -98,4 +98,4 @@ class Network : public IActor, public IFaultyNetwork {
   Logger logger_{"Network"};
 };
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

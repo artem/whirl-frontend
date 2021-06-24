@@ -5,7 +5,7 @@
 
 #include <whirl/helpers/digest.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Context: Server
 void PersistentStorage::Put(const std::string& key, const Bytes& value) {
@@ -42,4 +42,4 @@ size_t PersistentStorage::ComputeDigest() const {
   return digest.GetValue();
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -5,7 +5,7 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Deterministic randomness
 
@@ -37,4 +37,4 @@ std::vector<T> GlobalRandomSelect(std::vector<T> items, size_t k) {
   return selected;
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

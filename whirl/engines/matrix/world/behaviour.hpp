@@ -6,7 +6,7 @@
 
 #include <memory>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -38,4 +38,4 @@ using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;
 
 IWorldBehaviourPtr DefaultBehaviour();
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
-namespace whirl::adversary {
+namespace whirl::matrix::adversary {
 
 void AdversaryBase::Start() {
   Initialize();
@@ -33,4 +33,4 @@ void AdversaryBase::RandomPause(size_t lo, size_t hi) {
   Threads().SleepFor(GlobalRandomNumber(lo, hi));
 }
 
-}  // namespace whirl::adversary
+}  // namespace whirl::matrix::adversary

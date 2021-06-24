@@ -2,9 +2,9 @@
 
 #include <whirl/engines/matrix/process/heap.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Dirty magic
 void ReleaseFiberResourcesOnCrash(const ProcessHeap& heap);
 
-}  // namespace whirl
+}  // namespace whirl::matrix

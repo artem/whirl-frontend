@@ -7,7 +7,7 @@
 
 #include <wheels/support/string_builder.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 struct UidGenerator : public IUidGenerator {
   UidGenerator(size_t server_id) : server_id_(server_id) {
@@ -24,4 +24,4 @@ struct UidGenerator : public IUidGenerator {
   size_t request_{0};
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

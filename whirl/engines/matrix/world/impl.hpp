@@ -23,7 +23,7 @@
 #include <deque>
 #include <vector>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -236,7 +236,7 @@ class WorldImpl {
     return log_;
   }
 
-  histories::Recorder& HistoryRecorder() {
+  HistoryRecorder& GetHistoryRecorder() {
     return history_recorder_;
   }
 
@@ -380,9 +380,9 @@ class WorldImpl {
 
   DigestCalculator digest_;
   LogBackend log_;
-  histories::Recorder history_recorder_;
+  HistoryRecorder history_recorder_;
 
   UntypedDict globals_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

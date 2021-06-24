@@ -9,7 +9,7 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap)
     : net_(net), host_(host), heap_(heap) {
@@ -174,4 +174,4 @@ Port Transport::FindFreePort() {
   }
 }
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

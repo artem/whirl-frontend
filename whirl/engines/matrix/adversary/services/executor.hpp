@@ -6,7 +6,7 @@
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/process/step_queue.hpp>
 
-namespace whirl::adversary {
+namespace whirl::matrix::adversary {
 
 class Executor : public IExecutor {
  public:
@@ -26,4 +26,4 @@ class Executor : public IExecutor {
   StepQueue& events_;
 };
 
-}  // namespace whirl::adversary
+}  // namespace whirl::matrix::adversary

@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/world/behaviour.hpp>
 #include <whirl/engines/matrix/world/global/random.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Asynchronous world
 
@@ -61,4 +61,4 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

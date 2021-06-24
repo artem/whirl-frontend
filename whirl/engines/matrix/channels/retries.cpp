@@ -13,7 +13,7 @@
 
 #include <algorithm>
 
-namespace whirl {
+namespace whirl::matrix {
 
 static Logger logger_{"Retries-Channel"};
 
@@ -168,4 +168,4 @@ IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time) {
   return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

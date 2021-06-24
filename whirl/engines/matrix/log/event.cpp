@@ -6,7 +6,7 @@
 
 #include <await/fibers/core/api.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -60,4 +60,4 @@ LogEvent MakeLogEvent(const std::string& component, LogLevel level,
   return event;
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

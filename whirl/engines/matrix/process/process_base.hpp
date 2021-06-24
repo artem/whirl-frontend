@@ -9,7 +9,7 @@
 
 #include <whirl/logger/log.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class ProcessBase : public IActor {
  public:
@@ -61,4 +61,4 @@ class ProcessBase : public IActor {
   StepQueue steps_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

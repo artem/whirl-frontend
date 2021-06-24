@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/world/global/random.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 using namespace rpc;
 
@@ -44,4 +44,4 @@ IChannelPtr MakeRandomChannel(ChannelVector&& channels) {
   return std::make_shared<RandomChannel>(std::move(channels));
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class Random {
  public:
@@ -23,4 +23,4 @@ class Random {
   std::mt19937 twister_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

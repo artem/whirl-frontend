@@ -3,9 +3,9 @@
 #include <whirl/engines/matrix/fault/server.hpp>
 #include <whirl/engines/matrix/fault/network.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 IFaultyServer& AccessFaultyServer(size_t index);
 IFaultyNetwork& AccessFaultyNetwork();
 
-}  // namespace whirl
+}  // namespace whirl::matrix

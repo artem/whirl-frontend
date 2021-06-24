@@ -11,7 +11,7 @@
 
 #include <map>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -77,4 +77,4 @@ class Transport {
   Logger logger_{"Transport"};
 };
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

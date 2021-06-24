@@ -8,7 +8,7 @@
 
 #include <whirl/logger/log.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 class Network;
 
@@ -93,4 +93,4 @@ class Link {
   Logger logger_{"Network"};
 };
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

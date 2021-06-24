@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/server/storage.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -29,4 +29,4 @@ class Database : public IDatabase {
   PersistentStorage& impl_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

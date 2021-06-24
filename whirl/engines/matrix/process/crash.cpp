@@ -6,7 +6,7 @@
 
 #include <vector>
 
-namespace whirl {
+namespace whirl::matrix {
 
 void ReleaseFiberResourcesOnCrash(const ProcessHeap& heap) {
   auto& alive = await::fibers::AliveFibers();
@@ -28,4 +28,4 @@ void ReleaseFiberResourcesOnCrash(const ProcessHeap& heap) {
   }
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

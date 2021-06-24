@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/server/services/net_transport.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -39,4 +39,4 @@ void NetTransportServer::HandleMessage(const net::Message& message,
   }
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -4,23 +4,27 @@
 
 #include <whirl/engines/matrix/memory/new.hpp>
 
-namespace whirl::histories {
+using whirl::histories::Call;
+using whirl::histories::Value;
+using whirl::histories::Arguments;
+
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-Call Recorder::Complete(const RunningCall& call, Value result) {
+Call HistoryRecorder::Complete(const RunningCall& call, Value result) {
   return Call{call.method,     call.arguments, result,
               call.start_time, GlobalNow(),    call.labels};
 }
 
-Call Recorder::Lost(const RunningCall& call) {
+Call HistoryRecorder::Lost(const RunningCall& call) {
   return Call{call.method,     call.arguments, std::nullopt,
               call.start_time, std::nullopt,   call.labels};
 }
 
 //////////////////////////////////////////////////////////////////////
 
-Recorder::Cookie Recorder::CallStarted(const std::string& method,
+HistoryRecorder::Cookie HistoryRecorder::CallStarted(const std::string& method,
                                        const std::string& input) {
   GlobalAllocatorGuard g;
 
@@ -30,7 +34,7 @@ Recorder::Cookie Recorder::CallStarted(const std::string& method,
   return id;
 }
 
-void Recorder::AddLabel(Cookie id, const std::string& label) {
+void HistoryRecorder::AddLabel(Cookie id, const std::string& label) {
   GlobalAllocatorGuard g;
 
   auto it = running_calls_.find(id);
@@ -38,7 +42,7 @@ void Recorder::AddLabel(Cookie id, const std::string& label) {
   it->second.labels.push_back(label);
 }
 
-void Recorder::CallCompleted(Cookie id, const std::string& output) {
+void HistoryRecorder::CallCompleted(Cookie id, const std::string& output) {
   GlobalAllocatorGuard g;
 
   auto it = running_calls_.find(id);
@@ -49,7 +53,7 @@ void Recorder::CallCompleted(Cookie id, const std::string& output) {
   finalized_calls_.push_back(Complete(pending_call, output));
 }
 
-void Recorder::CallLost(Cookie id) {
+void HistoryRecorder::CallLost(Cookie id) {
   GlobalAllocatorGuard g;
 
   auto it = running_calls_.find(id);
@@ -60,13 +64,13 @@ void Recorder::CallLost(Cookie id) {
   finalized_calls_.push_back(Lost(pending_call));
 }
 
-void Recorder::RemoveCall(Cookie id) {
+void HistoryRecorder::RemoveCall(Cookie id) {
   GlobalAllocatorGuard g;
 
   running_calls_.erase(id);
 }
 
-size_t Recorder::NumCompletedCalls() const {
+size_t HistoryRecorder::NumCompletedCalls() const {
   size_t count = 0;
   for (const auto& call : finalized_calls_) {
     if (call.IsCompleted()) {
@@ -76,10 +80,10 @@ size_t Recorder::NumCompletedCalls() const {
   return count;
 }
 
-void Recorder::Finalize() {
+void HistoryRecorder::Finalize() {
   for (auto& [_, call] : running_calls_) {
     finalized_calls_.push_back(Lost(call));
   }
 }
 
-}  // namespace whirl::histories
+}  // namespace whirl::matrix::histories

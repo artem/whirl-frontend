@@ -6,7 +6,7 @@
 #include <optional>
 #include <string>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -24,4 +24,4 @@ class PersistentStorage {
   std::map<std::string, Bytes> data_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

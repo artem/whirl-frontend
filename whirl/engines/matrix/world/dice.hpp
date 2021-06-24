@@ -5,7 +5,7 @@
 #include <whirl/time.hpp>
 #include <whirl/engines/matrix/world/global/global.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Clocks
 
@@ -35,4 +35,4 @@ inline TimePoint FlightTime(const net::Packet& packet) {
   return GetWorldBehaviour()->FlightTime(packet);
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

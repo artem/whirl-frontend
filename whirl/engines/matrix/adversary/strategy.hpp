@@ -4,8 +4,8 @@
 
 #include <functional>
 
-namespace whirl::adversary {
+namespace whirl::matrix::adversary {
 
 using Strategy = std::function<void(ThreadsRuntime&)>;
 
-}  // namespace whirl::adversary
+}  // namespace whirl::matrix::adversary

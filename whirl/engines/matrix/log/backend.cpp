@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -80,4 +80,4 @@ void LogBackend::Log(const std::string& component, LogLevel level,
   Write(MakeLogEvent(component, level, message));
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

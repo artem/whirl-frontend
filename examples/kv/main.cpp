@@ -238,7 +238,7 @@ static const std::vector<std::string> kKeys({"a", "b", "c"});
 
 //////////////////////////////////////////////////////////////////////
 
-class KVClient final : public ClientBase {
+class KVClient final : public matrix::ClientBase {
  public:
   KVClient(NodeServices runtime) : ClientBase(std::move(runtime)) {
   }
@@ -261,7 +261,7 @@ class KVClient final : public ClientBase {
         WHIRL_LOG_INFO("Get({}) -> {}", key, result);
       }
 
-      GlobalCounter("requests").Increment();
+      matrix::GlobalCounter("requests").Increment();
 
       // Random pause
       SleepFor(RandomNumber(1, 100));
@@ -270,7 +270,7 @@ class KVClient final : public ClientBase {
 
  private:
   const std::string& ChooseKey() const {
-    return kKeys.at(RandomNumber(GetGlobal<size_t>("keys")));
+    return kKeys.at(RandomNumber(matrix::GetGlobal<size_t>("keys")));
   }
 
  private:
@@ -298,7 +298,7 @@ size_t RunSimulation(size_t seed) {
   static const size_t kTimeLimit = 10000;
   static const size_t kRequestsThreshold = 7;
 
-  Random random{seed};
+  matrix::Random random{seed};
 
   const size_t replicas = random.Get(3, 5);
   const size_t clients = random.Get(2, 3);
@@ -315,7 +315,7 @@ size_t RunSimulation(size_t seed) {
   await::fibers::ResetIds();
   whirl::rpc::ResetIds();
 
-  World world{seed};
+  matrix::World world{seed};
 
   // Cluster nodes
   auto node = MakeNode<KVNode>();
@@ -386,5 +386,5 @@ size_t RunSimulation(size_t seed) {
 // 2) --seed 54321 - run single simulation with seed 54321
 
 int main(int argc, const char** argv) {
-  return whirl::MatrixMain(argc, argv, RunSimulation);
+  return matrix::Main(argc, argv, RunSimulation);
 }

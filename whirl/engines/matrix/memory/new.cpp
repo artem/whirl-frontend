@@ -8,15 +8,19 @@
 
 //////////////////////////////////////////////////////////////////////
 
-static thread_local whirl::MemoryAllocator* allocator{nullptr};
+static thread_local whirl::matrix::MemoryAllocator* allocator{nullptr};
 
-void SetAllocator(whirl::MemoryAllocator* a) {
+namespace whirl::matrix {
+
+void SetAllocator(MemoryAllocator* a) {
   allocator = a;
 }
 
-whirl::MemoryAllocator* GetAllocator() {
+MemoryAllocator* GetAllocator() {
   return allocator;
 }
+
+}  // namespace whirl::matrix
 
 //////////////////////////////////////////////////////////////////////
 
@@ -36,9 +40,13 @@ static void FreeGlobal(void* addr) {
   global_allocs_checksum ^= (uintptr_t)addr;
 }
 
+namespace whirl::matrix {
+
 uintptr_t GlobalAllocsCheckSum() {
   return global_allocs_checksum;
 }
+
+}  // namespace whirl::matrix
 
 //////////////////////////////////////////////////////////////////////
 

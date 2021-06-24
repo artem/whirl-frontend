@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/network/transport.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 using namespace rpc;
 
@@ -115,4 +115,4 @@ struct NetTransport : public ITransport {
   net::Port port_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/world/impl.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -19,4 +19,4 @@ WorldImpl* WorldImpl::Access() {
   return this_world;
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

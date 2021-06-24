@@ -2,11 +2,11 @@
 
 #include <functional>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Seed -> Digest
 using Simulation = std::function<size_t(size_t)>;
 
-int MatrixMain(int argc, const char** argv, Simulation sim);
+int Main(int argc, const char** argv, Simulation sim);
 
-}  // namespace whirl
+}  // namespace whirl::matrix

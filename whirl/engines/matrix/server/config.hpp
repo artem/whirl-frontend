@@ -3,11 +3,11 @@
 #include <string>
 #include <cstdlib>
 
-namespace whirl {
+namespace whirl::matrix {
 
 struct ServerConfig {
   size_t id;
   std::string hostname;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

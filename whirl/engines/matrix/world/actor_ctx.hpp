@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/world/actor.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -47,4 +47,4 @@ class ActorContext {
   IActor* current_{nullptr};
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

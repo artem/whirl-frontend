@@ -13,7 +13,7 @@
 #include <string>
 #include <any>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Global world services used by different components of simulation
 
@@ -31,7 +31,7 @@ bool IsThereAdversary();
 
 //////////////////////////////////////////////////////////////////////
 
-histories::Recorder& GetHistoryRecorder();
+HistoryRecorder& GetHistoryRecorder();
 
 //////////////////////////////////////////////////////////////////////
 
@@ -49,4 +49,4 @@ std::string CurrentActorName();
 
 //////////////////////////////////////////////////////////////////////
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -56,7 +56,7 @@ class EchoNode final: public NodeBase {
 
 //////////////////////////////////////////////////////////////////////
 
-class ClientNode final: public ClientBase {
+class ClientNode final: public matrix::ClientBase {
  public:
   ClientNode(NodeServices services)
       : ClientBase(std::move(services)) {
@@ -103,7 +103,7 @@ class ClientNode final: public ClientBase {
 int main() {
   static const size_t kSeed = 17;
 
-  World world{kSeed};
+  matrix::World world{kSeed};
 
   // Cluster nodes
   auto node = MakeNode<EchoNode>();

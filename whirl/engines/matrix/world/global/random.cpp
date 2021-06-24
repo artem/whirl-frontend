@@ -2,7 +2,7 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // size_t GlobalRandomNumber() defined in global.cpp
 
@@ -16,4 +16,4 @@ size_t GlobalRandomNumber(size_t lo, size_t hi) {
   return lo + GlobalRandomNumber(hi - lo);
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

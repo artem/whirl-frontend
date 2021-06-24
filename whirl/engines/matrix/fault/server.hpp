@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <string>
 
-namespace whirl {
+namespace whirl::matrix {
 
 struct IFaultyServer {
   virtual ~IFaultyServer() = default;
@@ -25,4 +25,4 @@ struct IFaultyServer {
   virtual void AdjustWallClock() = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

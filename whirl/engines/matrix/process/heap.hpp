@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/memory/allocator.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class ProcessHeap {
  public:
@@ -27,4 +27,4 @@ class ProcessHeap {
   MemoryAllocator impl_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

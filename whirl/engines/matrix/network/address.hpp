@@ -6,7 +6,7 @@
 #include <ostream>
 #include <fmt/ostream.h>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 using Port = uint16_t;
 
@@ -17,4 +17,4 @@ struct Address {
 
 std::ostream& operator<<(std::ostream& out, const Address& address);
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace whirl {
+namespace whirl::matrix {
 
 template <typename T>
 T MakeCopy(const T& object) {
@@ -15,4 +15,4 @@ void HideToHeap(T&& obj) {
   new T(std::move(obj));
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -4,7 +4,7 @@
 
 #include <utility>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -14,4 +14,4 @@ void SetHeapSize(size_t bytes);
 wheels::MmapAllocation AcquireHeap();
 void ReleaseHeap(wheels::MmapAllocation heap);
 
-}  // namespace whirl
+}  // namespace whirl::matrix

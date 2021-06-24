@@ -5,7 +5,7 @@
 
 #include <whirl/engines/matrix/memory/new.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -127,4 +127,4 @@ const std::string& ReplySocket::Peer() const {
   return link_->End()->HostName();
 }
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

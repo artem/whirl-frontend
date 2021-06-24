@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace whirl {
+namespace whirl::matrix {
 
 struct IActor {
   virtual ~IActor() = default;
@@ -20,4 +20,4 @@ struct IActor {
   virtual void Shutdown() = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

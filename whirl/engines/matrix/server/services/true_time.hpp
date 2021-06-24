@@ -5,7 +5,7 @@
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/dice.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class TrueTimeService : public ITrueTimeService {
  public:
@@ -24,4 +24,4 @@ class TrueTimeService : public ITrueTimeService {
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

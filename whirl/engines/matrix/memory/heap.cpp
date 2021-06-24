@@ -8,7 +8,7 @@
 #include <cstring>
 #include <vector>
 
-namespace whirl {
+namespace whirl::matrix {
 
 using wheels::MmapAllocation;
 
@@ -69,4 +69,4 @@ void SetHeapSize(size_t bytes) {
   heaps.SetHeapSize(bytes);
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

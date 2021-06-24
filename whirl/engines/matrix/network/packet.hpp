@@ -4,7 +4,7 @@
 #include <whirl/engines/matrix/network/message.hpp>
 #include <whirl/engines/matrix/network/timestamp.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 struct Packet {
   enum class Type {
@@ -24,4 +24,4 @@ struct Packet {
   Message message;
 };
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

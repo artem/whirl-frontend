@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/dice.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Local clocks
 
@@ -94,4 +94,4 @@ class MonotonicClock {
   TimePoint init_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

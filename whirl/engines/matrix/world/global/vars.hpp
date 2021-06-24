@@ -4,7 +4,7 @@
 #include <string>
 #include <any>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@ class GlobalVar {
   }
 
   T Get() const {
-    return ::whirl::GetGlobal<T>(name_);
+    return ::whirl::matrix::GetGlobal<T>(name_);
   }
 
  private:
@@ -86,4 +86,4 @@ inline auto GlobalCounter(const std::string& name) {
   return detail::GlobalCounter{name};
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

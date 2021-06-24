@@ -1,6 +1,6 @@
 #pragma once
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Network
 
@@ -13,4 +13,4 @@ struct IFaultyNetwork {
   virtual void Heal() = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

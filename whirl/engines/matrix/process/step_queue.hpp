@@ -6,7 +6,7 @@
 
 #include <wheels/support/function.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 using Action = wheels::UniqueFunction<void()>;
 
@@ -56,4 +56,4 @@ class StepQueue {
   PriorityQueue<Step> steps_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

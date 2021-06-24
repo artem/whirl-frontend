@@ -8,7 +8,7 @@
 
 #include <await/futures/core/future.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -55,4 +55,4 @@ class TimeService : public ITimeService {
   Logger logger_{"Time"};
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

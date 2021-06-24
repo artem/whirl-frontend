@@ -2,8 +2,8 @@
 
 #include <whirl/time.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 TimePoint GlobalNow();
 
-}  // namespace whirl
+}  // namespace whirl::matrix

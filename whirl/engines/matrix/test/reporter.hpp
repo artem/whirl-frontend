@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-namespace whirl {
+namespace whirl::matrix {
 
 namespace detail {
 
@@ -114,4 +114,4 @@ class TestReporter {
   size_t sims_ = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

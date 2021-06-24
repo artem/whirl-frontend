@@ -2,10 +2,10 @@
 
 #include <fstream>
 
-namespace whirl {
+namespace whirl::matrix {
 
 void SetLogFile(const std::string& path);
 
 std::ofstream GetLogFile();
 
-}  // namespace whirl
+}  // namespace whirl::matrix

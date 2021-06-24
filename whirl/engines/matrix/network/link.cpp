@@ -7,7 +7,7 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 void Link::Add(Packet packet) {
   if (packet.header.type == Packet::Type::Data) {
@@ -55,4 +55,4 @@ void Link::Add(Packet&& packet, TimePoint delivery_time) {
   net_->AddLinkEvent(this, delivery_time);
 }
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

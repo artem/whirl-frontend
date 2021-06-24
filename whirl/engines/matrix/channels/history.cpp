@@ -9,12 +9,12 @@
 #include <await/futures/core/future.hpp>
 #include <await/futures/helpers.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 using namespace rpc;
 using wheels::Result;
 
-using Cookie = histories::Recorder::Cookie;
+using Cookie = HistoryRecorder::Cookie;
 
 class HistoryChannel : public IChannel {
  public:
@@ -75,4 +75,4 @@ IChannelPtr MakeHistoryChannel(IChannelPtr channel) {
   return std::make_shared<HistoryChannel>(std::move(channel));
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

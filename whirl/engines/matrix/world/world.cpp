@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/world/impl.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 World::World(size_t seed) : impl_(std::make_unique<WorldImpl>(seed)) {
 }
@@ -86,4 +86,4 @@ std::any World::GetGlobalImpl(const std::string& key) const {
   return impl_->GetGlobal(key);
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

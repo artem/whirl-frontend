@@ -5,14 +5,14 @@
 #include <map>
 #include <vector>
 
-namespace whirl::histories {
+namespace whirl::matrix {
 
-class Recorder {
+class HistoryRecorder {
   struct RunningCall {
     std::string method;
-    Arguments arguments;
+    histories::Arguments arguments;
     TimePoint start_time;
-    CallLabels labels;
+    histories::CallLabels labels;
   };
 
  public:
@@ -40,19 +40,19 @@ class Recorder {
   void Finalize();
 
   // After Finalize
-  const History& GetHistory() const {
+  const histories::History& GetHistory() const {
     return finalized_calls_;
   }
 
  private:
   // Finalizers
-  static Call Complete(const RunningCall& call, Value output);
-  static Call Lost(const RunningCall& call);
+  static histories::Call Complete(const RunningCall& call, histories::Value output);
+  static histories::Call Lost(const RunningCall& call);
 
  private:
-  std::vector<Call> finalized_calls_;
+  std::vector<histories::Call> finalized_calls_;
   Cookie next_id_{0};
   std::map<Cookie, RunningCall> running_calls_;
 };
 
-}  // namespace whirl::histories
+}  // namespace whirl::matrix

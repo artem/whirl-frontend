@@ -9,7 +9,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class LogBackend : public ILoggerBackend {
  public:
@@ -38,4 +38,4 @@ class LogBackend : public ILoggerBackend {
   std::ofstream file_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

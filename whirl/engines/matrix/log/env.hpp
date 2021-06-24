@@ -6,7 +6,7 @@
 #include <string>
 #include <optional>
 
-namespace whirl {
+namespace whirl::matrix {
 
 // Component -> Min log level
 using LogLevels = std::map<std::string, LogLevel>;
@@ -17,4 +17,4 @@ LogLevels GetLogLevelsFromEnv();
 // Usage: WHIRL_LOG_FILE=/path/to/log/file
 std::optional<std::string> GetLogPathFromEnv();
 
-}  // namespace whirl
+}  // namespace whirl::matrix

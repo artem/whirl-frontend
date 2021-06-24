@@ -7,7 +7,7 @@
 
 #include <memory>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 class Transport;
 class Link;
@@ -70,4 +70,4 @@ class ReplySocket {
   Timestamp ts_;
 };
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

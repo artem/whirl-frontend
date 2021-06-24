@@ -1,9 +1,9 @@
 #pragma once
 
-namespace whirl {
+namespace whirl::matrix {
 
 inline void ThreadFault() {
   // TODO
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class RandomSource {
   // NB: Consistent across all platforms
@@ -29,4 +29,4 @@ class RandomSource {
   Twister twister_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

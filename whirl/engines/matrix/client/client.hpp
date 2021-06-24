@@ -14,7 +14,7 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 using await::futures::Future;
 
@@ -182,4 +182,4 @@ class ExactlyOnceClientBase : public ClientBase {
   rpc::IChannelPtr MakeClientChannel() override;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

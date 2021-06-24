@@ -5,7 +5,7 @@
 #include <whirl/engines/matrix/process/step_queue.hpp>
 #include <whirl/engines/matrix/world/global/time.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -27,4 +27,4 @@ class EventQueueExecutor : public IExecutor {
   StepQueue& events_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

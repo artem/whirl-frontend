@@ -7,7 +7,7 @@
 #include <string>
 #include <optional>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -27,4 +27,4 @@ struct LogEvent {
 LogEvent MakeLogEvent(const std::string& component, LogLevel level,
                       const std::string& message);
 
-}  // namespace whirl
+}  // namespace whirl::matrix

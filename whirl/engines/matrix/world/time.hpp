@@ -4,7 +4,7 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -30,4 +30,4 @@ class WorldTime {
   TimePoint now_{0};
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

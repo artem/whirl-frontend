@@ -2,11 +2,13 @@
 
 #include <whirl/engines/matrix/memory/allocator.hpp>
 
+namespace whirl::matrix {
+
 //////////////////////////////////////////////////////////////////////
 
 // nullptr - global allocator
-void SetAllocator(whirl::MemoryAllocator* allocator);
-whirl::MemoryAllocator* GetAllocator();
+void SetAllocator(MemoryAllocator* allocator);
+MemoryAllocator* GetAllocator();
 
 //////////////////////////////////////////////////////////////////////
 
@@ -14,12 +16,12 @@ whirl::MemoryAllocator* GetAllocator();
 
 class AllocatorGuard {
  public:
-  AllocatorGuard(whirl::MemoryAllocator* a) {
+  AllocatorGuard(MemoryAllocator* a) {
     saved_ = GetAllocator();
     SetAllocator(a);
   }
 
-  whirl::MemoryAllocator* ParentScopeHeap() {
+  MemoryAllocator* ParentScopeHeap() {
     return saved_;
   }
 
@@ -28,7 +30,7 @@ class AllocatorGuard {
   }
 
  private:
-  whirl::MemoryAllocator* saved_;
+  MemoryAllocator* saved_;
 };
 
 class GlobalAllocatorGuard : public AllocatorGuard {
@@ -40,3 +42,5 @@ class GlobalAllocatorGuard : public AllocatorGuard {
 //////////////////////////////////////////////////////////////////////
 
 uintptr_t GlobalAllocsCheckSum();
+
+}  // namespace whirl::matrix

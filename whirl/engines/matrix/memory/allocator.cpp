@@ -20,7 +20,7 @@
     }                                   \
   } while (false)
 
-namespace whirl {
+namespace whirl::matrix {
 
 static size_t AllocToPowerOf2(size_t bytes) {
   size_t pow2 = RoundUpToNextPowerOfTwo(bytes);
@@ -208,4 +208,4 @@ size_t MemoryAllocator::BytesAllocated() const {
   return next_ - arena_.Start();
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

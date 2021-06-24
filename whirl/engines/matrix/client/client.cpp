@@ -4,7 +4,7 @@
 #include <whirl/engines/matrix/channels/retries.hpp>
 #include <whirl/engines/matrix/channels/history.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -55,4 +55,4 @@ rpc::IChannelPtr ExactlyOnceClientBase::MakeClientChannel() {
   return history;
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

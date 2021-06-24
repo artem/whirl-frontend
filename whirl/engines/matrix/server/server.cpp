@@ -20,7 +20,7 @@
 
 #include <whirl/helpers/digest.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
     : config_(config),
@@ -203,4 +203,4 @@ NodeServices Server::CreateNodeServices() {
   return services;
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

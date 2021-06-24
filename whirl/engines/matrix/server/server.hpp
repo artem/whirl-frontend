@@ -19,7 +19,7 @@
 
 #include <whirl/logger/log.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -101,4 +101,4 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
 //////////////////////////////////////////////////////////////////////
 
-}  // namespace whirl
+}  // namespace whirl::matrix

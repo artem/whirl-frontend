@@ -9,7 +9,7 @@
 #include <ostream>
 #include <any>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class WorldImpl;
 
@@ -81,4 +81,4 @@ class World {
   std::unique_ptr<WorldImpl> impl_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

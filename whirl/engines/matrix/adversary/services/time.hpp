@@ -8,7 +8,7 @@
 
 #include <await/futures/helpers.hpp>
 
-namespace whirl::adversary {
+namespace whirl::matrix::adversary {
 
 using namespace await::futures;
 
@@ -46,4 +46,4 @@ class TimeService : public ITimeService {
   StepQueue& events_;
 };
 
-}  // namespace whirl::adversary
+}  // namespace whirl::matrix::adversary

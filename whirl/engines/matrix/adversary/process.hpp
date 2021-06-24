@@ -13,7 +13,7 @@
 #include <functional>
 #include <deque>
 
-namespace whirl::adversary {
+namespace whirl::matrix::adversary {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -53,4 +53,4 @@ class Process : public ProcessBase {
 
 //////////////////////////////////////////////////////////////////////
 
-}  // namespace whirl::adversary
+}  // namespace whirl::matrix::adversary

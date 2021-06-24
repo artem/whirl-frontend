@@ -6,8 +6,8 @@
 
 #include <vector>
 
-namespace whirl {
+namespace whirl::matrix {
 
 rpc::IChannelPtr WithRetries(rpc::IChannelPtr channel, ITimeServicePtr time);
 
-}  // namespace whirl
+}  // namespace whirl::matrix

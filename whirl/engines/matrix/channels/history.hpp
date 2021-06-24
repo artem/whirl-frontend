@@ -2,8 +2,8 @@
 
 #include <whirl/rpc/channel.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 rpc::IChannelPtr MakeHistoryChannel(rpc::IChannelPtr channel);
 
-}  // namespace whirl
+}  // namespace whirl::matrix

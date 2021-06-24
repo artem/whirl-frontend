@@ -7,7 +7,7 @@
 
 #include <vector>
 
-namespace whirl::adversary {
+namespace whirl::matrix::adversary {
 
 struct AdversaryBase {
  public:
@@ -61,4 +61,4 @@ Strategy MakeStrategy() {
   return strategy;
 }
 
-}  // namespace whirl::adversary
+}  // namespace whirl::matrix::adversary

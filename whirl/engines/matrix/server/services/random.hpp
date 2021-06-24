@@ -5,7 +5,7 @@
 // Impl
 #include <whirl/engines/matrix/world/global/random.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 struct RandomService : public IRandomService {
   RandomUInt RandomNumber() override {
@@ -13,4 +13,4 @@ struct RandomService : public IRandomService {
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

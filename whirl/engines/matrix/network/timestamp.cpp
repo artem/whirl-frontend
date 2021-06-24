@@ -2,10 +2,10 @@
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
-namespace whirl::net {
+namespace whirl::matrix::net {
 
 Timestamp GetNewEndpointTimestamp() {
   return WorldStepNumber();
 }
 
-}  // namespace whirl::net
+}  // namespace whirl::matrix::net

@@ -4,13 +4,13 @@
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
-namespace whirl {
+namespace whirl::matrix {
 
 class DiscoveryService : public IDiscoveryService {
  public:
   std::vector<std::string> GetPool(const std::string& name) override {
-    return whirl::GetPool(name);
+    return ::whirl::matrix::GetPool(name);
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::matrix

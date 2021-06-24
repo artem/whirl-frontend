@@ -7,7 +7,7 @@
 
 #include <cstdlib>
 
-namespace whirl {
+namespace whirl::matrix {
 
 static const char* kLevelsEnvVar = "WHIRL_LOG_LEVELS";
 
@@ -42,4 +42,4 @@ std::optional<std::string> GetLogPathFromEnv() {
   return wheels::GetEnvVar("WHIRL_LOG_FILE");
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

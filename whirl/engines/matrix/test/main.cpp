@@ -8,7 +8,7 @@
 #include <sstream>
 #include <random>
 
-namespace whirl {
+namespace whirl::matrix {
 
 void FailTest() {
   std::cout << "(ﾉಥ益ಥ）ﾉ ┻━┻" << std::endl;
@@ -67,7 +67,7 @@ static T FromString(std::string str) {
   return value;
 }
 
-int MatrixMain(int argc, const char** argv, Simulation sim) {
+int Main(int argc, const char** argv, Simulation sim) {
   wheels::ArgumentParser parser{"Whirl simulator"};
   CLI(parser);
 
@@ -75,10 +75,10 @@ int MatrixMain(int argc, const char** argv, Simulation sim) {
 
   if (args.Has("log")) {
     std::string log_fpath = args.Get("log");
-    whirl::SetLogFile(log_fpath);
+    SetLogFile(log_fpath);
   }
   // Initialize
-  whirl::GetLogFile();
+  GetLogFile();
 
   if (args.Has("seed")) {
     RunSimulation(sim, FromString<size_t>(args.Get("seed")));
@@ -97,4 +97,4 @@ int MatrixMain(int argc, const char** argv, Simulation sim) {
   return 0;
 }
 
-}  // namespace whirl
+}  // namespace whirl::matrix

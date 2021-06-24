@@ -4,8 +4,8 @@
 
 #include <vector>
 
-namespace whirl {
+namespace whirl::matrix {
 
 rpc::IChannelPtr MakeRandomChannel(std::vector<rpc::IChannelPtr>&& channels);
 
-}  // namespace whirl
+}  // namespace whirl::matrix
