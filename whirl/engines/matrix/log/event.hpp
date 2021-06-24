@@ -9,6 +9,8 @@
 
 namespace whirl {
 
+//////////////////////////////////////////////////////////////////////
+
 struct LogEvent {
   TimePoint time;
   size_t step;
@@ -18,5 +20,11 @@ struct LogEvent {
   std::optional<std::string> trace_id;
   std::string message;
 };
+
+//////////////////////////////////////////////////////////////////////
+
+// Capture event context
+LogEvent MakeLogEvent(const std::string& component, LogLevel level,
+                      const std::string& message);
 
 }  // namespace whirl

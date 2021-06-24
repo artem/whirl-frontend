@@ -4,13 +4,6 @@
 
 #include <whirl/engines/matrix/memory/new.hpp>
 
-#include <wheels/support/assert.hpp>
-
-#include <whirl/engines/matrix/world/global/global.hpp>
-
-#include <await/fibers/core/api.hpp>
-#include <whirl/rpc/trace.hpp>
-
 #include <iostream>
 
 namespace whirl {
@@ -43,33 +36,6 @@ static void WriteTo(const LogEvent& event, std::ostream& out) {
   }
 
   out << "\t" << event.message;
-}
-
-//////////////////////////////////////////////////////////////////////
-
-static std::string ThisFiberName() {
-  auto name = await::fibers::self::GetName();
-  if (name.has_value()) {
-    return *name;
-  } else {
-    return wheels::StringBuilder() << "T" << await::fibers::self::GetId();
-  }
-}
-
-static std::string ThisActorName() {
-  if (AmIActor()) {
-    return CurrentActorName();
-  } else {
-    return "World";
-  }
-}
-
-static std::string DescribeThisActor() {
-  std::string actor = ThisActorName();
-  if (await::fibers::AmIFiber()) {
-    actor = actor + " /" + ThisFiberName();
-  }
-  return actor;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -111,22 +77,7 @@ LogLevel LogBackend::GetMinLevel(const std::string& component) const {
 void LogBackend::Log(const std::string& component, LogLevel level,
                      const std::string& message) {
   GlobalAllocatorGuard g;
-  Write(MakeEvent(component, level, message));
-}
-
-LogEvent LogBackend::MakeEvent(const std::string& component, LogLevel level,
-                               const std::string& message) const {
-  LogEvent event;
-
-  event.time = GlobalNow();
-  event.step = WorldStepNumber();
-  event.level = level;
-  event.actor = DescribeThisActor();
-  event.component = component;
-  event.trace_id = rpc::TryGetCurrentTraceId();
-  event.message = message;
-
-  return event;
+  Write(MakeLogEvent(component, level, message));
 }
 
 }  // namespace whirl

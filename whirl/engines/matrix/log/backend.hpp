@@ -28,8 +28,6 @@ class LogBackend : public ILoggerBackend {
 
  private:
   void Write(const LogEvent& event);
-  LogEvent MakeEvent(const std::string& component, LogLevel level,
-                     const std::string& message) const;
 
   void InitLevels();
 

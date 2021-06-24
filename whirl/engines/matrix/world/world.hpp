@@ -57,9 +57,6 @@ class World {
     return GetGlobal<size_t>(name);
   }
 
-  // Deprecated
-  void WriteLogTo(std::ostream& out);
-
   void Start();
 
   bool Step();
