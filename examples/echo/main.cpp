@@ -25,16 +25,38 @@ using namespace whirl;
 
 // Echo service
 
+namespace proto {
+
+struct Echo {
+  struct Request {
+    std::string data;
+
+    WHIRL_SERIALIZE(data);
+  };
+
+  struct Response {
+    std::string data;
+
+    WHIRL_SERIALIZE(data);
+  };
+};
+
+}  // namespace proto
+
 class EchoService : public rpc::ServiceBase<EchoService> {
  public:
-  std::string Echo(std::string input) {
-    return input;
+  proto::Echo::Response Echo(proto::Echo::Request req) {
+    WHIRL_LOG_INFO("Echo({})", req.data);
+    return {req.data};
   }
 
  protected:
   void RegisterRPCMethods() override {
     RPC_REGISTER_METHOD(Echo);
   }
+
+ private:
+  Logger logger_{"EchoService"};
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -68,8 +90,7 @@ class ClientNode final: public matrix::ClientBase {
       // Печатаем текущее системное время
       WHIRL_LOG_INFO("Local wall time: {}", WallTimeNow());
 
-      // Выполняем RPC
-      // Вызываем метод "Echo" у сервиса "Echo"
+      // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
       // Результат вызова - Future, она типизируется вызовом .As<std::string>()
 
       // Фьючу дожидаемся синхронно с помощью функции Await
@@ -78,14 +99,16 @@ class ClientNode final: public matrix::ClientBase {
 
       /*
       auto result = Await(
-          rpc::Call("Echo.Echo", std::string("Hello!")).Via(Chnanel()).As<std::string>());
+          rpc::Call("Echo.Echo", proto::Echo::Request{"Hello!"})
+            .Via(Channel())
+            .As<proto::Echo::Response>());
       */
 
-      Future<std::string> future = rpc::Call("Echo.Echo", std::string("Hello")).Via(Channel());
+      Future<proto::Echo::Response> future = rpc::Call("Echo.Echo", proto::Echo::Request{"Hello"}).Via(Channel());
       auto result = Await(WithTimeout(std::move(future), 256_jiffies));
 
       if (result.IsOk()) {
-        WHIRL_LOG_INFO("Echo response: '{}'", *result);
+        WHIRL_LOG_INFO("Echo response: '{}'", result->data);
       } else {
         WHIRL_LOG_INFO("Echo request failed: {}", result.GetError().GetErrorCode().message());
       }

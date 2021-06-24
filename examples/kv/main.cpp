@@ -73,36 +73,21 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 // KV storage node
 
-class KVNode final : public rpc::ServiceBase<KVNode>,
-                     public NodeBase,
-                     public std::enable_shared_from_this<KVNode> {
+// Services / roles
+
+class Coordinator : public rpc::ServiceBase<Coordinator>,
+                    public PeerBase {
  public:
-  KVNode(NodeServices runtime)
-      : NodeBase(std::move(runtime)), kv_(StorageBackend(), "kv") {
+  Coordinator(NodeServices runtime)
+      : PeerBase(std::move(runtime)) {
   }
 
- protected:
-  // NodeBase
-  void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
-    rpc_server->RegisterService("KV", shared_from_this());
-  }
-
-  // ServiceBase
   void RegisterRPCMethods() override {
-    // TODO: split coordinator / storage roles to different RPC services
-
-    // Coordinator RPC handlers
     RPC_REGISTER_METHOD(Set);
     RPC_REGISTER_METHOD(Get);
+  };
 
-    // Storage replica RPC handlers
-    RPC_REGISTER_METHOD(LocalWrite);
-    RPC_REGISTER_METHOD(LocalRead);
-  }
-
-  // RPC method handlers
-
-  // Coordinator role
+  // RPC handlers
 
   void Set(Key key, Value value) {
     Timestamp write_ts = ChooseWriteTimestamp();
@@ -112,22 +97,21 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // TODO: iterate over configuration
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
-          rpc::Call("KV.LocalWrite", key, StampedValue{value, write_ts})
+          rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
               .Via(PeerChannel(i)));
     }
 
     // Await acks from majority of replicas
-    // Await(std::move(future)).ExpectOk() ~ future.await? in Rust
-    Await(Quorum(std::move(writes), Majority())).ExpectOk();
+    Await(Quorum(std::move(writes), /*threshold=*/Majority())).ExpectOk();
   }
 
   Value Get(Key key) {
     std::vector<Future<StampedValue>> reads;
 
-    // Broadcast KV.LocalRead request
+    // Broadcast LocalRead request to replicas
     for (size_t i = 0; i < PeerCount(); ++i) {
       reads.push_back(
-          rpc::Call("KV.LocalRead", key)
+          rpc::Call("Replica.LocalRead", key)
               .Via(PeerChannel(i)));
     }
 
@@ -153,7 +137,46 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     return most_recent.value;
   }
 
-  // Storage replica role
+ private:
+  Timestamp ChooseWriteTimestamp() const {
+    // Local wall clock may be out of sync with other replicas
+    // Use TrueTime (TrueTime() method)
+    return WallTimeNow();
+  }
+
+  // Find value with largest timestamp
+  StampedValue FindMostRecentValue(
+      const std::vector<StampedValue>& values) const {
+    return *std::max_element(
+        values.begin(), values.end(),
+        [](const StampedValue& lhs, const StampedValue& rhs) {
+          return lhs.ts < rhs.ts;
+        });
+  }
+
+  // Quorum size
+  size_t Majority() const {
+    return PeerCount() / 2 + 1;
+  }
+
+ private:
+  Logger logger_{"KVNode.Coordinator"};
+};
+
+class StorageReplica : public rpc::ServiceBase<StorageReplica>,
+                       public NodeMethodsBase {
+ public:
+  StorageReplica(NodeServices runtime)
+    : NodeMethodsBase(std::move(runtime))
+    , kv_(StorageBackend(), "kv") {
+  }
+
+  void RegisterRPCMethods() override {
+    RPC_REGISTER_METHOD(LocalWrite);
+    RPC_REGISTER_METHOD(LocalRead);
+  };
+
+  // RPC handlers
 
   void LocalWrite(Key key, StampedValue stamped_value) {
     std::lock_guard guard(mutex_);
@@ -181,27 +204,6 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     return kv_.GetOr(key, StampedValue::NoValue());
   }
 
-  Timestamp ChooseWriteTimestamp() const {
-    // Local wall clock may be out of sync with other replicas
-    // Use TrueTime (TrueTime() method)
-    return WallTimeNow();
-  }
-
-  // Find value with largest timestamp
-  StampedValue FindMostRecentValue(
-      const std::vector<StampedValue>& values) const {
-    return *std::max_element(
-        values.begin(), values.end(),
-        [](const StampedValue& lhs, const StampedValue& rhs) {
-          return lhs.ts < rhs.ts;
-        });
-  }
-
-  // Quorum size
-  size_t Majority() const {
-    return PeerCount() / 2 + 1;
-  }
-
  private:
   // Local persistent K/V storage
   // strings -> StampedValues
@@ -210,7 +212,34 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Guards access to kv_ from RPC handlers
   await::fibers::Mutex mutex_;
 
-  Logger logger_{"KVNode"};
+  Logger logger_{"KVNode.Replica"};
+};
+
+class KVNode final : public NodeBase {
+ public:
+  KVNode(NodeServices runtime)
+      : NodeBase(std::move(runtime)) {
+  }
+
+ protected:
+  void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
+    // Public
+    rpc_server->RegisterService("KV", MakeCoordinatorService());
+    rpc_server->RegisterService("Replica", MakeReplicaService());
+  }
+
+  void MainThread() override {
+    // Do nothing
+  }
+
+ private:
+  rpc::IServicePtr MakeCoordinatorService() {
+    return std::make_shared<Coordinator>(ThisNodeServices());
+  }
+
+  rpc::IServicePtr MakeReplicaService() {
+    return std::make_shared<StorageReplica>(ThisNodeServices());
+  }
 };
 
 //////////////////////////////////////////////////////////////////////
