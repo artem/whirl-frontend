@@ -187,9 +187,9 @@ class WorldImpl {
 
     WHIRL_LOG_INFO("Clients stopped");
 
-    actors_.clear();
-
     CheckNoFibersLeft();
+
+    actors_.clear();
 
     history_recorder_.Finalize();
 
