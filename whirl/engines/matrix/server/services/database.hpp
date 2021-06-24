@@ -2,15 +2,15 @@
 
 #include <whirl/services/database.hpp>
 
-#include <whirl/engines/matrix/server/storage.hpp>
+#include <whirl/engines/matrix/server/database.hpp>
 
 namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class Database : public IDatabase {
+class DatabaseProxy : public IDatabase {
  public:
-  Database(PersistentStorage& impl) : impl_(impl) {
+  DatabaseProxy(Database& impl) : impl_(impl) {
   }
 
   void Put(const std::string& key, const Bytes& value) override {
@@ -26,7 +26,7 @@ class Database : public IDatabase {
   }
 
  private:
-  PersistentStorage& impl_;
+  Database& impl_;
 };
 
 }  // namespace whirl::matrix

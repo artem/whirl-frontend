@@ -10,7 +10,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class PersistentStorage {
+class Database {
  public:
   // Context: Server
   void Put(const std::string& key, const Bytes& value);

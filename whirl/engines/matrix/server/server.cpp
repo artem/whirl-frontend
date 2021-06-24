@@ -166,7 +166,7 @@ size_t Server::ComputeDigest() const {
 
   DigestCalculator digest;
   digest.Eat(heap_.BytesAllocated());
-  digest.Combine(persistent_storage_.ComputeDigest());
+  digest.Combine(db_.ComputeDigest());
   return digest.GetValue();
 }
 
@@ -184,7 +184,7 @@ NodeServices Server::CreateNodeServices() {
   services.executor = executor;
   services.time_service = time_service;
 
-  services.database = std::make_shared<Database>(persistent_storage_);
+  services.database = std::make_shared<DatabaseProxy>(db_);
 
   static const net::Port kTransportPort = 42;
   auto net_transport =

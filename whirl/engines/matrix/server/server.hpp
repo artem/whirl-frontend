@@ -8,7 +8,7 @@
 
 #include <whirl/engines/matrix/server/config.hpp>
 #include <whirl/engines/matrix/server/clocks.hpp>
-#include <whirl/engines/matrix/server/storage.hpp>
+#include <whirl/engines/matrix/server/database.hpp>
 
 #include <whirl/engines/matrix/network/server.hpp>
 #include <whirl/engines/matrix/network/network.hpp>
@@ -88,7 +88,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   WallClock wall_clock_;
   MonotonicClock monotonic_clock_;
-  PersistentStorage persistent_storage_;
+  Database db_;
 
   // Node process
 
