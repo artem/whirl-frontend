@@ -72,7 +72,8 @@ void Network::Step() {
       .Eat(packet.header.dest_port)
       .Eat(packet.message.length());
 
-  link->End()->HandlePacket(packet, link->GetOpposite());
+  IServer* receiver = link->End();
+  receiver->HandlePacket(packet, link->GetOpposite());
 }
 
 void Network::AddLinkEvent(Link* link, TimePoint t) {
