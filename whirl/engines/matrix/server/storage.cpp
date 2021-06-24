@@ -37,7 +37,7 @@ size_t PersistentStorage::ComputeDigest() const {
   DigestCalculator digest;
   // NB: sorted std::map, unique keys -> deterministic order
   for (const auto& [k, v] : data_) {
-    digest.EatT(k).EatT(v.Raw());
+    digest.Eat(k).Eat(v.Raw());
   }
   return digest.Get();
 }

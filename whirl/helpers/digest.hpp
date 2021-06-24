@@ -11,14 +11,14 @@ class DigestCalculator {
   using Self = DigestCalculator;
 
  public:
-  Self& Eat(size_t hash_value) {
+  Self& Combine(size_t hash_value) {
     wheels::HashCombine(digest_, hash_value);
     return *this;
   }
 
   template <typename T>
-  Self& EatT(const T& object) {
-    return Eat(std::hash<T>()(object));
+  Self& Eat(const T& object) {
+    return Combine(std::hash<T>()(object));
   }
 
   size_t Get() const {
