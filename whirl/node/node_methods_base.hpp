@@ -136,13 +136,6 @@ class NodeMethodsBase {
     return services_.uids;
   }
 
-  // Logger
-  // Usage: NODE_LOG(format, values...)
-
-  INodeLoggerPtr NodeLogger() const {
-    return services_.logger;
-  }
-
  private:
   NodeServices services_;
 };

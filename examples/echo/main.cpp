@@ -1,5 +1,6 @@
 #include <whirl/node/node_base.hpp>
-#include <whirl/node/logging.hpp>
+
+#include <whirl/logger/log.hpp>
 
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
@@ -31,7 +32,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
   }
 
  protected:
-  void RegisterRPCMethods() {
+  void RegisterRPCMethods() override {
     RPC_REGISTER_METHOD(Echo);
   }
 };
@@ -65,7 +66,7 @@ class ClientNode final: public ClientBase {
   void MainThread() override {
     while (true) {
       // Печатаем текущее системное время
-      NODE_LOG("Local wall time: {}", WallTimeNow());
+      WHIRL_LOG_INFO("Local wall time: {}", WallTimeNow());
 
       // Выполняем RPC
       // Вызываем метод "Echo" у сервиса "Echo"
@@ -84,9 +85,9 @@ class ClientNode final: public ClientBase {
       auto result = Await(WithTimeout(std::move(future), 256_jiffies));
 
       if (result.IsOk()) {
-        NODE_LOG("Echo response: '{}'", *result);
+        WHIRL_LOG_INFO("Echo response: '{}'", *result);
       } else {
-        NODE_LOG("Echo request failed: {}", result.GetError().GetErrorCode().message());
+        WHIRL_LOG_INFO("Echo request failed: {}", result.GetError().GetErrorCode().message());
       }
 
       // Threads() - рантайм, с помощью которого можно запускать новые потоки

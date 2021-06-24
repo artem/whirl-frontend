@@ -1,6 +1,6 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/node/local_storage.hpp>
-#include <whirl/node/logging.hpp>
+#include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
 #include <whirl/cereal/serializable.hpp>
@@ -106,7 +106,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
 
   void Set(Key key, Value value) {
     Timestamp write_ts = ChooseWriteTimestamp();
-    NODE_LOG_INFO("Write timestamp: {}", write_ts);
+    WHIRL_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
     // TODO: iterate over configuration
@@ -127,7 +127,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // Broadcast KV.LocalRead request
     for (size_t i = 0; i < PeerCount(); ++i) {
       reads.push_back(
-          rpc::Call("KV.LocalRead", key).Via(PeerChannel(i)));
+          rpc::Call("KV.LocalRead", key)
+              .Via(PeerChannel(i)));
     }
 
     // Await responses from majority of replicas
@@ -145,7 +146,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
     // auto values = Await(Quorum(std::move(reads), Majority())).ValueOrThrow()
 
     for (size_t i = 0; i < values.size(); ++i) {
-      NODE_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
+      WHIRL_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
     }
 
     auto most_recent = FindMostRecentValue(values);
@@ -171,7 +172,7 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   }
 
   void LocalUpdate(Key key, StampedValue stamped_value) {
-    NODE_LOG_INFO("Write '{}' -> {}", key, stamped_value);
+    WHIRL_LOG_INFO("Write '{}' -> {}", key, stamped_value);
     kv_.Set(key, stamped_value);
   }
 
@@ -208,6 +209,8 @@ class KVNode final : public rpc::ServiceBase<KVNode>,
   // Fiber-aware mutex
   // Guards access to kv_ from RPC handlers
   await::fibers::Mutex mutex_;
+
+  Logger logger_{"KVNode"};
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -248,14 +251,14 @@ class KVClient final : public ClientBase {
       if (Either()) {
         Key key = ChooseKey();
         Value value = RandomNumber(1, 100);
-        NODE_LOG_INFO("Execute Set({}, {})", key, value);
+        WHIRL_LOG_INFO("Execute Set({}, {})", key, value);
         kv_store.Set(key, value);
-        NODE_LOG_INFO("Set completed");
+        WHIRL_LOG_INFO("Set completed");
       } else {
         Key key = ChooseKey();
-        NODE_LOG_INFO("Execute Get({})", key);
+        WHIRL_LOG_INFO("Execute Get({})", key);
         [[maybe_unused]] Value result = kv_store.Get(key);
-        NODE_LOG_INFO("Get({}) -> {}", key, result);
+        WHIRL_LOG_INFO("Get({}) -> {}", key, result);
       }
 
       GlobalCounter("requests").Increment();
@@ -269,6 +272,9 @@ class KVClient final : public ClientBase {
   const std::string& ChooseKey() const {
     return kKeys.at(RandomNumber(GetGlobal<size_t>("keys")));
   }
+
+ private:
+  Logger logger_{"KVNode"};
 };
 
 //////////////////////////////////////////////////////////////////////

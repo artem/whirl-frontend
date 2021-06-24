@@ -52,7 +52,7 @@ std::vector<std::string> GetPool(const std::string& name) {
 
 //////////////////////////////////////////////////////////////////////
 
-Log& GetLog() {
+LogBackend& GetLog() {
   return WorldImpl::Access()->GetLog();
 }
 

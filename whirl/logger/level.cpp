@@ -1,4 +1,4 @@
-#include <whirl/engines/matrix/log/level.hpp>
+#include <whirl/logger/level.hpp>
 
 #include <wheels/support/panic.hpp>
 #include <wheels/support/preprocessor.hpp>

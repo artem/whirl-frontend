@@ -81,6 +81,8 @@ class WorldImpl {
   void Start() {
     WorldGuard g(this);
 
+    SetLoggerBackend(&log_);
+
     WHIRL_SIM_LOG("Seed: {}", seed_);
 
     SetStartTime();
@@ -192,6 +194,8 @@ class WorldImpl {
 
     WHIRL_SIM_LOG("Simulation stopped");
 
+    SetLoggerBackend(nullptr);
+
     return Digest();
   }
 
@@ -227,7 +231,7 @@ class WorldImpl {
     return step_count_;
   }
 
-  Log& GetLog() {
+  LogBackend& GetLog() {
     return log_;
   }
 
@@ -374,7 +378,7 @@ class WorldImpl {
   size_t step_random_number_{0};
 
   DigestCalculator digest_;
-  Log log_;
+  LogBackend log_;
   histories::Recorder history_recorder_;
 
   UntypedDict globals_;

@@ -134,10 +134,6 @@ class ClientBase : public INode {
     return services_.time_service;
   }
 
-  const INodeLoggerPtr& NodeLogger() const {
-    return services_.logger;
-  }
-
   const rpc::IClientPtr& RPCClient() const {
     return services_.rpc_client;
   }

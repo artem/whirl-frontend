@@ -14,7 +14,6 @@
 #include <whirl/engines/matrix/server/services/uid.hpp>
 #include <whirl/engines/matrix/server/services/random.hpp>
 #include <whirl/engines/matrix/server/services/net_transport.hpp>
-#include <whirl/engines/matrix/server/services/logger.hpp>
 #include <whirl/engines/matrix/server/services/discovery.hpp>
 
 #include <whirl/rpc/server_impl.hpp>
@@ -200,8 +199,6 @@ NodeServices Server::CreateNodeServices() {
   services.random = std::make_shared<RandomService>();
   services.uids = std::make_shared<UidGenerator>(config_.id);
   services.true_time = std::make_shared<TrueTimeService>();
-
-  services.logger = std::make_shared<LoggerProxy>();
 
   return services;
 }

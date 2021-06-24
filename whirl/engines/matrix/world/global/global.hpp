@@ -39,7 +39,7 @@ std::vector<std::string> GetPool(const std::string& name);
 
 //////////////////////////////////////////////////////////////////////
 
-Log& GetLog();
+LogBackend& GetLog();
 
 // For logging
 

@@ -7,7 +7,6 @@
 #include <whirl/services/uid.hpp>
 #include <whirl/services/true_time.hpp>
 #include <whirl/services/filesystem.hpp>
-#include <whirl/services/logger.hpp>
 #include <whirl/services/discovery.hpp>
 
 #include <whirl/rpc/server.hpp>
@@ -32,8 +31,6 @@ struct NodeServices {
   IRandomServicePtr random;
   IUidGeneratorPtr uids;
   ITrueTimeServicePtr true_time;
-
-  INodeLoggerPtr logger;
 
   // TODO
   IFileSystemPtr fs;

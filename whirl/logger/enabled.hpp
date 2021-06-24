@@ -1,5 +1,3 @@
-#pragma once
-
 #if !defined(NDEBUG) || defined(WHIRL_FORCE_LOGGING)
 #define WHIRL_LOGGING_ENABLED
 #else

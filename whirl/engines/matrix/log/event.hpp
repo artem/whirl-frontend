@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/engines/matrix/log/level.hpp>
+#include <whirl/logger/level.hpp>
 
 #include <whirl/time.hpp>
 
