@@ -8,6 +8,7 @@
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
 #include <whirl/engines/matrix/client/client.hpp>
+#include <whirl/engines/matrix/test/event_log.hpp>
 
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/core/await.hpp>
@@ -147,10 +148,9 @@ int main() {
       << ", steps: " << world.StepCount()
       << std::endl;
 
-  std::cout
-      << "Simulation log: " << std::endl
-      << world.TextLog()
-      << std::endl;
+  std::cout << "Simulation log: " << std::endl;
+  matrix::WriteTextLog(world.EventLog(), std::cout);
+  std::cout << std::endl;
 
   return 0;
 }

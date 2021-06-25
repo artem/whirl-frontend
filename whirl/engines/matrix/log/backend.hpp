@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 namespace whirl::matrix {
 
@@ -22,8 +23,8 @@ class LogBackend : public ILoggerBackend {
   void Log(const std::string& component, LogLevel level,
            const std::string& message);
 
-  std::string TextLog() const {
-    return memory_.str();
+  const EventLog& GetEvents() const {
+    return events_;
   }
 
  private:
@@ -34,7 +35,7 @@ class LogBackend : public ILoggerBackend {
  private:
   LogLevels levels_;
 
-  std::stringstream memory_;
+  EventLog events_;
   std::ofstream file_;
 };
 

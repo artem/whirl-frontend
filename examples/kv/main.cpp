@@ -12,6 +12,7 @@
 #include <whirl/engines/matrix/test/random.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 #include <whirl/engines/matrix/test/main.hpp>
+#include <whirl/engines/matrix/test/event_log.hpp>
 
 #include <whirl/history/printers/kv.hpp>
 #include <whirl/history/checker/check.hpp>
@@ -102,7 +103,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     }
 
     // Await acks from majority of replicas
-    Await(Quorum(std::move(writes), /*threshold=*/Majority())).ExpectOk();
+    Await(Quorum(std::move(writes), /*threshold=*/Majority())).ThrowIfError();
   }
 
   Value Get(Key key) {
@@ -248,7 +249,7 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(rpc::Call("KV.Set", k, v).Via(channel_).As<void>()).ExpectOk();
+    Await(rpc::Call("KV.Set", k, v).Via(channel_).As<void>()).ThrowIfError();
   }
 
   Value Get(Key k) {
@@ -327,6 +328,7 @@ size_t RunSimulation(size_t seed) {
 
   matrix::Random random{seed};
 
+  // Randomize simulation parameters
   const size_t replicas = random.Get(3, 5);
   const size_t clients = random.Get(2, 3);
   const size_t keys = random.Get(1, 2);
@@ -373,12 +375,15 @@ size_t RunSimulation(size_t seed) {
             << "digest: " << digest << ", time: " << world.TimeElapsed()
             << ", steps: " << world.StepCount() << std::endl;
 
-  const auto text_log = world.TextLog();
+  const auto event_log = world.EventLog();
 
   // Time limit exceeded
   if (world.GetCounter("requests") < kRequestsThreshold) {
     // Log
-    std::cout << "Log:" << std::endl << text_log << std::endl;
+    std::cout << "Log:" << std::endl;
+    matrix::WriteTextLog(event_log, std::cout);
+    std::cout << std::endl;
+
     if (world.TimeElapsed() < kTimeLimit) {
       std::cout << "Deadlock in simulation" << std::endl;
     } else {
@@ -396,7 +401,10 @@ size_t RunSimulation(size_t seed) {
 
   if (!linearizable) {
     // Log
-    std::cout << "Log:" << std::endl << text_log << std::endl;
+    std::cout << "Log:" << std::endl;
+    matrix::WriteTextLog(event_log, std::cout);
+    std::cout << std::endl;
+
     // History
     std::cout << "History (seed = " << seed
               << ") is NOT LINEARIZABLE:" << std::endl;

@@ -2,6 +2,7 @@
 
 #include <whirl/engines/matrix/world/behaviour.hpp>
 #include <whirl/engines/matrix/adversary/strategy.hpp>
+#include <whirl/engines/matrix/log/event.hpp>
 #include <whirl/history/history.hpp>
 #include <whirl/node/node.hpp>
 
@@ -70,7 +71,7 @@ class World {
   size_t StepCount() const;
   Duration TimeElapsed() const;
 
-  std::string TextLog() const;
+  const EventLog& EventLog() const;
   const histories::History& History() const;
 
  private:

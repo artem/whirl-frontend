@@ -18,12 +18,11 @@ LogBackend::LogBackend() {
 }
 
 void LogBackend::Write(const LogEvent& event) {
-  auto event_str = LogEventToString(event);
-
-  memory_ << event_str << std::endl;
+  events_.push_back(event);
 
 #if defined(WHIRL_LOGGING_ENABLED)
-  file_ << event_str << std::endl;
+  FormatLogEventTo(event, file_);
+  file_ << std::endl;
 #endif
 }
 

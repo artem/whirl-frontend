@@ -62,8 +62,8 @@ size_t World::Digest() const {
   return impl_->Digest();
 }
 
-std::string World::TextLog() const {
-  return impl_->GetLog().TextLog();
+const EventLog& World::EventLog() const {
+  return impl_->GetLog().GetEvents();
 }
 
 const histories::History& World::History() const {

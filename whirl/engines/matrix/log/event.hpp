@@ -6,6 +6,7 @@
 
 #include <string>
 #include <optional>
+#include <vector>
 
 namespace whirl::matrix {
 
@@ -26,5 +27,9 @@ struct LogEvent {
 // Capture event context
 LogEvent MakeLogEvent(const std::string& component, LogLevel level,
                       const std::string& message);
+
+//////////////////////////////////////////////////////////////////////
+
+using EventLog = std::vector<LogEvent>;
 
 }  // namespace whirl::matrix
