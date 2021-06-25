@@ -17,6 +17,7 @@
 
 #include <chrono>
 #include <cstdlib>
+#include <cassert>
 
 using namespace await::fibers;
 using namespace whirl::time_literals;
@@ -47,6 +48,9 @@ struct Echo {
 class EchoService : public rpc::ServiceBase<EchoService> {
  public:
   proto::Echo::Response Echo(proto::Echo::Request req) {
+    // Каждый обработчик – отдельный файбер
+    assert(await::fibers::AmIFiber());
+
     WHIRL_LOG_INFO("Echo({})", req.data);
     return {req.data};
   }
@@ -88,7 +92,7 @@ class ClientNode final: public matrix::ClientBase {
  protected:
   void MainThread() override {
     while (true) {
-      // Печатаем текущее системное время
+      // Печатаем локальное время
       WHIRL_LOG_INFO("Local wall time: {}", WallTimeNow());
 
       // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
@@ -97,13 +101,6 @@ class ClientNode final: public matrix::ClientBase {
       // Фьючу дожидаемся синхронно с помощью функции Await
       // Она распаковывает фьючу в Result<std::string>
       // См. <await/fibers/sync/future.hpp>
-
-      /*
-      auto result = Await(
-          rpc::Call("Echo.Echo", proto::Echo::Request{"Hello!"})
-            .Via(Channel())
-            .As<proto::Echo::Response>());
-      */
 
       Future<proto::Echo::Response> future = rpc::Call("Echo.Echo", proto::Echo::Request{"Hello"}).Via(Channel());
       auto result = Await(WithTimeout(std::move(future), 256_jiffies));
@@ -114,10 +111,9 @@ class ClientNode final: public matrix::ClientBase {
         WHIRL_LOG_INFO("Echo request failed: {}", result.GetError().GetErrorCode().message());
       }
 
-      // Threads() - рантайм, с помощью которого можно запускать новые потоки
-      // или работать с текущим потоком
+      // SleepFor – приостановить текущий файбер (не поток!) на заданное время
       // RandomNumber(lo, hi) - генерация случайного числа
-      Threads().SleepFor(RandomNumber(1, 100));
+      SleepFor(RandomNumber(1, 100));
     }
   }
 };
