@@ -27,7 +27,7 @@ class Logger {
 
 #if defined(WHIRL_LOGGING_ENABLED)
 
-#define WHIRL_LOG_IMPL(level, ...)                  \
+#define __WHIRL_LOG_IMPL(level, ...)                  \
   do {                                              \
     if (logger_.IsLevelEnabled(level)) {            \
       logger_.Log(level, fmt::format(__VA_ARGS__)); \
@@ -36,13 +36,13 @@ class Logger {
 
 #else
 
-#define WHIRL_LOG_IMPL(level, ...)
+#define __WHIRL_LOG_IMPL(level, ...)
 
 #endif
 
-#define WHIRL_LOG_DEBUG(...) WHIRL_LOG_IMPL(LogLevel::Debug, __VA_ARGS__)
-#define WHIRL_LOG_INFO(...) WHIRL_LOG_IMPL(LogLevel::Info, __VA_ARGS__)
-#define WHIRL_LOG_WARN(...) WHIRL_LOG_IMPL(LogLevel::Warning, __VA_ARGS__)
-#define WHIRL_LOG_ERROR(...) WHIRL_LOG_IMPL(LogLevel::Error, __VA_ARGS__)
+#define WHIRL_LOG_DEBUG(...) __WHIRL_LOG_IMPL(LogLevel::Debug, __VA_ARGS__)
+#define WHIRL_LOG_INFO(...) __WHIRL_LOG_IMPL(LogLevel::Info, __VA_ARGS__)
+#define WHIRL_LOG_WARN(...) __WHIRL_LOG_IMPL(LogLevel::Warning, __VA_ARGS__)
+#define WHIRL_LOG_ERROR(...) __WHIRL_LOG_IMPL(LogLevel::Error, __VA_ARGS__)
 
 }  // namespace whirl
