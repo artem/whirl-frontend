@@ -6,10 +6,11 @@
 
 namespace whirl {
 
+std::string LogLevelToString(LogLevel level) {
+
 #define LEVEL_TO_STRING_CASE(level) \
   case LogLevel::level: return TO_STRING(level)
 
-std::string LogLevelToString(LogLevel level) {
   switch (level) {
     LEVEL_TO_STRING_CASE(Debug);
     LEVEL_TO_STRING_CASE(Info);
@@ -17,20 +18,25 @@ std::string LogLevelToString(LogLevel level) {
     LEVEL_TO_STRING_CASE(Error);
     default: return "?";
   }
+
+#undef LEVEL_TO_STRING_CASE
 }
 
-#define PARSE_LEVEL(level)             \
+LogLevel LogLevelFromString(const std::string& level_str) {
+
+#define FROM_STRING_IF(level)             \
   if (level_str == TO_STRING(level)) { \
     return LogLevel::level;            \
   }
 
-LogLevel LogLevelFromString(const std::string& level_str) {
-  PARSE_LEVEL(Debug);
-  PARSE_LEVEL(Info);
-  PARSE_LEVEL(Warning);
-  PARSE_LEVEL(Error);
-  PARSE_LEVEL(All);
-  PARSE_LEVEL(Off);
+  FROM_STRING_IF(Debug);
+  FROM_STRING_IF(Info);
+  FROM_STRING_IF(Warning);
+  FROM_STRING_IF(Error);
+  FROM_STRING_IF(All);
+  FROM_STRING_IF(Off);
+
+#undef FROM_STRING_IF
 
   WHEELS_PANIC("Unknown log level: " << level_str);
 
