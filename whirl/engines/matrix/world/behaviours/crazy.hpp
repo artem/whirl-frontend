@@ -46,6 +46,10 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
     return GlobalRandomNumber(5, 500);
   }
 
+  Duration DiskSeek() override {
+    return GlobalRandomNumber(10, 100);
+  }
+
   // Network
 
   TimePoint FlightTime(const net::Packet& packet) override {
