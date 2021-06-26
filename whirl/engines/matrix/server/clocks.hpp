@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/engines/matrix/world/global/time.hpp>
-#include <whirl/engines/matrix/world/dice.hpp>
+#include <whirl/engines/matrix/world/global/dice.hpp>
 
 namespace whirl::matrix {
 
@@ -57,6 +57,11 @@ class WallClock {
   }
 
  private:
+  static Duration InitLocalClockOffset() {
+    return GetWorldBehaviour()->InitLocalClockOffset();
+  }
+
+ private:
   Duration offset_{0};
 };
 
@@ -64,12 +69,13 @@ class WallClock {
 
 class MonotonicClock {
  public:
-  MonotonicClock() : drift_(InitClockDrift()) {
+  MonotonicClock()
+      : drift_(GetWorldBehaviour()->InitClockDrift()) {
     Reset();
   }
 
   void Reset() {
-    init_ = ResetMonotonicClock();
+    init_ = GetWorldBehaviour()->ResetMonotonicClock();
     last_reset_ = GlobalNow();
   }
 

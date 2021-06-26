@@ -4,6 +4,7 @@
 
 #include <whirl/engines/matrix/server/database.hpp>
 #include <whirl/engines/matrix/server/services/detail/disk.hpp>
+#include <whirl/engines/matrix/world/global/random.hpp>
 
 #include <whirl/logger/log.hpp>
 

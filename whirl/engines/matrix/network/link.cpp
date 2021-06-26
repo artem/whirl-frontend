@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/network/network.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
-#include <whirl/engines/matrix/world/dice.hpp>
+#include <whirl/engines/matrix/world/global/dice.hpp>
 
 #include <wheels/support/assert.hpp>
 
@@ -21,7 +21,7 @@ TimePoint Link::ChooseDeliveryTime(const Packet& packet) const {
   if (IsLoopBack()) {
     return GlobalNow() + 1;
   }
-  return GlobalNow() + FlightTime(packet);
+  return GlobalNow() + GetWorldBehaviour()->FlightTime(packet);
 }
 
 Packet Link::ExtractNextPacket() {

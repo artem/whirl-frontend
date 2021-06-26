@@ -2,7 +2,7 @@
 
 #include <whirl/services/time.hpp>
 
-#include <whirl/engines/matrix/world/global/global.hpp>
+#include <whirl/engines/matrix/world/global/dice.hpp>
 
 namespace whirl::matrix {
 
