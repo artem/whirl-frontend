@@ -1,25 +1,22 @@
-#include <whirl/engines/matrix/channels/retries.hpp>
+#include <whirl/rpc/retries.hpp>
 
 #include <whirl/rpc/request_context.hpp>
 #include <whirl/rpc/errors.hpp>
 
-#include <whirl/services/time.hpp>
-
 #include <whirl/logger/log.hpp>
 
+// TODO: stop token
 #include <whirl/helpers/weak_ptr.hpp>
 
 #include <await/futures/util/promise.hpp>
 
 #include <algorithm>
 
-namespace whirl::matrix {
 
-static Logger logger_{"Retries-Channel"};
-
-using namespace rpc;
 using wheels::Result;
 using namespace await::futures;
+
+namespace whirl::rpc {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -132,6 +129,8 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
   size_t attempt_{0};
   Backoff backoff_;
+
+  Logger logger_{"Retries-Channel"};
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -168,4 +167,4 @@ IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time) {
   return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::rpc

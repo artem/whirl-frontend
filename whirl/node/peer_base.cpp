@@ -1,6 +1,6 @@
 #include <whirl/node/peer_base.hpp>
 
-#include <whirl/engines/matrix/channels/retries.hpp>
+#include <whirl/rpc/retries.hpp>
 
 namespace whirl {
 
@@ -39,7 +39,7 @@ void PeerBase::ConnectToPeers() const {
 
 rpc::IChannelPtr PeerBase::MakeChannel(const std::string& peer) const {
   auto transport = RPCClient()->Dial(peer);
-  auto retries = matrix::WithRetries(std::move(transport), TimeService());
+  auto retries = rpc::WithRetries(std::move(transport), TimeService());
   return retries;
 }
 

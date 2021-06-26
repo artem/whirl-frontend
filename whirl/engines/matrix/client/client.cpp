@@ -1,7 +1,7 @@
 #include <whirl/engines/matrix/client/client.hpp>
 
 #include <whirl/engines/matrix/channels/random.hpp>
-#include <whirl/engines/matrix/channels/retries.hpp>
+#include <whirl/rpc/retries.hpp>
 #include <whirl/engines/matrix/channels/history.hpp>
 
 namespace whirl::matrix {
