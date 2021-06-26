@@ -3,7 +3,7 @@
 #include <whirl/services/true_time.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
-#include <whirl/engines/matrix/world/global/dice.hpp>
+#include <whirl/engines/matrix/world/global/behaviour.hpp>
 
 namespace whirl::matrix {
 

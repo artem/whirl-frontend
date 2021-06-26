@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/network/network.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
-#include <whirl/engines/matrix/world/global/dice.hpp>
+#include <whirl/engines/matrix/world/global/behaviour.hpp>
 
 #include <wheels/support/assert.hpp>
 
