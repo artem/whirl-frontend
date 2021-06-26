@@ -1,5 +1,5 @@
 #if !defined(NDEBUG) || defined(WHIRL_FORCE_LOGGING)
-#define WHIRL_LOGGING_ENABLED
+#define __WHIRL_LOGGING_ENABLED
 #else
-#undef WHIRL_LOGGING_ENABLED
+#undef __WHIRL_LOGGING_ENABLED
 #endif

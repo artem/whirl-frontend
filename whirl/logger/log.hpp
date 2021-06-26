@@ -25,7 +25,7 @@ class Logger {
 
 //////////////////////////////////////////////////////////////////////
 
-#if defined(WHIRL_LOGGING_ENABLED)
+#if defined(__WHIRL_LOGGING_ENABLED)
 
 #define __WHIRL_LOG_IMPL(level, ...)                  \
   do {                                              \
@@ -36,6 +36,7 @@ class Logger {
 
 #else
 
+// No-op
 #define __WHIRL_LOG_IMPL(level, ...)
 
 #endif

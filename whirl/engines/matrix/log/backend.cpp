@@ -11,7 +11,7 @@
 namespace whirl::matrix {
 
 LogBackend::LogBackend() {
-#if defined(WHIRL_LOGGING_ENABLED)
+#if defined(__WHIRL_LOGGING_ENABLED)
   file_ = GetLogFile();
 #endif
   InitLevels();
@@ -20,7 +20,7 @@ LogBackend::LogBackend() {
 void LogBackend::Write(const LogEvent& event) {
   events_.push_back(event);
 
-#if defined(WHIRL_LOGGING_ENABLED)
+#if defined(__WHIRL_LOGGING_ENABLED)
   FormatLogEventTo(event, file_);
   file_ << std::endl;
 #endif
