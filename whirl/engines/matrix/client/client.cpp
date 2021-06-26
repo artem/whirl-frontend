@@ -9,7 +9,7 @@ namespace whirl::matrix {
 //////////////////////////////////////////////////////////////////////
 
 static rpc::BackoffParams RetriesBackoff() {
-  return { 50, 1000, 2 };  // Magic
+  return {50, 1000, 2};  // Magic
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -29,7 +29,8 @@ rpc::IChannelPtr ClientBase::MakeClientChannel() {
 
   auto random = MakeRandomChannel(std::move(channels));
   auto history = MakeHistoryChannel(std::move(random));
-  auto retries = WithRetries(std::move(history), TimeService(), RetriesBackoff());
+  auto retries =
+      WithRetries(std::move(history), TimeService(), RetriesBackoff());
 
   return retries;
 }
@@ -55,7 +56,8 @@ rpc::IChannelPtr ExactlyOnceClientBase::MakeClientChannel() {
   // History -> Retries -> Random -> Peers
 
   auto random = MakeRandomChannel(std::move(channels));
-  auto retries = WithRetries(std::move(random), TimeService(), RetriesBackoff());
+  auto retries =
+      WithRetries(std::move(random), TimeService(), RetriesBackoff());
   auto history = MakeHistoryChannel(std::move(retries));
 
   return history;

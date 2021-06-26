@@ -7,7 +7,6 @@
 namespace whirl {
 
 std::string LogLevelToString(LogLevel level) {
-
 #define LEVEL_TO_STRING_CASE(level) \
   case LogLevel::level: return TO_STRING(level)
 
@@ -23,8 +22,7 @@ std::string LogLevelToString(LogLevel level) {
 }
 
 LogLevel LogLevelFromString(const std::string& level_str) {
-
-#define FROM_STRING_IF(level)             \
+#define FROM_STRING_IF(level)          \
   if (level_str == TO_STRING(level)) { \
     return LogLevel::level;            \
   }

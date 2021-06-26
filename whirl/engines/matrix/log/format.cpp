@@ -15,6 +15,8 @@ static std::string_view LimitWidth(std::string_view str, size_t width) {
 #define _FMT(str, width) std::setw(width) << LimitWidth(str, width)
 
 void FormatLogEventTo(const LogEvent& event, std::ostream& out) {
+  // clang-format off
+
   out << std::left
       << "[T " << event.time << " | " << event.step << ']'
       << '\t'
@@ -30,6 +32,8 @@ void FormatLogEventTo(const LogEvent& event, std::ostream& out) {
   }
 
   out << "\t" << event.message;
+
+  // clang-format on
 }
 
 }  // namespace whirl::matrix

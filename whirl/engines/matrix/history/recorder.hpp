@@ -46,7 +46,8 @@ class HistoryRecorder {
 
  private:
   // Finalizers
-  static histories::Call Complete(const RunningCall& call, histories::Value output);
+  static histories::Call Complete(const RunningCall& call,
+                                  histories::Value output);
   static histories::Call Lost(const RunningCall& call);
 
  private:

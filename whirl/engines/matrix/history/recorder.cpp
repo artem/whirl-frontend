@@ -4,9 +4,9 @@
 
 #include <whirl/engines/matrix/memory/new.hpp>
 
+using whirl::histories::Arguments;
 using whirl::histories::Call;
 using whirl::histories::Value;
-using whirl::histories::Arguments;
 
 namespace whirl::matrix {
 
@@ -25,7 +25,7 @@ Call HistoryRecorder::Lost(const RunningCall& call) {
 //////////////////////////////////////////////////////////////////////
 
 HistoryRecorder::Cookie HistoryRecorder::CallStarted(const std::string& method,
-                                       const std::string& input) {
+                                                     const std::string& input) {
   GlobalAllocatorGuard g;
 
   Cookie id = ++next_id_;
@@ -86,4 +86,4 @@ void HistoryRecorder::Finalize() {
   }
 }
 
-}  // namespace whirl::matrix::histories
+}  // namespace whirl::matrix

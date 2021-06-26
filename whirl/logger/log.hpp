@@ -27,7 +27,7 @@ class Logger {
 
 #if defined(__WHIRL_LOGGING_ENABLED)
 
-#define __WHIRL_LOG_IMPL(level, ...)                  \
+#define __WHIRL_LOG_IMPL(level, ...)                \
   do {                                              \
     if (logger_.IsLevelEnabled(level)) {            \
       logger_.Log(level, fmt::format(__VA_ARGS__)); \
