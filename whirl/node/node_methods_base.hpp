@@ -3,8 +3,6 @@
 #include <whirl/node/services.hpp>
 #include <whirl/node/threads.hpp>
 
-#include <whirl/helpers/errors.hpp>
-
 #include <await/futures/helpers.hpp>
 
 namespace whirl {
@@ -61,12 +59,6 @@ class NodeMethodsBase {
 
   Future<void> After(Duration d) {
     return TimeService()->After(d);
-  }
-
-  template <typename T>
-  Future<T> WithTimeout(Future<T> f, Duration timeout) {
-    return await::futures::WithInterrupt(std::move(f), After(timeout),
-                                         TimeOutError());
   }
 
   // TrueTime

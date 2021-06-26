@@ -6,8 +6,6 @@
 
 #include <whirl/rpc/channel.hpp>
 
-#include <whirl/helpers/errors.hpp>
-
 #include <whirl/logger/log.hpp>
 
 #include <await/futures/helpers.hpp>
@@ -95,12 +93,6 @@ class ClientBase : public INode {
 
   Future<void> After(Duration d) {
     return TimeService()->After(d);
-  }
-
-  template <typename T>
-  Future<T> WithTimeout(Future<T> f, Duration timeout) {
-    return await::futures::WithInterrupt(std::move(f), After(timeout),
-                                         TimeOutError());
   }
 
   // Threads
