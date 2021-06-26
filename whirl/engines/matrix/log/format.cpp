@@ -1,11 +1,8 @@
 #include <whirl/engines/matrix/log/format.hpp>
 
 #include <iomanip>
-#include <sstream>
 
 namespace whirl::matrix {
-
-// Formatting
 
 static std::string_view LimitWidth(std::string_view str, size_t width) {
   if (str.length() < width) {
@@ -33,12 +30,6 @@ void FormatLogEventTo(const LogEvent& event, std::ostream& out) {
   }
 
   out << "\t" << event.message;
-}
-
-std::string LogEventToString(const LogEvent& event) {
-  std::ostringstream out;
-  FormatLogEventTo(event, out);
-  return out.str();
 }
 
 }  // namespace whirl::matrix
