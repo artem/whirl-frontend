@@ -216,7 +216,7 @@ class WorldImpl {
   }
 
  private:
-  size_t seed_;
+  const size_t seed_;
 
   Time time_;
   RandomSource random_source_;
