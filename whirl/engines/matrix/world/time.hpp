@@ -8,13 +8,13 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class WorldTime {
+class Time {
  public:
-  WorldTime() = default;
+  Time() = default;
 
   // Non-copyable
-  WorldTime(const WorldTime&) = delete;
-  WorldTime& operator=(const WorldTime&) = delete;
+  Time(const Time&) = delete;
+  Time& operator=(const Time&) = delete;
 
   void AdvanceTo(TimePoint future) {
     WHEELS_VERIFY(future >= now_, "Cannot move world time backward: now = "

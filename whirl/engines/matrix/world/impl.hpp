@@ -218,7 +218,7 @@ class WorldImpl {
  private:
   size_t seed_;
 
-  WorldTime time_;
+  Time time_;
   RandomSource random_source_;
 
   wheels::IdGenerator ids_;
