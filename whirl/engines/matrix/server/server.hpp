@@ -79,7 +79,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   // Runtime
 
-  const NodeServices& ThisNodeServices() {
+  const NodeServices& GetNodeServices() {
     return *runtime_;
   }
 

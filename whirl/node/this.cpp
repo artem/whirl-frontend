@@ -6,7 +6,7 @@
 namespace whirl {
 
 const NodeServices& ThisNodeServices() {
-  return matrix::ThisServer().ThisNodeServices();
+  return matrix::ThisServer().GetNodeServices();
 }
 
 }  // namespace whirl

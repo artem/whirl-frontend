@@ -71,7 +71,7 @@ class NodeMethodsBase {
   }
 
   void Spawn(ThreadRoutine routine) {
-    await::fibers::Spawn(std::move(routine), ThisNodeServices().executor);
+    await::fibers::Spawn(std::move(routine), Executor());
   }
 
   void SleepFor(Duration delay) {
@@ -82,7 +82,7 @@ class NodeMethodsBase {
     await::fibers::self::Yield();
   }
 
-  const await::executors::IExecutorPtr& GetExecutor() {
+  const await::executors::IExecutorPtr& Executor() {
     return ThisNodeServices().executor;
   }
 
