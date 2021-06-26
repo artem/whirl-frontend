@@ -10,8 +10,6 @@
 
 namespace whirl::rpc {
 
-using await::futures::Future;
-
 struct CallContext {
   await::util::StopToken stop_token;
 };
@@ -23,9 +21,9 @@ struct IChannel {
   virtual ~IChannel() = default;
 
   // Unary RPC call
-  virtual Future<BytesValue> Call(const Method& method,
-                                  const BytesValue& input,
-                                  CallContext ctx) = 0;
+  virtual await::futures::Future<BytesValue> Call(const Method& method,
+                                                  const BytesValue& input,
+                                                  CallContext ctx) = 0;
 
   virtual void Close() = 0;
 

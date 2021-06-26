@@ -10,10 +10,10 @@
 #include <await/futures/helpers.hpp>
 
 using namespace whirl::rpc;
+using await::futures::Future;
 using wheels::Result;
 
 namespace whirl::matrix {
-
 
 using Cookie = HistoryRecorder::Cookie;
 
@@ -30,8 +30,7 @@ class HistoryChannel : public IChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input,
+  Future<BytesValue> Call(const Method& method, const BytesValue& input,
                           CallContext ctx) override {
     auto cookie = GetHistoryRecorder().CallStarted(method.name, input);
 

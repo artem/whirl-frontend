@@ -15,6 +15,8 @@ namespace whirl::rpc {
 
 namespace detail {
 
+using await::futures::Future;
+
 template <typename T>
 Future<T> As(Future<BytesValue> f_raw) {
   return std::move(f_raw).Then([](BytesValue raw) {
@@ -30,8 +32,9 @@ inline Future<void> As(Future<BytesValue> f_raw) {
 class [[nodiscard]] Caller {
  public:
   Caller(Method method, BytesValue input)
-      : method_(method), input_(std::move(input)),
-      stop_token_(DefaultStopToken()) {
+      : method_(method),
+        input_(std::move(input)),
+        stop_token_(DefaultStopToken()) {
   }
 
   Caller& Via(IChannelPtr channel) {

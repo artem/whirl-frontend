@@ -3,6 +3,7 @@
 #include <whirl/engines/matrix/world/global/random.hpp>
 
 using namespace whirl::rpc;
+using await::futures::Future;
 using await::util::StopToken;
 
 namespace whirl::matrix {
@@ -20,8 +21,7 @@ class RandomChannel : public IChannel {
     Close();
   }
 
-  Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input,
+  Future<BytesValue> Call(const Method& method, const BytesValue& input,
                           CallContext ctx) override {
     size_t index = GlobalRandomNumber(channels_.size());
     return channels_[index]->Call(method, input, std::move(ctx));

@@ -37,8 +37,7 @@ void WorldImpl::Start() {
   AddActor(&network_);
   Scope(network_)->Start();
 
-  WHIRL_LOG_INFO("Cluster: {}, clients: {}", cluster_.size(),
-                 clients_.size());
+  WHIRL_LOG_INFO("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
 
   WHIRL_LOG_INFO("Starting cluster...");
 

@@ -157,8 +157,7 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input,
+  Future<BytesValue> Call(const Method& method, const BytesValue& input,
                           CallContext ctx) override {
     auto retrier = std::make_shared<Retrier>(
         impl_, method, input, std::move(ctx), time_, backoff_params_);

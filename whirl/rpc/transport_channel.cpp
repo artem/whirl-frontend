@@ -5,6 +5,8 @@
 #include <await/futures/helpers.hpp>
 #include <await/futures/util/await.hpp>
 
+using await::futures::Future;
+
 namespace whirl::rpc {
 
 TransportChannel::~TransportChannel() {
