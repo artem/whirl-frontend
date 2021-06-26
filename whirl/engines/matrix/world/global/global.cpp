@@ -52,10 +52,6 @@ std::vector<std::string> GetPool(const std::string& name) {
 
 //////////////////////////////////////////////////////////////////////
 
-LogBackend& GetLog() {
-  return WorldImpl::Access()->GetLog();
-}
-
 size_t WorldStepNumber() {
   return WorldImpl::Access()->CurrentStep();
 }

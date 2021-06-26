@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/process/crash.hpp>
 
-#include <whirl/engines/matrix/world/global/global.hpp>
+#include <whirl/engines/matrix/world/global/actor.hpp>
 
 // Services
 

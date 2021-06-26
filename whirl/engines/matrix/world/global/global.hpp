@@ -1,10 +1,10 @@
 #pragma once
 
+#include <whirl/engines/matrix/world/global/actor.hpp>
 #include <whirl/engines/matrix/world/global/random.hpp>
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/vars.hpp>
 
-#include <whirl/engines/matrix/world/actor.hpp>
 #include <whirl/engines/matrix/world/behaviour.hpp>
 #include <whirl/engines/matrix/history/recorder.hpp>
 #include <whirl/engines/matrix/log/backend.hpp>
@@ -21,29 +21,12 @@ namespace whirl::matrix {
 //////////////////////////////////////////////////////////////////////
 
 size_t WorldSeed();
-
-//////////////////////////////////////////////////////////////////////
+size_t WorldStepNumber();
 
 bool IsThereAdversary();
 
-//////////////////////////////////////////////////////////////////////
-
 HistoryRecorder& GetHistoryRecorder();
 
-//////////////////////////////////////////////////////////////////////
-
 std::vector<std::string> GetPool(const std::string& name);
-
-//////////////////////////////////////////////////////////////////////
-
-LogBackend& GetLog();
-
-// For logging
-
-size_t WorldStepNumber();
-bool AmIActor();
-IActor* CurrentActor();
-
-//////////////////////////////////////////////////////////////////////
 
 }  // namespace whirl::matrix
