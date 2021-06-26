@@ -5,9 +5,6 @@
 
 #include <whirl/logger/log.hpp>
 
-// TODO: stop token
-#include <whirl/helpers/weak_ptr.hpp>
-
 #include <await/futures/util/promise.hpp>
 
 #include <algorithm>
