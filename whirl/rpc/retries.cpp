@@ -105,10 +105,8 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   void ScheduleRetry(IExecutorPtr e) {
-    if (ctx_.stop_token.StopRequested()) {
-      WHIRL_LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
-                     channel_->Peer(), method_);
-      std::move(promise_).SetError(wheels::Error(RPCErrorCode::Cancelled));
+    if (ctx_.stop_advice.StopRequested()) {
+      Cancel();
       return;
     }
 
@@ -118,6 +116,12 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
     auto after = time_->After(backoff_.Next());
     std::move(after).Via(e).Subscribe(retry);
+  }
+
+  void Cancel() {
+    WHIRL_LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
+                   channel_->Peer(), method_);
+    std::move(promise_).SetError(wheels::Error(RPCErrorCode::Cancelled));
   }
 
  private:
