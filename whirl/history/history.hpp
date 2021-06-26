@@ -75,8 +75,10 @@ struct Call {
   // std::nullopt - incomplete call,
   // wheels::Unit (std::monostate) - void
   std::optional<Value> result;
+
   TimePoint start_time;
   std::optional<TimePoint> end_time;
+
   CallLabels labels;
 
   bool IsCompleted() const {
