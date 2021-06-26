@@ -4,6 +4,7 @@
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/vars.hpp>
 
+#include <whirl/engines/matrix/world/actor.hpp>
 #include <whirl/engines/matrix/world/behaviour.hpp>
 #include <whirl/engines/matrix/history/recorder.hpp>
 #include <whirl/engines/matrix/log/backend.hpp>
@@ -41,7 +42,7 @@ LogBackend& GetLog();
 
 size_t WorldStepNumber();
 bool AmIActor();
-std::string CurrentActorName();
+IActor* CurrentActor();
 
 //////////////////////////////////////////////////////////////////////
 

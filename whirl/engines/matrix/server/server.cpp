@@ -4,6 +4,8 @@
 
 #include <whirl/engines/matrix/process/crash.hpp>
 
+#include <whirl/engines/matrix/world/global/global.hpp>
+
 // Services
 
 #include <whirl/engines/matrix/server/services/config.hpp>
@@ -21,6 +23,8 @@
 #include <whirl/helpers/digest.hpp>
 
 namespace whirl::matrix {
+
+//////////////////////////////////////////////////////////////////////
 
 Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
     : config_(config),
@@ -201,6 +205,14 @@ NodeServices Server::CreateNodeServices() {
   services.true_time = std::make_shared<TrueTimeService>();
 
   return services;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+Server& ThisServer() {
+  Server* this_server = dynamic_cast<Server*>(CurrentActor());
+  WHEELS_VERIFY(this_server != nullptr, "Current actor is not a server");
+  return *this_server;
 }
 
 }  // namespace whirl::matrix

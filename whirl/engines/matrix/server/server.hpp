@@ -101,4 +101,6 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
 //////////////////////////////////////////////////////////////////////
 
+Server& ThisServer();
+
 }  // namespace whirl::matrix

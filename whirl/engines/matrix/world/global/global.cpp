@@ -64,8 +64,8 @@ bool AmIActor() {
   return WorldImpl::Access()->CurrentActor() != nullptr;
 }
 
-std::string CurrentActorName() {
-  return WorldImpl::Access()->CurrentActor()->Name();
+IActor* CurrentActor() {
+  return WorldImpl::Access()->CurrentActor();
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -29,7 +29,7 @@ static std::string ThisFiberName() {
 
 static std::string ThisActorName() {
   if (AmIActor()) {
-    return CurrentActorName();
+    return CurrentActor()->Name();
   } else {
     return "World";
   }
