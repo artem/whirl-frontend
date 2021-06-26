@@ -79,8 +79,8 @@ class [[nodiscard]] Caller {
 
 // Unary RPC
 // Usage:
-// 1) Future<std::string> f = Call("EchoService.Echo", data);
-// 2) auto f = Call(channel, "EchoService.Echo", data).As<std::string>()
+// 1) Future<std::string> f = Call("EchoService.Echo", data).Via(channel);
+// 2) auto f = Call("EchoService.Echo", data).Via(channel).As<std::string>()
 
 // TODO: Typestate correctness
 // TODO: BlockingCall
