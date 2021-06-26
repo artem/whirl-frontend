@@ -3,8 +3,11 @@
 #include <whirl/logger/level.hpp>
 
 #include <string>
+#include <functional>
 
 namespace whirl {
+
+//////////////////////////////////////////////////////////////////////
 
 struct ILoggerBackend {
   virtual ~ILoggerBackend() = default;
@@ -15,8 +18,11 @@ struct ILoggerBackend {
                    const std::string& message) = 0;
 };
 
-// TODO
-void SetLoggerBackend(ILoggerBackend* backend);
+//////////////////////////////////////////////////////////////////////
+
+using LoggerBackendAccessor = std::function<ILoggerBackend*()>;
+
+void SetLoggerBackend(LoggerBackendAccessor accessor);
 ILoggerBackend* GetLoggerBackend();
 
 }  // namespace whirl

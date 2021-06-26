@@ -2,14 +2,14 @@
 
 namespace whirl {
 
-ILoggerBackend* gbackend = nullptr;
+LoggerBackendAccessor gaccessor;
 
-void SetLoggerBackend(ILoggerBackend* backend) {
-  gbackend = backend;
+void SetLoggerBackend(LoggerBackendAccessor accessor) {
+  gaccessor = accessor;
 }
 
 ILoggerBackend* GetLoggerBackend() {
-  return gbackend;
+  return gaccessor();
 }
 
 }  // namespace whirl

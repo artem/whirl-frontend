@@ -24,7 +24,9 @@ WorldImpl* WorldImpl::Access() {
 void WorldImpl::Start() {
   WorldGuard g(this);
 
-  SetLoggerBackend(&log_);
+  SetLoggerBackend([backend = &log_]() {
+    return backend;
+  });
 
   WHIRL_LOG_INFO("Seed: {}", seed_);
 
@@ -145,8 +147,6 @@ size_t WorldImpl::Stop() {
   history_recorder_.Finalize();
 
   WHIRL_LOG_INFO("Simulation stopped");
-
-  SetLoggerBackend(nullptr);
 
   return Digest();
 }
