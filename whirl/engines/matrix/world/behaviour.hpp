@@ -13,18 +13,26 @@ namespace whirl::matrix {
 struct IWorldBehaviour {
   virtual ~IWorldBehaviour() = default;
 
-  // Time
+  virtual TimePoint GlobalStartTime() = 0;
+
+  // Clocks
 
   virtual int InitClockDrift() = 0;
   virtual int ClockDriftBound() = 0;
 
-  virtual TimePoint GlobalStartTime() = 0;
+  // Monotonic clock
 
   virtual TimePoint ResetMonotonicClock() = 0;
 
+  // Wall clock
+
   virtual TimePoint InitLocalClockOffset() = 0;
 
+  // TrueTime
+
   virtual Duration TrueTimeUncertainty() = 0;
+
+  // Disk
 
   virtual Duration DiskWrite() = 0;
   virtual Duration DiskRead() = 0;
