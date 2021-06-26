@@ -22,7 +22,10 @@ struct ILoggerBackend {
 
 using LoggerBackendAccessor = std::function<ILoggerBackend*()>;
 
+// Set at startup
 void SetLoggerBackend(LoggerBackendAccessor accessor);
+
+// Used by Logger-s
 ILoggerBackend* GetLoggerBackend();
 
 }  // namespace whirl
