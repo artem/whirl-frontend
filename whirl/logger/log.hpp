@@ -41,6 +41,10 @@ class Logger {
 
 #endif
 
+//////////////////////////////////////////////////////////////////////
+
+// Logging macros
+
 #define WHIRL_LOG_DEBUG(...) __WHIRL_LOG_IMPL(LogLevel::Debug, __VA_ARGS__)
 #define WHIRL_LOG_INFO(...) __WHIRL_LOG_IMPL(LogLevel::Info, __VA_ARGS__)
 #define WHIRL_LOG_WARN(...) __WHIRL_LOG_IMPL(LogLevel::Warning, __VA_ARGS__)
