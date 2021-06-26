@@ -6,6 +6,17 @@
 
 namespace whirl::rpc {
 
-IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time);
+//////////////////////////////////////////////////////////////////////
+
+struct BackoffParams {
+  Duration init;
+  Duration max;
+  size_t factor;
+};
+
+//////////////////////////////////////////////////////////////////////
+
+IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time,
+                        BackoffParams backoff_params);
 
 }  // namespace whirl::rpc

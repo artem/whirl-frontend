@@ -11,6 +11,7 @@
 #include <await/futures/util/promise.hpp>
 
 #include <algorithm>
+#include <utility>
 
 
 using wheels::Result;
@@ -22,17 +23,23 @@ namespace whirl::rpc {
 
 class Backoff {
  public:
-  Backoff() {
+  Backoff(BackoffParams params)
+    : params_(params),
+      next_(params.init) {
   }
 
   Duration Next() {
-    auto d = next_;
-    next_ = std::min<Duration>(next_ * 2, 1000);
-    return d;
+    return std::exchange(next_, ComputeNext(next_));
   }
 
  private:
-  Duration next_{50};
+  Duration ComputeNext(Duration curr) const {
+    return std::min<Duration>(curr * params_.factor, params_.max);
+  }
+
+ private:
+  BackoffParams params_;
+  Duration next_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -44,12 +51,13 @@ using Scope = std::weak_ptr<RequestContext>;
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
   Retrier(const IChannelPtr& channel, const Method& method,
-          const BytesValue& input, Scope scope, ITimeServicePtr time)
+          const BytesValue& input, Scope scope, ITimeServicePtr time, BackoffParams backoff_params)
       : channel_(channel),
         method_(method),
         input_(input),
         scope_(std::move(scope)),
-        time_(time) {
+        time_(time),
+        backoff_(backoff_params) {
   }
 
   Future<BytesValue> Start() {
@@ -138,8 +146,8 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public IChannel {
  public:
-  RetriesChannel(IChannelPtr impl, ITimeServicePtr time)
-      : impl_(std::move(impl)), time_(std::move(time)) {
+  RetriesChannel(IChannelPtr impl, ITimeServicePtr time, BackoffParams backoff_params)
+      : impl_(std::move(impl)), time_(std::move(time)), backoff_params_(backoff_params) {
   }
 
   void Close() override {
@@ -154,17 +162,18 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                           const BytesValue& input) override {
     Scope scope = GetRequestContext();
     auto retrier = std::make_shared<Retrier>(impl_, method, input,
-                                             std::move(scope), time_);
+                                             std::move(scope), time_, backoff_params_);
     return retrier->Start();
   }
 
  private:
   IChannelPtr impl_;
   ITimeServicePtr time_;
+  BackoffParams backoff_params_;
 };
 
-IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time) {
-  return std::make_shared<RetriesChannel>(std::move(channel), std::move(time));
+IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time, BackoffParams backoff_params) {
+  return std::make_shared<RetriesChannel>(std::move(channel), std::move(time), backoff_params);
 }
 
 }  // namespace whirl::rpc
