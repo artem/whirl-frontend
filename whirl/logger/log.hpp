@@ -17,7 +17,7 @@ class Logger {
   }
 
   bool IsLevelEnabled(LogLevel level) const;
-  void Log(LogLevel level, const std::string& message);
+  void Log(LogLevel level, const std::string& message) const;
 
  private:
   std::string component_;
