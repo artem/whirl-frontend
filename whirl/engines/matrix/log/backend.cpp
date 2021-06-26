@@ -32,7 +32,7 @@ void LogBackend::InitLevels() {
   levels_ = GetLogLevelsFromEnv();
 }
 
-LogLevel LogBackend::GetMinLevel(const std::string& component) const {
+LogLevel LogBackend::GetMinLevelFor(const std::string& component) const {
   if (auto it = levels_.find(component); it != levels_.end()) {
     return it->second;
   }

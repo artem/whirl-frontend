@@ -17,7 +17,7 @@ class LogBackend : public ILoggerBackend {
   LogBackend();
 
   // Context: Server
-  LogLevel GetMinLevel(const std::string& component) const;
+  LogLevel GetMinLevelFor(const std::string& component) const;
 
   // Context: Server
   void Log(const std::string& component, LogLevel level,
