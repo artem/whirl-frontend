@@ -69,11 +69,6 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 // Echo server node
 
 class EchoNode final: public NodeBase {
- public:
-  EchoNode(NodeServices services)
-      : NodeBase(std::move(services)) {
-  }
-
  protected:
   void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
     rpc_server->RegisterService(
@@ -85,8 +80,7 @@ class EchoNode final: public NodeBase {
 
 class ClientNode final: public matrix::ClientBase {
  public:
-  ClientNode(NodeServices services)
-      : ClientBase(std::move(services)) {
+  ClientNode() {
   }
 
  protected:
@@ -103,7 +97,7 @@ class ClientNode final: public matrix::ClientBase {
       // См. <await/fibers/sync/future.hpp>
 
       Future<proto::Echo::Response> future = rpc::Call("Echo.Echo", proto::Echo::Request{"Hello"}).Via(Channel());
-      auto result = Await(WithTimeout(std::move(future), 256_jiffies));
+      auto result = Await(std::move(future));
 
       if (result.IsOk()) {
         WHIRL_LOG_INFO("Echo response: '{}'", result->data);

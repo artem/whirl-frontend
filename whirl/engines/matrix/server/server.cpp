@@ -127,10 +127,16 @@ void Server::Start() {
 
   steps_ = new StepQueue();
 
-  auto services = CreateNodeServices();
-  auto node = node_factory_->CreateNode(std::move(services));
+  // Start node process
+
+  runtime_ = MoveToHeap(MakeNodeServices());
+  // Now runtime is accessible from node code
+  // via ThisNodeServices()
+
+  // TODO: this is ugly, we need abstractions for program/process
+  auto node = node_factory_->CreateNode();
   node->Start();
-  HideToHeap(std::move(node));
+  MoveToHeap(std::move(node));
 
   state_ = State::Running;
 }
@@ -176,7 +182,7 @@ size_t Server::ComputeDigest() const {
 
 // Private
 
-NodeServices Server::CreateNodeServices() {
+NodeServices Server::MakeNodeServices() {
   NodeServices services;
 
   services.config = std::make_shared<Config>(config_.id);

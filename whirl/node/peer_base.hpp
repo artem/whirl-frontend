@@ -9,10 +9,6 @@
 namespace whirl {
 
 class PeerBase : public NodeMethodsBase {
- public:
-  PeerBase(NodeServices services) : NodeMethodsBase(services) {
-  }
-
  protected:
   size_t PeerCount() const;
 

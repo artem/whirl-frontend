@@ -20,7 +20,7 @@ using INodePtr = std::shared_ptr<INode>;
 struct INodeFactory {
   virtual ~INodeFactory() = default;
 
-  virtual INodePtr CreateNode(NodeServices services) = 0;
+  virtual INodePtr CreateNode() = 0;
 };
 
 using INodeFactoryPtr = std::shared_ptr<INodeFactory>;
@@ -29,8 +29,8 @@ using INodeFactoryPtr = std::shared_ptr<INodeFactory>;
 
 template <typename TNode>
 class TNodeFactory : public INodeFactory {
-  INodePtr CreateNode(NodeServices services) override {
-    return std::make_shared<TNode>(std::move(services));
+  INodePtr CreateNode() override {
+    return std::make_shared<TNode>();
   }
 };
 

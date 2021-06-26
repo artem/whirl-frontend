@@ -10,9 +10,6 @@ namespace whirl {
 
 class NodeBase : public INode, public PeerBase {
  public:
-  NodeBase(NodeServices services) : PeerBase(std::move(services)) {
-  }
-
   void Start() override;
 
  private:

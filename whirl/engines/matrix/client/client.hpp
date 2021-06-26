@@ -3,6 +3,7 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/services.hpp>
 #include <whirl/node/threads.hpp>
+#include <whirl/node/node_methods_base.hpp>
 
 #include <whirl/rpc/channel.hpp>
 
@@ -18,13 +19,10 @@ using await::futures::Future;
 
 //////////////////////////////////////////////////////////////////////
 
-class ClientBase : public INode {
+class ClientBase : public INode, public NodeMethodsBase {
  public:
-  ClientBase(NodeServices services) : services_(std::move(services)) {
-  }
-
   void Start() override {
-    Threads().Spawn([this]() {
+    Spawn([this]() {
       Main();
     });
   }
@@ -34,12 +32,12 @@ class ClientBase : public INode {
   virtual rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
-    cluster_ = services_.discovery->GetCluster();
+    cluster_ = ThisNodeServices().discovery->GetCluster();
   }
 
  private:
   void RandomPause() {
-    Threads().SleepFor(RandomNumber(50));
+    SleepFor(RandomNumber(50));
   }
 
   void ConnectToClusterNodes() {
@@ -47,12 +45,6 @@ class ClientBase : public INode {
   }
 
  protected:
-  // Me
-
-  NodeId Id() const {
-    return services_.config->Id();
-  }
-
   // Cluster
 
   rpc::IChannelPtr Channel() {
@@ -61,80 +53,8 @@ class ClientBase : public INode {
 
   // Common functions
 
-  // Randomness
-
-  RandomUInt RandomNumber() const {
-    return services_.random->RandomNumber();
-  }
-
-  RandomUInt RandomNumber(size_t bound) const {
-    return RandomNumber() % bound;
-  }
-
-  RandomUInt RandomNumber(size_t lo, size_t hi) const {
-    return lo + RandomNumber(hi - lo);
-  }
-
   bool Either() const {
     return RandomNumber(2) == 1;
-  }
-
-  // Time
-
-  TimePoint WallTimeNow() const {
-    return services_.time_service->WallTimeNow();
-  }
-
-  TimePoint MonotonicNow() const {
-    return services_.time_service->MonotonicNow();
-  }
-
-  // Timeouts
-
-  Future<void> After(Duration d) {
-    return TimeService()->After(d);
-  }
-
-  // Threads
-
-  void Spawn(ThreadRoutine routine) {
-    Threads().Spawn(std::move(routine));
-  }
-
-  void Yield() {
-    Threads().Yield();
-  }
-
-  void SleepFor(Duration d) {
-    Threads().SleepFor(d);
-  }
-
-  // Uids
-
-  Uid GenerateUid() const {
-    return services_.uids->Generate();
-  }
-
-  // Local services
-
-  ThreadsRuntime Threads() {
-    return {services_.executor, services_.time_service};
-  }
-
-  const ITimeServicePtr& TimeService() const {
-    return services_.time_service;
-  }
-
-  const rpc::IClientPtr& RPCClient() const {
-    return services_.rpc_client;
-  }
-
-  const IRandomServicePtr& RandomService() const {
-    return services_.random;
-  }
-
-  const IUidGeneratorPtr& UidsGenerator() const {
-    return services_.uids;
   }
 
   // Cluster
@@ -153,8 +73,6 @@ class ClientBase : public INode {
   void Main();
 
  private:
-  NodeServices services_;
-
   std::vector<std::string> cluster_;
   rpc::IChannelPtr channel_;
 

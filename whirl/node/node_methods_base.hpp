@@ -2,6 +2,7 @@
 
 #include <whirl/node/services.hpp>
 #include <whirl/node/threads.hpp>
+#include <whirl/node/this.hpp>
 
 #include <await/futures/helpers.hpp>
 
@@ -10,25 +11,21 @@ namespace whirl {
 using await::futures::Future;
 
 class NodeMethodsBase {
- public:
-  NodeMethodsBase(NodeServices services) : services_(std::move(services)) {
-  }
-
  protected:
-  const NodeServices& ThisNodeServices() const {
-    return services_;
-  }
-
   // Me
 
   NodeId Id() const {
-    return services_.config->Id();
+    return ThisNodeServices().config->Id();
   }
 
   // Randomness
 
+  const IRandomServicePtr& RandomService() const {
+    return ThisNodeServices().random;
+  }
+
   size_t RandomNumber() const {
-    return services_.random->RandomNumber();
+    return RandomService()->RandomNumber();
   }
 
   // [0, bound)
@@ -44,15 +41,15 @@ class NodeMethodsBase {
   // Clocks
 
   const ITimeServicePtr& TimeService() const {
-    return services_.time_service;
+    return ThisNodeServices().time_service;
   }
 
   TimePoint WallTimeNow() const {
-    return services_.time_service->WallTimeNow();
+    return TimeService()->WallTimeNow();
   }
 
   TimePoint MonotonicNow() const {
-    return services_.time_service->MonotonicNow();
+    return TimeService()->MonotonicNow();
   }
 
   // Timeouts
@@ -64,72 +61,59 @@ class NodeMethodsBase {
   // TrueTime
 
   const ITrueTimeServicePtr& TrueTime() const {
-    return services_.true_time;
+    return ThisNodeServices().true_time;
   }
 
   // Local storage backend
 
   const IDatabasePtr& StorageBackend() const {
-    return services_.database;
-  }
-
-  // Threads
-
-  // TODO: remove
-  ThreadsRuntime Threads() {
-    return ThreadsRuntime{services_.executor, services_.time_service};
+    return ThisNodeServices().database;
   }
 
   void Spawn(ThreadRoutine routine) {
-    await::fibers::Spawn(std::move(routine), services_.executor);
+    await::fibers::Spawn(std::move(routine), ThisNodeServices().executor);
   }
 
   void SleepFor(Duration delay) {
-    Threads().SleepFor(delay);
+    await::fibers::Await(After(delay)).ExpectOk();
   }
 
   void Yield() {
-    Threads().Yield();
+    await::fibers::self::Yield();
   }
 
   const await::executors::IExecutorPtr& GetExecutor() {
-    return services_.executor;
+    return ThisNodeServices().executor;
   }
 
   // Uids
 
   Uid GenerateUid() const {
-    return services_.uids->Generate();
+    return ThisNodeServices().uids->Generate();
   }
 
   // Cluster
 
   std::vector<std::string> DiscoverCluster() const {
-    return services_.discovery->GetCluster();
+    return ThisNodeServices().discovery->GetCluster();
   }
 
   // RPC
 
   const rpc::IServerPtr& RPCServer() const {
-    return services_.rpc_server;
+    return ThisNodeServices().rpc_server;
   }
 
   const rpc::IClientPtr& RPCClient() const {
-    return services_.rpc_client;
+    return ThisNodeServices().rpc_client;
   }
 
   // Local services
 
-  const IRandomServicePtr& RandomService() const {
-    return services_.random;
-  }
-
   const IUidGeneratorPtr& UidsGenerator() const {
-    return services_.uids;
+    return ThisNodeServices().uids;
   }
 
- private:
-  NodeServices services_;
 };
 
 }  // namespace whirl

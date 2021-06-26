@@ -79,8 +79,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 class Coordinator : public rpc::ServiceBase<Coordinator>,
                     public PeerBase {
  public:
-  Coordinator(NodeServices runtime)
-      : PeerBase(std::move(runtime)) {
+  Coordinator() {
   }
 
   void RegisterRPCMethods() override {
@@ -99,7 +98,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
           rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
-              .Via(PeerChannel(i)));
+              .Via(PeerChannel(i))
+              .StopAdvice(await::fibers::self::LifetimeToken()));
     }
 
     // Await acks from majority of replicas
@@ -166,9 +166,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 class StorageReplica : public rpc::ServiceBase<StorageReplica>,
                        public NodeMethodsBase {
  public:
-  StorageReplica(NodeServices runtime)
-    : NodeMethodsBase(std::move(runtime))
-    , kv_(StorageBackend(), "kv") {
+  StorageReplica()
+    : kv_(StorageBackend(), "kv") {
   }
 
   void RegisterRPCMethods() override {
@@ -217,8 +216,7 @@ class StorageReplica : public rpc::ServiceBase<StorageReplica>,
 
 class KVNode final : public NodeBase {
  public:
-  KVNode(NodeServices runtime)
-      : NodeBase(std::move(runtime)) {
+  KVNode() {
   }
 
  protected:
@@ -233,11 +231,11 @@ class KVNode final : public NodeBase {
 
  private:
   rpc::IServicePtr MakeCoordinatorService() {
-    return std::make_shared<Coordinator>(ThisNodeServices());
+    return std::make_shared<Coordinator>();
   }
 
   rpc::IServicePtr MakeReplicaService() {
-    return std::make_shared<StorageReplica>(ThisNodeServices());
+    return std::make_shared<StorageReplica>();
   }
 };
 
@@ -268,7 +266,7 @@ static const std::vector<std::string> kKeys({"a", "b", "c"});
 
 class KVClient final : public matrix::ClientBase {
  public:
-  KVClient(NodeServices runtime) : ClientBase(std::move(runtime)) {
+  KVClient() {
   }
 
  protected:

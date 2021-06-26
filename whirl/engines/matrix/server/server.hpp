@@ -77,8 +77,14 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   size_t ComputeDigest() const;
 
+  // Runtime
+
+  const NodeServices& ThisNodeServices() {
+    return *runtime_;
+  }
+
  private:
-  NodeServices CreateNodeServices();
+  NodeServices MakeNodeServices();
 
  private:
   State state_{State::Initial};
@@ -94,7 +100,9 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   mutable ProcessHeap heap_;
   net::Transport transport_;
+
   StepQueue* steps_{nullptr};
+  NodeServices* runtime_{nullptr};
 
   Logger logger_{"Server"};
 };

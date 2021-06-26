@@ -11,8 +11,8 @@ T MakeCopy(const T& object) {
 }
 
 template <typename T>
-void HideToHeap(T&& obj) {
-  new T(std::move(obj));
+T* MoveToHeap(T&& obj) {
+  return new T(std::move(obj));
 }
 
 }  // namespace whirl::matrix
