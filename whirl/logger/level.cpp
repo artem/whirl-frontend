@@ -37,8 +37,6 @@ LogLevel LogLevelFromString(const std::string& level_str) {
 #undef FROM_STRING_IF
 
   WHEELS_PANIC("Unknown log level: " << level_str);
-
-  WHEELS_UNREACHABLE();
 }
 
 }  // namespace whirl
