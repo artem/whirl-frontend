@@ -78,127 +78,18 @@ class WorldImpl {
     behaviour_ = std::move(behaviour);
   }
 
-  void Start() {
-    WorldGuard g(this);
+  void Start();
 
-    SetLoggerBackend(&log_);
+  // Returns false if simulation is in deadlock state
+  bool Step();
 
-    WHIRL_LOG_INFO("Seed: {}", seed_);
+  // Stop simulation and compute digest
+  size_t Stop();
 
-    SetStartTime();
-    start_time_ = time_.Now();
+  // Returns number of steps actually made
+  size_t MakeSteps(size_t steps);
 
-    // Start network:
-    AddActor(&network_);
-    Scope(network_)->Start();
-
-    WHIRL_LOG_INFO("Cluster: {}, clients: {}", cluster_.size(),
-                   clients_.size());
-
-    WHIRL_LOG_INFO("Starting cluster...");
-
-    // Start servers
-    for (auto& server : cluster_) {
-      Scope(server)->Start();
-    }
-
-    WHIRL_LOG_INFO("Starting clients...");
-
-    // Start clients
-    for (auto& client : clients_) {
-      Scope(client)->Start();
-    }
-
-    // Start adversary
-    if (adversary_.has_value()) {
-      WHIRL_LOG_INFO("Starting adversary...");
-      Scope(*adversary_)->Start();
-    }
-
-    WHIRL_LOG_INFO("World started");
-  }
-
-  bool Step() {
-    WorldGuard g(this);
-
-    NextStep next = FindNextStep();
-    if (!next.actor) {
-      return false;
-    }
-
-    ++step_count_;
-
-    digest_.Eat(next.time).Eat(next.actor_index);
-
-    step_random_number_ = random_source_.Next();
-
-    time_.AdvanceTo(next.time);
-    Scope(next.actor)->Step();
-
-    return true;
-  }
-
-  void MakeSteps(size_t steps) {
-    for (size_t i = 0; i < steps; ++i) {
-      if (!Step()) {
-        break;
-      }
-    }
-  }
-
-  void RunFor(Duration d) {
-    while (Now() < d) {
-      if (!Step()) {
-        break;
-      }
-    }
-  }
-
-  size_t Stop() {
-    WorldGuard g(this);
-
-    // Adversary
-    if (adversary_.has_value()) {
-      Scope(*adversary_)->Shutdown();
-    }
-
-    WHIRL_LOG_INFO("Adversary stopped");
-
-    // Network
-    digest_.Combine(network_.Digest());
-    Scope(network_)->Shutdown();
-
-    WHIRL_LOG_INFO("Network stopped");
-
-    // Servers
-    for (auto& server : cluster_) {
-      digest_.Combine(server.ComputeDigest());
-      Scope(server)->Shutdown();
-    }
-    cluster_.clear();
-
-    WHIRL_LOG_INFO("Servers stopped");
-
-    // Clients
-    for (auto& client : clients_) {
-      Scope(client)->Shutdown();
-    }
-    clients_.clear();
-
-    WHIRL_LOG_INFO("Clients stopped");
-
-    CheckNoFibersLeft();
-
-    actors_.clear();
-
-    history_recorder_.Finalize();
-
-    WHIRL_LOG_INFO("Simulation stopped");
-
-    SetLoggerBackend(nullptr);
-
-    return Digest();
-  }
+  void RunFor(Duration time_budget);
 
   size_t ClusterSize() const {
     return cluster_.size();
@@ -318,29 +209,7 @@ class WorldImpl {
     actors_.push_back(actor);
   }
 
-  NextStep FindNextStep() {
-    if (actors_.empty()) {
-      return NextStep::NoStep();
-    }
-
-    auto next_step = NextStep::NoStep();
-
-    for (size_t i = 0; i < actors_.size(); ++i) {
-      IActor* actor = actors_[i];
-
-      if (actor->IsRunnable()) {
-        TimePoint next_step_time = actor->NextStepTime();
-
-        if (!next_step.actor || next_step_time < next_step.time) {
-          next_step.actor = actor;
-          next_step.time = next_step_time;
-          next_step.actor_index = i;
-        }
-      }
-    }
-
-    return next_step;
-  }
+  NextStep FindNextStep();
 
   void CheckNoFibersLeft() {
     WHEELS_VERIFY(await::fibers::AliveFibers().IsEmpty(), "Alive fibers!");
