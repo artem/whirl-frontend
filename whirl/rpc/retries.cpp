@@ -15,6 +15,7 @@
 
 using wheels::Result;
 using namespace await::futures;
+using await::util::StopToken;
 
 namespace whirl::rpc {
 
@@ -48,13 +49,13 @@ using Scope = std::weak_ptr<RequestContext>;
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
   Retrier(const IChannelPtr& channel, const Method& method,
-          const BytesValue& input, Scope scope, ITimeServicePtr time,
+          const BytesValue& input, CallContext ctx, ITimeServicePtr time,
           BackoffParams backoff_params)
       : channel_(channel),
         method_(method),
         input_(input),
-        scope_(std::move(scope)),
-        time_(time),
+        ctx_(std::move(ctx)),
+        time_(std::move(time)),
         backoff_(backoff_params) {
   }
 
@@ -64,7 +65,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     auto self = shared_from_this();
 
     ++attempt_;
-    auto f = channel_->Call(method_, input_);
+    auto f = channel_->Call(method_, input_, ctx_);
     auto e = f.GetExecutor();
     SubscribeToResult(std::move(f));
 
@@ -78,7 +79,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
                    attempt_);
 
     ++attempt_;
-    auto f = channel_->Call(method_, input_);
+    auto f = channel_->Call(method_, input_, ctx_);
     SubscribeToResult(std::move(f));
   }
 
@@ -107,10 +108,10 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   void ScheduleRetry(IExecutorPtr e) {
-    if (IsExpired(scope_)) {
-      WHIRL_LOG_INFO("Context for {}.{} expired, stop retrying",
+    if (ctx_.stop_token.StopRequested()) {
+      WHIRL_LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
                      channel_->Peer(), method_);
-      std::move(promise_).SetError(wheels::Error(RPCErrorCode::TransportError));
+      std::move(promise_).SetError(wheels::Error(RPCErrorCode::Cancelled));
       return;
     }
 
@@ -129,7 +130,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   Method method_;
   BytesValue input_;
 
-  Scope scope_;
+  CallContext ctx_;
 
   ITimeServicePtr time_;
 
@@ -160,10 +161,10 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
   Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input) override {
-    Scope scope = GetRequestContext();
+                          const BytesValue& input,
+                          CallContext ctx) override {
     auto retrier = std::make_shared<Retrier>(
-        impl_, method, input, std::move(scope), time_, backoff_params_);
+        impl_, method, input, std::move(ctx), time_, backoff_params_);
     return retrier->Start();
   }
 

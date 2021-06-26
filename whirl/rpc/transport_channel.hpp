@@ -56,7 +56,8 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   // IChannel
 
   Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input) override;
+                          const BytesValue& input,
+                          CallContext ctx) override;
 
   void Close() override;
 

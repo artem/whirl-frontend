@@ -2,9 +2,10 @@
 
 #include <whirl/engines/matrix/world/global/random.hpp>
 
-namespace whirl::matrix {
+using namespace whirl::rpc;
+using await::util::StopToken;
 
-using namespace rpc;
+namespace whirl::matrix {
 
 using ChannelVector = std::vector<IChannelPtr>;
 
@@ -20,9 +21,10 @@ class RandomChannel : public IChannel {
   }
 
   Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input) override {
+                          const BytesValue& input,
+                          CallContext ctx) override {
     size_t index = GlobalRandomNumber(channels_.size());
-    return channels_[index]->Call(method, input);
+    return channels_[index]->Call(method, input, std::move(ctx));
   }
 
   const std::string& Peer() const override {

@@ -23,14 +23,15 @@ Future<T> As(Future<BytesValue> f_raw) {
 }
 
 template <>
-Future<void> As(Future<BytesValue> f_raw) {
+inline Future<void> As(Future<BytesValue> f_raw) {
   return await::futures::JustStatus(std::move(f_raw));
 }
 
 class [[nodiscard]] Caller {
  public:
   Caller(Method method, BytesValue input)
-      : method_(method), input_(std::move(input)) {
+      : method_(method), input_(std::move(input)),
+      stop_token_(DefaultStopToken()) {
   }
 
   Caller& Via(IChannelPtr channel) {
@@ -38,7 +39,10 @@ class [[nodiscard]] Caller {
     return *this;
   }
 
-  // TODO: WithContext
+  Caller& StopAdvice(await::util::StopToken stop_token) {
+    stop_token_ = std::move(stop_token);
+    return *this;
+  }
 
   template <typename T>
   Future<T> As() {
@@ -51,21 +55,28 @@ class [[nodiscard]] Caller {
   }
 
  private:
+  await::util::StopToken DefaultStopToken();
+
+  CallContext MakeCallContext() {
+    return {stop_token_};
+  }
+
   Future<BytesValue> Call() {
-    return channel_->Call(method_, input_);
+    return channel_->Call(method_, input_, MakeCallContext());
   }
 
  private:
   Method method_;
   BytesValue input_;
   IChannelPtr channel_{nullptr};
+  await::util::StopToken stop_token_;
 };
 
 }  // namespace detail
 
 // Unary RPC
 // Usage:
-// 1) Future<std::string> f = Call(channel, "EchoService.Echo", data);
+// 1) Future<std::string> f = Call("EchoService.Echo", data);
 // 2) auto f = Call(channel, "EchoService.Echo", data).As<std::string>()
 
 // TODO: Typestate correctness

@@ -13,7 +13,8 @@ TransportChannel::~TransportChannel() {
 }
 
 Future<BytesValue> TransportChannel::Call(const Method& method,
-                                          const BytesValue& input) {
+                                          const BytesValue& input,
+                                          CallContext /*ctx*/) {
   auto request = MakeRequest(method, input);
   auto trace_id = request.trace_id;
 

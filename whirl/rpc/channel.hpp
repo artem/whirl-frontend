@@ -4,12 +4,17 @@
 #include <whirl/rpc/bytes_value.hpp>
 
 #include <await/futures/core/future.hpp>
+#include <await/util/stop_token.hpp>
 
 #include <memory>
 
 namespace whirl::rpc {
 
 using await::futures::Future;
+
+struct CallContext {
+  await::util::StopToken stop_token;
+};
 
 // Communication line between client and remote service
 // Untyped
@@ -19,7 +24,8 @@ struct IChannel {
 
   // Unary RPC call
   virtual Future<BytesValue> Call(const Method& method,
-                                  const BytesValue& input) = 0;
+                                  const BytesValue& input,
+                                  CallContext ctx) = 0;
 
   virtual void Close() = 0;
 

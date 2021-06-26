@@ -9,10 +9,11 @@
 #include <await/futures/core/future.hpp>
 #include <await/futures/helpers.hpp>
 
+using namespace whirl::rpc;
+using wheels::Result;
+
 namespace whirl::matrix {
 
-using namespace rpc;
-using wheels::Result;
 
 using Cookie = HistoryRecorder::Cookie;
 
@@ -30,10 +31,11 @@ class HistoryChannel : public IChannel {
   }
 
   Future<BytesValue> Call(const Method& method,
-                          const BytesValue& input) override {
+                          const BytesValue& input,
+                          CallContext ctx) override {
     auto cookie = GetHistoryRecorder().CallStarted(method.name, input);
 
-    auto f = impl_->Call(method, input);
+    auto f = impl_->Call(method, input, std::move(ctx));
 
     auto record = [cookie](const Result<BytesValue>& result) mutable {
       RecordCallResult(cookie, result);
