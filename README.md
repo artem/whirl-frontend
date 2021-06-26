@@ -58,6 +58,11 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 #### StateRight
 - https://github.com/stateright/stateright
 
+### Fuzzing
+
+- [Fuzzing Raft for Fun and Publication](https://colin-scott.github.io/blog/2015/10/07/fuzzing-raft-for-fun-and-profit/)
+- [Minimizing Faulty Executions of Distributed Systems](https://www.usenix.org/conference/nsdi16/technical-sessions/presentation/scott)
+
 ## Requirements
 
 - x86-64
