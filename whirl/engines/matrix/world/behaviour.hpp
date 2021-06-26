@@ -8,8 +8,6 @@
 
 namespace whirl::matrix {
 
-//////////////////////////////////////////////////////////////////////
-
 struct IWorldBehaviour {
   virtual ~IWorldBehaviour() = default;
 
@@ -44,9 +42,5 @@ struct IWorldBehaviour {
 };
 
 using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;
-
-//////////////////////////////////////////////////////////////////////
-
-IWorldBehaviourPtr DefaultBehaviour();
 
 }  // namespace whirl::matrix

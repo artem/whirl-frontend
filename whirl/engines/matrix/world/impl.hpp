@@ -183,6 +183,8 @@ class WorldImpl {
   }
 
  private:
+  static IWorldBehaviourPtr DefaultBehaviour();
+
   void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
     size_t id = ids_.NextId();
     std::string name = type + "-" + std::to_string(servers.size() + 1);

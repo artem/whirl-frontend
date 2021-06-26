@@ -1,5 +1,7 @@
 #include <whirl/engines/matrix/world/impl.hpp>
 
+#include <whirl/engines/matrix/world/behaviours/crazy.hpp>
+
 namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
@@ -20,6 +22,10 @@ WorldImpl* WorldImpl::Access() {
 }
 
 //////////////////////////////////////////////////////////////////////
+
+IWorldBehaviourPtr WorldImpl::DefaultBehaviour() {
+  return std::make_shared<CrazyWorldBehaviour>();
+}
 
 void WorldImpl::Start() {
   WorldGuard g(this);
