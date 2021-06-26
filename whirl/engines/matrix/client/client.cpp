@@ -44,23 +44,4 @@ void ClientBase::Main() {
   MainThread();
 }
 
-//////////////////////////////////////////////////////////////////////
-
-rpc::IChannelPtr ExactlyOnceClientBase::MakeClientChannel() {
-  // Peer channels
-  std::vector<rpc::IChannelPtr> channels;
-  for (const auto& addr : Cluster()) {
-    channels.push_back(MakeTransportChannel(addr));
-  }
-
-  // History -> Retries -> Random -> Peers
-
-  auto random = MakeRandomChannel(std::move(channels));
-  auto retries =
-      WithRetries(std::move(random), TimeService(), RetriesBackoff());
-  auto history = MakeHistoryChannel(std::move(retries));
-
-  return history;
-}
-
 }  // namespace whirl::matrix

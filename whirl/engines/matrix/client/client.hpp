@@ -162,16 +162,4 @@ class ClientBase : public INode {
   Logger logger_{"Client"};
 };
 
-//////////////////////////////////////////////////////////////////////
-
-class ExactlyOnceClientBase : public ClientBase {
- public:
-  ExactlyOnceClientBase(NodeServices services)
-      : ClientBase(std::move(services)) {
-  }
-
- protected:
-  rpc::IChannelPtr MakeClientChannel() override;
-};
-
 }  // namespace whirl::matrix
