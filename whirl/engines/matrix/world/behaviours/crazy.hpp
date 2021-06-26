@@ -46,8 +46,12 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
     return GlobalRandomNumber(5, 500);
   }
 
-  Duration DiskSeek() override {
-    return GlobalRandomNumber(10, 100);
+  Duration DiskWrite() override {
+    return GlobalRandomNumber(10, 250);
+  }
+
+  Duration DiskRead() override {
+    return GlobalRandomNumber(10, 50);
   }
 
   // Network

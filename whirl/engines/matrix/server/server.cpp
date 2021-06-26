@@ -184,7 +184,7 @@ NodeServices Server::CreateNodeServices() {
   services.executor = executor;
   services.time_service = time_service;
 
-  services.database = std::make_shared<DatabaseProxy>(db_);
+  services.database = std::make_shared<DatabaseProxy>(db_, time_service);
 
   static const net::Port kTransportPort = 42;
   auto net_transport =

@@ -26,7 +26,8 @@ struct IWorldBehaviour {
 
   virtual Duration TrueTimeUncertainty() = 0;
 
-  virtual Duration DiskSeek() = 0;
+  virtual Duration DiskWrite() = 0;
+  virtual Duration DiskRead() = 0;
 
   // Network
 

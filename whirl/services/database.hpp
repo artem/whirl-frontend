@@ -15,9 +15,6 @@ namespace whirl {
 
 // TODO: Iterators
 
-// TODO: Asynchronous API: db can be accessed from callbacks,
-// not only from fibers
-
 struct IDatabase {
   virtual ~IDatabase() = default;
 
