@@ -1,11 +1,12 @@
 #pragma once
 
+#include <whirl/services/net_transport.hpp>
+
 #include <whirl/rpc/method.hpp>
 #include <whirl/rpc/id.hpp>
 #include <whirl/rpc/protocol.hpp>
 #include <whirl/rpc/channel.hpp>
 #include <whirl/rpc/trace.hpp>
-#include <whirl/rpc/net_transport.hpp>
 
 #include <whirl/logger/log.hpp>
 

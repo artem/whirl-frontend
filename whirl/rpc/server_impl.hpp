@@ -1,8 +1,9 @@
 #pragma once
 
+#include <whirl/services/net_transport.hpp>
+
 #include <whirl/rpc/bytes_value.hpp>
 #include <whirl/rpc/protocol.hpp>
-#include <whirl/rpc/net_transport.hpp>
 #include <whirl/rpc/server.hpp>
 
 #include <whirl/logger/log.hpp>

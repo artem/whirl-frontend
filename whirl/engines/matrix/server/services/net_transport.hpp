@@ -1,12 +1,10 @@
 #pragma once
 
-#include <whirl/rpc/net_transport.hpp>
+#include <whirl/services/net_transport.hpp>
 
 #include <whirl/engines/matrix/network/transport.hpp>
 
 namespace whirl::matrix {
-
-using namespace rpc;
 
 //////////////////////////////////////////////////////////////////////
 
