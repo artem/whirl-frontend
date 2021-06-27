@@ -1,9 +1,10 @@
 #pragma once
 
 #include <whirl/node/runtime.hpp>
-#include <whirl/node/threads.hpp>
 
-#include <await/futures/helpers.hpp>
+#include <await/fibers/core/api.hpp>
+#include <await/fibers/core/await.hpp>
+#include <await/fibers/sync/future.hpp>
 
 namespace whirl {
 
@@ -69,7 +70,7 @@ class NodeMethodsBase {
     return GetRuntime().database;
   }
 
-  void Spawn(ThreadRoutine routine) {
+  void Go(await::fibers::FiberRoutine routine) {
     await::fibers::Spawn(std::move(routine), Executor());
   }
 

@@ -5,7 +5,7 @@
 namespace whirl {
 
 void NodeBase::Start() {
-  Spawn([this]() {
+  Go([this]() {
     Main();
   });
 }

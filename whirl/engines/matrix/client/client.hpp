@@ -22,7 +22,7 @@ using await::futures::Future;
 class ClientBase : public INode, public NodeMethodsBase {
  public:
   void Start() override {
-    Spawn([this]() {
+    Go([this]() {
       Main();
     });
   }
