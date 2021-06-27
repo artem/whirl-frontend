@@ -8,7 +8,7 @@ static std::string_view LimitWidth(std::string_view str, size_t width) {
   if (str.length() < width) {
     return str;
   } else {
-    return str.substr(width);
+    return str.substr(0, width);
   }
 }
 
