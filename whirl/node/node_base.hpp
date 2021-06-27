@@ -1,7 +1,6 @@
 #pragma once
 
 #include <whirl/node/node.hpp>
-#include <whirl/node/services.hpp>
 #include <whirl/node/peer_base.hpp>
 
 namespace whirl {

@@ -182,8 +182,8 @@ size_t Server::ComputeDigest() const {
 
 // Private
 
-NodeServices Server::MakeNodeServices() {
-  NodeServices services;
+NodeRuntime Server::MakeNodeServices() {
+  NodeRuntime services;
 
   services.config = std::make_shared<Config>(config_.id);
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/node/node.hpp>
-#include <whirl/node/services.hpp>
+#include <whirl/node/runtime.hpp>
 #include <whirl/node/threads.hpp>
 #include <whirl/node/node_methods_base.hpp>
 
@@ -32,7 +32,7 @@ class ClientBase : public INode, public NodeMethodsBase {
   virtual rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
-    cluster_ = ThisNodeServices().discovery->GetCluster();
+    cluster_ = GetRuntime().discovery->GetCluster();
   }
 
  private:

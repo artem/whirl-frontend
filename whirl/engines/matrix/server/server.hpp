@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/services.hpp>
+#include <whirl/node/runtime.hpp>
 #include <whirl/node/node.hpp>
 
 #include <whirl/engines/matrix/world/actor.hpp>
@@ -79,12 +79,12 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   // Runtime
 
-  const NodeServices& GetNodeServices() {
+  const NodeRuntime& GetNodeRuntime() {
     return *runtime_;
   }
 
  private:
-  NodeServices MakeNodeServices();
+  NodeRuntime MakeNodeServices();
 
  private:
   State state_{State::Initial};
@@ -102,7 +102,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   net::Transport transport_;
 
   StepQueue* steps_{nullptr};
-  NodeServices* runtime_{nullptr};
+  NodeRuntime* runtime_{nullptr};
 
   Logger logger_{"Server"};
 };

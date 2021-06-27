@@ -1,8 +1,7 @@
 #pragma once
 
-#include <whirl/node/services.hpp>
+#include <whirl/node/runtime.hpp>
 #include <whirl/node/threads.hpp>
-#include <whirl/node/this.hpp>
 
 #include <await/futures/helpers.hpp>
 
@@ -15,13 +14,13 @@ class NodeMethodsBase {
   // Me
 
   NodeId Id() const {
-    return ThisNodeServices().config->Id();
+    return GetRuntime().config->Id();
   }
 
   // Randomness
 
   const IRandomServicePtr& RandomService() const {
-    return ThisNodeServices().random;
+    return GetRuntime().random;
   }
 
   size_t RandomNumber() const {
@@ -41,7 +40,7 @@ class NodeMethodsBase {
   // Clocks
 
   const ITimeServicePtr& TimeService() const {
-    return ThisNodeServices().time_service;
+    return GetRuntime().time_service;
   }
 
   TimePoint WallTimeNow() const {
@@ -61,13 +60,13 @@ class NodeMethodsBase {
   // TrueTime
 
   const ITrueTimeServicePtr& TrueTime() const {
-    return ThisNodeServices().true_time;
+    return GetRuntime().true_time;
   }
 
   // Local storage backend
 
   const IDatabasePtr& StorageBackend() const {
-    return ThisNodeServices().database;
+    return GetRuntime().database;
   }
 
   void Spawn(ThreadRoutine routine) {
@@ -83,35 +82,35 @@ class NodeMethodsBase {
   }
 
   const await::executors::IExecutorPtr& Executor() {
-    return ThisNodeServices().executor;
+    return GetRuntime().executor;
   }
 
   // Uids
 
   Uid GenerateUid() const {
-    return ThisNodeServices().uids->Generate();
+    return GetRuntime().uids->Generate();
   }
 
   // Cluster
 
   std::vector<std::string> DiscoverCluster() const {
-    return ThisNodeServices().discovery->GetCluster();
+    return GetRuntime().discovery->GetCluster();
   }
 
   // RPC
 
   const rpc::IServerPtr& RPCServer() const {
-    return ThisNodeServices().rpc_server;
+    return GetRuntime().rpc_server;
   }
 
   const rpc::IClientPtr& RPCClient() const {
-    return ThisNodeServices().rpc_client;
+    return GetRuntime().rpc_client;
   }
 
   // Local services
 
   const IUidGeneratorPtr& UidsGenerator() const {
-    return ThisNodeServices().uids;
+    return GetRuntime().uids;
   }
 
 };

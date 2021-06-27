@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/services.hpp>
+#include <memory>
 
 namespace whirl {
 

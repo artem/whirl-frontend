@@ -14,7 +14,9 @@
 
 namespace whirl {
 
-struct NodeServices {
+//////////////////////////////////////////////////////////////////////
+
+struct NodeRuntime {
   IConfigPtr config;
 
   IExecutorPtr executor;
@@ -35,5 +37,9 @@ struct NodeServices {
   // TODO
   IFileSystemPtr fs;
 };
+
+//////////////////////////////////////////////////////////////////////
+
+const NodeRuntime& GetRuntime();
 
 }  // namespace whirl
