@@ -7,7 +7,7 @@
 #include <whirl/engines/matrix/world/actor_ctx.hpp>
 #include <whirl/engines/matrix/adversary/process.hpp>
 #include <whirl/engines/matrix/world/random_source.hpp>
-#include <whirl/engines/matrix/world/behaviour.hpp>
+#include <whirl/engines/matrix/world/time_model.hpp>
 #include <whirl/engines/matrix/history/recorder.hpp>
 #include <whirl/engines/matrix/log/backend.hpp>
 
@@ -49,7 +49,7 @@ class WorldImpl {
 
  public:
   WorldImpl(size_t seed)
-      : seed_(seed), random_source_(seed), behaviour_(DefaultBehaviour()) {
+      : seed_(seed), random_source_(seed), time_model_(DefaultBehaviour()) {
   }
 
   void AddServer(INodeFactoryPtr node) {
@@ -74,8 +74,8 @@ class WorldImpl {
     return adversary_.has_value();
   }
 
-  void SetBehaviour(IWorldBehaviourPtr behaviour) {
-    behaviour_ = std::move(behaviour);
+  void SetTimeModel(ITimeModelPtr time_model) {
+    time_model_ = std::move(time_model);
   }
 
   void Start();
@@ -166,8 +166,8 @@ class WorldImpl {
     return random_source_.Next();
   }
 
-  const IWorldBehaviourPtr& Behaviour() const {
-    return behaviour_;
+  const ITimeModelPtr& TimeModel() const {
+    return time_model_;
   }
 
   IActor* CurrentActor() const {
@@ -183,7 +183,7 @@ class WorldImpl {
   }
 
  private:
-  static IWorldBehaviourPtr DefaultBehaviour();
+  static ITimeModelPtr DefaultBehaviour();
 
   void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
     size_t id = ids_.NextId();
@@ -196,7 +196,7 @@ class WorldImpl {
   }
 
   void SetStartTime() {
-    time_.FastForwardTo(GetWorldBehaviour()->GlobalStartTime());
+    time_.FastForwardTo(GetTimeModel()->GlobalStartTime());
   }
 
   ActorContext::ScopeGuard Scope(IActor& actor) {
@@ -225,7 +225,7 @@ class WorldImpl {
 
   wheels::IdGenerator ids_;
 
-  IWorldBehaviourPtr behaviour_;
+  ITimeModelPtr time_model_;
 
   // Actors
 

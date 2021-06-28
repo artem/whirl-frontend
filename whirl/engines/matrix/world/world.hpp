@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/engines/matrix/world/behaviour.hpp>
+#include <whirl/engines/matrix/world/time_model.hpp>
 #include <whirl/engines/matrix/adversary/strategy.hpp>
 #include <whirl/engines/matrix/log/event.hpp>
 #include <whirl/history/history.hpp>
@@ -31,7 +31,7 @@ class World {
   void AddClient(INodeFactoryPtr node);
   void AddClients(size_t count, INodeFactoryPtr node);
 
-  void SetBehaviour(IWorldBehaviourPtr behaviour);
+  void SetTimeModel(ITimeModelPtr time_model);
 
   void SetAdversary(adversary::Strategy strategy);
 

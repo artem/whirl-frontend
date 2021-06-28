@@ -9,8 +9,8 @@
 
 namespace whirl::matrix {
 
-struct IWorldBehaviour {
-  virtual ~IWorldBehaviour() = default;
+struct ITimeModel {
+  virtual ~ITimeModel() = default;
 
   virtual TimePoint GlobalStartTime() = 0;
 
@@ -48,6 +48,6 @@ struct IWorldBehaviour {
   virtual Duration ThreadPause() = 0;
 };
 
-using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;
+using ITimeModelPtr = std::shared_ptr<ITimeModel>;
 
 }  // namespace whirl::matrix

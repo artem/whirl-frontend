@@ -1,13 +1,13 @@
 #pragma once
 
-#include <whirl/engines/matrix/world/behaviour.hpp>
+#include <whirl/engines/matrix/world/time_model.hpp>
 #include <whirl/engines/matrix/world/global/random.hpp>
 
 namespace whirl::matrix {
 
 // Asynchronous world
 
-class CrazyWorldBehaviour : public IWorldBehaviour {
+class CrazyTimeModel : public ITimeModel {
   // Time
 
   // [-75, +75]

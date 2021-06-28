@@ -34,8 +34,8 @@ void World::AddClients(size_t count, INodeFactoryPtr node) {
   }
 }
 
-void World::SetBehaviour(IWorldBehaviourPtr behaviour) {
-  impl_->SetBehaviour(std::move(behaviour));
+void World::SetTimeModel(ITimeModelPtr time_model) {
+  impl_->SetTimeModel(std::move(time_model));
 }
 
 void World::SetAdversary(adversary::Strategy strategy) {

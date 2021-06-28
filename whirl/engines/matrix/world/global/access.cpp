@@ -30,8 +30,8 @@ TimePoint GlobalNow() {
 
 // Behaviour
 
-IWorldBehaviourPtr GetWorldBehaviour() {
-  return WorldImpl::Access()->Behaviour();
+ITimeModelPtr GetTimeModel() {
+  return WorldImpl::Access()->TimeModel();
 }
 
 bool IsThereAdversary() {

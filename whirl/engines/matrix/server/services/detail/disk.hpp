@@ -2,7 +2,7 @@
 
 #include <whirl/services/time.hpp>
 
-#include <whirl/engines/matrix/world/global/behaviour.hpp>
+#include <whirl/engines/matrix/world/global/time_model.hpp>
 
 namespace whirl::matrix {
 
@@ -14,12 +14,12 @@ class Disk {
   }
 
   Future<void> Read() const {
-    auto read_time = GetWorldBehaviour()->DiskRead();
+    auto read_time = GetTimeModel()->DiskRead();
     return time_service_->After(read_time);
   }
 
   Future<void> Write() {
-    auto write_time = GetWorldBehaviour()->DiskWrite();
+    auto write_time = GetTimeModel()->DiskWrite();
     return time_service_->After(write_time);
   }
 

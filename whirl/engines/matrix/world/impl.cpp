@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/world/impl.hpp>
 
-#include <whirl/engines/matrix/world/behaviours/crazy.hpp>
+#include <whirl/engines/matrix/world/time_models/crazy.hpp>
 
 namespace whirl::matrix {
 
@@ -23,8 +23,8 @@ WorldImpl* WorldImpl::Access() {
 
 //////////////////////////////////////////////////////////////////////
 
-IWorldBehaviourPtr WorldImpl::DefaultBehaviour() {
-  return std::make_shared<CrazyWorldBehaviour>();
+ITimeModelPtr WorldImpl::DefaultBehaviour() {
+  return std::make_shared<CrazyTimeModel>();
 }
 
 void WorldImpl::Start() {
