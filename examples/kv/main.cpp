@@ -300,7 +300,7 @@ class KVClient final : public matrix::ClientBase {
   }
 
  private:
-  Logger logger_{"KVNode"};
+  Logger logger_{"KVClient"};
 };
 
 //////////////////////////////////////////////////////////////////////
