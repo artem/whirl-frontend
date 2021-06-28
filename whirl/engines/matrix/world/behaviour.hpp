@@ -3,6 +3,7 @@
 #include <whirl/time.hpp>
 
 #include <whirl/engines/matrix/network/packet.hpp>
+#include <whirl/engines/matrix/network/server.hpp>
 
 #include <memory>
 
@@ -38,7 +39,9 @@ struct IWorldBehaviour {
   // Network
 
   // DPI =)
-  virtual Duration FlightTime(const net::Packet& packet) = 0;
+  virtual Duration FlightTime(const net::IServer* start,
+                              const net::IServer* end,
+                              const net::Packet& packet) = 0;
 };
 
 using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;

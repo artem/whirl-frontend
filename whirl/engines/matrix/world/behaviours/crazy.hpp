@@ -56,7 +56,9 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
 
   // Network
 
-  TimePoint FlightTime(const net::Packet& packet) override {
+  TimePoint FlightTime(const net::IServer* /*start*/,
+                       const net::IServer* /*end*/,
+                       const net::Packet& packet) override {
     if (packet.header.type != net::Packet::Type::Data) {
       // Service packet, do not affect randomness
       return 50;

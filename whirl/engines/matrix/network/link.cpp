@@ -21,7 +21,9 @@ TimePoint Link::ChooseDeliveryTime(const Packet& packet) const {
   if (IsLoopBack()) {
     return GlobalNow() + 1;
   }
-  return GlobalNow() + GetWorldBehaviour()->FlightTime(packet);
+  const auto flight_time =
+      GetWorldBehaviour()->FlightTime(Start(), End(), packet);
+  return GlobalNow() + flight_time;
 }
 
 Packet Link::ExtractNextPacket() {

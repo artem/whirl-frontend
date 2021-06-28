@@ -73,7 +73,6 @@ class [[nodiscard]] Caller1 {
   await::util::StopToken stop_token_;
 };
 
-
 class [[nodiscard]] Caller0 {
  public:
   Caller0(Method method, BytesValue input)

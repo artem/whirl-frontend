@@ -69,8 +69,7 @@ class WallClock {
 
 class MonotonicClock {
  public:
-  MonotonicClock()
-      : drift_(GetWorldBehaviour()->InitClockDrift()) {
+  MonotonicClock() : drift_(GetWorldBehaviour()->InitClockDrift()) {
     Reset();
   }
 

@@ -10,8 +10,7 @@ namespace detail {
 
 class Disk {
  public:
-  Disk(ITimeServicePtr time_service)
-      : time_service_(std::move(time_service)) {
+  Disk(ITimeServicePtr time_service) : time_service_(std::move(time_service)) {
   }
 
   Future<void> Read() const {

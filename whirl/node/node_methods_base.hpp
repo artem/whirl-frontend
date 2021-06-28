@@ -113,7 +113,6 @@ class NodeMethodsBase {
   const IUidGeneratorPtr& UidsGenerator() const {
     return GetRuntime().uids;
   }
-
 };
 
 }  // namespace whirl
