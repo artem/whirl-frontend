@@ -1,4 +1,4 @@
-#include <whirl/engines/matrix/channels/history.hpp>
+#include <whirl/engines/matrix/history/channel.hpp>
 
 #include <whirl/rpc/channel.hpp>
 #include <whirl/rpc/errors.hpp>

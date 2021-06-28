@@ -2,7 +2,7 @@
 
 #include <whirl/rpc/random.hpp>
 #include <whirl/rpc/retries.hpp>
-#include <whirl/engines/matrix/channels/history.hpp>
+#include <whirl/engines/matrix/history/channel.hpp>
 
 namespace whirl::matrix {
 
