@@ -17,11 +17,11 @@ class LogBackend : public ILoggerBackend {
   LogBackend();
 
   // Context: Server
-  LogLevel GetMinLevelFor(const std::string& component) const;
+  LogLevel GetMinLevelFor(const std::string& component) const override;
 
   // Context: Server
   void Log(const std::string& component, LogLevel level,
-           const std::string& message);
+           const std::string& message) override;
 
   const EventLog& GetEvents() const {
     return events_;
