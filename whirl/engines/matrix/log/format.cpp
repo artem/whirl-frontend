@@ -28,7 +28,7 @@ void FormatLogEventTo(const LogEvent& event, std::ostream& out) {
 
   if (event.trace_id.has_value()) {
     out << "\t"
-        << "[" << _FMT(event.trace_id.value(), 6) << "]";
+        << "[" << event.trace_id.value() << "]";
   }
 
   out << "\t" << event.message;

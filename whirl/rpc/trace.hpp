@@ -9,6 +9,7 @@
 
 namespace whirl::rpc {
 
+// Globally unique
 using TraceId = std::string;
 
 //////////////////////////////////////////////////////////////////////
@@ -40,6 +41,6 @@ IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id);
 std::optional<TraceId> TryGetCurrentTraceId();
 
 // Get current trace id or generate new based on request id
-TraceId GetOrGenerateNewTraceId(RequestId id);
+TraceId GetOrGenerateNewTraceId();
 
 }  // namespace whirl::rpc

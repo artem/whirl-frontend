@@ -13,6 +13,13 @@ await::util::StopToken Caller1::DefaultStopToken() {
   return await::util::NeverStop();
 }
 
+TraceId Caller1::GetTraceId() {
+  if (trace_id_.has_value()) {
+    return *trace_id_;
+  }
+  return GetOrGenerateNewTraceId();
+}
+
 }  // namespace detail
 
 }  // namespace whirl::rpc

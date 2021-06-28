@@ -5,6 +5,9 @@
 
 #include <wheels/support/assert.hpp>
 
+// TODO: ???
+#include <whirl/node/runtime.hpp>
+
 #include <fmt/core.h>
 
 namespace whirl::rpc {
@@ -84,11 +87,16 @@ std::optional<TraceId> TryGetCurrentTraceId() {
   }
 }
 
-TraceId GetOrGenerateNewTraceId(RequestId request_id) {
+// Globally unique!
+static TraceId GenerateNewTraceId() {
+  return GetRuntime().uids->Generate();
+}
+
+TraceId GetOrGenerateNewTraceId() {
   if (auto trace_id = TryGetCurrentTraceId()) {
     return *trace_id;
   }
-  return fmt::format("R-{}", request_id);
+  return GenerateNewTraceId();
 }
 
 }  // namespace whirl::rpc

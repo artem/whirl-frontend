@@ -6,7 +6,6 @@
 #include <whirl/rpc/id.hpp>
 #include <whirl/rpc/protocol.hpp>
 #include <whirl/rpc/channel.hpp>
-#include <whirl/rpc/trace.hpp>
 
 #include <whirl/logger/log.hpp>
 
@@ -82,7 +81,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   }
 
  private:
-  Request MakeRequest(const Method& method, const BytesValue& input);
+  Request MakeRequest(const Method& method, const BytesValue& input, const CallContext& ctx);
 
   // Inside strand executor
   void SendRequest(Request request);

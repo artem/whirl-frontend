@@ -2,6 +2,7 @@
 
 #include <whirl/rpc/method.hpp>
 #include <whirl/rpc/bytes_value.hpp>
+#include <whirl/rpc/trace.hpp>
 
 #include <await/futures/core/future.hpp>
 #include <await/util/stop_token.hpp>
@@ -11,6 +12,7 @@
 namespace whirl::rpc {
 
 struct CallContext {
+  TraceId trace_id;
   await::util::StopToken stop_advice;
 };
 

@@ -11,6 +11,8 @@
 
 #include <cereal/types/string.hpp>
 
+#include <optional>
+
 namespace whirl::rpc {
 
 namespace detail {
@@ -43,6 +45,11 @@ class [[nodiscard]] Caller1 {
     return *this;
   }
 
+  Caller1& WithTraceId(TraceId trace_id) {
+    trace_id_ = trace_id;
+    return *this;
+  }
+
   template <typename T>
   Future<T> As() {
     return detail::As<T>(Call());
@@ -55,9 +62,10 @@ class [[nodiscard]] Caller1 {
 
  private:
   await::util::StopToken DefaultStopToken();
+  TraceId GetTraceId();
 
   CallContext MakeCallContext() {
-    return {stop_token_};
+    return {GetTraceId(), stop_token_};
   }
 
   Future<BytesValue> Call() {
@@ -70,6 +78,7 @@ class [[nodiscard]] Caller1 {
   IChannelPtr channel_{nullptr};
 
   // Call context
+  std::optional<TraceId> trace_id_;
   await::util::StopToken stop_token_;
 };
 
@@ -94,6 +103,7 @@ class [[nodiscard]] Caller0 {
 // auto f = Call("EchoService.Echo", proto::Echo::Request{data})
 //            .Via(channel)
 //            .StopAdvice(stop_token)
+//            .WithTraceId(trace_id);
 //            .As<proto::Echo::Response>();
 //
 // .As<R>() is optional:
