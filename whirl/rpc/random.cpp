@@ -12,7 +12,8 @@ static const std::string kRandomPeer = "Random";
 
 class RandomChannel : public IChannel {
  public:
-  RandomChannel(ChannelVector channels, IRandomServicePtr random) : channels_(std::move(channels)), random_(std::move(random)) {
+  RandomChannel(ChannelVector channels, IRandomServicePtr random)
+      : channels_(std::move(channels)), random_(std::move(random)) {
   }
 
   ~RandomChannel() {
@@ -46,8 +47,10 @@ class RandomChannel : public IChannel {
   IRandomServicePtr random_;
 };
 
-IChannelPtr MakeRandomChannel(ChannelVector&& channels, IRandomServicePtr random) {
-  return std::make_shared<RandomChannel>(std::move(channels), std::move(random));
+IChannelPtr MakeRandomChannel(ChannelVector&& channels,
+                              IRandomServicePtr random) {
+  return std::make_shared<RandomChannel>(std::move(channels),
+                                         std::move(random));
 }
 
 }  // namespace whirl::matrix

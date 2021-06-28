@@ -81,7 +81,8 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   }
 
  private:
-  Request MakeRequest(const Method& method, const BytesValue& input, const CallContext& ctx);
+  Request MakeRequest(const Method& method, const BytesValue& input,
+                      const CallContext& ctx);
 
   // Inside strand executor
   void SendRequest(Request request);
