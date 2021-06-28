@@ -1,7 +1,6 @@
 #include <whirl/rpc/server_impl.hpp>
 
 #include <whirl/rpc/trace.hpp>
-#include <whirl/rpc/request_context.hpp>
 #include <whirl/rpc/exceptions.hpp>
 
 #include <whirl/cereal/serialize.hpp>
@@ -53,7 +52,6 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   auto request = Deserialize<RequestMessage>(message);
 
   SetThisFiberTraceId(request.trace_id);
-  SetRequestContext(request);
 
   WHIRL_LOG_INFO("Process {} request from {}, id = {}", request.method,
                  back->Peer(), request.id);

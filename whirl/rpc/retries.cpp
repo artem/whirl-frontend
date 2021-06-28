@@ -1,6 +1,5 @@
 #include <whirl/rpc/retries.hpp>
 
-#include <whirl/rpc/request_context.hpp>
 #include <whirl/rpc/errors.hpp>
 
 #include <whirl/logger/log.hpp>
@@ -36,10 +35,6 @@ class Backoff {
   BackoffParams params_;
   Duration next_;
 };
-
-//////////////////////////////////////////////////////////////////////
-
-using Scope = std::weak_ptr<RequestContext>;
 
 //////////////////////////////////////////////////////////////////////
 
