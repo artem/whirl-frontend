@@ -37,6 +37,10 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 - [Testing Distributed Systems w/ Deterministic Simulation](https://www.youtube.com/watch?v=4fFDFbi3toc)
 - [FoundationDB or: How I Learned to Stop Worrying and Trust the Database](https://www.youtube.com/watch?v=OJb8A6h9jQQ&list=PLSE8ODhjZXjagqlf1NxuBQwaMkrHXi-iz&index=22)
 
+#### AWS
+
+- [Millions of Tiny Databases](https://www.usenix.org/system/files/nsdi20-paper-brooker.pdf)
+
 #### Jepsen
 - https://github.com/jepsen-io/maelstrom
 
