@@ -101,7 +101,6 @@ class [[nodiscard]] Caller0 {
 //   Call("EchoService.Echo", proto::Echo::Request{data})
 //      .Via(channel);
 
-// TODO: Typestate correctness
 // TODO: BlockingCall
 
 template <typename... Arguments>
