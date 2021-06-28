@@ -29,20 +29,16 @@ inline Future<void> As(Future<BytesValue> f_raw) {
   return await::futures::JustStatus(std::move(f_raw));
 }
 
-class [[nodiscard]] Caller {
+class [[nodiscard]] Caller1 {
  public:
-  Caller(Method method, BytesValue input)
+  Caller1(Method method, BytesValue input, IChannelPtr channel)
       : method_(method),
         input_(std::move(input)),
+        channel_(std::move(channel)),
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller& Via(IChannelPtr channel) {
-    channel_ = channel;
-    return *this;
-  }
-
-  Caller& StopAdvice(await::util::StopToken stop_token) {
+  Caller1& StopAdvice(await::util::StopToken stop_token) {
     stop_token_ = std::move(stop_token);
     return *this;
   }
@@ -77,6 +73,21 @@ class [[nodiscard]] Caller {
   await::util::StopToken stop_token_;
 };
 
+
+class [[nodiscard]] Caller0 {
+ public:
+  Caller0(Method method, BytesValue input)
+      : method_(method), input_(std::move(input)) {
+  }
+
+  Caller1 Via(IChannelPtr channel) {
+    return Caller1(std::move(method_), std::move(input_), std::move(channel));
+  }
+
+  Method method_;
+  BytesValue input_;
+};
+
 }  // namespace detail
 
 // Unary RPC
@@ -95,11 +106,11 @@ class [[nodiscard]] Caller {
 // TODO: BlockingCall
 
 template <typename... Arguments>
-detail::Caller Call(const std::string& method_str, Arguments&&... arguments) {
+detail::Caller0 Call(const std::string& method_str, Arguments&&... arguments) {
   auto method = Method::Parse(method_str);
   // Erase argument types
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
-  return detail::Caller{method, input};
+  return detail::Caller0{method, input};
 }
 
 }  // namespace whirl::rpc

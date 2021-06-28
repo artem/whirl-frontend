@@ -6,7 +6,7 @@ namespace whirl::rpc {
 
 namespace detail {
 
-await::util::StopToken Caller::DefaultStopToken() {
+await::util::StopToken Caller1::DefaultStopToken() {
   if (await::fibers::AmIFiber()) {
     return await::fibers::self::LifetimeToken();
   }
