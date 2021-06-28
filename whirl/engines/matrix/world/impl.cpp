@@ -82,7 +82,7 @@ bool WorldImpl::Step() {
 
   step_random_number_ = random_source_.Next();
 
-  time_.AdvanceTo(next.time);
+  time_.FastForwardTo(next.time);
   Scope(next.actor)->Step();
 
   return true;

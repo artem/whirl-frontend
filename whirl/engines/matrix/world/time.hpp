@@ -6,8 +6,6 @@
 
 namespace whirl::matrix {
 
-//////////////////////////////////////////////////////////////////////
-
 class Time {
  public:
   Time() = default;
@@ -16,14 +14,18 @@ class Time {
   Time(const Time&) = delete;
   Time& operator=(const Time&) = delete;
 
-  void AdvanceTo(TimePoint future) {
-    WHEELS_VERIFY(future >= now_, "Cannot move world time backward: now = "
-                                      << now_ << " -> " << future);
-    now_ = future;
-  }
+  // Non-movable
+  Time(Time&&) = delete;
+  Time& operator=(Time&&) = delete;
 
   TimePoint Now() const {
     return now_;
+  }
+
+  void FastForwardTo(TimePoint future) {
+    WHEELS_VERIFY(future >= now_, "Cannot fast-forward time: now = "
+                                      << now_ << " -> " << future);
+    now_ = future;
   }
 
  private:
