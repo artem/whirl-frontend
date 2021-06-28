@@ -4,6 +4,9 @@
 
 namespace whirl::matrix {
 
-ITimeModelPtr GetTimeModel();
+ITimeModelPtr MakeTransition(
+    ITimeModelPtr before,
+    ITimeModelPtr after,
+    TimePoint transition_time);
 
 }  // namespace whirl::matrix

@@ -49,7 +49,7 @@ class WorldImpl {
 
  public:
   WorldImpl(size_t seed)
-      : seed_(seed), random_source_(seed), time_model_(DefaultBehaviour()) {
+      : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
   }
 
   void AddServer(INodeFactoryPtr node) {
@@ -183,7 +183,7 @@ class WorldImpl {
   }
 
  private:
-  static ITimeModelPtr DefaultBehaviour();
+  static ITimeModelPtr DefaultTimeModel();
 
   void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
     size_t id = ids_.NextId();

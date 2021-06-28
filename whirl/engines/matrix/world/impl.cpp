@@ -23,8 +23,8 @@ WorldImpl* WorldImpl::Access() {
 
 //////////////////////////////////////////////////////////////////////
 
-ITimeModelPtr WorldImpl::DefaultBehaviour() {
-  return std::make_shared<CrazyTimeModel>();
+ITimeModelPtr WorldImpl::DefaultTimeModel() {
+  return MakeCrazyTimeModel();
 }
 
 void WorldImpl::Start() {
