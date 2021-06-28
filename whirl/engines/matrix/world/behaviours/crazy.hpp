@@ -69,6 +69,12 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
     }
     return GlobalRandomNumber(30, 60);
   }
+
+  // Threads
+
+  Duration ThreadPause() override {
+    return GlobalRandomNumber(5, 50);
+  }
 };
 
 }  // namespace whirl::matrix

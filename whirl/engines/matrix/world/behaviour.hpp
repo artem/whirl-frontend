@@ -42,6 +42,10 @@ struct IWorldBehaviour {
   virtual Duration FlightTime(const net::IServer* start,
                               const net::IServer* end,
                               const net::Packet& packet) = 0;
+
+  // Threads
+
+  virtual Duration ThreadPause() = 0;
 };
 
 using IWorldBehaviourPtr = std::shared_ptr<IWorldBehaviour>;

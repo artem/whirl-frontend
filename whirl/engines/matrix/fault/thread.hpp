@@ -2,8 +2,6 @@
 
 namespace whirl::matrix {
 
-inline void ThreadPause() {
-  // TODO
-}
+void ThreadPause();
 
 }  // namespace whirl::matrix
