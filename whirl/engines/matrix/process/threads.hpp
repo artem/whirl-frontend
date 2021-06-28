@@ -10,6 +10,8 @@
 
 namespace whirl {
 
+// TODO: remove
+
 using ThreadRoutine = await::fibers::FiberRoutine;
 using await::fibers::ThreadLike;
 

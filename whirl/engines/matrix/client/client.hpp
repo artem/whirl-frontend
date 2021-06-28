@@ -2,7 +2,7 @@
 
 #include <whirl/node/node.hpp>
 #include <whirl/node/runtime.hpp>
-#include <whirl/node/threads.hpp>
+#include <whirl/engines/matrix/process/threads.hpp>
 #include <whirl/node/node_methods_base.hpp>
 
 #include <whirl/rpc/channel.hpp>

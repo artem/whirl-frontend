@@ -8,7 +8,7 @@
 #include <whirl/engines/matrix/process/step_queue.hpp>
 #include <whirl/engines/matrix/server/server.hpp>
 #include <whirl/engines/matrix/process/process_base.hpp>
-#include <whirl/node/threads.hpp>
+#include <whirl/engines/matrix/process/threads.hpp>
 
 #include <functional>
 #include <deque>
