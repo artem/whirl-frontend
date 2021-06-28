@@ -1,6 +1,4 @@
-#include <whirl/engines/matrix/channels/random.hpp>
-
-#include <whirl/engines/matrix/world/global/random.hpp>
+#include <whirl/rpc/random.hpp>
 
 using namespace whirl::rpc;
 using await::futures::Future;
@@ -14,7 +12,7 @@ static const std::string kRandomPeer = "Random";
 
 class RandomChannel : public IChannel {
  public:
-  RandomChannel(ChannelVector channels) : channels_(std::move(channels)) {
+  RandomChannel(ChannelVector channels, IRandomServicePtr random) : channels_(std::move(channels)), random_(std::move(random)) {
   }
 
   ~RandomChannel() {
@@ -23,7 +21,7 @@ class RandomChannel : public IChannel {
 
   Future<BytesValue> Call(const Method& method, const BytesValue& input,
                           CallContext ctx) override {
-    size_t index = GlobalRandomNumber(channels_.size());
+    size_t index = SelectIndex();
     return channels_[index]->Call(method, input, std::move(ctx));
   }
 
@@ -39,11 +37,17 @@ class RandomChannel : public IChannel {
   }
 
  private:
+  size_t SelectIndex() const {
+    return random_->RandomNumber() % channels_.size();
+  }
+
+ private:
   ChannelVector channels_;
+  IRandomServicePtr random_;
 };
 
-IChannelPtr MakeRandomChannel(ChannelVector&& channels) {
-  return std::make_shared<RandomChannel>(std::move(channels));
+IChannelPtr MakeRandomChannel(ChannelVector&& channels, IRandomServicePtr random) {
+  return std::make_shared<RandomChannel>(std::move(channels), std::move(random));
 }
 
 }  // namespace whirl::matrix

@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/client/client.hpp>
 
-#include <whirl/engines/matrix/channels/random.hpp>
+#include <whirl/rpc/random.hpp>
 #include <whirl/rpc/retries.hpp>
 #include <whirl/engines/matrix/channels/history.hpp>
 
@@ -27,7 +27,7 @@ rpc::IChannelPtr ClientBase::MakeClientChannel() {
 
   // Retries -> History -> Random -> Peers
 
-  auto random = MakeRandomChannel(std::move(channels));
+  auto random = MakeRandomChannel(std::move(channels), RandomService());
   auto history = MakeHistoryChannel(std::move(random));
   auto retries =
       WithRetries(std::move(history), TimeService(), RetriesBackoff());
