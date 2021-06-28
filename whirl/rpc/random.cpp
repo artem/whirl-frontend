@@ -4,7 +4,7 @@ using namespace whirl::rpc;
 using await::futures::Future;
 using await::util::StopToken;
 
-namespace whirl::matrix {
+namespace whirl::rpc {
 
 using ChannelVector = std::vector<IChannelPtr>;
 
@@ -53,4 +53,4 @@ IChannelPtr MakeRandomChannel(ChannelVector&& channels,
                                          std::move(random));
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::rpc
