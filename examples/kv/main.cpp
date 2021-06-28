@@ -98,8 +98,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     for (size_t i = 0; i < PeerCount(); ++i) {
       writes.push_back(
           rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
-              .Via(PeerChannel(i))
-              .StopAdvice(await::fibers::self::LifetimeToken()));
+              .Via(PeerChannel(i)));
     }
 
     // Await acks from majority of replicas
