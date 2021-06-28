@@ -72,6 +72,8 @@ class [[nodiscard]] Caller {
   Method method_;
   BytesValue input_;
   IChannelPtr channel_{nullptr};
+
+  // Call context
   await::util::StopToken stop_token_;
 };
 
@@ -79,8 +81,15 @@ class [[nodiscard]] Caller {
 
 // Unary RPC
 // Usage:
-// 1) Future<std::string> f = Call("EchoService.Echo", data).Via(channel);
-// 2) auto f = Call("EchoService.Echo", data).Via(channel).As<std::string>()
+// auto f = Call("EchoService.Echo", proto::Echo::Request{data})
+//            .Via(channel)
+//            .StopAdvice(stop_token)
+//            .As<proto::Echo::Response>();
+//
+// .As<R>() is optional:
+// Future<proto::Echo::Response> f =
+//   Call("EchoService.Echo", proto::Echo::Request{data})
+//      .Via(channel);
 
 // TODO: Typestate correctness
 // TODO: BlockingCall
