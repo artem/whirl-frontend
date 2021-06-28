@@ -8,7 +8,7 @@ namespace detail {
 
 await::util::StopToken Caller1::DefaultStopToken() {
   if (await::fibers::AmIFiber()) {
-    return await::fibers::self::LifetimeToken();
+    return await::fibers::self::GetLifetimeToken();
   }
   return await::util::NeverStop();
 }
