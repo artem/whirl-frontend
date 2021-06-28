@@ -58,7 +58,7 @@ class WallClock {
 
  private:
   static Duration InitLocalClockOffset() {
-    return GetWorldBehaviour()->InitLocalClockOffset();
+    return GetWorldBehaviour()->InitWallClockOffset();
   }
 
  private:

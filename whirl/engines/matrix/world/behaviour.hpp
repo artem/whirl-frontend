@@ -24,7 +24,7 @@ struct IWorldBehaviour {
 
   // Wall clock
 
-  virtual TimePoint InitLocalClockOffset() = 0;
+  virtual TimePoint InitWallClockOffset() = 0;
 
   // TrueTime
 

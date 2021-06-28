@@ -38,7 +38,7 @@ class CrazyWorldBehaviour : public IWorldBehaviour {
     return GlobalRandomNumber(1, 100);
   }
 
-  TimePoint InitLocalClockOffset() override {
+  TimePoint InitWallClockOffset() override {
     return GlobalRandomNumber(1000);
   }
 
