@@ -11,7 +11,7 @@
 #include <whirl/engines/matrix/history/recorder.hpp>
 #include <whirl/engines/matrix/log/backend.hpp>
 
-#include <whirl/services/uid.hpp>
+#include <whirl/services/guid.hpp>
 
 #include <whirl/logger/log.hpp>
 
@@ -184,15 +184,15 @@ class WorldImpl {
     return globals_.Get(name);
   }
 
-  Uid GenerateUid() {
-    return fmt::format("uid-{}", uids_.NextId());
+  Guid GenerateGuid() {
+    return fmt::format("guid-{}", guids_.NextId());
   }
 
  private:
   static ITimeModelPtr DefaultTimeModel();
 
   void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
-    size_t id = ids_.NextId();
+    size_t id = server_ids_.NextId();
     std::string name = type + "-" + std::to_string(servers.size() + 1);
 
     servers.emplace_back(network_, ServerConfig{id, name}, node);
@@ -228,16 +228,16 @@ class WorldImpl {
 
   Time time_;
   RandomSource random_source_;
-  wheels::IdGenerator uids_;
+  wheels::IdGenerator guids_;
 
   ITimeModelPtr time_model_;
 
   // Actors
 
-  wheels::IdGenerator ids_;
-
   Servers cluster_;
   Servers clients_;
+
+  wheels::IdGenerator server_ids_;
 
   net::Network network_;
 

@@ -86,10 +86,10 @@ class NodeMethodsBase {
     return GetRuntime().executor;
   }
 
-  // Uids
+  // Guids
 
-  Uid GenerateUid() const {
-    return GetRuntime().uids->Generate();
+  Guid GenerateGuid() const {
+    return GetRuntime().guids->Generate();
   }
 
   // Cluster
@@ -110,8 +110,8 @@ class NodeMethodsBase {
 
   // Local services
 
-  const IUidGeneratorPtr& UidsGenerator() const {
-    return GetRuntime().uids;
+  const IGuidGeneratorPtr& GuidsGenerator() const {
+    return GetRuntime().guids;
   }
 };
 

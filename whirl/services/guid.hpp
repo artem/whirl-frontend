@@ -7,18 +7,18 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-using Uid = std::string;
+using Guid = std::string;
 
 //////////////////////////////////////////////////////////////////////
 
 // Generates globally unique identifiers
 
-struct IUidGenerator {
-  virtual ~IUidGenerator() = default;
+struct IGuidGenerator {
+  virtual ~IGuidGenerator() = default;
 
-  virtual Uid Generate() = 0;
+  virtual Guid Generate() = 0;
 };
 
-using IUidGeneratorPtr = std::shared_ptr<IUidGenerator>;
+using IGuidGeneratorPtr = std::shared_ptr<IGuidGenerator>;
 
 }  // namespace whirl

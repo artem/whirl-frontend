@@ -13,7 +13,7 @@
 #include <whirl/engines/matrix/server/services/time.hpp>
 #include <whirl/engines/matrix/server/services/database.hpp>
 #include <whirl/engines/matrix/server/services/true_time.hpp>
-#include <whirl/engines/matrix/server/services/uid.hpp>
+#include <whirl/engines/matrix/server/services/guid.hpp>
 #include <whirl/engines/matrix/server/services/random.hpp>
 #include <whirl/engines/matrix/server/services/net_transport.hpp>
 #include <whirl/engines/matrix/server/services/discovery.hpp>
@@ -207,7 +207,7 @@ NodeRuntime Server::MakeNodeServices() {
   services.rpc_client = rpc::MakeClient(net_transport, executor);
 
   services.random = std::make_shared<RandomService>();
-  services.uids = std::make_shared<UidGenerator>(config_.id);
+  services.guids = std::make_shared<GuidGenerator>(config_.id);
   services.true_time = std::make_shared<TrueTimeService>();
 
   return services;

@@ -4,7 +4,7 @@
 #include <whirl/services/time.hpp>
 #include <whirl/services/database.hpp>
 #include <whirl/services/random.hpp>
-#include <whirl/services/uid.hpp>
+#include <whirl/services/guid.hpp>
 #include <whirl/services/true_time.hpp>
 #include <whirl/services/filesystem.hpp>
 #include <whirl/services/discovery.hpp>
@@ -31,7 +31,7 @@ struct NodeRuntime {
   IDatabasePtr database;
 
   IRandomServicePtr random;
-  IUidGeneratorPtr uids;
+  IGuidGeneratorPtr guids;
   ITrueTimeServicePtr true_time;
 
   // TODO

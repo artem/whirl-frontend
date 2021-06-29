@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/services/uid.hpp>
+#include <whirl/services/guid.hpp>
 
 namespace whirl::matrix {
 
-Uid GenerateUid();
+Guid GenerateGuid();
 
 }  // namespace whirl::matrix

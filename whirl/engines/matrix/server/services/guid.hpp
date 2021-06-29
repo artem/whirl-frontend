@@ -1,29 +1,29 @@
 #pragma once
 
-#include <whirl/services/uid.hpp>
+#include <whirl/services/guid.hpp>
 
 #include <whirl/engines/matrix/world/global/random.hpp>
 #include <whirl/engines/matrix/world/global/time.hpp>
-#include <whirl/engines/matrix/world/global/uids.hpp>
+#include <whirl/engines/matrix/world/global/guids.hpp>
 
 #include <wheels/support/string_builder.hpp>
 
 namespace whirl::matrix {
 
-struct UidGenerator : public IUidGenerator {
-  UidGenerator(size_t server_id) : server_id_(server_id) {
+struct GuidGenerator : public IGuidGenerator {
+  GuidGenerator(size_t server_id) : server_id_(server_id) {
   }
 
-  Uid Generate() override {
+  Guid Generate() override {
     // return GenerateLocal
 
     // Short and globally unique id
-    return GenerateUid();
+    return GenerateGuid();
   }
 
  private:
   // {random-number}-{server-id}-{global-time}-{uid-request}
-  Uid GenerateLocal() {
+  Guid GenerateLocal() {
     return wheels::StringBuilder() << GlobalRandomNumber() << "-" << server_id_
                                    << "-" << GlobalNow() << "-" << ++request_;
   }
