@@ -11,6 +11,8 @@
 #include <whirl/engines/matrix/history/recorder.hpp>
 #include <whirl/engines/matrix/log/backend.hpp>
 
+#include <whirl/services/uid.hpp>
+
 #include <whirl/logger/log.hpp>
 
 #include <whirl/helpers/digest.hpp>
@@ -182,6 +184,10 @@ class WorldImpl {
     return globals_.Get(name);
   }
 
+  Uid GenerateUid() {
+    return fmt::format("uid-{}", uids_.NextId());
+  }
+
  private:
   static ITimeModelPtr DefaultTimeModel();
 
@@ -222,12 +228,13 @@ class WorldImpl {
 
   Time time_;
   RandomSource random_source_;
-
-  wheels::IdGenerator ids_;
+  wheels::IdGenerator uids_;
 
   ITimeModelPtr time_model_;
 
   // Actors
+
+  wheels::IdGenerator ids_;
 
   Servers cluster_;
   Servers clients_;
