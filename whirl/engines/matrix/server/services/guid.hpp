@@ -15,7 +15,7 @@ struct GuidGenerator : public IGuidGenerator {
   }
 
   Guid Generate() override {
-    // return GenerateLocal
+    // return GenerateLocal();
 
     // Short and globally unique id
     return GenerateGuid();
