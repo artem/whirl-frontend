@@ -25,7 +25,7 @@ class NodeMethodsBase {
   }
 
   size_t RandomNumber() const {
-    return RandomService()->RandomNumber();
+    return RandomService()->GenerateNumber();
   }
 
   // [0, bound)

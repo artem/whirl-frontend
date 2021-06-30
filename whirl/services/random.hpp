@@ -10,7 +10,7 @@ using RandomUInt = size_t;
 struct IRandomService {
   virtual ~IRandomService() = default;
 
-  virtual RandomUInt RandomNumber() = 0;
+  virtual RandomUInt GenerateNumber() = 0;
 };
 
 using IRandomServicePtr = std::shared_ptr<IRandomService>;

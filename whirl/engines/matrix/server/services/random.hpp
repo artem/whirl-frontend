@@ -8,7 +8,7 @@
 namespace whirl::matrix {
 
 struct RandomService : public IRandomService {
-  RandomUInt RandomNumber() override {
+  RandomUInt GenerateNumber() override {
     return GlobalRandomNumber();
   }
 };
