@@ -40,7 +40,7 @@ class [[nodiscard]] Caller1 {
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller1& StopAdvice(await::util::StopToken stop_token) {
+  Caller1& StopAdvice(await::StopToken stop_token) {
     stop_token_ = std::move(stop_token);
     return *this;
   }
@@ -61,7 +61,7 @@ class [[nodiscard]] Caller1 {
   }
 
  private:
-  await::util::StopToken DefaultStopToken();
+  await::StopToken DefaultStopToken();
   TraceId GetTraceId();
 
   CallContext MakeCallContext() {
@@ -79,7 +79,7 @@ class [[nodiscard]] Caller1 {
 
   // Call context
   std::optional<TraceId> trace_id_;
-  await::util::StopToken stop_token_;
+  await::StopToken stop_token_;
 };
 
 class [[nodiscard]] Caller0 {

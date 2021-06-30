@@ -6,11 +6,11 @@ namespace whirl::rpc {
 
 namespace detail {
 
-await::util::StopToken Caller1::DefaultStopToken() {
+await::StopToken Caller1::DefaultStopToken() {
   if (await::fibers::AmIFiber()) {
     return await::fibers::self::GetLifetimeToken();
   }
-  return await::util::NeverStop();
+  return await::NeverStop();
 }
 
 TraceId Caller1::GetTraceId() {

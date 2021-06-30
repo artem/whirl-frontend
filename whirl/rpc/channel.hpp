@@ -13,7 +13,7 @@ namespace whirl::rpc {
 
 struct CallContext {
   TraceId trace_id;
-  await::util::StopToken stop_advice;
+  await::StopToken stop_advice;
 };
 
 // Communication line between client and remote service

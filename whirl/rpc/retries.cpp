@@ -11,7 +11,7 @@
 
 using wheels::Result;
 using namespace await::futures;
-using await::util::StopToken;
+using await::StopToken;
 
 namespace whirl::rpc {
 

@@ -2,7 +2,7 @@
 
 using namespace whirl::rpc;
 using await::futures::Future;
-using await::util::StopToken;
+using await::StopToken;
 
 namespace whirl::rpc {
 
