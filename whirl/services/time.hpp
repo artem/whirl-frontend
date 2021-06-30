@@ -13,7 +13,7 @@ using await::futures::Future;
 struct ITimeService {
   virtual ~ITimeService() = default;
 
-  // Wall-time (system) clock
+  // Wall clock
   // NB: Constant within simulation step
   virtual TimePoint WallTimeNow() = 0;
 
