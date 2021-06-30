@@ -36,7 +36,7 @@ void ServerImpl::Shutdown() {
 void ServerImpl::HandleMessage(const TransportMessage& message,
                                ITransportSocketPtr back) {
   // Process request
-  await::fibers::Spawn(
+  await::fibers::Go(
       [self = shared_from_this(), message, back = std::move(back)]() mutable {
         self->ProcessRequest(message, back);
       },

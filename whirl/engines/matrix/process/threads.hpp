@@ -25,7 +25,7 @@ class ThreadsRuntime {
   ThreadsRuntime() = default;
 
   void Spawn(ThreadRoutine routine) {
-    await::fibers::Spawn(std::move(routine), executor_);
+    await::fibers::Go(std::move(routine), executor_);
   }
 
   ThreadLike Thread(ThreadRoutine routine) {

@@ -71,7 +71,7 @@ class NodeMethodsBase {
   }
 
   void Go(await::fibers::FiberRoutine routine) {
-    await::fibers::Spawn(std::move(routine), Executor());
+    await::fibers::Go(std::move(routine), Executor());
   }
 
   void SleepFor(Duration delay) {
