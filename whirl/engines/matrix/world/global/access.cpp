@@ -64,7 +64,7 @@ bool AmIActor() {
   return ThisWorld()->CurrentActor() != nullptr;
 }
 
-IActor* CurrentActor() {
+IActor* ThisActor() {
   return ThisWorld()->CurrentActor();
 }
 

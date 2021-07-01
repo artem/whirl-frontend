@@ -216,7 +216,7 @@ NodeRuntime Server::MakeNodeServices() {
 //////////////////////////////////////////////////////////////////////
 
 Server& ThisServer() {
-  Server* this_server = dynamic_cast<Server*>(CurrentActor());
+  Server* this_server = dynamic_cast<Server*>(ThisActor());
   WHEELS_VERIFY(this_server != nullptr, "Current actor is not a server");
   return *this_server;
 }

@@ -5,6 +5,6 @@
 namespace whirl::matrix {
 
 bool AmIActor();
-IActor* CurrentActor();
+IActor* ThisActor();
 
 }  // namespace whirl::matrix
