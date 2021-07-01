@@ -25,6 +25,6 @@ struct ITimeService {
   virtual Future<void> After(Duration d) = 0;
 };
 
-using ITimeServicePtr = std::shared_ptr<ITimeService>;
+using ITimeServicePtr = ITimeService*;
 
 }  // namespace whirl

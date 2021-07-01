@@ -15,4 +15,9 @@ T* MoveToHeap(T&& obj) {
   return new T(std::move(obj));
 }
 
+template <typename T, typename ... Args>
+T* MakeStaticLikeObject(Args&& ... args) {
+  return new T(std::forward<Args>(args)...);
+}
+
 }  // namespace whirl::matrix

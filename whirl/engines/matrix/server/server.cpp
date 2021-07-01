@@ -189,12 +189,12 @@ NodeRuntime Server::MakeNodeServices() {
 
   auto executor = std::make_shared<EventQueueExecutor>(*steps_);
   auto time_service =
-      std::make_shared<TimeService>(wall_clock_, monotonic_clock_, *steps_);
+      MakeStaticLikeObject<TimeService>(wall_clock_, monotonic_clock_, *steps_);
 
   services.executor = executor;
   services.time_service = time_service;
 
-  services.database = std::make_shared<DatabaseProxy>(db_, time_service);
+  services.database = MakeStaticLikeObject<DatabaseProxy>(db_, time_service);
 
   static const net::Port kTransportPort = 42;
   auto net_transport =
@@ -206,9 +206,9 @@ NodeRuntime Server::MakeNodeServices() {
       std::make_shared<rpc::ServerImpl>(net_transport, executor);
   services.rpc_client = rpc::MakeClient(net_transport, executor);
 
-  services.random = std::make_shared<RandomService>();
-  services.guids = std::make_shared<GuidGenerator>(config_.id);
-  services.true_time = std::make_shared<TrueTimeService>();
+  services.random = MakeStaticLikeObject<RandomService>();
+  services.guids = MakeStaticLikeObject<GuidGenerator>(config_.id);
+  services.true_time = MakeStaticLikeObject<TrueTimeService>();
 
   return services;
 }

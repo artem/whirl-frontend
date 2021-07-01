@@ -13,6 +13,6 @@ struct IRandomService {
   virtual RandomUInt GenerateNumber() = 0;
 };
 
-using IRandomServicePtr = std::shared_ptr<IRandomService>;
+using IRandomServicePtr = IRandomService*;
 
 }  // namespace whirl

@@ -34,6 +34,6 @@ struct ITrueTimeService {
   }
 };
 
-using ITrueTimeServicePtr = std::shared_ptr<ITrueTimeService>;
+using ITrueTimeServicePtr = ITrueTimeService*;
 
 }  // namespace whirl

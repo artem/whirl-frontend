@@ -19,6 +19,6 @@ struct IGuidGenerator {
   virtual Guid Generate() = 0;
 };
 
-using IGuidGeneratorPtr = std::shared_ptr<IGuidGenerator>;
+using IGuidGeneratorPtr = IGuidGenerator*;
 
 }  // namespace whirl

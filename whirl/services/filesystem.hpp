@@ -11,6 +11,6 @@ struct IFileSystem {
   virtual void RmRf() = 0;
 };
 
-using IFileSystemPtr = std::shared_ptr<IFileSystem>;
+using IFileSystemPtr = IFileSystem*;
 
 }  // namespace whirl

@@ -5,6 +5,7 @@
 #include <whirl/engines/matrix/adversary/services/executor.hpp>
 #include <whirl/engines/matrix/adversary/services/time.hpp>
 
+#include <whirl/engines/matrix/memory/helpers.hpp>
 #include <whirl/engines/matrix/process/step_queue.hpp>
 #include <whirl/engines/matrix/server/server.hpp>
 #include <whirl/engines/matrix/process/process_base.hpp>
@@ -44,7 +45,7 @@ class Process : public ProcessBase {
   }
 
   ITimeServicePtr MakeTimeService() {
-    return std::make_shared<TimeService>(steps_);
+    return MakeStaticLikeObject<TimeService>(steps_);
   }
 
  private:

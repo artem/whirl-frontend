@@ -23,6 +23,6 @@ struct IDatabase {
   virtual void Delete(const std::string& key) = 0;
 };
 
-using IDatabasePtr = std::shared_ptr<IDatabase>;
+using IDatabasePtr = IDatabase*;
 
 }  // namespace whirl
