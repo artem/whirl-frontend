@@ -4,26 +4,30 @@
 
 namespace whirl::matrix {
 
+static WorldImpl* ThisWorld() {
+  return WorldImpl::Access();
+}
+
 //////////////////////////////////////////////////////////////////////
 
 size_t WorldSeed() {
-  return WorldImpl::Access()->Seed();
+  return ThisWorld()->Seed();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 size_t StepRandomNumber() {
-  return WorldImpl::Access()->StepRandomNumber();
+  return ThisWorld()->StepRandomNumber();
 }
 
 RandomUInt GlobalRandomNumber() {
-  return WorldImpl::Access()->RandomNumber();
+  return ThisWorld()->RandomNumber();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 TimePoint GlobalNow() {
-  return WorldImpl::Access()->Now();
+  return ThisWorld()->Now();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -31,43 +35,43 @@ TimePoint GlobalNow() {
 // Behaviour
 
 ITimeModelPtr GetTimeModel() {
-  return WorldImpl::Access()->TimeModel();
+  return ThisWorld()->TimeModel();
 }
 
 bool IsThereAdversary() {
-  return WorldImpl::Access()->HasAdversary();
+  return ThisWorld()->HasAdversary();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 HistoryRecorder& GetHistoryRecorder() {
-  return WorldImpl::Access()->GetHistoryRecorder();
+  return ThisWorld()->GetHistoryRecorder();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 std::vector<std::string> GetPool(const std::string& name) {
-  return WorldImpl::Access()->GetPool(name);
+  return ThisWorld()->GetPool(name);
 }
 
 //////////////////////////////////////////////////////////////////////
 
 size_t WorldStepNumber() {
-  return WorldImpl::Access()->CurrentStep();
+  return ThisWorld()->CurrentStep();
 }
 
 bool AmIActor() {
-  return WorldImpl::Access()->CurrentActor() != nullptr;
+  return ThisWorld()->CurrentActor() != nullptr;
 }
 
 IActor* CurrentActor() {
-  return WorldImpl::Access()->CurrentActor();
+  return ThisWorld()->CurrentActor();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 Guid GenerateGuid() {
-  return WorldImpl::Access()->GenerateGuid();
+  return ThisWorld()->GenerateGuid();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -75,11 +79,11 @@ Guid GenerateGuid() {
 namespace detail {
 
 std::any GetGlobal(const std::string& name) {
-  return WorldImpl::Access()->GetGlobal(name);
+  return ThisWorld()->GetGlobal(name);
 }
 
 void SetGlobal(const std::string& name, std::any value) {
-  return WorldImpl::Access()->SetGlobal(name, std::move(value));
+  return ThisWorld()->SetGlobal(name, std::move(value));
 }
 
 }  // namespace detail
