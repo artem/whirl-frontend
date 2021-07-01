@@ -21,10 +21,18 @@ class NodeBase : public INode, public PeerBase {
   virtual void MainThread() {
   }
 
+  const rpc::IServerPtr& RpcServer() {
+    return server_;
+  }
+
  private:
   // Main fiber routine
   void Main();
-  void StartRPCServer();
+
+  void StartRpcServer();
+
+ private:
+  rpc::IServerPtr server_;
 };
 
 }  // namespace whirl

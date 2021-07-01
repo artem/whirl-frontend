@@ -2,6 +2,8 @@
 
 #include <wheels/support/assert.hpp>
 
+#include <whirl/rpc/server_impl.hpp>
+
 namespace whirl {
 
 void NodeBase::Start() {
@@ -10,16 +12,17 @@ void NodeBase::Start() {
   });
 }
 
-void NodeBase::StartRPCServer() {
-  RPCServer()->Start();
+void NodeBase::StartRpcServer() {
+  server_ = std::make_shared<rpc::ServerImpl>(NetTransport(), Executor());
+  server_->Start();
 }
 
 // Main fiber routine
 void NodeBase::Main() {
   await::fibers::self::SetName("main");
 
-  StartRPCServer();
-  RegisterRPCServices(RPCServer());
+  StartRpcServer();
+  RegisterRPCServices(RpcServer());
   MainThread();
 }
 

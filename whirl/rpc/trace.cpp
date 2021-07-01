@@ -89,7 +89,7 @@ std::optional<TraceId> TryGetCurrentTraceId() {
 
 // Globally unique!
 static TraceId GenerateNewTraceId() {
-  return GetRuntime().guids->Generate();
+  return GetRuntime().GuidGenerator()->Generate();
 }
 
 TraceId GetOrGenerateNewTraceId() {

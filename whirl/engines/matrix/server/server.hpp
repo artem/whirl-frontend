@@ -83,12 +83,10 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   // Runtime
 
-  const NodeRuntime& GetNodeRuntime() {
-    return *runtime_;
-  }
+  INodeRuntime& GetNodeRuntime();
 
  private:
-  NodeRuntime MakeNodeRuntime();
+  INodeRuntime* MakeNodeRuntime();
 
  private:
   State state_{State::Initial};
@@ -98,6 +96,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   WallClock wall_clock_;
   MonotonicClock monotonic_clock_;
+
   Database db_;
 
   // Node process
@@ -106,7 +105,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   net::Transport transport_;
 
   StepQueue* steps_{nullptr};
-  NodeRuntime* runtime_{nullptr};
+  INodeRuntime* runtime_{nullptr};
 
   Logger logger_{"Server"};
 };

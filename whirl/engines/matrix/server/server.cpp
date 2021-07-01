@@ -6,19 +6,9 @@
 
 #include <whirl/engines/matrix/world/global/actor.hpp>
 
-// Services
-
-#include <whirl/engines/matrix/server/services/config.hpp>
-#include <whirl/engines/matrix/server/services/executor.hpp>
-#include <whirl/engines/matrix/server/services/time.hpp>
-#include <whirl/engines/matrix/server/services/database.hpp>
-#include <whirl/engines/matrix/server/services/true_time.hpp>
-#include <whirl/engines/matrix/server/services/guid.hpp>
-#include <whirl/engines/matrix/server/services/random.hpp>
-#include <whirl/engines/matrix/server/services/net_transport.hpp>
-#include <whirl/engines/matrix/server/services/discovery.hpp>
-
-#include <whirl/rpc/server_impl.hpp>
+// TODO
+#include <whirl/engines/matrix/server/services/runtime.hpp>
+#include <whirl/engines/matrix/server/services/locator.hpp>
 
 #include <whirl/helpers/digest.hpp>
 
@@ -64,6 +54,7 @@ void Server::Crash() {
   {
     auto g = heap_.Use();
     steps_ = nullptr;
+    runtime_ = nullptr;
     ReleaseFiberResourcesOnCrash(heap_);
   }
   heap_.Reset();
@@ -129,9 +120,8 @@ void Server::Start() {
 
   // Start node process
 
-  runtime_ = MoveToHeap(MakeNodeRuntime());
-  // Now runtime is accessible from node code
-  // via ThisNodeServices()
+  runtime_ = MakeNodeRuntime();
+  // Now runtime is accessible from node via GetRuntime()
 
   // TODO: this is ugly, we need abstractions for program/process
   auto node = node_factory_->CreateNode();
@@ -182,35 +172,34 @@ size_t Server::ComputeDigest() const {
 
 // Private
 
-NodeRuntime Server::MakeNodeRuntime() {
-  NodeRuntime runtime;
+INodeRuntime* Server::MakeNodeRuntime() {
+  NodeRuntime* runtime = new NodeRuntime();
 
-  runtime.config = std::make_shared<Config>(config_.id);
+  runtime->thread_pool.Init(*steps_);
 
-  auto executor = std::make_shared<EventQueueExecutor>(*steps_);
-  auto time_service =
-      MakeStaticLikeObject<TimeService>(wall_clock_, monotonic_clock_, *steps_);
+  runtime->time
+      .Init(wall_clock_, monotonic_clock_, *steps_);
 
-  runtime.executor = executor;
-  runtime.time_service = time_service;
-
-  runtime.database = MakeStaticLikeObject<DatabaseProxy>(db_, time_service);
+  runtime->db
+      .Init(db_, runtime->time.Get());
 
   static const net::Port kTransportPort = 42;
-  auto net_transport =
-      std::make_shared<NetTransport>(transport_, kTransportPort);
+  runtime->transport.Init(transport_, kTransportPort);
 
-  runtime.discovery = std::make_shared<DiscoveryService>();
+  runtime->random.Init();
+  runtime->guids.Init(config_.id);
 
-  runtime.rpc_server =
-      std::make_shared<rpc::ServerImpl>(net_transport, executor);
-  runtime.rpc_client = rpc::MakeClient(net_transport, executor);
+  runtime->true_time.Init();
 
-  runtime.random = MakeStaticLikeObject<RandomService>();
-  runtime.guids = MakeStaticLikeObject<GuidGenerator>(config_.id);
-  runtime.true_time = MakeStaticLikeObject<TrueTimeService>();
+  runtime->config.Init(config_.id);
 
-  return runtime;
+  runtime->discovery.Init();
+
+  return new RuntimeLocator{runtime};
+}
+
+INodeRuntime& Server::GetNodeRuntime() {
+  return *runtime_;
 }
 
 //////////////////////////////////////////////////////////////////////

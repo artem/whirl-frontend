@@ -20,6 +20,6 @@ struct IDiscoveryService {
   }
 };
 
-using IDiscoveryPtr = std::shared_ptr<IDiscoveryService>;
+using IDiscoveryPtr = IDiscoveryService*;
 
 }  // namespace whirl

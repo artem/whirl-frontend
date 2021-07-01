@@ -15,13 +15,13 @@ class NodeMethodsBase {
   // Me
 
   NodeId Id() const {
-    return GetRuntime().config->Id();
+    return GetRuntime().Config()->Id();
   }
 
   // Randomness
 
-  const IRandomServicePtr& RandomService() const {
-    return GetRuntime().random;
+  IRandomServicePtr RandomService() const {
+    return GetRuntime().RandomService();
   }
 
   size_t RandomNumber() const {
@@ -40,8 +40,8 @@ class NodeMethodsBase {
 
   // Clocks
 
-  const ITimeServicePtr& TimeService() const {
-    return GetRuntime().time_service;
+  ITimeServicePtr TimeService() const {
+    return GetRuntime().TimeService();
   }
 
   TimePoint WallTimeNow() const {
@@ -60,14 +60,14 @@ class NodeMethodsBase {
 
   // TrueTime
 
-  const ITrueTimeServicePtr& TrueTime() const {
-    return GetRuntime().true_time;
+  ITrueTimeServicePtr TrueTime() const {
+    return GetRuntime().TrueTime();
   }
 
   // Local storage backend
 
-  const IDatabasePtr& StorageBackend() const {
-    return GetRuntime().database;
+  IDatabasePtr StorageBackend() const {
+    return GetRuntime().Database();
   }
 
   void Go(await::fibers::FiberRoutine routine) {
@@ -82,36 +82,32 @@ class NodeMethodsBase {
     await::fibers::self::Yield();
   }
 
-  const await::executors::IExecutorPtr& Executor() {
-    return GetRuntime().executor;
+  const await::executors::IExecutorPtr Executor() {
+    return GetRuntime().Executor();
   }
 
   // Guids
 
   Guid GenerateGuid() const {
-    return GetRuntime().guids->Generate();
+    return GetRuntime().GuidGenerator()->Generate();
   }
 
   // Cluster
 
   std::vector<std::string> DiscoverCluster() const {
-    return GetRuntime().discovery->GetCluster();
+    return GetRuntime().DiscoveryService()->GetCluster();
   }
 
   // RPC
 
-  const rpc::IServerPtr& RPCServer() const {
-    return GetRuntime().rpc_server;
-  }
-
-  const rpc::IClientPtr& RPCClient() const {
-    return GetRuntime().rpc_client;
+  ITransportPtr NetTransport() const {
+    return GetRuntime().NetTransport();
   }
 
   // Local services
 
-  const IGuidGeneratorPtr& GuidsGenerator() const {
-    return GetRuntime().guids;
+  IGuidGeneratorPtr GuidsGenerator() const {
+    return GetRuntime().GuidGenerator();
   }
 };
 

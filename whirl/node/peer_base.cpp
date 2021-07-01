@@ -4,6 +4,10 @@
 
 namespace whirl {
 
+PeerBase::PeerBase()
+  : client_(MakeRpcClient()) {
+}
+
 size_t PeerBase::PeerCount() const {
   LazyInit();
   return channels_.size();
@@ -24,6 +28,10 @@ const std::string& PeerBase::PeerName(size_t index) const {
   return PeerChannel(index)->Peer();
 }
 
+rpc::IClientPtr PeerBase::MakeRpcClient() {
+  return rpc::MakeClient(NetTransport(), Executor());
+}
+
 void PeerBase::LazyInit() const {
   if (channels_.empty()) {
     ConnectToPeers();
@@ -42,7 +50,7 @@ static rpc::BackoffParams RetriesBackoff() {
 }
 
 rpc::IChannelPtr PeerBase::MakeChannel(const std::string& peer) const {
-  auto transport = RPCClient()->Dial(peer);
+  auto transport = client_->Dial(peer);
   auto retries =
       rpc::WithRetries(std::move(transport), TimeService(), RetriesBackoff());
   return retries;

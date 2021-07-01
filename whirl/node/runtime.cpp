@@ -9,7 +9,7 @@
 
 namespace whirl {
 
-const NodeRuntime& GetRuntime() {
+INodeRuntime& GetRuntime() {
   if (IsMatrix()) {
     return matrix::ThisServer().GetNodeRuntime();
   }

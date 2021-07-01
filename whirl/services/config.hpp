@@ -16,6 +16,6 @@ struct IConfig {
   // TODO: attributes
 };
 
-using IConfigPtr = std::shared_ptr<IConfig>;
+using IConfigPtr = IConfig*;
 
 }  // namespace whirl

@@ -8,6 +8,7 @@
 #include <whirl/services/true_time.hpp>
 #include <whirl/services/filesystem.hpp>
 #include <whirl/services/discovery.hpp>
+#include <whirl/services/net_transport.hpp>
 
 #include <whirl/rpc/server.hpp>
 #include <whirl/rpc/client.hpp>
@@ -16,30 +17,34 @@ namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
 
-struct NodeRuntime {
-  IConfigPtr config;
+// Service locator
 
-  IExecutorPtr executor;
-  ITimeServicePtr time_service;
+struct INodeRuntime {
+  virtual ~INodeRuntime() = default;
 
-  IDiscoveryPtr discovery;
+  virtual IConfigPtr Config() = 0;
 
-  rpc::IServerPtr rpc_server;
-  rpc::IClientPtr rpc_client;
+  virtual const IExecutorPtr& Executor() = 0;
 
-  // Use to create local storages
-  IDatabasePtr database;
+  virtual ITimeServicePtr TimeService() = 0;
 
-  IRandomServicePtr random;
-  IGuidGeneratorPtr guids;
-  ITrueTimeServicePtr true_time;
+  virtual IDiscoveryPtr DiscoveryService() = 0;
 
-  // TODO
-  IFileSystemPtr fs;
+  virtual ITransportPtr NetTransport() = 0;
+
+  virtual IDatabasePtr Database() = 0;
+
+  virtual IRandomServicePtr RandomService() = 0;
+  virtual IGuidGeneratorPtr GuidGenerator() = 0;
+
+  virtual ITrueTimeServicePtr TrueTime() = 0;
+
+  virtual IFileSystemPtr FileSystem() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-const NodeRuntime& GetRuntime();
+// Bridge connecting engine-agnostic node and concrete engine
+INodeRuntime& GetRuntime();
 
 }  // namespace whirl

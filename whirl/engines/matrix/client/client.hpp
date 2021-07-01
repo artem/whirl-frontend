@@ -28,11 +28,10 @@ class ClientBase : public INode, public NodeMethodsBase {
   }
 
  protected:
-  rpc::IChannelPtr MakeTransportChannel(const std::string& peer);
   virtual rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
-    cluster_ = GetRuntime().discovery->GetCluster();
+    cluster_ = GetRuntime().DiscoveryService()->GetCluster();
   }
 
  private:
@@ -40,7 +39,10 @@ class ClientBase : public INode, public NodeMethodsBase {
     SleepFor(RandomNumber(50));
   }
 
+  rpc::IClientPtr MakeRpcClient();
+
   void ConnectToClusterNodes() {
+    client_ = MakeRpcClient();
     channel_ = MakeClientChannel();
   }
 
@@ -74,6 +76,8 @@ class ClientBase : public INode, public NodeMethodsBase {
 
  private:
   std::vector<std::string> cluster_;
+
+  rpc::IClientPtr client_;
   rpc::IChannelPtr channel_;
 
  protected:

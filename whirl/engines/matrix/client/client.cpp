@@ -14,15 +14,15 @@ static rpc::BackoffParams RetriesBackoff() {
 
 //////////////////////////////////////////////////////////////////////
 
-rpc::IChannelPtr ClientBase::MakeTransportChannel(const std::string& peer) {
-  return RPCClient()->Dial(peer);
+rpc::IClientPtr ClientBase::MakeRpcClient() {
+  return rpc::MakeClient(NetTransport(), Executor());
 }
 
 rpc::IChannelPtr ClientBase::MakeClientChannel() {
   // Peer channels
   std::vector<rpc::IChannelPtr> channels;
   for (const auto& addr : Cluster()) {
-    channels.push_back(MakeTransportChannel(addr));
+    channels.push_back(client_->Dial(addr));
   }
 
   // Retries -> History -> Random -> Peers

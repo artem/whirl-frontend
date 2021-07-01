@@ -58,7 +58,7 @@ struct ITransport {
                                         ITransportHandlerPtr handler) = 0;
 };
 
-using ITransportPtr = std::shared_ptr<ITransport>;
+using ITransportPtr = ITransport*;
 
 //////////////////////////////////////////////////////////////////////
 

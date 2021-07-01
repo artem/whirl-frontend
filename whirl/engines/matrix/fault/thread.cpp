@@ -9,10 +9,10 @@
 namespace whirl::matrix {
 
 void ThreadPause() {
-  const auto& runtime = ThisServer().GetNodeRuntime();
+  auto& runtime = ThisServer().GetNodeRuntime();
 
   auto pause = GetTimeModel()->ThreadPause();
-  auto after = runtime.time_service->After(pause);
+  auto after = runtime.TimeService()->After(pause);
   await::fibers::Await(std::move(after)).ExpectOk();
 }
 
