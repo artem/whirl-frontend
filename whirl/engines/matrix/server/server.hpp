@@ -47,6 +47,10 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
     return config_.hostname;
   }
 
+  net::ZoneId Zone() const override {
+    return 0;  // TODO
+  }
+
   void HandlePacket(const net::Packet& packet, net::Link* out) override;
 
   // IFaultyServer
