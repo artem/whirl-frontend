@@ -88,7 +88,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   }
 
  private:
-  NodeRuntime MakeNodeServices();
+  NodeRuntime MakeNodeRuntime();
 
  private:
   State state_{State::Initial};

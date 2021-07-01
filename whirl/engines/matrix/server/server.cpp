@@ -129,7 +129,7 @@ void Server::Start() {
 
   // Start node process
 
-  runtime_ = MoveToHeap(MakeNodeServices());
+  runtime_ = MoveToHeap(MakeNodeRuntime());
   // Now runtime is accessible from node code
   // via ThisNodeServices()
 
@@ -182,35 +182,35 @@ size_t Server::ComputeDigest() const {
 
 // Private
 
-NodeRuntime Server::MakeNodeServices() {
-  NodeRuntime services;
+NodeRuntime Server::MakeNodeRuntime() {
+  NodeRuntime runtime;
 
-  services.config = std::make_shared<Config>(config_.id);
+  runtime.config = std::make_shared<Config>(config_.id);
 
   auto executor = std::make_shared<EventQueueExecutor>(*steps_);
   auto time_service =
       MakeStaticLikeObject<TimeService>(wall_clock_, monotonic_clock_, *steps_);
 
-  services.executor = executor;
-  services.time_service = time_service;
+  runtime.executor = executor;
+  runtime.time_service = time_service;
 
-  services.database = MakeStaticLikeObject<DatabaseProxy>(db_, time_service);
+  runtime.database = MakeStaticLikeObject<DatabaseProxy>(db_, time_service);
 
   static const net::Port kTransportPort = 42;
   auto net_transport =
       std::make_shared<NetTransport>(transport_, kTransportPort);
 
-  services.discovery = std::make_shared<DiscoveryService>();
+  runtime.discovery = std::make_shared<DiscoveryService>();
 
-  services.rpc_server =
+  runtime.rpc_server =
       std::make_shared<rpc::ServerImpl>(net_transport, executor);
-  services.rpc_client = rpc::MakeClient(net_transport, executor);
+  runtime.rpc_client = rpc::MakeClient(net_transport, executor);
 
-  services.random = MakeStaticLikeObject<RandomService>();
-  services.guids = MakeStaticLikeObject<GuidGenerator>(config_.id);
-  services.true_time = MakeStaticLikeObject<TrueTimeService>();
+  runtime.random = MakeStaticLikeObject<RandomService>();
+  runtime.guids = MakeStaticLikeObject<GuidGenerator>(config_.id);
+  runtime.true_time = MakeStaticLikeObject<TrueTimeService>();
 
-  return services;
+  return runtime;
 }
 
 //////////////////////////////////////////////////////////////////////
