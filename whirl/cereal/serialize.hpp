@@ -65,28 +65,31 @@ std::string GetTypeName() {
 }  // namespace detail
 
 template <typename T>
-std::string Serialize(const T& object) {
+void Serialize(const T& object, std::ostream& output) {
   // GlobalHeapScope g;
 
   // Prepare header
   detail::SerializedObjectHeader header;
   header.type_name = detail::GetTypeName<T>();
 
-  std::stringstream output;
   {
     Archives::OutputArchive oarchive(output);
     oarchive(CEREAL_NVP(header));
     oarchive(CEREAL_NVP(object));
   }  // archive goes out of scope, ensuring all contents are flushed
 
-  auto str = output.str();
-  return str;
-
   // return CopyToHeap(str, g.ParentScopeHeap());
 }
 
 template <typename T>
-T Deserialize(const std::string& bytes) {
+std::string Serialize(const T& object) {
+  std::stringstream sout;
+  Serialize(object, sout);
+  return sout.str();
+}
+
+template <typename T>
+T Deserialize(std::istream& input) {
   // GlobalHeapScope g;
 
   const auto type_name = detail::GetTypeName<T>();
@@ -94,7 +97,6 @@ T Deserialize(const std::string& bytes) {
   detail::SerializedObjectHeader header;
   T object;
 
-  std::stringstream input(bytes);
   {
     Archives::InputArchive iarchive(input);
     iarchive(header);
@@ -112,6 +114,12 @@ T Deserialize(const std::string& bytes) {
   return object;
 
   // return CopyToHeap(object, g.ParentScopeHeap());
+}
+
+template <typename T>
+T Deserialize(const std::string& str) {
+  std::stringstream sinput(str);
+  return Deserialize<T>(sinput);
 }
 
 //////////////////////////////////////////////////////////////////////
