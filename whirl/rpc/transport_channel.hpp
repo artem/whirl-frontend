@@ -18,9 +18,6 @@
 
 namespace whirl::rpc {
 
-using await::executors::IExecutorPtr;
-using await::futures::Promise;
-
 //////////////////////////////////////////////////////////////////////
 
 // Fair-loss channel
@@ -40,7 +37,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   using Requests = std::map<RequestId, Request>;
 
  public:
-  TransportChannel(ITransportPtr t, IExecutorPtr e, TransportAddress peer)
+  TransportChannel(ITransportPtr t, await::executors::IExecutorPtr e, TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
         peer_(peer),
@@ -99,7 +96,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
  private:
   ITransportPtr transport_;
-  IExecutorPtr executor_;  // For callbacks
+  await::executors::IExecutorPtr executor_;  // For callbacks
 
   const TransportAddress peer_;
 

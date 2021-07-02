@@ -16,8 +16,6 @@
 
 namespace whirl::rpc {
 
-using await::executors::IExecutorPtr;
-
 // Server
 
 //////////////////////////////////////////////////////////////////////
@@ -26,7 +24,7 @@ class ServerImpl : public IServer,
                    public std::enable_shared_from_this<ServerImpl>,
                    public ITransportHandler {
  public:
-  ServerImpl(ITransportPtr t, IExecutorPtr e) : transport_(t), executor_(e) {
+  ServerImpl(ITransportPtr t, await::executors::IExecutorPtr e) : transport_(t), executor_(e) {
   }
 
   void Start() override;
@@ -53,7 +51,7 @@ class ServerImpl : public IServer,
  private:
   // Services
   ITransportPtr transport_;
-  IExecutorPtr executor_;
+  await::executors::IExecutorPtr executor_;
 
   ITransportServerPtr server_;
 

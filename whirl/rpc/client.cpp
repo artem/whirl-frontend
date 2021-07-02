@@ -2,6 +2,8 @@
 
 #include <whirl/rpc/transport_channel.hpp>
 
+using await::executors::IExecutorPtr;
+
 namespace whirl::rpc {
 
 class Client : public IClient {
