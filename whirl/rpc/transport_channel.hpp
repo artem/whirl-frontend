@@ -26,7 +26,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
                          public IChannel,
                          public ITransportHandler {
  private:
-  struct Request {
+  struct ActiveRequest {
     RequestId id;
     TraceId trace_id;
     Method method;
@@ -34,7 +34,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
     await::futures::LazyPromise<BytesValue> promise;
   };
 
-  using Requests = std::map<RequestId, Request>;
+  using ActiveRequests = std::map<RequestId, ActiveRequest>;
 
  public:
   TransportChannel(ITransportPtr t, await::executors::IExecutorPtr e, TransportAddress peer)
@@ -78,21 +78,21 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   }
 
  private:
-  Request MakeRequest(const Method& method, const BytesValue& input,
+  ActiveRequest MakeRequest(const Method& method, const BytesValue& input,
                       const CallContext& ctx);
 
   // Inside strand executor
-  void SendRequest(Request request);
+  void SendRequest(ActiveRequest request);
   void ProcessResponse(const TransportMessage& message);
   void LostPeer();
   void DoClose();
 
-  ResponseMessage ParseResponse(const TransportMessage& message);
+  proto::Response ParseResponse(const TransportMessage& message);
 
  private:
   ITransportSocketPtr& GetTransportSocket();
 
-  void Fail(Request& request, std::error_code e);
+  void Fail(ActiveRequest& request, std::error_code e);
 
  private:
   ITransportPtr transport_;
@@ -103,7 +103,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   IExecutorPtr strand_;
   // State guarded by strand_
   ITransportSocketPtr socket_{nullptr};
-  Requests requests_;
+  ActiveRequests requests_;
 
   Logger logger_{"RPC-Channel"};
 };

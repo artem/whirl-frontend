@@ -16,11 +16,11 @@ namespace whirl::rpc {
 
 // Network protocol
 
+namespace proto {
+
 //////////////////////////////////////////////////////////////////////
 
-// Request
-
-struct RequestMessage {
+struct Request {
   RequestId id;
   TraceId trace_id;
   std::string to;  // For debugging
@@ -32,9 +32,7 @@ struct RequestMessage {
 
 //////////////////////////////////////////////////////////////////////
 
-// Response
-
-struct ResponseMessage {
+struct Response {
   RequestId request_id;
   Method method;      // For debugging, echoes that of the request
   BytesValue result;  // wheels::Unit for handlers with void return type
@@ -46,5 +44,7 @@ struct ResponseMessage {
     return error == RPCErrorCode::Ok;
   }
 };
+
+}  // namespace proto
 
 }  // namespace whirl::rpc

@@ -43,10 +43,10 @@ class ServerImpl : public IServer,
   void ProcessRequest(const TransportMessage& message,
                       const ITransportSocketPtr& back);
 
-  void RespondWithError(const RequestMessage& request,
+  void RespondWithError(const proto::Request& request,
                         const ITransportSocketPtr& back, RPCErrorCode error);
 
-  void SendResponse(ResponseMessage response, const ITransportSocketPtr& back);
+  void SendResponse(proto::Response response, const ITransportSocketPtr& back);
 
  private:
   // Services

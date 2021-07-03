@@ -40,9 +40,9 @@ void TransportChannel::Close() {
   await::futures::SyncVia(strand_, std::move(close));
 }
 
-TransportChannel::Request TransportChannel::MakeRequest(
+TransportChannel::ActiveRequest TransportChannel::MakeRequest(
     const Method& method, const BytesValue& input, const CallContext& ctx) {
-  Request request;
+  ActiveRequest request;
 
   request.id = GenerateRequestId();
   request.trace_id = ctx.trace_id;
@@ -52,7 +52,7 @@ TransportChannel::Request TransportChannel::MakeRequest(
   return request;
 }
 
-void TransportChannel::SendRequest(Request request) {
+void TransportChannel::SendRequest(ActiveRequest request) {
   TLTraceContext tg{request.trace_id};
 
   WHIRL_LOG_INFO("Request {}.{}", peer_, request.method);
@@ -67,7 +67,7 @@ void TransportChannel::SendRequest(Request request) {
 
   auto id = request.id;
 
-  socket->Send(Serialize<RequestMessage>(
+  socket->Send(Serialize<proto::Request>(
       {request.id, request.trace_id, peer_, request.method, request.input}));
 
   requests_.emplace(id, std::move(request));
@@ -85,7 +85,7 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
     return;  // Probably duplicated response message from transport layer?
   }
 
-  Request request = std::move(request_it->second);
+  ActiveRequest request = std::move(request_it->second);
   requests_.erase(request_it);
 
   TLTraceContext tg{request.trace_id};
@@ -100,9 +100,9 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
   }
 }
 
-ResponseMessage TransportChannel::ParseResponse(
+proto::Response TransportChannel::ParseResponse(
     const TransportMessage& message) {
-  return Deserialize<ResponseMessage>(message);
+  return Deserialize<proto::Response>(message);
 }
 
 void TransportChannel::LostPeer() {
@@ -138,7 +138,7 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
   return socket_;
 }
 
-void TransportChannel::Fail(Request& request, std::error_code e) {
+void TransportChannel::Fail(ActiveRequest& request, std::error_code e) {
   WHIRL_LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_, request.method,
                  request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));

@@ -49,7 +49,7 @@ void ServerImpl::HandleDisconnect(const std::string& /*client*/) {
 
 void ServerImpl::ProcessRequest(const TransportMessage& message,
                                 const ITransportSocketPtr& back) {
-  auto request = Deserialize<RequestMessage>(message);
+  auto request = Deserialize<proto::Request>(message);
 
   SetThisFiberTraceId(request.trace_id);
 
@@ -89,13 +89,13 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   SendResponse({request.id, request.method, result, RPCErrorCode::Ok}, back);
 }
 
-void ServerImpl::RespondWithError(const RequestMessage& request,
+void ServerImpl::RespondWithError(const proto::Request& request,
                                   const ITransportSocketPtr& back,
                                   RPCErrorCode error) {
   SendResponse({request.id, request.method, "", error}, back);
 }
 
-void ServerImpl::SendResponse(ResponseMessage response,
+void ServerImpl::SendResponse(proto::Response response,
                               const ITransportSocketPtr& back) {
   back->Send(Serialize(response));
 }
