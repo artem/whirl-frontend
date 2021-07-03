@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/engines/matrix/memory/new.hpp>
+
 #include <wheels/support/mmap_allocation.hpp>
 
 #include <cstdlib>
@@ -51,14 +53,14 @@ class BlockCache {
   BlockList block_lists_[kMaxClassIndex + 1];
 };
 
-class MemoryAllocator {
+class MemoryAllocator : public IMemoryAllocator {
  public:
   MemoryAllocator();
   ~MemoryAllocator();
 
   // And initialize with zeroes
-  void* Allocate(size_t bytes);
-  void Free(void* addr);
+  void* Allocate(size_t bytes) override;
+  void Free(void* addr) override;
 
   bool FromHere(void* addr) const;
 

@@ -1,14 +1,23 @@
 #pragma once
 
-#include <whirl/engines/matrix/memory/allocator.hpp>
+#include <cstdlib>
 
 namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
+struct IMemoryAllocator {
+  virtual ~IMemoryAllocator() = default;
+
+  virtual void* Allocate(size_t bytes) = 0;
+  virtual void Free(void* addr) = 0;
+};
+
+//////////////////////////////////////////////////////////////////////
+
 // nullptr - global allocator
-void SetAllocator(MemoryAllocator* allocator);
-MemoryAllocator* GetAllocator();
+void SetAllocator(IMemoryAllocator* allocator);
+IMemoryAllocator* GetAllocator();
 
 //////////////////////////////////////////////////////////////////////
 
@@ -16,21 +25,29 @@ MemoryAllocator* GetAllocator();
 
 class AllocatorGuard {
  public:
-  AllocatorGuard(MemoryAllocator* a) {
+  AllocatorGuard(IMemoryAllocator* a) {
     saved_ = GetAllocator();
     SetAllocator(a);
   }
 
-  MemoryAllocator* ParentScopeHeap() {
+  IMemoryAllocator* ParentScopeHeap() {
     return saved_;
   }
 
+  void RollBack() {
+    if (active_) {
+      SetAllocator(saved_);
+      active_ = false;
+    }
+  }
+
   ~AllocatorGuard() {
-    SetAllocator(saved_);
+    RollBack();
   }
 
  private:
-  MemoryAllocator* saved_;
+  bool active_{true};
+  IMemoryAllocator* saved_;
 };
 
 class GlobalAllocatorGuard : public AllocatorGuard {

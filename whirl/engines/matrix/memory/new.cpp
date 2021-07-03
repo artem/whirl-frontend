@@ -8,15 +8,15 @@
 
 //////////////////////////////////////////////////////////////////////
 
-static thread_local whirl::matrix::MemoryAllocator* allocator{nullptr};
+static thread_local whirl::matrix::IMemoryAllocator* allocator{nullptr};
 
 namespace whirl::matrix {
 
-void SetAllocator(MemoryAllocator* a) {
+void SetAllocator(IMemoryAllocator* a) {
   allocator = a;
 }
 
-MemoryAllocator* GetAllocator() {
+IMemoryAllocator* GetAllocator() {
   return allocator;
 }
 
