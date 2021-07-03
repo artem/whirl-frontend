@@ -5,6 +5,7 @@
 #include <whirl/engines/matrix/process/threads.hpp>
 #include <whirl/node/node_methods_base.hpp>
 
+#include <whirl/rpc/client.hpp>
 #include <whirl/rpc/channel.hpp>
 
 #include <whirl/logger/log.hpp>
@@ -15,16 +16,14 @@
 
 namespace whirl::matrix {
 
-using await::futures::Future;
-
 //////////////////////////////////////////////////////////////////////
 
 class ClientBase : public INode, public NodeMethodsBase {
  public:
   void Start() override {
-    Go([this]() {
+    await::fibers::Go([this]() {
       Main();
-    });
+    }, Executor());
   }
 
  protected:

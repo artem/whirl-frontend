@@ -2,6 +2,7 @@
 
 #include <whirl/node/node_methods_base.hpp>
 
+#include <whirl/rpc/client.hpp>
 #include <whirl/rpc/channel.hpp>
 
 #include <vector>

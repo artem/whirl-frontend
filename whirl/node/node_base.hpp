@@ -3,6 +3,8 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/peer_base.hpp>
 
+#include <whirl/rpc/server.hpp>
+
 namespace whirl {
 
 // Peer + Main routine

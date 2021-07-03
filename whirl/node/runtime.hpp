@@ -10,9 +10,6 @@
 #include <whirl/services/discovery.hpp>
 #include <whirl/services/net_transport.hpp>
 
-#include <whirl/rpc/server.hpp>
-#include <whirl/rpc/client.hpp>
-
 namespace whirl {
 
 //////////////////////////////////////////////////////////////////////
@@ -24,7 +21,7 @@ struct INodeRuntime {
 
   virtual IConfigPtr Config() = 0;
 
-  virtual const IExecutorPtr& Executor() = 0;
+  virtual const await::executors::IExecutorPtr& Executor() = 0;
 
   virtual ITimeServicePtr TimeService() = 0;
 
