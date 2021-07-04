@@ -10,7 +10,7 @@
 #include <whirl/engines/matrix/server/services/runtime.hpp>
 #include <whirl/engines/matrix/server/services/locator.hpp>
 
-#include <whirl/helpers/digest.hpp>
+#include <whirl/engines/matrix/helpers/digest.hpp>
 
 namespace whirl::matrix {
 

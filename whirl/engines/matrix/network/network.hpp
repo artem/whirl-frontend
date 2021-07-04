@@ -6,9 +6,9 @@
 #include <whirl/engines/matrix/network/link.hpp>
 #include <whirl/engines/matrix/network/server.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <whirl/engines/matrix/helpers/digest.hpp>
 
-#include <whirl/helpers/digest.hpp>
+#include <whirl/logger/log.hpp>
 
 #include <string>
 #include <cstdlib>

@@ -2,7 +2,7 @@
 
 #include <whirl/time.hpp>
 
-#include <whirl/helpers/priority_queue.hpp>
+#include <whirl/engines/matrix/helpers/priority_queue.hpp>
 
 #include <wheels/support/function.hpp>
 

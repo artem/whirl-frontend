@@ -1,10 +1,11 @@
 #pragma once
 
 #include <whirl/time.hpp>
+
 #include <whirl/engines/matrix/network/packet.hpp>
 #include <whirl/engines/matrix/network/server.hpp>
 
-#include <whirl/helpers/priority_queue.hpp>
+#include <whirl/engines/matrix/helpers/priority_queue.hpp>
 
 #include <whirl/logger/log.hpp>
 

@@ -11,12 +11,12 @@
 #include <whirl/engines/matrix/history/recorder.hpp>
 #include <whirl/engines/matrix/log/backend.hpp>
 
+#include <whirl/engines/matrix/helpers/digest.hpp>
+#include <whirl/engines/matrix/helpers/untyped_dict.hpp>
+
 #include <whirl/services/guid.hpp>
 
 #include <whirl/logger/log.hpp>
-
-#include <whirl/helpers/digest.hpp>
-#include <whirl/helpers/untyped_dict.hpp>
 
 #include <wheels/support/id.hpp>
 

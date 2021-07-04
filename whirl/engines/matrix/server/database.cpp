@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/memory/new.hpp>
 #include <whirl/engines/matrix/memory/helpers.hpp>
 
-#include <whirl/helpers/digest.hpp>
+#include <whirl/engines/matrix/helpers/digest.hpp>
 
 namespace whirl::matrix {
 
