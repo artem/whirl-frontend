@@ -2,10 +2,6 @@
 
 #include <whirl/logger/backend.hpp>
 
-#include <wheels/support/assert.hpp>
-
-#include <iostream>
-
 namespace whirl {
 
 bool Logger::IsLevelEnabled(LogLevel level) const {
