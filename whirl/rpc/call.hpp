@@ -109,7 +109,8 @@ class [[nodiscard]] Caller0 {
 // auto f = Call("EchoService.Echo", proto::Echo::Request{data})
 //            .Via(channel)
 //            .StopAdvice(stop_token)
-//            .WithTraceId(trace_id);
+//            .WithTraceId(trace_id)
+//            .LimitRetries(77)
 //            .As<proto::Echo::Response>();
 //
 // .As<R>() is optional:
