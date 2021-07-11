@@ -100,7 +100,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   void ScheduleRetry(IExecutorPtr e) {
-    if (options_.stop_advice.StopRequested()) {
+    if (Enough()) {
       Cancel();
       return;
     }
@@ -117,6 +117,18 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     WHIRL_LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
                    channel_->Peer(), method_);
     std::move(promise_).SetError(wheels::Error(RPCErrorCode::Cancelled));
+  }
+
+  bool Enough() const {
+    return Cancelled() || AttemptsLimitReached();
+  }
+
+  bool Cancelled() const {
+    return options_.stop_advice.StopRequested();
+  }
+
+  bool AttemptsLimitReached() const {
+    return options_.attempts_limit > 0 && attempt_ >= options_.attempts_limit;
   }
 
  private:

@@ -50,6 +50,11 @@ class [[nodiscard]] Caller1 {
     return *this;
   }
 
+  Caller1& LimitAttempts(size_t limit) {
+    attempts_limit_ = limit;
+    return *this;
+  }
+
   template <typename T>
   Future<T> As() {
     return detail::As<T>(Call());
@@ -64,12 +69,12 @@ class [[nodiscard]] Caller1 {
   await::StopToken DefaultStopToken();
   TraceId GetTraceId();
 
-  CallOptions MakeCallContext() {
-    return {GetTraceId(), stop_token_};
+  CallOptions MakeCallOptions() {
+    return {GetTraceId(), stop_token_, attempts_limit_};
   }
 
   Future<BytesValue> Call() {
-    return channel_->Call(method_, input_, MakeCallContext());
+    return channel_->Call(method_, input_, MakeCallOptions());
   }
 
  private:
@@ -80,6 +85,7 @@ class [[nodiscard]] Caller1 {
   // Call context
   std::optional<TraceId> trace_id_;
   await::StopToken stop_token_;
+  size_t attempts_limit_{0};  // 0 - Infinite
 };
 
 class [[nodiscard]] Caller0 {

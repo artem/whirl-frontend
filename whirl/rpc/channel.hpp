@@ -14,6 +14,7 @@ namespace whirl::rpc {
 struct CallOptions {
   TraceId trace_id;
   await::StopToken stop_advice;
+  size_t attempts_limit;
 };
 
 // Communication line between client and remote service
