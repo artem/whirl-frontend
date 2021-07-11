@@ -16,8 +16,8 @@ TransportChannel::~TransportChannel() {
 
 Future<BytesValue> TransportChannel::Call(const Method& method,
                                           const BytesValue& input,
-                                          CallContext ctx) {
-  auto request = MakeRequest(method, input, ctx);
+                                          CallOptions options) {
+  auto request = MakeRequest(method, input, options);
   auto trace_id = request.trace_id;
 
   auto e = MakeTracingExecutor(executor_, trace_id);
@@ -41,11 +41,11 @@ void TransportChannel::Close() {
 }
 
 TransportChannel::ActiveRequest TransportChannel::MakeRequest(
-    const Method& method, const BytesValue& input, const CallContext& ctx) {
+    const Method& method, const BytesValue& input, const CallOptions& options) {
   ActiveRequest request;
 
   request.id = GenerateRequestId();
-  request.trace_id = ctx.trace_id;
+  request.trace_id = options.trace_id;
   request.method = method;
   request.input = input;
 

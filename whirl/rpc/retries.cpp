@@ -41,12 +41,12 @@ class Backoff {
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
   Retrier(const IChannelPtr& channel, const Method& method,
-          const BytesValue& input, CallContext ctx, ITimeServicePtr time,
+          const BytesValue& input, CallOptions options, ITimeServicePtr time,
           BackoffParams backoff_params)
       : channel_(channel),
         method_(method),
         input_(input),
-        ctx_(std::move(ctx)),
+        options_(std::move(options)),
         time_(std::move(time)),
         backoff_(backoff_params) {
   }
@@ -57,7 +57,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     auto self = shared_from_this();
 
     ++attempt_;
-    auto f = channel_->Call(method_, input_, ctx_);
+    auto f = channel_->Call(method_, input_, options_);
     auto e = f.GetExecutor();
     SubscribeToResult(std::move(f));
 
@@ -71,7 +71,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
                    attempt_);
 
     ++attempt_;
-    auto f = channel_->Call(method_, input_, ctx_);
+    auto f = channel_->Call(method_, input_, options_);
     SubscribeToResult(std::move(f));
   }
 
@@ -100,7 +100,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   void ScheduleRetry(IExecutorPtr e) {
-    if (ctx_.stop_advice.StopRequested()) {
+    if (options_.stop_advice.StopRequested()) {
       Cancel();
       return;
     }
@@ -126,7 +126,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   Method method_;
   BytesValue input_;
 
-  CallContext ctx_;
+  CallOptions options_;
 
   ITimeServicePtr time_;
 
@@ -157,9 +157,9 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   }
 
   Future<BytesValue> Call(const Method& method, const BytesValue& input,
-                          CallContext ctx) override {
+                          CallOptions options) override {
     auto retrier = std::make_shared<Retrier>(
-        impl_, method, input, std::move(ctx), time_, backoff_params_);
+        impl_, method, input, std::move(options), time_, backoff_params_);
     return retrier->Start();
   }
 

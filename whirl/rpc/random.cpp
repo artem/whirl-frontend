@@ -21,9 +21,9 @@ class RandomChannel : public IChannel {
   }
 
   Future<BytesValue> Call(const Method& method, const BytesValue& input,
-                          CallContext ctx) override {
+                          CallOptions options) override {
     size_t index = SelectIndex();
-    return channels_[index]->Call(method, input, std::move(ctx));
+    return channels_[index]->Call(method, input, std::move(options));
   }
 
   const std::string& Peer() const override {

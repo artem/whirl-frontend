@@ -11,7 +11,7 @@
 
 namespace whirl::rpc {
 
-struct CallContext {
+struct CallOptions {
   TraceId trace_id;
   await::StopToken stop_advice;
 };
@@ -25,7 +25,7 @@ struct IChannel {
   // Unary RPC call
   virtual await::futures::Future<BytesValue> Call(const Method& method,
                                                   const BytesValue& input,
-                                                  CallContext ctx) = 0;
+                                                  CallOptions options) = 0;
 
   virtual void Close() = 0;
 

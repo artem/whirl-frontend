@@ -31,10 +31,10 @@ class HistoryChannel : public IChannel {
   }
 
   Future<BytesValue> Call(const Method& method, const BytesValue& input,
-                          CallContext ctx) override {
+                          CallOptions options) override {
     auto cookie = GetHistoryRecorder().CallStarted(method.name, input);
 
-    auto f = impl_->Call(method, input, std::move(ctx));
+    auto f = impl_->Call(method, input, std::move(options));
 
     auto record = [cookie](const Result<BytesValue>& result) mutable {
       RecordCallResult(cookie, result);

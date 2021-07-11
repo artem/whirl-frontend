@@ -54,7 +54,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
   await::futures::Future<BytesValue> Call(const Method& method,
                                           const BytesValue& input,
-                                          CallContext ctx) override;
+                                          CallOptions ctx) override;
 
   void Close() override;
 
@@ -79,7 +79,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
  private:
   ActiveRequest MakeRequest(const Method& method, const BytesValue& input,
-                      const CallContext& ctx);
+                      const CallOptions& options);
 
   // Inside strand executor
   void SendRequest(ActiveRequest request);

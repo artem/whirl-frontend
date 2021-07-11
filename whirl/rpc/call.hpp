@@ -64,7 +64,7 @@ class [[nodiscard]] Caller1 {
   await::StopToken DefaultStopToken();
   TraceId GetTraceId();
 
-  CallContext MakeCallContext() {
+  CallOptions MakeCallContext() {
     return {GetTraceId(), stop_token_};
   }
 
