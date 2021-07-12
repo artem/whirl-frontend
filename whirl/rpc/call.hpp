@@ -17,52 +17,70 @@ namespace whirl::rpc {
 
 namespace detail {
 
-using await::futures::Future;
+// --Call--> ViaCaller --Via--> Caller --Start--> CallResult --As-> Future<T>
 
-template <typename T>
-Future<T> As(Future<BytesValue> f_raw) {
-  return std::move(f_raw).Then([](BytesValue raw) {
-    return Deserialize<T>(raw);
-  });
-}
+class [[nodiscard]] CallResult {
+  template <typename T>
+  using Future = await::futures::Future<T>;
 
-template <>
-inline Future<void> As(Future<BytesValue> f_raw) {
-  return await::futures::JustStatus(std::move(f_raw));
-}
-
-class [[nodiscard]] Caller1 {
  public:
-  Caller1(Method method, BytesValue input, IChannelPtr channel)
+  CallResult(Future<BytesValue> f)
+      : raw_future_(std::move(f)) {
+  }
+
+  template <typename T>
+  Future<T> As() && {
+    return std::move(raw_future_).Then([](BytesValue raw) {
+      return Deserialize<T>(raw);
+    });
+  }
+
+  template <>
+  Future<void> As() && {
+    return await::futures::JustStatus(std::move(raw_future_));
+  }
+
+  // Implicit cast
+  template <typename T>
+  operator Future<T>() && {
+    return std::move(*this).As<T>();
+  }
+
+ private:
+  Future<BytesValue> raw_future_;
+};
+
+class [[nodiscard]] Caller {
+ public:
+  Caller(Method method, BytesValue input, IChannelPtr channel)
       : method_(method),
         input_(std::move(input)),
         channel_(std::move(channel)),
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller1& StopAdvice(await::StopToken stop_token) {
+  Caller& StopAdvice(await::StopToken stop_token) && {
     stop_token_ = std::move(stop_token);
     return *this;
   }
 
-  Caller1& WithTraceId(TraceId trace_id) {
+  Caller& WithTraceId(TraceId trace_id) && {
     trace_id_ = trace_id;
     return *this;
   }
 
-  Caller1& LimitAttempts(size_t limit) {
+  Caller& LimitAttempts(size_t limit) && {
     attempts_limit_ = limit;
     return *this;
   }
 
-  template <typename T>
-  Future<T> As() {
-    return detail::As<T>(Call());
+  CallResult Start() && {
+    return {Call()};
   }
 
   template <typename T>
-  operator Future<T>() {
-    return detail::As<T>(Call());
+  operator await::futures::Future<T>() && {
+    return std::move(*this).Start().As<T>();
   }
 
  private:
@@ -73,7 +91,7 @@ class [[nodiscard]] Caller1 {
     return {GetTraceId(), stop_token_, attempts_limit_};
   }
 
-  Future<BytesValue> Call() {
+  await::futures::Future<BytesValue> Call() {
     return channel_->Call(method_, input_, MakeCallOptions());
   }
 
@@ -88,16 +106,17 @@ class [[nodiscard]] Caller1 {
   size_t attempts_limit_{0};  // 0 - Infinite
 };
 
-class [[nodiscard]] Caller0 {
+class [[nodiscard]] ViaCaller {
  public:
-  Caller0(Method method, BytesValue input)
+  ViaCaller(Method method, BytesValue input)
       : method_(method), input_(std::move(input)) {
   }
 
-  Caller1 Via(IChannelPtr channel) {
-    return Caller1(std::move(method_), std::move(input_), std::move(channel));
+  Caller Via(IChannelPtr channel) {
+    return Caller(std::move(method_), std::move(input_), std::move(channel));
   }
 
+ private:
   Method method_;
   BytesValue input_;
 };
@@ -111,9 +130,10 @@ class [[nodiscard]] Caller0 {
 //            .StopAdvice(stop_token)
 //            .WithTraceId(trace_id)
 //            .LimitRetries(77)
+//            .Start()
 //            .As<proto::Echo::Response>();
 //
-// .As<R>() is optional:
+// .Start().As<ResponseType>() is optional:
 // Future<proto::Echo::Response> f =
 //   Call("EchoService.Echo", proto::Echo::Request{data})
 //      .Via(channel);
@@ -121,11 +141,11 @@ class [[nodiscard]] Caller0 {
 // TODO: BlockingCall
 
 template <typename... Arguments>
-detail::Caller0 Call(const std::string& method_str, Arguments&&... arguments) {
+detail::ViaCaller Call(const std::string& method_str, Arguments&&... arguments) {
   auto method = Method::Parse(method_str);
   // Erase argument types
   auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
-  return detail::Caller0{method, input};
+  return detail::ViaCaller{method, input};
 }
 
 }  // namespace whirl::rpc
