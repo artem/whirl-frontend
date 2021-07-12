@@ -112,7 +112,7 @@ class [[nodiscard]] ViaCaller {
       : method_(method), input_(std::move(input)) {
   }
 
-  Caller Via(IChannelPtr channel) {
+  Caller Via(IChannelPtr channel) && {
     return Caller(std::move(method_), std::move(input_), std::move(channel));
   }
 
