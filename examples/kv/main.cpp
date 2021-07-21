@@ -124,16 +124,17 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     // 2) Block current fiber until quorum collected
     Result<std::vector<StampedValue>> results = Await(std::move(quorum_reads));
     // 3) Unpack vector or throw error
-    auto values = results.ValueOrThrow();
+    std::vector<StampedValue> stamped_values = results.ValueOrThrow();
 
     // Or combine all steps into:
-    // auto values = Await(Quorum(std::move(reads), Majority())).ValueOrThrow()
+    // auto stamped_values = Await(Quorum(std::move(reads), Majority())).ValueOrThrow()
 
-    for (size_t i = 0; i < values.size(); ++i) {
-      WHIRL_LOG_INFO("{}-th value in read quorum: {}", i + 1, values[i]);
+    for (size_t i = 0; i < stamped_values.size(); ++i) {
+      WHIRL_LOG_INFO("{}-th value in read quorum: {}", i + 1,
+                     stamped_values[i]);
     }
 
-    auto most_recent = FindMostRecentValue(values);
+    auto most_recent = FindMostRecent(stamped_values);
     return most_recent.value;
   }
 
@@ -145,7 +146,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
   }
 
   // Find value with largest timestamp
-  StampedValue FindMostRecentValue(
+  StampedValue FindMostRecent(
       const std::vector<StampedValue>& values) const {
     return *std::max_element(
         values.begin(), values.end(),
