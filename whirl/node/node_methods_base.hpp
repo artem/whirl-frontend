@@ -8,8 +8,6 @@
 
 namespace whirl {
 
-using await::futures::Future;
-
 class NodeMethodsBase {
  protected:
   // Me
@@ -54,7 +52,7 @@ class NodeMethodsBase {
 
   // Timeouts
 
-  Future<void> After(Duration d) {
+  await::futures::Future<void> After(Duration d) {
     return TimeService()->After(d);
   }
 

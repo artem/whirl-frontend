@@ -36,6 +36,7 @@
 #include <algorithm>
 
 using wheels::Result;
+using await::futures::Future;
 using namespace await::fibers;
 using namespace whirl;
 using namespace whirl::time_literals;
