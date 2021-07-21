@@ -4,6 +4,8 @@
 
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
+#include <await/futures/core/future.hpp>
+
 namespace whirl::matrix {
 
 namespace detail {
@@ -13,12 +15,12 @@ class Disk {
   Disk(ITimeServicePtr time_service) : time_service_(std::move(time_service)) {
   }
 
-  Future<void> Read() const {
+  await::futures::Future<void> Read() const {
     auto read_time = GetTimeModel()->DiskRead();
     return time_service_->After(read_time);
   }
 
-  Future<void> Write() {
+  await::futures::Future<void> Write() {
     auto write_time = GetTimeModel()->DiskWrite();
     return time_service_->After(write_time);
   }

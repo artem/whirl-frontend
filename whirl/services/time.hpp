@@ -8,8 +8,6 @@
 
 namespace whirl {
 
-using await::futures::Future;
-
 struct ITimeService {
   virtual ~ITimeService() = default;
 
@@ -22,7 +20,7 @@ struct ITimeService {
   virtual TimePoint MonotonicNow() = 0;
 
   // Timeouts and delays
-  virtual Future<void> After(Duration d) = 0;
+  virtual await::futures::Future<void> After(Duration d) = 0;
 };
 
 using ITimeServicePtr = ITimeService*;

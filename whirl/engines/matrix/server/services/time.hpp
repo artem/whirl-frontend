@@ -31,7 +31,7 @@ class TimeService : public ITimeService {
     return monotonic_clock_.Now();
   }
 
-  Future<void> After(Duration d) override {
+  await::futures::Future<void> After(Duration d) override {
     auto tp = AfterGlobalTime(d);
 
     auto [f, p] = await::futures::MakeContract<void>();
