@@ -69,6 +69,16 @@ class [[nodiscard]] Caller {
     return *this;
   }
 
+  Caller& AtMostOnce() && {
+    attempts_limit_ = 1;
+    return *this;
+  }
+
+  Caller& AtLeastOnce() && {
+    attempts_limit_ = 0;
+    return *this;
+  }
+
   Caller& LimitAttempts(size_t limit) && {
     attempts_limit_ = limit;
     return *this;
