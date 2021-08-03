@@ -110,10 +110,10 @@ class [[nodiscard]] Caller {
   BytesValue input_;
   IChannelPtr channel_{nullptr};
 
-  // Call context
+  // Call options
   std::optional<TraceId> trace_id_;
   await::StopToken stop_token_;
-  size_t attempts_limit_{0};  // 0 - Infinite
+  size_t attempts_limit_{0};  // 0 == Infinite
 };
 
 class [[nodiscard]] ViaCaller {
@@ -139,7 +139,7 @@ class [[nodiscard]] ViaCaller {
 //            .Via(channel)
 //            .StopAdvice(stop_token)
 //            .WithTraceId(trace_id)
-//            .LimitRetries(77)
+//            .AtLeastOnce() or .AtMostOnce() or .LimitAttempts(3)
 //            .Start()
 //            .As<proto::Echo::Response>();
 //
@@ -147,8 +147,6 @@ class [[nodiscard]] ViaCaller {
 // Future<proto::Echo::Response> f =
 //   Call("EchoService.Echo", proto::Echo::Request{data})
 //      .Via(channel);
-
-// TODO: BlockingCall
 
 template <typename... Arguments>
 detail::ViaCaller Call(const std::string& method_str, Arguments&&... arguments) {
