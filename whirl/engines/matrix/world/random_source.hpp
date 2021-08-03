@@ -7,10 +7,10 @@ namespace whirl::matrix {
 class RandomSource {
   // NB: Consistent across all platforms
   // https://eel.is/c++draft/rand.eng.mers
-  using Twister = std::mt19937;
+  using Impl = std::mt19937;
 
  public:
-  using ResultType = Twister::result_type;
+  using ResultType = Impl::result_type;
 
  public:
   RandomSource(ResultType seed) {
@@ -18,15 +18,15 @@ class RandomSource {
   }
 
   void Reset(ResultType seed) {
-    twister_.seed(seed);
+    impl_.seed(seed);
   }
 
   ResultType Next() {
-    return twister_();
+    return impl_();
   }
 
  private:
-  Twister twister_;
+  Impl impl_;
 };
 
 }  // namespace whirl::matrix
