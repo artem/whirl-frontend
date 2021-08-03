@@ -34,7 +34,7 @@ TimePoint GlobalNow() {
 
 // Behaviour
 
-ITimeModelPtr GetTimeModel() {
+const ITimeModelPtr& GetTimeModel() {
   return ThisWorld()->TimeModel();
 }
 

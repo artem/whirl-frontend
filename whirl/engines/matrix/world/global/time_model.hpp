@@ -4,6 +4,6 @@
 
 namespace whirl::matrix {
 
-ITimeModelPtr GetTimeModel();
+const ITimeModelPtr& GetTimeModel();
 
 }  // namespace whirl::matrix
