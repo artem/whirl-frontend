@@ -1,11 +1,11 @@
 #pragma once
 
-#include <functional>
+#include <cstdlib>
 
 namespace whirl::matrix {
 
 // Seed -> Digest
-using Simulation = std::function<size_t(size_t)>;
+typedef size_t (*Simulation)(size_t);
 
 int Main(int argc, const char** argv, Simulation sim);
 
