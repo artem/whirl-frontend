@@ -90,6 +90,9 @@ static T FromString(std::string str) {
 //////////////////////////////////////////////////////////////////////
 
 int Main(int argc, const char** argv, Simulation sim) {
+  // For simulator debugging
+  // ActivateAllocsTracker();
+
   wheels::ArgumentParser parser{"Whirl simulator"};
   CLI(parser);
 
