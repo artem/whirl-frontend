@@ -25,14 +25,14 @@ class PeerBase : public NodeMethodsBase {
   const std::string& PeerName(size_t index) const;
 
  private:
-  rpc::IClientPtr MakeRpcClient();
+  rpc::IClientPtr MakeRpcClient() const;
   void LazyInit() const;
 
   void ConnectToPeers() const;
   rpc::IChannelPtr MakeChannel(const std::string& peer) const;
 
  private:
-  rpc::IClientPtr client_;
+  mutable rpc::IClientPtr client_;
   mutable std::vector<rpc::IChannelPtr> channels_;
 };
 

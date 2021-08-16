@@ -4,8 +4,7 @@
 
 namespace whirl {
 
-PeerBase::PeerBase()
-  : client_(MakeRpcClient()) {
+PeerBase::PeerBase() {
 }
 
 size_t PeerBase::PeerCount() const {
@@ -28,12 +27,13 @@ const std::string& PeerBase::PeerName(size_t index) const {
   return PeerChannel(index)->Peer();
 }
 
-rpc::IClientPtr PeerBase::MakeRpcClient() {
+rpc::IClientPtr PeerBase::MakeRpcClient() const {
   return rpc::MakeClient(NetTransport(), Executor());
 }
 
 void PeerBase::LazyInit() const {
   if (channels_.empty()) {
+    client_ = MakeRpcClient();
     ConnectToPeers();
   }
 }
