@@ -14,6 +14,7 @@ struct IReader {
 
 //////////////////////////////////////////////////////////////////////
 
+size_t Read(IReader* reader, wheels::MutableMemView buffer);
 void ReadFull(IReader* reader, wheels::MutableMemView buffer);
 
 std::string ReadString(IReader* reader, size_t length);
