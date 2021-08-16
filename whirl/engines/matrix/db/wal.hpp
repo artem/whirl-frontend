@@ -23,11 +23,11 @@ class WALWriter {
   }
 
   void Put(node::db::Key key, node::db::Value value) {
-    Append({key, value, node::db::MutationType::Put});
+    Append({node::db::MutationType::Put, key, value});
   }
 
   void Delete(node::db::Key key) {
-    Append({key, std::nullopt, node::db::MutationType::Delete});
+    Append({node::db::MutationType::Delete, key, std::nullopt});
   }
 
  private:

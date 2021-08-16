@@ -21,11 +21,11 @@ struct MutationType {
 };
 
 struct Mutation {
+  MutationType::Value type;
   Key key;
   std::optional<Value> value;
-  MutationType::Value type;
 
-  WHIRL_SERIALIZE(key, value, type)
+  WHIRL_SERIALIZE(type, key, value)
 };
 
 }  // namespace whirl::node::db

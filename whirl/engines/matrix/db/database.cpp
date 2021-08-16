@@ -4,6 +4,7 @@
 
 using whirl::node::db::Key;
 using whirl::node::db::Value;
+using whirl::node::db::WriteBatch;
 
 namespace whirl::matrix::db {
 
@@ -42,6 +43,10 @@ std::optional<Value> Database::TryGet(const Key& key) const {
   }
   WHIRL_LOG_INFO("TryGet({})", key);
   return mem_table_.TryGet(key);
+}
+
+void Database::Write(WriteBatch /*batch*/) {
+  WHEELS_PANIC("Not implemented");
 }
 
 bool Database::ReadCacheMiss() const {

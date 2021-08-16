@@ -30,6 +30,8 @@ class Database : public node::db::IDatabase {
   std::optional<node::db::Value> TryGet(
       const node::db::Key& key) const override;
 
+  void Write(node::db::WriteBatch batch) override;
+
  private:
   void ReplayWAL();
 
