@@ -15,39 +15,39 @@ class RuntimeLocator : public INodeRuntime {
     return runtime_->thread_pool->GetExecutor();
   }
 
-  ITimeServicePtr TimeService() {
+  ITimeService* TimeService() {
     return runtime_->time.Get();
   }
 
-  ITransportPtr NetTransport() {
+  ITransport* NetTransport() {
     return runtime_->transport.Get();
   }
 
-  IDatabasePtr Database() {
+  node::db::IDatabase* Database() {
     return runtime_->db.Get();
   }
 
-  IGuidGeneratorPtr GuidGenerator() {
+  IGuidGenerator* GuidGenerator() {
     return runtime_->guids.Get();
   }
 
-  IRandomServicePtr RandomService() {
+  IRandomService* RandomService() {
     return runtime_->random.Get();
   }
 
-  ITrueTimeServicePtr TrueTime() {
+  ITrueTimeService* TrueTime() {
     return runtime_->true_time.Get();
   }
 
-  IFileSystemPtr FileSystem() {
+  node::fs::IFileSystem* FileSystem() {
     return runtime_->fs.Get();
   }
 
-  IConfigPtr Config() {
+  IConfig* Config() {
     return runtime_->config.Get();
   }
 
-  IDiscoveryPtr DiscoveryService() {
+  IDiscoveryService* DiscoveryService() {
     return runtime_->discovery.Get();
   }
 

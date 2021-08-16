@@ -23,6 +23,4 @@ struct ITimeService {
   virtual await::futures::Future<void> After(Duration d) = 0;
 };
 
-using ITimeServicePtr = ITimeService*;
-
 }  // namespace whirl

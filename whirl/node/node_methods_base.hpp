@@ -18,7 +18,7 @@ class NodeMethodsBase {
 
   // Randomness
 
-  IRandomServicePtr RandomService() const {
+  IRandomService* RandomService() const {
     return GetRuntime().RandomService();
   }
 
@@ -38,7 +38,7 @@ class NodeMethodsBase {
 
   // Clocks
 
-  ITimeServicePtr TimeService() const {
+  ITimeService* TimeService() const {
     return GetRuntime().TimeService();
   }
 
@@ -58,13 +58,13 @@ class NodeMethodsBase {
 
   // TrueTime
 
-  ITrueTimeServicePtr TrueTime() const {
+  ITrueTimeService* TrueTime() const {
     return GetRuntime().TrueTime();
   }
 
   // Local storage backend
 
-  IDatabasePtr Database() const {
+  node::db::IDatabase* Database() const {
     return GetRuntime().Database();
   }
 
@@ -104,7 +104,7 @@ class NodeMethodsBase {
 
   // Local services
 
-  IGuidGeneratorPtr GuidsGenerator() const {
+  IGuidGenerator* GuidsGenerator() const {
     return GetRuntime().GuidGenerator();
   }
 };

@@ -17,8 +17,8 @@ using await::fibers::ThreadLike;
 
 class ThreadsRuntime {
  public:
-  ThreadsRuntime(IExecutorPtr e, ITimeServicePtr t)
-      : executor_(std::move(e)), time_service_(std::move(t)) {
+  ThreadsRuntime(IExecutorPtr e, ITimeService* t)
+      : executor_(std::move(e)), time_service_(t) {
   }
 
   // TODO: Remove
@@ -42,7 +42,7 @@ class ThreadsRuntime {
 
  private:
   IExecutorPtr executor_;
-  ITimeServicePtr time_service_;
+  ITimeService* time_service_;
 };
 
 }  // namespace whirl

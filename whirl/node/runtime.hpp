@@ -19,24 +19,24 @@ namespace whirl {
 struct INodeRuntime {
   virtual ~INodeRuntime() = default;
 
-  virtual IConfigPtr Config() = 0;
+  virtual IConfig* Config() = 0;
 
   virtual const await::executors::IExecutorPtr& Executor() = 0;
 
-  virtual ITimeServicePtr TimeService() = 0;
+  virtual ITimeService* TimeService() = 0;
 
-  virtual IDiscoveryPtr DiscoveryService() = 0;
+  virtual IDiscoveryService* DiscoveryService() = 0;
 
-  virtual ITransportPtr NetTransport() = 0;
+  virtual ITransport* NetTransport() = 0;
 
-  virtual IDatabasePtr Database() = 0;
+  virtual node::db::IDatabase* Database() = 0;
 
-  virtual IRandomServicePtr RandomService() = 0;
-  virtual IGuidGeneratorPtr GuidGenerator() = 0;
+  virtual IRandomService* RandomService() = 0;
+  virtual IGuidGenerator* GuidGenerator() = 0;
 
-  virtual ITrueTimeServicePtr TrueTime() = 0;
+  virtual ITrueTimeService* TrueTime() = 0;
 
-  virtual IFileSystemPtr FileSystem() = 0;
+  virtual node::fs::IFileSystem* FileSystem() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////

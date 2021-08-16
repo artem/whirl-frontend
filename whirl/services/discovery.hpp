@@ -20,6 +20,4 @@ struct IDiscoveryService {
   }
 };
 
-using IDiscoveryPtr = IDiscoveryService*;
-
 }  // namespace whirl

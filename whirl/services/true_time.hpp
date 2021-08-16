@@ -34,6 +34,4 @@ struct ITrueTimeService {
   }
 };
 
-using ITrueTimeServicePtr = ITrueTimeService*;
-
 }  // namespace whirl

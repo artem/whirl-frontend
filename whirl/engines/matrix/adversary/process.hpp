@@ -44,7 +44,7 @@ class Process : public ProcessBase {
     return std::make_shared<Executor>(steps_);
   }
 
-  ITimeServicePtr MakeTimeService() {
+  ITimeService* MakeTimeService() {
     return MakeStaticLikeObject<TimeService>(steps_);
   }
 

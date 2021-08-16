@@ -16,7 +16,7 @@ struct BackoffParams {
 
 //////////////////////////////////////////////////////////////////////
 
-IChannelPtr WithRetries(IChannelPtr channel, ITimeServicePtr time,
+IChannelPtr WithRetries(IChannelPtr channel, ITimeService* time,
                         BackoffParams backoff_params);
 
 }  // namespace whirl::rpc

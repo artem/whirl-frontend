@@ -19,6 +19,4 @@ struct IGuidGenerator {
   virtual Guid Generate() = 0;
 };
 
-using IGuidGeneratorPtr = IGuidGenerator*;
-
 }  // namespace whirl

@@ -9,6 +9,6 @@
 namespace whirl::rpc {
 
 rpc::IChannelPtr MakeRandomChannel(std::vector<rpc::IChannelPtr>&& channels,
-                                   IRandomServicePtr random);
+                                   IRandomService* random);
 
 }  // namespace whirl::rpc

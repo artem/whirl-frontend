@@ -13,6 +13,4 @@ struct IRandomService {
   virtual RandomUInt GenerateNumber() = 0;
 };
 
-using IRandomServicePtr = IRandomService*;
-
 }  // namespace whirl

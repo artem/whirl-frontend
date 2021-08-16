@@ -16,6 +16,4 @@ struct IConfig {
   // TODO: attributes
 };
 
-using IConfigPtr = IConfig*;
-
 }  // namespace whirl
