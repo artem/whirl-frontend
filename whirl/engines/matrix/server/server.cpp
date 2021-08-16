@@ -19,7 +19,7 @@ namespace whirl::matrix {
 Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
     : config_(config),
       node_factory_(std::move(factory)),
-      transport_(net, config.hostname, heap_) {
+      transport_(net, config.hostname, heap_, scheduler_) {
 }
 
 Server::~Server() {
@@ -46,14 +46,19 @@ void Server::Crash() {
 
   WHIRL_LOG_INFO("Crash server {}", HostName());
 
-  // 1) Remove all network endpoints
+  // Remove all network endpoints
   transport_.Reset();
+
+  // Close open files
+  filesystem_.Reset();
+
+  // Drop scheduled tasks
+  scheduler_.Reset();
 
   // 2) Reset process heap
   // WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
   {
     auto g = heap_.Use();
-    steps_ = nullptr;
     runtime_ = nullptr;
     ReleaseFiberResourcesOnCrash(heap_);
   }
@@ -81,16 +86,7 @@ void Server::Resume() {
 
   WHEELS_VERIFY(state_ == State::Paused, "Server is not paused");
 
-  auto now = GlobalNow();
-
-  {
-    auto g = heap_.Use();
-
-    while (!steps_->IsEmpty() && steps_->NextStepTime() < now) {
-      auto step = steps_->TakeNext();
-      steps_->Add(now, std::move(step.action));
-    }
-  }
+  scheduler_.Resume(GlobalNow());
 
   state_ = State::Running;
 }
@@ -116,8 +112,6 @@ void Server::Start() {
 
   auto g = heap_.Use();
 
-  steps_ = new StepQueue();
-
   // Start node process
 
   runtime_ = MakeNodeRuntime();
@@ -135,22 +129,20 @@ bool Server::IsRunnable() const {
   if (state_ != State::Running) {
     return false;
   }
-  // No [de]allocations here
-  // auto g = heap_.Use();
-  // WHEELS_VERIFY(steps_, "Step queue is not created");
-  return !steps_->IsEmpty();
+  return !scheduler_.IsEmpty();
 }
 
 TimePoint Server::NextStepTime() const {
-  // No [de]allocations here
-  // auto g = heap_.Use();
-  return steps_->NextStepTime();
+  return scheduler_.NextTaskTime();
+
 }
 
 void Server::Step() {
-  auto g = heap_.Use();
-  auto step = steps_->TakeNext();
-  step();
+  ITask* task = scheduler_.TakeNext();
+  {
+    auto g = heap_.Use();
+    task->Run();
+  }
 }
 
 void Server::Shutdown() {
@@ -165,8 +157,10 @@ size_t Server::ComputeDigest() const {
   }
 
   DigestCalculator digest;
+  // Memory
   digest.Eat(heap_.BytesAllocated());
-  digest.Combine(db_.ComputeDigest());
+  // Fs
+  digest.Combine(filesystem_.ComputeDigest());
   return digest.GetValue();
 }
 
@@ -175,13 +169,14 @@ size_t Server::ComputeDigest() const {
 INodeRuntime* Server::MakeNodeRuntime() {
   NodeRuntime* runtime = new NodeRuntime();
 
-  runtime->thread_pool.Init(*steps_);
+  runtime->thread_pool.Init(scheduler_);
 
   runtime->time
-      .Init(wall_clock_, monotonic_clock_, *steps_);
+      .Init(wall_clock_, monotonic_clock_, scheduler_);
 
-  runtime->db
-      .Init(db_, runtime->time.Get());
+  runtime->fs.Init(&filesystem_, runtime->time.Get());
+
+  runtime->db.Init(runtime->fs.Get());
 
   static const net::Port kTransportPort = 42;
   runtime->transport.Init(transport_, kTransportPort);

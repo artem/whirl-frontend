@@ -4,7 +4,8 @@
 
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
-#include <await/futures/core/future.hpp>
+#include <await/fibers/core/await.hpp>
+#include <await/fibers/sync/future.hpp>
 
 namespace whirl::matrix {
 
@@ -12,21 +13,25 @@ namespace detail {
 
 class Disk {
  public:
-  Disk(ITimeServicePtr time_service) : time_service_(std::move(time_service)) {
+  Disk(ITimeService* time_service) : time_service_(std::move(time_service)) {
   }
 
-  await::futures::Future<void> Read() const {
-    auto read_time = GetTimeModel()->DiskRead();
-    return time_service_->After(read_time);
+  void Read(size_t bytes) const {
+    BlockFor(GetTimeModel()->DiskRead(bytes));
   }
 
-  await::futures::Future<void> Write() {
-    auto write_time = GetTimeModel()->DiskWrite();
-    return time_service_->After(write_time);
+  void Write(size_t bytes) {
+    BlockFor(GetTimeModel()->DiskWrite(bytes));
   }
 
  private:
-  ITimeServicePtr time_service_;
+  void BlockFor(Duration latency) const {
+    auto after = time_service_->After(latency);
+    await::fibers::Await(std::move(after)).ExpectOk();
+  }
+
+ private:
+  ITimeService* time_service_;
 };
 
 }  // namespace detail

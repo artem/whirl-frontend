@@ -5,6 +5,7 @@
 #include <whirl/engines/matrix/server/services/random.hpp>
 #include <whirl/engines/matrix/server/services/thread_pool.hpp>
 #include <whirl/engines/matrix/server/services/time.hpp>
+#include <whirl/engines/matrix/server/services/filesystem.hpp>
 #include <whirl/engines/matrix/server/services/true_time.hpp>
 #include <whirl/engines/matrix/server/services/guid.hpp>
 #include <whirl/engines/matrix/server/services/net_transport.hpp>
@@ -43,8 +44,9 @@ class StaticObject {
 struct NodeRuntime {
   StaticObject<ThreadPool> thread_pool;
   StaticObject<TimeService> time;
+  StaticObject<FS> fs;
   StaticObject<NetTransport> transport;
-  StaticObject<DatabaseProxy> db;
+  StaticObject<db::Database> db;
   StaticObject<RandomGenerator> random;
   StaticObject<GuidGenerator> guids;
   StaticObject<TrueTimeService> true_time;

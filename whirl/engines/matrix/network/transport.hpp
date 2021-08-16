@@ -6,6 +6,7 @@
 #include <whirl/engines/matrix/network/socket.hpp>
 
 #include <whirl/engines/matrix/process/heap.hpp>
+#include <whirl/engines/matrix/process/scheduler.hpp>
 
 #include <whirl/logger/log.hpp>
 
@@ -41,7 +42,7 @@ class Transport {
   friend class ServerSocket;
 
  public:
-  Transport(Network& net, const std::string& host, ProcessHeap& heap);
+  Transport(Network& net, const std::string& host, ProcessHeap& heap, TaskScheduler& scheduler);
 
   // Context: Server
   ClientSocket ConnectTo(const Address& address, ISocketHandler* handler);
@@ -57,7 +58,7 @@ class Transport {
 
  private:
   // Context: Server
-  // Invoked from socket dtors
+  // Invoked from socket destructor
   void RemoveEndpoint(Port port);
 
   Port FindFreePort();
@@ -73,6 +74,7 @@ class Transport {
 
   // To invoke ISocketHandler methods
   ProcessHeap& heap_;
+  TaskScheduler& scheduler_;
 
   Logger logger_{"Transport"};
 };

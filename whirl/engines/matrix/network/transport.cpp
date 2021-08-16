@@ -11,8 +11,28 @@
 
 namespace whirl::matrix::net {
 
-Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap)
-    : net_(net), host_(host), heap_(heap) {
+namespace detail {
+
+template <typename Callback>
+class TransportTask : public ITask {
+ public:
+  TransportTask(Callback cb) : cb_(std::move(cb)) {
+  }
+
+  void Run() override {
+    cb_();
+    delete this;
+  }
+
+ private:
+  Callback cb_;
+};
+
+}  // namespace detail
+
+
+Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap, TaskScheduler& scheduler)
+    : net_(net), host_(host), heap_(heap), scheduler_(scheduler) {
 }
 
 ClientSocket Transport::ConnectTo(const Address& address,
@@ -149,7 +169,16 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.header.type == Packet::Type::Reset) {
     // Disconnect
     auto g = heap_.Use();
-    endpoint.handler->HandleDisconnect(from.host);
+
+    auto callback = [
+        handler = endpoint.handler,
+        host = from.host]() {
+      handler->HandleDisconnect(host);
+    };
+
+    auto task = new detail::TransportTask(std::move(callback));
+    scheduler_.ScheduleAsap(task);
+
     return;
 
   } else if (packet.header.type == Packet::Type::Data) {
@@ -159,8 +188,20 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
                    packet.message);
 
     auto g = heap_.Use();
-    endpoint.handler->HandleMessage(packet.message,
-                                    ReplySocket(packet.header, out));
+
+    auto callback = [
+      handler = endpoint.handler,
+      message = packet.message,
+      reply_socket = ReplySocket(packet.header, out)]() {
+      handler->HandleMessage(message, reply_socket);
+    };
+
+    auto* task = new detail::TransportTask(std::move(callback));
+
+    scheduler_.ScheduleAsap(task);
+
+//    endpoint.handler->HandleMessage(packet.message,
+//                                    ReplySocket(packet.header, out));
     return;
   }
 }

@@ -3,7 +3,7 @@
 #include <whirl/services/time.hpp>
 
 #include <whirl/engines/matrix/server/clocks.hpp>
-#include <whirl/engines/matrix/process/step_queue.hpp>
+#include <whirl/engines/matrix/process/scheduler.hpp>
 #include <whirl/logger/log.hpp>
 
 #include <await/futures/core/future.hpp>
@@ -17,10 +17,10 @@ namespace whirl::matrix {
 class TimeService : public ITimeService {
  public:
   TimeService(WallClock& wall_clock, MonotonicClock& monotonic_clock,
-              StepQueue& events)
+              TaskScheduler& scheduler)
       : wall_clock_(wall_clock),
         monotonic_clock_(monotonic_clock),
-        events_(events) {
+        scheduler_(scheduler) {
   }
 
   TimePoint WallTimeNow() override {
@@ -32,12 +32,14 @@ class TimeService : public ITimeService {
   }
 
   await::futures::Future<void> After(Duration d) override {
-    auto tp = AfterGlobalTime(d);
+    auto after = AfterGlobalTime(d);
 
     auto [f, p] = await::futures::MakeContract<void>();
-    events_.Add(tp, [p = std::move(p)]() mutable {
-      std::move(p).Set();
-    });
+
+    auto cb = [timer_promise = std::move(p)]() mutable {
+      std::move(timer_promise).Set();
+    };
+    Schedule(scheduler_, after, std::move(cb));
     return std::move(f);
   }
 
@@ -50,7 +52,7 @@ class TimeService : public ITimeService {
   WallClock& wall_clock_;
   MonotonicClock& monotonic_clock_;
 
-  StepQueue& events_;
+  TaskScheduler& scheduler_;
 
   Logger logger_{"Time"};
 };

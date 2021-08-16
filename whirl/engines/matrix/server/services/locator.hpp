@@ -40,7 +40,7 @@ class RuntimeLocator : public INodeRuntime {
   }
 
   IFileSystemPtr FileSystem() {
-    return nullptr;  // TODO
+    return nullptr;
   }
 
   IConfigPtr Config() {

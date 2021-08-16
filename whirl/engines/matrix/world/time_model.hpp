@@ -33,8 +33,8 @@ struct ITimeModel {
 
   // Disk
 
-  virtual Duration DiskWrite() = 0;
-  virtual Duration DiskRead() = 0;
+  virtual Duration DiskWrite(size_t bytes) = 0;
+  virtual Duration DiskRead(size_t bytes) = 0;
 
   // Network
 

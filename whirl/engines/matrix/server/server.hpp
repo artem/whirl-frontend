@@ -8,14 +8,15 @@
 
 #include <whirl/engines/matrix/server/config.hpp>
 #include <whirl/engines/matrix/server/clocks.hpp>
-#include <whirl/engines/matrix/server/database.hpp>
+
+#include <whirl/engines/matrix/fs/fs.hpp>
 
 #include <whirl/engines/matrix/network/server.hpp>
 #include <whirl/engines/matrix/network/network.hpp>
 #include <whirl/engines/matrix/network/transport.hpp>
 
 #include <whirl/engines/matrix/process/heap.hpp>
-#include <whirl/engines/matrix/process/step_queue.hpp>
+#include <whirl/engines/matrix/process/scheduler.hpp>
 
 #include <whirl/logger/log.hpp>
 
@@ -94,17 +95,16 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   ServerConfig config_;
   INodeFactoryPtr node_factory_;
 
+  // Hardware
   WallClock wall_clock_;
   MonotonicClock monotonic_clock_;
 
-  Database db_;
-
-  // Node process
-
+  // Operating system
+  TaskScheduler scheduler_;
+  fs::FileSystem filesystem_;
   mutable ProcessHeap heap_;
   net::Transport transport_;
 
-  StepQueue* steps_{nullptr};
   INodeRuntime* runtime_{nullptr};
 
   Logger logger_{"Server"};

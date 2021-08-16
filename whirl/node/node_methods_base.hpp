@@ -64,7 +64,7 @@ class NodeMethodsBase {
 
   // Local storage backend
 
-  IDatabasePtr StorageBackend() const {
+  IDatabasePtr Database() const {
     return GetRuntime().Database();
   }
 

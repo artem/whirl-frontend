@@ -21,8 +21,12 @@ void NodeBase::StartRpcServer() {
 void NodeBase::Main() {
   await::fibers::self::SetName("main");
 
+  // TODO: Read dir from config
+  Database()->Open("/db");
+
   StartRpcServer();
   RegisterRPCServices(RpcServer());
+
   MainThread();
 }
 

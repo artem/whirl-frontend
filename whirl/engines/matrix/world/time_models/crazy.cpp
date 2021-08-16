@@ -43,11 +43,11 @@ class CrazyTimeModel : public ITimeModel {
     return GlobalRandomNumber(5, 500);
   }
 
-  Duration DiskWrite() override {
+  Duration DiskWrite(size_t /*bytes*/) override {
     return GlobalRandomNumber(10, 250);
   }
 
-  Duration DiskRead() override {
+  Duration DiskRead(size_t /*bytes*/) override {
     return GlobalRandomNumber(10, 50);
   }
 

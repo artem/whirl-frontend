@@ -1,15 +1,8 @@
 #pragma once
 
-#include <memory>
+#include <whirl/fs/fs.hpp>
 
 namespace whirl {
-
-struct IFileSystem {
-  virtual ~IFileSystem() = default;
-
-  // TODO: more useful API
-  virtual void RmRf() = 0;
-};
 
 using IFileSystemPtr = IFileSystem*;
 
