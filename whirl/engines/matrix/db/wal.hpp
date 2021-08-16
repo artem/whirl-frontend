@@ -18,7 +18,7 @@ namespace whirl::matrix::db {
 
 class WALWriter {
  public:
-  WALWriter(node::fs::IFileSystem* fs, node::fs::FsPath file_path)
+  WALWriter(node::fs::IFileSystem* fs, node::fs::Path file_path)
       : file_writer_(fs, file_path), framed_writer_(&file_writer_) {
   }
 
@@ -45,7 +45,7 @@ class WALWriter {
 
 class WALReader {
  public:
-  WALReader(node::fs::IFileSystem *fs, node::fs::FsPath log_file_path)
+  WALReader(node::fs::IFileSystem *fs, node::fs::Path log_file_path)
       : file_reader_(fs, log_file_path),
         framed_reader_(&file_reader_) {
   }

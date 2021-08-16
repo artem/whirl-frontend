@@ -24,10 +24,10 @@ enum class FileMode {
 struct IFileSystem {
   virtual ~IFileSystem() = default;
 
-  virtual bool Exists(const FsPath& file_path) const = 0;
+  virtual bool Exists(const Path& file_path) const = 0;
 
   // FileMode::Append creates file if it does not exist
-  virtual Fd Open(const FsPath& file_path, FileMode mode) = 0;
+  virtual Fd Open(const Path& file_path, FileMode mode) = 0;
 
   // Only for FileMode::Append
   // Blocking

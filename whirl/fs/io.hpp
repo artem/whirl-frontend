@@ -13,7 +13,7 @@ namespace whirl::node::fs {
 
 class FileReader : public IReader, private wheels::NonCopyable {
  public:
-  FileReader(IFileSystem* fs, FsPath file_path);
+  FileReader(IFileSystem* fs, Path file_path);
   ~FileReader();
 
   size_t ReadSome(wheels::MutableMemView buffer) override;
@@ -30,7 +30,7 @@ class FileReader : public IReader, private wheels::NonCopyable {
 
 class FileWriter : public IWriter, private wheels::NonCopyable {
  public:
-  FileWriter(IFileSystem* fs, FsPath file_path);
+  FileWriter(IFileSystem* fs, Path file_path);
   ~FileWriter();
 
   size_t Write(wheels::ConstMemView data) override;

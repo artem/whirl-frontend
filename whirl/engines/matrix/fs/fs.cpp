@@ -6,18 +6,18 @@
 #include <whirl/engines/matrix/memory/new.hpp>
 
 using whirl::node::fs::Fd;
-using whirl::node::fs::FsPath;
+using whirl::node::fs::Path;
 using whirl::node::fs::FileMode;
 
 namespace whirl::matrix::fs {
 
 // System calls
 
-bool FileSystem::Exists(const FsPath& file_path) const {
+bool FileSystem::Exists(const Path& file_path) const {
   return files_.find(file_path) != files_.end();
 }
 
-Fd FileSystem::Open(const FsPath& file_path, FileMode mode) {
+Fd FileSystem::Open(const Path& file_path, FileMode mode) {
   GlobalAllocatorGuard g;
 
   auto file = FindOrCreateFile(file_path, mode);
@@ -57,7 +57,7 @@ void FileSystem::Close(Fd fd) {
   }
 }
 
-FileSystem::FileRef FileSystem::FindOrCreateFile(const FsPath& file_path, FileMode open_mode) {
+FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path, FileMode open_mode) {
   auto it = files_.find(file_path);
 
   if (it != files_.end()) {

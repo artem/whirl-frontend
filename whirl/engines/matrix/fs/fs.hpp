@@ -19,7 +19,7 @@ class FileSystem {
 
   struct OpenedFile {
     node::fs::Fd fd;
-    node::fs::FsPath path;
+    node::fs::Path path;
     node::fs::FileMode mode;
     size_t offset;
     FileRef file;
@@ -30,10 +30,10 @@ class FileSystem {
 
   // System calls
 
-  bool Exists(const node::fs::FsPath& file_path) const;
+  bool Exists(const node::fs::Path& file_path) const;
 
   node::fs::Fd Open(
-      const node::fs::FsPath& file_path,
+      const node::fs::Path& file_path,
       node::fs::FileMode mode);
 
   size_t Read(node::fs::Fd fd, wheels::MutableMemView buffer);
@@ -50,7 +50,7 @@ class FileSystem {
 
  private:
   FileRef FindOrCreateFile(
-      const node::fs::FsPath& file_path,
+      const node::fs::Path& file_path,
       node::fs::FileMode open_mode);
 
   static FileRef CreateFile();
@@ -65,7 +65,7 @@ class FileSystem {
 
  private:
   // Persistent state
-  std::map<node::fs::FsPath, FileRef> files_;
+  std::map<node::fs::Path, FileRef> files_;
 
   // Process (volatile) state
   std::map<node::fs::Fd, OpenedFile> opened_files_;

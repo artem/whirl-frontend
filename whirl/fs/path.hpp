@@ -4,6 +4,6 @@
 
 namespace whirl::node::fs {
 
-using FsPath = std::string;
+using Path = std::string;
 
 }  // namespace whirl::node::fs

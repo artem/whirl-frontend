@@ -39,5 +39,4 @@ class MonotonicClock {
   TimePoint init_;
 };
 
-
 }  // namespace whirl::matrix
