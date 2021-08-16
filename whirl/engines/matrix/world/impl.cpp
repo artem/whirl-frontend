@@ -175,4 +175,9 @@ void WorldImpl::RunFor(Duration time_budget) {
   }
 }
 
+void WorldImpl::RestartServer(size_t index) {
+  WorldGuard g(this);
+  cluster_[index].FastReboot();
+}
+
 }  // namespace whirl::matrix

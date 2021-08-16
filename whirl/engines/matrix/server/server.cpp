@@ -119,10 +119,16 @@ void Server::Start() {
 
   // TODO: this is ugly, we need abstractions for program/process
   auto node = node_factory_->CreateNode();
-  node->Start();
+  StartNodeMain(node.get());
   MoveToHeap(std::move(node));
 
   state_ = State::Running;
+}
+
+void Server::StartNodeMain(INode* node) {
+  await::fibers::Go([node]() {
+    node->Start();
+    }, runtime_->Executor());
 }
 
 bool Server::IsRunnable() const {

@@ -93,6 +93,8 @@ class WorldImpl {
 
   void RunFor(Duration time_budget);
 
+  void RestartServer(size_t index);
+
   size_t ClusterSize() const {
     return cluster_.size();
   }

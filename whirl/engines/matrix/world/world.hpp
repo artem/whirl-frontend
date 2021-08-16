@@ -63,6 +63,9 @@ class World {
   bool Step();
   void MakeSteps(size_t count);
 
+  // For tests
+  void RestartServer(size_t index);
+
   // Returns simulation digest
   size_t Stop();
 

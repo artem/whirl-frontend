@@ -90,6 +90,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
  private:
   INodeRuntime* MakeNodeRuntime();
+  void StartNodeMain(INode* node);
 
  private:
   State state_{State::Initial};

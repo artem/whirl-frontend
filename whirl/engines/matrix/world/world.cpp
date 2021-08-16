@@ -54,6 +54,10 @@ void World::MakeSteps(size_t count) {
   impl_->MakeSteps(count);
 }
 
+void World::RestartServer(size_t index) {
+  impl_->RestartServer(index);
+}
+
 size_t World::Stop() {
   return impl_->Stop();
 }
