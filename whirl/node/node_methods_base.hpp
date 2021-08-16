@@ -80,7 +80,7 @@ class NodeMethodsBase {
     await::fibers::self::Yield();
   }
 
-  const await::executors::IExecutorPtr Executor() {
+  const await::executors::IExecutorPtr Executor() const {
     return GetRuntime().Executor();
   }
 
@@ -106,6 +106,10 @@ class NodeMethodsBase {
 
   IGuidGenerator* GuidsGenerator() const {
     return GetRuntime().GuidGenerator();
+  }
+
+  node::fs::IFileSystem* FileSystem() const {
+    return GetRuntime().FileSystem();
   }
 };
 
