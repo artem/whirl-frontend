@@ -20,6 +20,7 @@
 #include <cassert>
 
 using namespace await::fibers;
+using await::futures::Future;
 using namespace whirl::time_literals;
 using namespace whirl;
 
@@ -84,7 +85,7 @@ class ClientNode final: public matrix::ClientBase {
   }
 
  protected:
-  void MainThread() override {
+  [[noreturn]] void MainThread() override {
     while (true) {
       // Печатаем локальное время
       WHIRL_LOG_INFO("Local wall time: {}", WallTimeNow());

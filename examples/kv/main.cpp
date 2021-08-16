@@ -1,5 +1,5 @@
 #include <whirl/node/node_base.hpp>
-#include <whirl/node/local_storage.hpp>
+#include <whirl/db/typed/kv_storage.hpp>
 #include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
@@ -55,19 +55,19 @@ using Timestamp = size_t;
 
 struct StampedValue {
   Value value;
-  Timestamp ts;
+  Timestamp timestamp;
 
   static StampedValue NoValue() {
     return {0, 0};
   }
 
   // Serialization support for local storage and RPC
-  WHIRL_SERIALIZE(value, ts)
+  WHIRL_SERIALIZE(value, timestamp)
 };
 
 // For logging
 std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
-  out << "{" << stamped_value.value << ", ts: " << stamped_value.ts << "}";
+  out << "{" << stamped_value.value << ", ts: " << stamped_value.timestamp << "}";
   return out;
 }
 
@@ -76,6 +76,8 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 // KV storage / bunch of atomic R/W registers
 
 // RPC services / algorithm roles
+
+// Coordinator role, stateless
 
 class Coordinator : public rpc::ServiceBase<Coordinator>,
                     public PeerBase {
@@ -102,7 +104,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
               .Via(PeerChannel(i)));
     }
 
-    // Await acks from majority of replicas
+    // Await acknowledgements from the majority of storage replicas
     Await(Quorum(std::move(writes), /*threshold=*/Majority())).ThrowIfError();
   }
 
@@ -116,7 +118,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
               .Via(PeerChannel(i)));
     }
 
-    // Await responses from majority of replicas
+    // Await responses from the majority of replicas
 
     // 1) Combine futures from read RPC-s to single quorum future
     Future<std::vector<StampedValue>> quorum_reads =
@@ -145,13 +147,13 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     return WallTimeNow();
   }
 
-  // Find value with largest timestamp
+  // Find value with the largest timestamp
   StampedValue FindMostRecent(
       const std::vector<StampedValue>& values) const {
     return *std::max_element(
         values.begin(), values.end(),
         [](const StampedValue& lhs, const StampedValue& rhs) {
-          return lhs.ts < rhs.ts;
+          return lhs.timestamp < rhs.timestamp;
         });
   }
 
@@ -164,11 +166,13 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
   Logger logger_{"KVNode.Coordinator"};
 };
 
-class StorageReplica : public rpc::ServiceBase<StorageReplica>,
+// Storage replica role
+
+class Replica : public rpc::ServiceBase<Replica>,
                        public NodeMethodsBase {
  public:
-  StorageReplica()
-    : kv_(StorageBackend(), "kv") {
+  Replica()
+    : kv_store_(Database(), "abd") {
   }
 
   void RegisterRPCMethods() override {
@@ -178,39 +182,39 @@ class StorageReplica : public rpc::ServiceBase<StorageReplica>,
 
   // RPC handlers
 
-  void LocalWrite(Key key, StampedValue stamped_value) {
-    std::lock_guard guard(mutex_);
+  void LocalWrite(Key key, StampedValue target_value) {
+    std::lock_guard guard(write_mutex_);
 
-    std::optional<StampedValue> local = kv_.TryGet(key);
+    std::optional<StampedValue> local_value = kv_store_.TryGet(key);
 
-    if (!local.has_value()) {
+    if (!local_value.has_value()) {
       // First write for this key
-      LocalUpdate(key, stamped_value);
+      LocalUpdate(key, target_value);
     } else {
       // Write timestamp > timestamp of locally stored value
-      if (stamped_value.ts > local->ts) {
-        LocalUpdate(key, stamped_value);
+      if (target_value.timestamp > local_value->timestamp) {
+        LocalUpdate(key, target_value);
       }
     }
   }
 
-  void LocalUpdate(Key key, StampedValue stamped_value) {
-    WHIRL_LOG_INFO("Write '{}' -> {}", key, stamped_value);
-    kv_.Set(key, stamped_value);
+  StampedValue LocalRead(Key key) {
+    return kv_store_.GetOr(key, StampedValue::NoValue());
   }
 
-  StampedValue LocalRead(Key key) {
-    std::lock_guard guard(mutex_);  // Blocks fiber, not thread!
-    return kv_.GetOr(key, StampedValue::NoValue());
+ private:
+  void LocalUpdate(Key key, StampedValue target_value) {
+    WHIRL_LOG_INFO("Write '{}' -> {}", key, target_value);
+    kv_store_.Set(key, target_value);
   }
 
  private:
   // Local persistent K/V storage
   // strings -> StampedValues
-  LocalKVStorage<StampedValue> kv_;
-  // Fiber-aware mutex
-  // Guards access to kv_ from RPC handlers
-  await::fibers::Mutex mutex_;
+  storage::LocalKVStorage<StampedValue> kv_store_;
+  // Mutex for _fibers_
+  // Guards writes to kv_store_
+  await::fibers::Mutex write_mutex_;
 
   Logger logger_{"KVNode.Replica"};
 };
@@ -236,7 +240,7 @@ class KVNode final : public NodeBase {
   }
 
   rpc::IServicePtr MakeReplicaService() {
-    return std::make_shared<StorageReplica>();
+    return std::make_shared<Replica>();
   }
 };
 
@@ -271,7 +275,7 @@ class KVClient final : public matrix::ClientBase {
   }
 
  protected:
-  void MainThread() override {
+  [[noreturn]] void MainThread() override {
     KVBlockingStub kv_store{Channel()};
 
     for (size_t i = 1;; ++i) {
