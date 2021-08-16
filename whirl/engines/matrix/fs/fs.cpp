@@ -34,7 +34,9 @@ size_t FileSystem::Read(Fd fd, wheels::MutableMemView buffer) {
   CheckMode(of, FileMode::Read);
 
   WHIRL_LOG_DEBUG("Read {} bytes from '{}'", buffer.Size(), of.path);
-  return of.file->PRead(of.offset, buffer);
+  size_t bytes_read = of.file->PRead(of.offset, buffer);
+  of.offset += bytes_read;
+  return bytes_read;
 }
 
 void FileSystem::Append(Fd fd, wheels::ConstMemView data) {
