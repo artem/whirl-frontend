@@ -21,7 +21,7 @@ void Database::Open(const std::string& directory) {
 void Database::Put(const Key& key, const Value& value) {
   auto guard = write_mutex_.Guard();
 
-  WHIRL_LOG_INFO("Put({}, {})", key, value);
+  WHIRL_LOG_INFO("Put('{}', '{}')", key, value);
 
   wal_->Put(key, value);
   mem_table_.Put(key, value);
@@ -30,7 +30,7 @@ void Database::Put(const Key& key, const Value& value) {
 void Database::Delete(const Key& key) {
   auto guard = write_mutex_.Guard();
 
-  WHIRL_LOG_INFO("Delete({})", key);
+  WHIRL_LOG_INFO("Delete('{}')", key);
 
   wal_->Delete(key);
   mem_table_.Delete(key);
@@ -68,11 +68,11 @@ void Database::ReplayWAL() {
   while (auto mut = wal_reader.Next()) {
     switch (mut->type) {
       case node::db::MutationType::Put:
-        WHIRL_LOG_INFO("Replay Put({}, {})", mut->key, *(mut->value));
+        WHIRL_LOG_INFO("Replay Put('{}', '{}')", mut->key, *(mut->value));
         mem_table_.Put(mut->key, *(mut->value));
         break;
       case node::db::MutationType::Delete:
-        WHIRL_LOG_INFO("Replay Delete({})", mut->key);
+        WHIRL_LOG_INFO("Replay Delete('{}')", mut->key);
         mem_table_.Delete(mut->key);
         break;
     }
