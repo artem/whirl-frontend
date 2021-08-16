@@ -18,7 +18,7 @@ struct FrameHeader {
   uint64_t size;
 };
 
-inline wheels::MutableMemView AsBytes(FrameHeader h) {
+inline wheels::MutableMemView AsBytes(FrameHeader& h) {
   return {(char*)&h, sizeof(FrameHeader)};
 }
 
