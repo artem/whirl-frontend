@@ -22,16 +22,16 @@ class WALWriter {
   }
 
   void Put(node::db::Key key, node::db::Value value) {
-    Append({key, value, MutationType::Put});
+    Append({key, value, node::db::MutationType::Put});
   }
 
   void Delete(node::db::Key key) {
-    Append({key, std::nullopt, MutationType::Delete});
+    Append({key, std::nullopt, node::db::MutationType::Delete});
   }
 
  private:
   // Atomic
-  void Append(Mutation mut) {
+  void Append(node::db::Mutation mut) {
     framed_writer_.WriteFrame(Serialize(mut));
   }
 
@@ -49,12 +49,12 @@ class WALReader {
         framed_reader_(&file_reader_) {
   }
 
-  std::optional<Mutation> Next() {
+  std::optional<node::db::Mutation> Next() {
     auto frame = framed_reader_.ReadNextFrame();
     if (!frame.has_value()) {
       return std::nullopt;
     }
-    return Deserialize<Mutation>(*frame);
+    return Deserialize<node::db::Mutation>(*frame);
   }
 
  private:

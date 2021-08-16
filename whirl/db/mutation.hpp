@@ -9,7 +9,7 @@
 
 #include <cstdlib>
 
-namespace whirl::matrix::db {
+namespace whirl::node::db {
 
 struct MutationType {
   using Value = int32_t;
@@ -21,11 +21,11 @@ struct MutationType {
 };
 
 struct Mutation {
-  node::db::Key key;
-  std::optional<node::db::Value> value;
+  Key key;
+  std::optional<Value> value;
   MutationType::Value type;
 
   WHIRL_SERIALIZE(key, value, type)
 };
 
-}  // namespace whirl::matrix::db
+}  // namespace whirl::node::db

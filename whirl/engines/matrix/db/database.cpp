@@ -62,11 +62,11 @@ void Database::ReplayWAL() {
 
   while (auto mut = wal_reader.Next()) {
     switch (mut->type) {
-      case MutationType::Put:
+      case node::db::MutationType::Put:
         WHIRL_LOG_INFO("Replay Put({}, {})", mut->key, *(mut->value));
         mem_table_.Put(mut->key, *(mut->value));
         break;
-      case MutationType::Delete:
+      case node::db::MutationType::Delete:
         WHIRL_LOG_INFO("Replay Delete({})", mut->key);
         mem_table_.Delete(mut->key);
         break;

@@ -4,7 +4,7 @@
 
 #include <whirl/fs/fs.hpp>
 
-#include <whirl/engines/matrix/db/mutation.hpp>
+#include <whirl/db/mutation.hpp>
 #include <whirl/engines/matrix/db/mem_table.hpp>
 #include <whirl/engines/matrix/db/wal.hpp>
 
