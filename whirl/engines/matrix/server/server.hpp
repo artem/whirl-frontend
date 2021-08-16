@@ -7,7 +7,9 @@
 #include <whirl/engines/matrix/fault/server.hpp>
 
 #include <whirl/engines/matrix/server/config.hpp>
-#include <whirl/engines/matrix/server/clocks.hpp>
+
+#include <whirl/engines/matrix/clocks/monotonic.hpp>
+#include <whirl/engines/matrix/clocks/wall.hpp>
 
 #include <whirl/engines/matrix/fs/fs.hpp>
 
