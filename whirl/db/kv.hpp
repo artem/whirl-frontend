@@ -2,9 +2,9 @@
 
 #include <string>
 
-namespace whirl {
+namespace whirl::node::db {
 
-using DbKey = std::string;
-using DbValue = std::string;
+using Key = std::string;
+using Value = std::string;
 
 }  // namespace whirl

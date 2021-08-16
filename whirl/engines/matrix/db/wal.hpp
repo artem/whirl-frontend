@@ -17,15 +17,15 @@ namespace whirl::matrix::db {
 
 class WALWriter {
  public:
-  WALWriter(IFileSystem* fs, FsPath file_path)
+  WALWriter(node::fs::IFileSystem* fs, node::fs::FsPath file_path)
       : file_writer_(fs, file_path), framed_writer_(&file_writer_) {
   }
 
-  void Put(DbKey key, DbValue value) {
+  void Put(node::db::Key key, node::db::Value value) {
     Append({key, value, MutationType::Put});
   }
 
-  void Delete(DbKey key) {
+  void Delete(node::db::Key key) {
     Append({key, std::nullopt, MutationType::Delete});
   }
 
@@ -36,7 +36,7 @@ class WALWriter {
   }
 
  private:
-  FileWriter file_writer_;
+  node::fs::FileWriter file_writer_;
   FramedWriter framed_writer_;
 };
 
@@ -44,7 +44,7 @@ class WALWriter {
 
 class WALReader {
  public:
-  WALReader(IFileSystem *fs, FsPath log_file_path)
+  WALReader(node::fs::IFileSystem *fs, node::fs::FsPath log_file_path)
       : file_reader_(fs, log_file_path),
         framed_reader_(&file_reader_) {
   }
@@ -58,7 +58,7 @@ class WALReader {
   }
 
  private:
-  FileReader file_reader_;
+  node::fs::FileReader file_reader_;
   FramedReader framed_reader_;
 };
 

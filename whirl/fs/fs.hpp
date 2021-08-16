@@ -6,7 +6,7 @@
 
 #include <string>
 
-namespace whirl {
+namespace whirl::node::fs {
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -41,4 +41,4 @@ struct IFileSystem {
   virtual void Close(Fd fd) = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node::fs

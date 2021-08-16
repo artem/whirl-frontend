@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace whirl {
+namespace whirl::node::fs {
 
 class FsError : public std::runtime_error {
  public:
@@ -10,4 +10,4 @@ class FsError : public std::runtime_error {
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::node::fs

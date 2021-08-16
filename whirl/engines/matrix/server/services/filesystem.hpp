@@ -8,34 +8,34 @@
 
 namespace whirl::matrix {
 
-class FS: public IFileSystem {
+class FS: public node::fs::IFileSystem {
  public:
   FS(matrix::fs::FileSystem* impl, ITimeService* time_service)
     : disk_(time_service), impl_(impl) {
   }
 
-  bool Exists(const FsPath& file_path) const override {
+  bool Exists(const node::fs::FsPath& file_path) const override {
     return impl_->Exists(file_path);
   }
 
   // FileMode::Append creates file if it does not exist
-  Fd Open(const FsPath& file_path, FileMode mode) override {
+  node::fs::Fd Open(const node::fs::FsPath& file_path, node::fs::FileMode mode) override {
     return impl_->Open(file_path, mode);
   }
 
   // Only for FileMode::Append
-  void Append(Fd fd, wheels::ConstMemView data) override {
+  void Append(node::fs::Fd fd, wheels::ConstMemView data) override {
     disk_.Write(data.Size());
     impl_->Append(fd, data);
   }
 
   // Only for FileMode::Read
-  size_t Read(Fd fd, wheels::MutableMemView buffer) override {
+  size_t Read(node::fs::Fd fd, wheels::MutableMemView buffer) override {
     disk_.Read(buffer.Size());  // Blocks
     return impl_->Read(fd, buffer);
   }
 
-  void Close(Fd fd) override {
+  void Close(node::fs::Fd fd) override {
     impl_->Close(fd);
   }
 

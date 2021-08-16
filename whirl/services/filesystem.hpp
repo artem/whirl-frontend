@@ -4,6 +4,6 @@
 
 namespace whirl {
 
-using IFileSystemPtr = IFileSystem*;
+using IFileSystemPtr = node::fs::IFileSystem*;
 
 }  // namespace whirl

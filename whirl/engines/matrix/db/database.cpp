@@ -2,9 +2,12 @@
 
 #include <whirl/engines/matrix/world/global/random.hpp>
 
+using whirl::node::db::Key;
+using whirl::node::db::Value;
+
 namespace whirl::matrix::db {
 
-Database::Database(IFileSystem* fs)
+Database::Database(node::fs::IFileSystem* fs)
 : fs_(fs) {
 }
 
@@ -14,7 +17,7 @@ void Database::Open(const std::string& directory) {
   ReplayWAL();
 }
 
-void Database::Put(const DbKey& key, const DbValue& value) {
+void Database::Put(const Key& key, const Value& value) {
   auto guard = write_mutex_.Guard();
 
   WHIRL_LOG_INFO("Put({}, {})", key, value);
@@ -23,7 +26,7 @@ void Database::Put(const DbKey& key, const DbValue& value) {
   mem_table_.Put(key, value);
 }
 
-void Database::Delete(const DbKey& key) {
+void Database::Delete(const Key& key) {
   auto guard = write_mutex_.Guard();
 
   WHIRL_LOG_INFO("Delete({})", key);
@@ -32,7 +35,7 @@ void Database::Delete(const DbKey& key) {
   mem_table_.Delete(key);
 }
 
-std::optional<DbValue> Database::TryGet(const DbKey& key) const {
+std::optional<Value> Database::TryGet(const Key& key) const {
   if (ReadCacheMiss()) {
     // TODO
     // disk_.Read(1);  // Access SSTable-s

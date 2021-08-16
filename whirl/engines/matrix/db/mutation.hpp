@@ -21,8 +21,8 @@ struct MutationType {
 };
 
 struct Mutation {
-  DbKey key;
-  std::optional<DbValue> value;
+  node::db::Key key;
+  std::optional<node::db::Value> value;
   MutationType::Value type;
 
   WHIRL_SERIALIZE(key, value, type)

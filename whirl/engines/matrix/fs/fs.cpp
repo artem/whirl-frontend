@@ -5,6 +5,10 @@
 #include <whirl/engines/matrix/helpers/digest.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
+using whirl::node::fs::Fd;
+using whirl::node::fs::FsPath;
+using whirl::node::fs::FileMode;
+
 namespace whirl::matrix::fs {
 
 // System calls

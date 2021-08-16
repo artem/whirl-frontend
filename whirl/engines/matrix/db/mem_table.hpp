@@ -12,11 +12,11 @@ class MemTable {
  public:
   MemTable() = default;
 
-  void Put(DbKey key, DbValue value) {
+  void Put(node::db::Key key, node::db::Value value) {
     entries_.insert_or_assign(key, value);
   }
 
-  std::optional<DbValue> TryGet(DbKey key) const {
+  std::optional<node::db::Value> TryGet(node::db::Key key) const {
     auto it = entries_.find(key);
     if (it != entries_.end()) {
       return it->second;
@@ -25,7 +25,7 @@ class MemTable {
     }
   }
 
-  void Delete(DbKey key) {
+  void Delete(node::db::Key key) {
     entries_.erase(key);
   }
 
@@ -34,7 +34,7 @@ class MemTable {
   }
 
  private:
-  std::map<DbKey, DbValue> entries_;
+  std::map<node::db::Key, node::db::Value> entries_;
 };
 
 }  // namespace whirl::matrix::db

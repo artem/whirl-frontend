@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-namespace whirl::storage {
+namespace whirl::node::db {
 
 // Persistent mapping: string -> V
 
@@ -74,4 +74,4 @@ class LocalKVStorage {
   std::string namespace_;
 };
 
-}  // namespace whirl::storage
+}  // namespace whirl::node::db

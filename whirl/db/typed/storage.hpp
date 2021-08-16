@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-namespace whirl::storage {
+namespace whirl::node::db {
 
 // Persistent map from string to arbitrary values
 
@@ -81,4 +81,4 @@ class LocalStorage {
   std::string namespace_;
 };
 
-}  // namespace whirl::storage
+}  // namespace whirl::node::db

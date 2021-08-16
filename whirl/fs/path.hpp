@@ -2,8 +2,8 @@
 
 #include <string>
 
-namespace whirl {
+namespace whirl::node::fs {
 
 using FsPath = std::string;
 
-}  // namespace whirl
+}  // namespace whirl::node::fs

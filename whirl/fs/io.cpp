@@ -1,6 +1,6 @@
 #include <whirl/fs/io.hpp>
 
-namespace whirl {
+namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -41,4 +41,4 @@ IFileSystem* FileWriter::Fs() {
   return fs_;
 }
 
-}  // namespace whirl
+}  // namespace whirl::node::fs

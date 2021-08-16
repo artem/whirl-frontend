@@ -4,6 +4,6 @@
 
 namespace whirl {
 
-using IDatabasePtr = IDatabase*;
+using IDatabasePtr = node::db::IDatabase*;
 
 }  // namespace whirl

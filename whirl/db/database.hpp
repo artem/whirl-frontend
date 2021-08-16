@@ -4,7 +4,7 @@
 
 #include <optional>
 
-namespace whirl {
+namespace whirl::node::db {
 
 // ~ LevelDB (https://github.com/google/leveldb)
 // Ordered mapping from string keys to string values.
@@ -17,9 +17,9 @@ struct IDatabase {
   virtual void Open(const std::string& directory) = 0;
 
   // Atomic, blocking
-  virtual void Put(const DbKey& key, const DbValue& value) = 0;
-  virtual std::optional<DbValue> TryGet(const DbKey& key) const = 0;
-  virtual void Delete(const DbKey& key) = 0;
+  virtual void Put(const Key& key, const Value& value) = 0;
+  virtual std::optional<Value> TryGet(const Key& key) const = 0;
+  virtual void Delete(const Key& key) = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node::db

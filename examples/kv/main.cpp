@@ -211,7 +211,7 @@ class Replica : public rpc::ServiceBase<Replica>,
  private:
   // Local persistent K/V storage
   // strings -> StampedValues
-  storage::LocalKVStorage<StampedValue> kv_store_;
+  node::db::LocalKVStorage<StampedValue> kv_store_;
   // Mutex for _fibers_
   // Guards writes to kv_store_
   await::fibers::Mutex write_mutex_;

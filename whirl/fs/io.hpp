@@ -7,7 +7,7 @@
 
 #include <wheels/support/noncopyable.hpp>
 
-namespace whirl {
+namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -43,5 +43,4 @@ class FileWriter : public IWriter, private wheels::NonCopyable {
   Fd fd_;
 };
 
-}  // namespace whirl
-
+}  // namespace whirl::node::fs

@@ -2,6 +2,8 @@
 
 #include <whirl/db/database.hpp>
 
+#include <whirl/fs/fs.hpp>
+
 #include <whirl/engines/matrix/db/mutation.hpp>
 #include <whirl/engines/matrix/db/mem_table.hpp>
 #include <whirl/engines/matrix/db/wal.hpp>
@@ -14,15 +16,19 @@ namespace whirl::matrix::db {
 
 // Implemented in userspace
 
-class Database : public IDatabase {
+class Database : public node::db::IDatabase {
  public:
-  Database(IFileSystem* fs);
+  Database(node::fs::IFileSystem* fs);
 
   void Open(const std::string& directory) override;
 
-  void Put(const DbKey& key, const DbValue& value) override;
-  void Delete(const DbKey& key) override;
-  std::optional<DbValue> TryGet(const DbKey& key) const override;
+  void Put(const node::db::Key& key,
+           const node::db::Value& value) override;
+
+  void Delete(const node::db::Key& key) override;
+
+  std::optional<node::db::Value> TryGet(
+      const node::db::Key& key) const override;
 
  private:
   void ReplayWAL();
@@ -30,7 +36,7 @@ class Database : public IDatabase {
   bool ReadCacheMiss() const;
 
  private:
-  IFileSystem* fs_;
+  node::fs::IFileSystem* fs_;
 
   std::string wal_path_;
 
