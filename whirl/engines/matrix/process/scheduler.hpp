@@ -22,11 +22,11 @@ struct ITask {
 class TaskScheduler {
  public:
   struct ScheduledTask {
-    TimePoint time;
+    TimePoint at_time;
     ITask* task;
 
     bool operator<(const ScheduledTask& that) const {
-      return time < that.time;
+      return at_time < that.at_time;
     }
 
     void operator()() {
@@ -37,15 +37,15 @@ class TaskScheduler {
  public:
   TaskScheduler() = default;
 
-  void Schedule(TimePoint t, ITask* task) {
+  void Schedule(TimePoint at, ITask* task) {
     GlobalAllocatorGuard g;
-    queue_.Insert({t, task});
+    ScheduleImpl(at, task);
   }
 
   void ScheduleAsap(ITask* task) {
     GlobalAllocatorGuard g;
     auto asap = GlobalNow();
-    Schedule(asap, task);
+    ScheduleImpl(asap, task);
   }
 
   bool IsEmpty() const {
@@ -57,7 +57,7 @@ class TaskScheduler {
   }
 
   TimePoint NextTaskTime() const {
-    return queue_.Smallest().time;
+    return queue_.Smallest().at_time;
   }
 
   ITask* TakeNext() {
@@ -73,10 +73,15 @@ class TaskScheduler {
   }
 
   void Resume(TimePoint at) {
-    while (!queue_.IsEmpty() && queue_.Smallest().time < at) {
+    while (!queue_.IsEmpty() && queue_.Smallest().at_time < at) {
       auto next = queue_.Extract();
       queue_.Insert({at, next.task});
     }
+  }
+
+ private:
+  void ScheduleImpl(TimePoint at, ITask* task) {
+    queue_.Insert({at, task});
   }
 
  private:
