@@ -39,6 +39,10 @@ class FS: public node::fs::IFileSystem {
     impl_->Close(fd);
   }
 
+  void Delete(const node::fs::Path& file_path) override {
+    impl_->Delete(file_path);
+  }
+
  private:
   // Emulate latency
   matrix::detail::Disk disk_;

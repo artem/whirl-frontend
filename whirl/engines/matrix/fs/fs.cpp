@@ -59,6 +59,12 @@ void FileSystem::Close(Fd fd) {
   }
 }
 
+void FileSystem::Delete(const Path& file_path) {
+  GlobalAllocatorGuard g;
+
+  files_.erase(file_path);
+}
+
 FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path, FileMode open_mode) {
   auto it = files_.find(file_path);
 

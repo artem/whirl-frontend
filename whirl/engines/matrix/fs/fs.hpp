@@ -41,6 +41,8 @@ class FileSystem {
 
   void Close(node::fs::Fd fd);
 
+  void Delete(const node::fs::Path& file_path);
+
   // Simulation
 
   // On crash

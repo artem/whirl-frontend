@@ -39,6 +39,9 @@ struct IFileSystem {
   virtual size_t Read(Fd fd, wheels::MutableMemView buffer) = 0;
 
   virtual void Close(Fd fd) = 0;
+
+  // Missing file is Ok
+  virtual void Delete(const Path& file_path) = 0;
 };
 
 }  // namespace whirl::node::fs
