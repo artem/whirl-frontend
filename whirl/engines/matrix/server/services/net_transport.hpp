@@ -99,6 +99,10 @@ struct NetTransport : public ITransport {
       : impl_(impl), port_(port) {
   }
 
+  const std::string& HostName() const override {
+    return impl_.HostName();
+  }
+
   ITransportServerPtr Serve(ITransportHandlerPtr handler) override {
     return std::make_shared<NetTransportServer>(impl_, port_, handler);
   }

@@ -16,6 +16,10 @@ class NodeMethodsBase {
     return GetRuntime().Config()->Id();
   }
 
+  const std::string& HostName() const {
+    return NetTransport()->HostName();
+  }
+
   // Randomness
 
   IRandomService* RandomService() const {

@@ -45,6 +45,11 @@ class Transport {
   Transport(Network& net, const std::string& host, ProcessHeap& heap, TaskScheduler& scheduler);
 
   // Context: Server
+  const std::string& HostName() const {
+    return host_;
+  }
+
+  // Context: Server
   ClientSocket ConnectTo(const Address& address, ISocketHandler* handler);
 
   // Context: Server
