@@ -6,7 +6,7 @@
 #include <whirl/fs/fs.hpp>
 #include <whirl/fs/io.hpp>
 
-#include <whirl/io/framed.hpp>
+#include <whirl/engines/matrix/db/detail/framed.hpp>
 
 #include <whirl/cereal/serialize.hpp>
 

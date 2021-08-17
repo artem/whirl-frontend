@@ -32,9 +32,8 @@ FileWriter::~FileWriter() {
   Fs()->Close(fd_);
 }
 
-size_t FileWriter::Write(wheels::ConstMemView data) {
+void FileWriter::Write(wheels::ConstMemView data) {
   Fs()->Append(fd_, data);
-  return data.Size();
 }
 
 IFileSystem* FileWriter::Fs() {

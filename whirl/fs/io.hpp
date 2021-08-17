@@ -2,8 +2,8 @@
 
 #include <whirl/fs/fs.hpp>
 
-#include <whirl/io/reader.hpp>
-#include <whirl/io/writer.hpp>
+#include <wheels/io/reader.hpp>
+#include <wheels/io/writer.hpp>
 
 #include <wheels/support/noncopyable.hpp>
 
@@ -11,7 +11,7 @@ namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
 
-class FileReader : public IReader, private wheels::NonCopyable {
+class FileReader : public wheels::io::IReader, private wheels::NonCopyable {
  public:
   FileReader(IFileSystem* fs, Path file_path);
   ~FileReader();
@@ -28,12 +28,12 @@ class FileReader : public IReader, private wheels::NonCopyable {
 
 //////////////////////////////////////////////////////////////////////
 
-class FileWriter : public IWriter, private wheels::NonCopyable {
+class FileWriter : public wheels::io::IWriter, private wheels::NonCopyable {
  public:
   FileWriter(IFileSystem* fs, Path file_path);
   ~FileWriter();
 
-  size_t Write(wheels::ConstMemView data) override;
+  void Write(wheels::ConstMemView data) override;
 
  private:
   IFileSystem* Fs();
