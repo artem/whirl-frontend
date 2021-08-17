@@ -19,21 +19,19 @@ void Database::Open(const std::string& directory) {
 }
 
 void Database::Put(const Key& key, const Value& value) {
-  auto guard = write_mutex_.Guard();
-
   WHIRL_LOG_INFO("Put('{}', '{}')", key, value);
 
-  wal_->Put(key, value);
-  mem_table_.Put(key, value);
+  node::db::WriteBatch batch;
+  batch.Put(key, value);
+  DoWrite(batch);
 }
 
 void Database::Delete(const Key& key) {
-  auto guard = write_mutex_.Guard();
-
   WHIRL_LOG_INFO("Delete('{}')", key);
 
-  wal_->Delete(key);
-  mem_table_.Delete(key);
+  node::db::WriteBatch batch;
+  batch.Delete(key);
+  Write(batch);
 }
 
 std::optional<Value> Database::TryGet(const Key& key) const {
@@ -45,8 +43,31 @@ std::optional<Value> Database::TryGet(const Key& key) const {
   return mem_table_.TryGet(key);
 }
 
-void Database::Write(WriteBatch /*batch*/) {
-  WHEELS_PANIC("Not implemented");
+void Database::Write(WriteBatch batch) {
+  WHIRL_LOG_INFO("Write({} mutations)", batch.muts.size());
+  DoWrite(batch);
+}
+
+void Database::DoWrite(WriteBatch& batch) {
+  auto guard = write_mutex_.Guard();
+
+  wal_->Append(batch);
+  ApplyToMemTable(batch);
+}
+
+void Database::ApplyToMemTable(const node::db::WriteBatch& batch) {
+  for (const auto& mut : batch.muts) {
+    switch (mut.type) {
+      case node::db::MutationType::Put:
+        WHIRL_LOG_INFO("Put('{}', '{}')", mut.key, *mut.value);
+        mem_table_.Put(mut.key, *mut.value);
+        break;
+      case node::db::MutationType::Delete:
+        WHIRL_LOG_INFO("Delete('{}')", mut.key);
+        mem_table_.Delete(mut.key);
+        break;
+    }
+  }
 }
 
 bool Database::ReadCacheMiss() const {
@@ -65,17 +86,8 @@ void Database::ReplayWAL() {
 
   WALReader wal_reader(fs_, wal_path_);
 
-  while (auto mut = wal_reader.Next()) {
-    switch (mut->type) {
-      case node::db::MutationType::Put:
-        WHIRL_LOG_INFO("Replay Put('{}', '{}')", mut->key, *(mut->value));
-        mem_table_.Put(mut->key, *(mut->value));
-        break;
-      case node::db::MutationType::Delete:
-        WHIRL_LOG_INFO("Replay Delete('{}')", mut->key);
-        mem_table_.Delete(mut->key);
-        break;
-    }
+  while (auto batch = wal_reader.ReadNext()) {
+    ApplyToMemTable(*batch);
   }
 
   WHIRL_LOG_INFO("Mem table populated");

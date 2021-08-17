@@ -33,9 +33,13 @@ class Database : public node::db::IDatabase {
   void Write(node::db::WriteBatch batch) override;
 
  private:
+  void DoWrite(node::db::WriteBatch& batch);
+  void ApplyToMemTable(const node::db::WriteBatch& batch);
+
   void ReplayWAL();
 
   bool ReadCacheMiss() const;
+
 
  private:
   node::fs::IFileSystem* fs_;

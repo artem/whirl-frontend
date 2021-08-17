@@ -7,14 +7,14 @@
 namespace whirl::node::db {
 
 struct WriteBatch {
-  std::vector<Mutation> muts_;
+  std::vector<Mutation> muts;
 
   void Put(Key key, Value value) {
-    muts_.push_back({MutationType::Put, std::move(key), std::move(value)});
+    muts.push_back({MutationType::Put, std::move(key), std::move(value)});
   }
 
   void Delete(Key key) {
-    muts_.push_back({MutationType::Delete, std::move(key), std::nullopt});
+    muts.push_back({MutationType::Delete, std::move(key), std::nullopt});
   }
 };
 
