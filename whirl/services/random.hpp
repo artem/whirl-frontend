@@ -5,12 +5,11 @@
 
 namespace whirl {
 
-using RandomUInt = size_t;
-
 struct IRandomService {
   virtual ~IRandomService() = default;
 
-  virtual RandomUInt GenerateNumber() = 0;
+  // [0, bound)
+  virtual uint64_t GenerateNumber(uint64_t bound) = 0;
 };
 
 }  // namespace whirl

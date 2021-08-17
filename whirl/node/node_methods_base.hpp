@@ -22,13 +22,9 @@ class NodeMethodsBase {
     return GetRuntime().RandomService();
   }
 
-  size_t RandomNumber() const {
-    return RandomService()->GenerateNumber();
-  }
-
   // [0, bound)
   size_t RandomNumber(size_t bound) const {
-    return RandomNumber() % bound;
+    return RandomService()->GenerateNumber(bound);
   }
 
   // [lo, hi)

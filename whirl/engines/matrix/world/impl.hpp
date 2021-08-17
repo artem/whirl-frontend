@@ -166,7 +166,7 @@ class WorldImpl {
     return step_random_number_;
   }
 
-  RandomSource::ResultType RandomNumber() {
+  uint64_t RandomNumber() {
     return random_source_.Next();
   }
 

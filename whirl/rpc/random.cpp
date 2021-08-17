@@ -39,7 +39,7 @@ class RandomChannel : public IChannel {
 
  private:
   size_t SelectIndex() const {
-    return random_->GenerateNumber() % channels_.size();
+    return random_->GenerateNumber(channels_.size());
   }
 
  private:

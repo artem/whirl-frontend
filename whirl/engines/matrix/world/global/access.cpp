@@ -16,11 +16,11 @@ size_t WorldSeed() {
 
 //////////////////////////////////////////////////////////////////////
 
-size_t StepRandomNumber() {
+uint64_t StepRandomNumber() {
   return ThisWorld()->StepRandomNumber();
 }
 
-RandomUInt GlobalRandomNumber() {
+uint64_t GlobalRandomNumber() {
   return ThisWorld()->RandomNumber();
 }
 

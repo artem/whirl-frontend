@@ -9,15 +9,15 @@ namespace whirl::matrix {
 
 // Deterministic randomness
 
-size_t StepRandomNumber();
+uint64_t StepRandomNumber();
 
-size_t GlobalRandomNumber();
+uint64_t GlobalRandomNumber();
 
 // [0, bound)
-size_t GlobalRandomNumber(size_t bound);
+uint64_t GlobalRandomNumber(uint64_t bound);
 
 // [lo, hi)
-size_t GlobalRandomNumber(size_t lo, size_t hi);
+uint64_t GlobalRandomNumber(uint64_t lo, uint64_t hi);
 
 // Ordered selection without repetitions
 template <typename T>
