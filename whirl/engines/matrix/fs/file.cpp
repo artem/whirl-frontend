@@ -1,5 +1,8 @@
 #include <whirl/engines/matrix/fs/file.hpp>
 
+#include <wheels/support/view_util.hpp>
+#include <wheels/support/hash.hpp>
+
 namespace whirl::matrix::fs {
 
 size_t File::Size() const {
@@ -30,7 +33,7 @@ size_t File::PRead(size_t offset, wheels::MutableMemView buffer) const {
 }
 
 size_t File::ComputeDigest() const {
-  return data_.size();  // TODO
+  return wheels::HashRange(17, wheels::ViewOf(data_));
 }
 
 }  // namespace whirl::matrix::fs
