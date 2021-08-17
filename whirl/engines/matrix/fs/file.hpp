@@ -15,6 +15,9 @@ class File {
   size_t ComputeDigest() const;
 
  private:
+  wheels::ConstMemView Tail(size_t offset) const;
+
+ private:
   std::vector<char> data_;
 };
 
