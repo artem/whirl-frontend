@@ -1,6 +1,6 @@
 #pragma once
 
-#include <wheels/support/hash_combine.hpp>
+#include <wheels/support/hash.hpp>
 
 #include <cstdlib>
 #include <functional>
