@@ -10,10 +10,14 @@
 
 namespace whirl::node::rt {
 
-// Me
+// Config
+
+inline IConfig* Config() {
+  return GetRuntime().Config();
+}
 
 inline NodeId Id() {
-  return GetRuntime().Config()->Id();
+  return Config()->Id();
 }
 
 // Net
@@ -64,8 +68,8 @@ inline TimePoint MonotonicNow() {
 
 // Timeouts
 
-inline await::futures::Future<void> After(Duration d) {
-  return TimeService()->After(d);
+inline await::futures::Future<void> After(Duration delay) {
+  return TimeService()->After(delay);
 }
 
 // TrueTime
