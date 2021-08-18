@@ -70,5 +70,5 @@ class ServiceBase : public IService {
 
 //////////////////////////////////////////////////////////////////////
 
-#define RPC_REGISTER_METHOD(method) \
+#define WHIRL_RPC_REGISTER_METHOD(method) \
   RegisterRPCMethod(TO_STRING(method), &ThisService::method)

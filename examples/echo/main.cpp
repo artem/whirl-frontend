@@ -58,7 +58,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 
  protected:
   void RegisterRPCMethods() override {
-    RPC_REGISTER_METHOD(Echo);
+    WHIRL_RPC_REGISTER_METHOD(Echo);
   }
 
  private:
@@ -88,6 +88,7 @@ class ClientNode final: public matrix::ClientBase {
   [[noreturn]] void MainThread() override {
     while (true) {
       // Печатаем локальное время
+      WHIRL_LOG_INFO("I am {}", HostName());
       WHIRL_LOG_INFO("Local wall time: {}", WallTimeNow());
 
       // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"

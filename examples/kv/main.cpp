@@ -86,8 +86,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
   }
 
   void RegisterRPCMethods() override {
-    RPC_REGISTER_METHOD(Set);
-    RPC_REGISTER_METHOD(Get);
+    WHIRL_RPC_REGISTER_METHOD(Set);
+    WHIRL_RPC_REGISTER_METHOD(Get);
   };
 
   // RPC handlers
@@ -175,8 +175,8 @@ class Replica : public rpc::ServiceBase<Replica>,
   }
 
   void RegisterRPCMethods() override {
-    RPC_REGISTER_METHOD(LocalWrite);
-    RPC_REGISTER_METHOD(LocalRead);
+    WHIRL_RPC_REGISTER_METHOD(LocalWrite);
+    WHIRL_RPC_REGISTER_METHOD(LocalRead);
   };
 
   // RPC handlers
