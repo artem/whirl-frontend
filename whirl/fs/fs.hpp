@@ -25,6 +25,8 @@ enum class FileMode {
 struct IFileSystem {
   virtual ~IFileSystem() = default;
 
+  // Metadata
+
   // Existing file is Ok
   virtual void Create(const Path& file_path) = 0;
 
@@ -35,6 +37,8 @@ struct IFileSystem {
 
   virtual std::vector<std::string> ListFiles(
       std::string_view prefix) = 0;
+
+  // Data
 
   // FileMode::Append creates file if it does not exist
   virtual Fd Open(const Path& file_path, FileMode mode) = 0;
