@@ -5,6 +5,7 @@
 #include <whirl/rpc/client.hpp>
 #include <whirl/rpc/channel.hpp>
 
+#include <map>
 #include <vector>
 
 namespace whirl {
@@ -14,15 +15,12 @@ class PeerBase : public NodeMethodsBase {
   PeerBase();
 
  protected:
-  const rpc::IClientPtr& Client();
+  size_t ClusterSize() const;
 
-  size_t PeerCount() const;
+  std::vector<std::string> Peers(bool with_me = true) const;
 
-  const std::vector<std::string>& Peers();
-
-  rpc::IChannelPtr& PeerChannel(size_t index) const;
+  rpc::IChannelPtr& PeerChannel(const std::string& peer) const;
   rpc::IChannelPtr& SelfChannel() const;
-  const std::string& PeerName(size_t index) const;
 
  private:
   rpc::IClientPtr MakeRpcClient() const;
@@ -32,8 +30,11 @@ class PeerBase : public NodeMethodsBase {
   rpc::IChannelPtr MakeChannel(const std::string& peer) const;
 
  private:
+  // TODO
   mutable rpc::IClientPtr client_;
-  mutable std::vector<rpc::IChannelPtr> channels_;
+  mutable std::vector<std::string> cluster_;
+  mutable std::vector<std::string> peers_;  // cluster without this node
+  mutable std::map<std::string, rpc::IChannelPtr> channels_;
 };
 
 }  // namespace whirl

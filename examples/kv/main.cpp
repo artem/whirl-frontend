@@ -97,11 +97,10 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     WHIRL_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
-    // TODO: iterate over configuration
-    for (size_t i = 0; i < PeerCount(); ++i) {
+    for (const auto& peer : Peers(/*with_me=*/true)) {
       writes.push_back(
           rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
-              .Via(PeerChannel(i)));
+              .Via(PeerChannel(peer)));
     }
 
     // Await acknowledgements from the majority of storage replicas
@@ -112,10 +111,10 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     std::vector<Future<StampedValue>> reads;
 
     // Broadcast LocalRead request to replicas
-    for (size_t i = 0; i < PeerCount(); ++i) {
+    for (const auto& peer : Peers(/*with_me=*/true)) {
       reads.push_back(
           rpc::Call("Replica.LocalRead", key)
-              .Via(PeerChannel(i)));
+              .Via(PeerChannel(peer)));
     }
 
     // Await responses from the majority of replicas
@@ -159,7 +158,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
   // Quorum size
   size_t Majority() const {
-    return PeerCount() / 2 + 1;
+    return ClusterSize() / 2 + 1;
   }
 
  private:

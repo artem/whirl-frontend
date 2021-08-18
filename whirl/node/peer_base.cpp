@@ -7,24 +7,28 @@ namespace whirl {
 PeerBase::PeerBase() {
 }
 
-size_t PeerBase::PeerCount() const {
+size_t PeerBase::ClusterSize() const {
   LazyInit();
   return channels_.size();
 }
 
-rpc::IChannelPtr& PeerBase::PeerChannel(size_t index) const {
+std::vector<std::string> PeerBase::Peers(bool with_me) const {
   LazyInit();
-  return channels_.at(index);
+
+  if (with_me) {
+    return cluster_;
+  } else {
+    return peers_;
+  }
+}
+
+rpc::IChannelPtr& PeerBase::PeerChannel(const std::string& peer) const {
+  LazyInit();
+  return channels_[peer];
 }
 
 rpc::IChannelPtr& PeerBase::SelfChannel() const {
-  // TODO: more reliable impl
-  size_t self_index = Id() - 1;
-  return PeerChannel(self_index);
-}
-
-const std::string& PeerBase::PeerName(size_t index) const {
-  return PeerChannel(index)->Peer();
+  return PeerChannel(HostName());
 }
 
 rpc::IClientPtr PeerBase::MakeRpcClient() const {
@@ -39,9 +43,17 @@ void PeerBase::LazyInit() const {
 }
 
 void PeerBase::ConnectToPeers() const {
-  auto cluster = DiscoverCluster();
-  for (const auto& peer : cluster) {
-    channels_.push_back(MakeChannel(peer));
+  cluster_ = DiscoverCluster();
+
+  // peers = cluster \ {HostName()}
+  for (const auto& host : cluster_) {
+    if (host != HostName()) {
+      peers_.push_back(host);
+    }
+  }
+
+  for (const auto& host : cluster_) {
+    channels_.emplace(host, MakeChannel(host));
   }
 }
 
