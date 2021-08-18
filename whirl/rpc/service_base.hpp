@@ -4,6 +4,7 @@
 #include <whirl/rpc/invoke_helper.hpp>
 
 #include <wheels/support/preprocessor.hpp>
+#include <wheels/support/assert.hpp>
 
 #include <map>
 

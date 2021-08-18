@@ -1,7 +1,6 @@
 #pragma once
 
 #include <whirl/node/node.hpp>
-#include <whirl/node/peer_base.hpp>
 
 #include <whirl/rpc/server.hpp>
 
@@ -9,7 +8,7 @@ namespace whirl::node {
 
 // Peer + Main routine
 
-class NodeBase : public INode, public PeerBase {
+class NodeBase : public INode {
  public:
   void Start() override;
 

@@ -1,4 +1,5 @@
 #include <whirl/node/node_base.hpp>
+#include <whirl/peer/peer.hpp>
 #include <whirl/db/typed/kv_storage.hpp>
 #include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
@@ -82,9 +83,9 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 // Coordinator role, stateless
 
 class Coordinator : public rpc::ServiceBase<Coordinator>,
-                    public node::PeerBase {
+                    public node::Peer {
  public:
-  Coordinator() {
+  Coordinator() : Peer("cluster") {
   }
 
   void RegisterRPCMethods() override {
@@ -101,10 +102,10 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     std::vector<Future<void>> writes;
 
     // Broadcast
-    for (const auto& peer : Peers(/*with_me=*/true)) {
+    for (const auto& peer : ListPeers(/*with_me=*/true)) {
       writes.push_back(
           rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
-              .Via(PeerChannel(peer))
+              .Via(Channel(peer))
               .AtLeastOnce());
     }
 
@@ -116,10 +117,10 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     std::vector<Future<StampedValue>> reads;
 
     // Broadcast LocalRead request to replicas
-    for (const auto& peer : Peers(/*with_me=*/true)) {
+    for (const auto& peer : ListPeers(/*with_me=*/true)) {
       reads.push_back(
           rpc::Call("Replica.LocalRead", key)
-              .Via(PeerChannel(peer))
+              .Via(Channel(peer))
               .AtLeastOnce());
     }
 
@@ -164,7 +165,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
   // Quorum size
   size_t Majority() const {
-    return ClusterSize() / 2 + 1;
+    return NodeCount() / 2 + 1;
   }
 
  private:

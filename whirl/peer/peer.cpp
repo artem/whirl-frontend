@@ -1,4 +1,4 @@
-#include <whirl/node/peer_base.hpp>
+#include <whirl/peer/peer.hpp>
 
 #include <whirl/runtime/methods.hpp>
 
@@ -6,17 +6,16 @@
 
 namespace whirl::node {
 
-PeerBase::PeerBase() {
+Peer::Peer(const std::string& pool)
+  : pool_(pool) {
+  ConnectToPeers();
 }
 
-size_t PeerBase::ClusterSize() const {
-  LazyInit();
+size_t Peer::NodeCount() const {
   return channels_.size();
 }
 
-std::vector<std::string> PeerBase::Peers(bool with_me) const {
-  LazyInit();
-
+std::vector<std::string> Peer::ListPeers(bool with_me) const {
   if (with_me) {
     return cluster_;
   } else {
@@ -24,28 +23,23 @@ std::vector<std::string> PeerBase::Peers(bool with_me) const {
   }
 }
 
-rpc::IChannelPtr& PeerBase::PeerChannel(const std::string& peer) const {
-  LazyInit();
-  return channels_[peer];
+const rpc::IChannelPtr& Peer::Channel(const std::string& peer) const {
+  auto it = channels_.find(peer);
+  return it->second;  // Or UB =(
 }
 
-rpc::IChannelPtr& PeerBase::SelfChannel() const {
-  return PeerChannel(rt::HostName());
+const rpc::IChannelPtr& Peer::SelfChannel() const {
+  return Channel(rt::HostName());
 }
 
-rpc::IClientPtr PeerBase::MakeRpcClient() const {
+rpc::IClientPtr Peer::MakeRpcClient() {
   return rpc::MakeClient(rt::NetTransport(), rt::Executor());
 }
 
-void PeerBase::LazyInit() const {
-  if (channels_.empty()) {
-    client_ = MakeRpcClient();
-    ConnectToPeers();
-  }
-}
+void Peer::ConnectToPeers() {
+  client_ = MakeRpcClient();
 
-void PeerBase::ConnectToPeers() const {
-  cluster_ = rt::Dns()->GetCluster();
+  cluster_ = rt::Dns()->GetPool(pool_);
 
   // peers = cluster \ {HostName()}
   for (const auto& host : cluster_) {
@@ -63,8 +57,8 @@ static rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
-rpc::IChannelPtr PeerBase::MakeChannel(const std::string& peer) const {
-  auto transport = client_->Dial(peer);
+rpc::IChannelPtr Peer::MakeChannel(const std::string& host) {
+  auto transport = client_->Dial(host);
   auto retries =
       rpc::WithRetries(std::move(transport), rt::TimeService(), RetriesBackoff());
   return retries;
