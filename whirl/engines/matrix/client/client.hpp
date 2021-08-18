@@ -29,7 +29,7 @@ class ClientBase : public node::INode {
   virtual rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
-    cluster_ = node::rt::Dns()->GetCluster();
+    cluster_ = node::rt::Dns()->GetPool("server");
   }
 
  private:

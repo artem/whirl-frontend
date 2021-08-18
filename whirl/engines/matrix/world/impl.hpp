@@ -56,12 +56,12 @@ class WorldImpl {
 
   std::string AddServer(node::INodeFactoryPtr node) {
     WorldGuard g(this);
-    return AddServerImpl(cluster_, node, "Server");
+    return AddServerImpl(cluster_, node, "server");
   }
 
   std::string AddClient(node::INodeFactoryPtr node) {
     WorldGuard g(this);
-    return AddServerImpl(clients_, node, "Client");
+    return AddServerImpl(clients_, node, "client");
   }
 
   void SetAdversary(adversary::Strategy strategy) {
@@ -137,7 +137,7 @@ class WorldImpl {
 
   // Context: Server
   std::vector<std::string> GetPool(const std::string& name) {
-    if (name != "cluster") {
+    if (name != "server") {
       WHEELS_PANIC("Custom pools are not supported yet!");
     }
 
@@ -199,14 +199,17 @@ class WorldImpl {
   static ITimeModelPtr DefaultTimeModel();
 
   // Returns host name
-  std::string AddServerImpl(Servers& servers, node::INodeFactoryPtr node, std::string type) {
+  std::string AddServerImpl(Servers& pool, node::INodeFactoryPtr node, std::string pool_name) {
     size_t id = server_ids_.NextId();
-    std::string name = type + "-" + std::to_string(servers.size() + 1);
 
-    servers.emplace_back(network_, ServerConfig{id, name}, node);
+    wheels::StringBuilder name;
+    name << toupper(pool_name[0]) << pool_name.substr(1, 256);
+    name << "-" << pool.size() + 1;
 
-    network_.AddServer(&servers.back());
-    AddActor(&servers.back());
+    pool.emplace_back(network_, ServerConfig{id, name.String(), pool_name}, node);
+
+    network_.AddServer(&pool.back());
+    AddActor(&pool.back());
 
     return name;
   }

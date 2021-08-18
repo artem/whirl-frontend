@@ -8,6 +8,7 @@ namespace whirl::matrix {
 struct ServerConfig {
   size_t id;
   std::string hostname;
+  std::string pool;
 };
 
 }  // namespace whirl::matrix

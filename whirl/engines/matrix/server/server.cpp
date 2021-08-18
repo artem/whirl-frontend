@@ -194,7 +194,7 @@ node::IRuntime* Server::MakeNodeRuntime() {
 
   runtime->true_time.Init();
 
-  runtime->config.Init(config_.id);
+  runtime->config.Init(config_.id, config_.pool);
 
   runtime->discovery.Init();
 

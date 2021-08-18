@@ -13,6 +13,8 @@ struct IConfig {
   // Small unique identifier
   virtual NodeId Id() const = 0;
 
+  virtual const std::string& PoolName() const = 0;
+
   // TODO: attributes
 };
 
