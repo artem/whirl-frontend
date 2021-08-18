@@ -29,11 +29,11 @@ class Peer {
   rpc::IChannelPtr MakeChannel(const std::string& host);
 
  private:
-  const std::string& pool_;
+  const std::string& pool_name_;
 
   rpc::IClientPtr client_;
-  std::vector<std::string> cluster_;
-  std::vector<std::string> peers_;  // cluster without this node
+  std::vector<std::string> pool_;
+  std::vector<std::string> others_;  // cluster without this node
   std::map<std::string, rpc::IChannelPtr> channels_;
 };
 

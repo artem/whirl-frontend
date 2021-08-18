@@ -257,7 +257,7 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(rpc::Call("KV.Put", k, v).Via(channel_).Start().As<void>()).ThrowIfError();
+    Await(rpc::Call("KV.Set", k, v).Via(channel_).Start().As<void>()).ThrowIfError();
   }
 
   Value Get(Key k) {

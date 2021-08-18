@@ -203,7 +203,7 @@ class WorldImpl {
     size_t id = server_ids_.NextId();
 
     wheels::StringBuilder name;
-    name << toupper(pool_name[0]) << pool_name.substr(1, 256);
+    name << (char)toupper(pool_name[0]) << pool_name.substr(1, 256);
     name << "-" << pool.size() + 1;
 
     pool.emplace_back(network_, ServerConfig{id, name.String(), pool_name}, node);

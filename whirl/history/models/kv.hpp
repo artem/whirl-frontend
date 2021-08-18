@@ -73,7 +73,7 @@ class KVStoreModel {
 
   static Result Apply(const State& current, const std::string& method,
                       const Arguments& arguments) {
-    if (method == "Put") {
+    if (method == "Set") {
       // Set
 
       auto [k, v] = arguments.As<K, V>();
@@ -102,7 +102,7 @@ class KVStoreModel {
   }
 
   static bool IsMutation(const Call& call) {
-    return call.method == "Put" || call.method == "Cas";
+    return call.method == "Set" || call.method == "Cas";
   }
 
   static bool IsReadOnly(const Call& call) {
