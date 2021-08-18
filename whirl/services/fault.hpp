@@ -7,6 +7,7 @@ struct IFaultInjector {
 
   virtual void ThreadPause() = 0;
   virtual void Reboot() = 0;
+  virtual void AdjustWallClock() = 0;
 };
 
 }  // namespace whirl

@@ -11,6 +11,7 @@
 #include <whirl/services/discovery.hpp>
 #include <whirl/services/net_transport.hpp>
 #include <whirl/services/terminal.hpp>
+#include <whirl/services/fault.hpp>
 
 namespace whirl::node {
 
@@ -31,14 +32,14 @@ struct IRuntime {
 
   virtual ITransport* NetTransport() = 0;
 
-  virtual node::db::IDatabase* Database() = 0;
+  virtual db::IDatabase* Database() = 0;
 
   virtual IRandomService* RandomService() = 0;
   virtual IGuidGenerator* GuidGenerator() = 0;
 
   virtual ITrueTimeService* TrueTime() = 0;
 
-  virtual node::fs::IFileSystem* FileSystem() = 0;
+  virtual fs::IFileSystem* FileSystem() = 0;
 
   virtual ITerminal* Terminal() = 0;
 };
