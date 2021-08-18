@@ -12,7 +12,7 @@ Peer::Peer(const std::string& pool)
 }
 
 size_t Peer::NodeCount() const {
-  return channels_.size();
+  return cluster_.size();
 }
 
 std::vector<std::string> Peer::ListPeers(bool with_me) const {

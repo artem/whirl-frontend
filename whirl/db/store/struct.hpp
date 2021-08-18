@@ -13,18 +13,18 @@ namespace whirl::node::db {
 // Persistent map from string to arbitrary values
 
 // Usage:
-// * local_storage.Store<int>("epoch", 42)
-// * local_storage.Load<int>("epoch");
+// * store.Store<int>("epoch", 42)
+// * store.Load<int>("epoch");
 
-class LocalStorage {
+class Store {
  public:
-  LocalStorage(IDatabase* db, const std::string& name = "default")
+  Store(IDatabase* db, const std::string& name = "default")
       : db_(db), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
-  LocalStorage(const LocalStorage&) = delete;
-  LocalStorage& operator=(const LocalStorage&) = delete;
+  Store(const Store&) = delete;
+  Store& operator=(const Store&) = delete;
 
   template <typename U>
   void Store(const std::string& key, const U& data) {

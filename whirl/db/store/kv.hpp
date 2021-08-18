@@ -13,17 +13,17 @@ namespace whirl::node::db {
 // Persistent mapping: string -> V
 
 template <typename V>
-class LocalKVStorage {
+class KVStore {
  public:
-  LocalKVStorage(IDatabase* db, const std::string& name)
+  KVStore(IDatabase* db, const std::string& name)
       : db_(db), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
-  LocalKVStorage(const LocalKVStorage&) = delete;
-  LocalKVStorage& operator=(const LocalKVStorage&) = delete;
+  KVStore(const KVStore&) = delete;
+  KVStore& operator=(const KVStore&) = delete;
 
-  void Set(const std::string& key, const V& value) {
+  void Put(const std::string& key, const V& value) {
     auto value_bytes = Serialize(value);
     db_->Put(WithNamespace(key), value_bytes);
   }

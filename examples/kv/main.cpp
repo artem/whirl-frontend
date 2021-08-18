@@ -1,6 +1,6 @@
 #include <whirl/node/node_base.hpp>
 #include <whirl/peer/peer.hpp>
-#include <whirl/db/typed/kv_storage.hpp>
+#include <whirl/db/store/kv.hpp>
 #include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
@@ -194,11 +194,11 @@ class Replica : public rpc::ServiceBase<Replica> {
 
     if (!local_value.has_value()) {
       // First write for this key
-      LocalUpdate(key, target_value);
+      Update(key, target_value);
     } else {
       // Write timestamp > timestamp of locally stored value
       if (target_value.timestamp > local_value->timestamp) {
-        LocalUpdate(key, target_value);
+        Update(key, target_value);
       }
     }
   }
@@ -208,15 +208,15 @@ class Replica : public rpc::ServiceBase<Replica> {
   }
 
  private:
-  void LocalUpdate(Key key, StampedValue target_value) {
+  void Update(Key key, StampedValue target_value) {
     WHIRL_LOG_INFO("Write '{}' -> {}", key, target_value);
-    kv_store_.Set(key, target_value);
+    kv_store_.Put(key, target_value);
   }
 
  private:
   // Local persistent K/V storage
   // strings -> StampedValues
-  node::db::LocalKVStorage<StampedValue> kv_store_;
+  node::db::KVStore<StampedValue> kv_store_;
   // Mutex for _fibers_
   // Guards writes to kv_store_
   await::fibers::Mutex write_mutex_;
@@ -257,7 +257,7 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(rpc::Call("KV.Set", k, v).Via(channel_).Start().As<void>()).ThrowIfError();
+    Await(rpc::Call("KV.Put", k, v).Via(channel_).Start().As<void>()).ThrowIfError();
   }
 
   Value Get(Key k) {
@@ -287,9 +287,9 @@ class KVClient final : public matrix::ClientBase {
       if (Either()) {
         Key key = ChooseKey();
         Value value = node::rt::RandomNumber(1, 100);
-        WHIRL_LOG_INFO("Execute Set({}, {})", key, value);
+        WHIRL_LOG_INFO("Execute Put({}, {})", key, value);
         kv_store.Set(key, value);
-        WHIRL_LOG_INFO("Set completed");
+        WHIRL_LOG_INFO("Put completed");
       } else {
         Key key = ChooseKey();
         WHIRL_LOG_INFO("Execute Get({})", key);
