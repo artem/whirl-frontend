@@ -133,6 +133,10 @@ void FileSystem::RaiseError(const std::string& message) {
 
 // Simulation
 
+void FileSystem::Corrupt(const Path& file_path) {
+  // TODO
+}
+
 void FileSystem::Reset() {
   // Reset volatile state
   opened_files_.clear();

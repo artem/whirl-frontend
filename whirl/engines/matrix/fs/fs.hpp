@@ -74,6 +74,9 @@ class FileSystem {
 
   // Simulation
 
+  // Fault injection
+  void Corrupt(const node::fs::Path& file_path);
+
   // On crash
   void Reset();
 
