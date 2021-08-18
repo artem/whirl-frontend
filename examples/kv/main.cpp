@@ -349,11 +349,11 @@ size_t RunSimulation(size_t seed) {
   matrix::World world{seed};
 
   // Cluster nodes
-  auto node = node::MakeNode<KVNode>();
+  auto node = node::Make<KVNode>();
   world.AddServers(replicas, node);
 
   // Clients
-  auto client = node::MakeNode<KVClient>();
+  auto client = node::Make<KVClient>();
   world.AddClients(clients, client);
 
   // Globals

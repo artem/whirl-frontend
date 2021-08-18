@@ -35,7 +35,7 @@ class TNodeFactory : public INodeFactory {
 };
 
 template <typename TNode>
-INodeFactoryPtr MakeNode() {
+INodeFactoryPtr Make() {
   return std::make_shared<TNodeFactory<TNode>>();
 }
 

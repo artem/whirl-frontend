@@ -122,11 +122,11 @@ int main() {
   matrix::World world{kSeed};
 
   // Cluster nodes
-  auto node = node::MakeNode<EchoNode>();
+  auto node = node::Make<EchoNode>();
   world.AddServers(3, node);
 
   // Clients
-  auto client = node::MakeNode<ClientNode>();
+  auto client = node::Make<ClientNode>();
   world.AddClient(client);
 
   world.Start();
