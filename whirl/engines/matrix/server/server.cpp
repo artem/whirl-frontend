@@ -64,6 +64,8 @@ void Server::Crash() {
   }
   heap_.Reset();
 
+  // Clear stdout?
+
   state_ = State::Crashed;
 }
 
@@ -195,6 +197,8 @@ INodeRuntime* Server::MakeNodeRuntime() {
   runtime->config.Init(config_.id);
 
   runtime->discovery.Init();
+
+  runtime->terminal.Init(stdout_);
 
   return new RuntimeLocator{runtime};
 }

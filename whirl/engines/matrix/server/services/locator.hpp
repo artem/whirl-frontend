@@ -51,6 +51,10 @@ class RuntimeLocator : public INodeRuntime {
     return runtime_->discovery.Get();
   }
 
+  ITerminal* Terminal() {
+    return runtime_->terminal.Get();
+  }
+
  private:
   NodeRuntime* runtime_;
 };

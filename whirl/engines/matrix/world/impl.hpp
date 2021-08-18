@@ -54,14 +54,14 @@ class WorldImpl {
       : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
   }
 
-  void AddServer(INodeFactoryPtr node) {
+  std::string AddServer(INodeFactoryPtr node) {
     WorldGuard g(this);
-    AddServerImpl(cluster_, node, "Server");
+    return AddServerImpl(cluster_, node, "Server");
   }
 
-  void AddClient(INodeFactoryPtr node) {
+  std::string AddClient(INodeFactoryPtr node) {
     WorldGuard g(this);
-    AddServerImpl(clients_, node, "Client");
+    return AddServerImpl(clients_, node, "Client");
   }
 
   void SetAdversary(adversary::Strategy strategy) {
@@ -93,7 +93,7 @@ class WorldImpl {
 
   void RunFor(Duration time_budget);
 
-  void RestartServer(size_t index);
+  void RestartServer(const std::string& hostname);
 
   size_t ClusterSize() const {
     return cluster_.size();
@@ -154,6 +154,11 @@ class WorldImpl {
     return history_recorder_.GetHistory();
   }
 
+  std::vector<std::string> GetStdout(const std::string& hostname) {
+    const Server* server = FindServer(hostname);
+    return server->GetStdout();
+  }
+
   TimePoint Now() const {
     return time_.Now();
   }
@@ -193,7 +198,8 @@ class WorldImpl {
  private:
   static ITimeModelPtr DefaultTimeModel();
 
-  void AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
+  // Returns host name
+  std::string AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
     size_t id = server_ids_.NextId();
     std::string name = type + "-" + std::to_string(servers.size() + 1);
 
@@ -201,6 +207,17 @@ class WorldImpl {
 
     network_.AddServer(&servers.back());
     AddActor(&servers.back());
+
+    return name;
+  }
+
+  Server* FindServer(const std::string& hostname) {
+    for (Server& server : cluster_) {
+      if (server.HostName() == hostname) {
+        return &server;
+      }
+    }
+    return nullptr;
   }
 
   void SetStartTime() {

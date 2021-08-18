@@ -12,6 +12,7 @@
 #include <whirl/engines/matrix/server/services/database.hpp>
 #include <whirl/engines/matrix/server/services/discovery.hpp>
 #include <whirl/engines/matrix/server/services/config.hpp>
+#include <whirl/engines/matrix/server/services/terminal.hpp>
 
 #include <optional>
 
@@ -50,6 +51,7 @@ struct NodeRuntime {
   StaticObject<RandomGenerator> random;
   StaticObject<GuidGenerator> guids;
   StaticObject<TrueTimeService> true_time;
+  StaticObject<Terminal> terminal;
 
   // TODO
   StaticObject<Config> config;

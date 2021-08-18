@@ -14,8 +14,8 @@ size_t World::Seed() const {
   return impl_->Seed();
 }
 
-void World::AddServer(INodeFactoryPtr node) {
-  impl_->AddServer(node);
+std::string World::AddServer(INodeFactoryPtr node) {
+  return impl_->AddServer(node);
 }
 
 void World::AddServers(size_t count, INodeFactoryPtr node) {
@@ -24,8 +24,8 @@ void World::AddServers(size_t count, INodeFactoryPtr node) {
   }
 }
 
-void World::AddClient(INodeFactoryPtr node) {
-  impl_->AddClient(std::move(node));
+std::string World::AddClient(INodeFactoryPtr node) {
+  return impl_->AddClient(std::move(node));
 }
 
 void World::AddClients(size_t count, INodeFactoryPtr node) {
@@ -54,8 +54,8 @@ void World::MakeSteps(size_t count) {
   impl_->MakeSteps(count);
 }
 
-void World::RestartServer(size_t index) {
-  impl_->RestartServer(index);
+void World::RestartServer(const std::string& hostname) {
+  impl_->RestartServer(hostname);
 }
 
 size_t World::Stop() {
@@ -72,6 +72,10 @@ const EventLog& World::EventLog() const {
 
 const histories::History& World::History() const {
   return impl_->History();
+}
+
+std::vector<std::string> World::GetStdout(const std::string& hostname) const {
+  return impl_->GetStdout(hostname);
 }
 
 size_t World::StepCount() const {

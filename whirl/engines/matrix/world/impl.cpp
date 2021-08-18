@@ -175,9 +175,10 @@ void WorldImpl::RunFor(Duration time_budget) {
   }
 }
 
-void WorldImpl::RestartServer(size_t index) {
+void WorldImpl::RestartServer(const std::string& hostname) {
   WorldGuard g(this);
-  cluster_[index].FastReboot();
+  Server* target = FindServer(hostname);
+  target->FastReboot();
 }
 
 }  // namespace whirl::matrix

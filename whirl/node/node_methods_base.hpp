@@ -6,6 +6,8 @@
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>
 
+#include <fmt/core.h>
+
 namespace whirl {
 
 class NodeMethodsBase {
@@ -112,6 +114,18 @@ class NodeMethodsBase {
 
   Guid GenerateGuid() const {
     return GetRuntime().GuidGenerator()->Generate();
+  }
+
+  // Terminal
+
+  ITerminal* Terminal() const {
+    return GetRuntime().Terminal();
+  }
+
+  template <typename ... Args>
+  void PrintLine(Args&& ... args) {
+    std::string line = fmt::format(std::forward<Args>(args)...);
+    Terminal()->PrintLine(line);
   }
 };
 

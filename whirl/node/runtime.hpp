@@ -10,6 +10,7 @@
 #include <whirl/services/true_time.hpp>
 #include <whirl/services/discovery.hpp>
 #include <whirl/services/net_transport.hpp>
+#include <whirl/services/terminal.hpp>
 
 namespace whirl {
 
@@ -38,6 +39,8 @@ struct INodeRuntime {
   virtual ITrueTimeService* TrueTime() = 0;
 
   virtual node::fs::IFileSystem* FileSystem() = 0;
+
+  virtual ITerminal* Terminal() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////

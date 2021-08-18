@@ -25,10 +25,10 @@ class World {
 
   size_t Seed() const;
 
-  void AddServer(INodeFactoryPtr node);
+  std::string AddServer(INodeFactoryPtr node);
   void AddServers(size_t count, INodeFactoryPtr node);
 
-  void AddClient(INodeFactoryPtr node);
+  std::string AddClient(INodeFactoryPtr node);
   void AddClients(size_t count, INodeFactoryPtr node);
 
   void SetTimeModel(ITimeModelPtr time_model);
@@ -64,7 +64,7 @@ class World {
   void MakeSteps(size_t count);
 
   // For tests
-  void RestartServer(size_t index);
+  void RestartServer(const std::string& hostname);
 
   // Returns simulation digest
   size_t Stop();
@@ -76,6 +76,8 @@ class World {
 
   const EventLog& EventLog() const;
   const histories::History& History() const;
+
+  std::vector<std::string> GetStdout(const std::string& hostname) const;
 
  private:
   void SetGlobalImpl(const std::string& key, std::any value);

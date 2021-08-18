@@ -7,6 +7,7 @@
 #include <whirl/engines/matrix/fault/server.hpp>
 
 #include <whirl/engines/matrix/server/config.hpp>
+#include <whirl/engines/matrix/server/stdout.hpp>
 
 #include <whirl/engines/matrix/clocks/monotonic.hpp>
 #include <whirl/engines/matrix/clocks/wall.hpp>
@@ -80,11 +81,13 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   void Step() override;
   void Shutdown() override;
 
-  // Digest
+  // Simulation
+
+  std::vector<std::string> GetStdout() const {
+    return stdout_.lines;
+  }
 
   size_t ComputeDigest() const;
-
-  // Runtime
 
   INodeRuntime& GetNodeRuntime();
 
@@ -107,6 +110,8 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   fs::FileSystem filesystem_;
   mutable ProcessHeap heap_;
   net::Transport transport_;
+
+  Stdout stdout_;
 
   INodeRuntime* runtime_{nullptr};
 

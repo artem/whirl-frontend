@@ -21,6 +21,8 @@ void NodeBase::StartRpcServer() {
 void NodeBase::Main() {
   await::fibers::self::SetName("main");
 
+  PrintLine("Starting at T{}", WallTimeNow());
+
   // TODO: Read dir from config
   Database()->Open("/db");
 
