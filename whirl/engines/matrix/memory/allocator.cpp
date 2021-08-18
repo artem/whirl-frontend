@@ -69,14 +69,14 @@ static_assert(sizeof(BlockHeader) % kRequiredAlignment == 0);
 //////////////////////////////////////////////////////////////////////
 
 BlockHeader* BlockCache::TryAcquire(size_t class_index) {
-  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex,
+  WHIRL_ALLOC_VERIFY(class_index <= kMaxClassIndex,
                      "Memory allocator internal error");
   return block_lists_[class_index].TryPop();
 }
 
 void BlockCache::Release(BlockHeader* block) {
   size_t class_index = GetAllocClass(block->size);
-  WHIRL_ALLOC_VERIFY(class_index < kMaxClassIndex,
+  WHIRL_ALLOC_VERIFY(class_index <= kMaxClassIndex,
                      "Memory allocator internal error");
   block_lists_[class_index].Push(block);
 }
