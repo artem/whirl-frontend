@@ -22,6 +22,8 @@ enum class FileMode {
 
 ///////////////////////////////////////////////////////////////////////
 
+// Local file system (or distributed like Colossus?)
+
 struct IFileSystem {
   virtual ~IFileSystem() = default;
 
