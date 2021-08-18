@@ -3,7 +3,7 @@
 #include <whirl/node/node.hpp>
 #include <whirl/node/runtime.hpp>
 #include <whirl/engines/matrix/process/threads.hpp>
-#include <whirl/node/node_methods_base.hpp>
+#include <whirl/node/runtime_methods_base.hpp>
 
 #include <whirl/rpc/client.hpp>
 #include <whirl/rpc/channel.hpp>
@@ -18,7 +18,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class ClientBase : public node::INode, public node::NodeMethodsBase {
+class ClientBase : public node::INode, public node::RuntimeMethodsBase {
  public:
   void Start() override {
     await::fibers::Go([this]() {

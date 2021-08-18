@@ -168,7 +168,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 // Storage replica role
 
 class Replica : public rpc::ServiceBase<Replica>,
-                public node::NodeMethodsBase {
+                public node::RuntimeMethodsBase {
  public:
   Replica()
     : kv_store_(Database(), "abd") {

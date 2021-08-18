@@ -10,7 +10,7 @@
 
 namespace whirl::node {
 
-class NodeMethodsBase {
+class RuntimeMethodsBase {
  protected:
   // Me
 
