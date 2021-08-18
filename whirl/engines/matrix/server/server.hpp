@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/runtime/runtime.hpp>
-#include <whirl/node/node.hpp>
+#include <whirl/program/program.hpp>
 
 #include <whirl/engines/matrix/world/actor.hpp>
 #include <whirl/engines/matrix/fault/server.hpp>
@@ -37,7 +37,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   };
 
  public:
-  Server(net::Network& network, ServerConfig config, node::INodeFactoryPtr factory);
+  Server(net::Network& network, ServerConfig config, node::Program program);
 
   // Non-copyable
   Server(const Server&) = delete;
@@ -93,13 +93,13 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
  private:
   node::IRuntime* MakeNodeRuntime();
-  void StartNodeMain(node::INode* node);
+  void StartProgram();
 
  private:
   State state_{State::Initial};
 
   ServerConfig config_;
-  node::INodeFactoryPtr node_factory_;
+  node::Program program_;
 
   // Hardware
   WallClock wall_clock_;

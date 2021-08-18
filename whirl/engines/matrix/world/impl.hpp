@@ -54,14 +54,14 @@ class WorldImpl {
       : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
   }
 
-  std::string AddServer(node::INodeFactoryPtr node) {
+  std::string AddServer(node::Program program) {
     WorldGuard g(this);
-    return AddServerImpl(cluster_, node, "server");
+    return AddServerImpl(cluster_, program, "server");
   }
 
-  std::string AddClient(node::INodeFactoryPtr node) {
+  std::string AddClient(node::Program program) {
     WorldGuard g(this);
-    return AddServerImpl(clients_, node, "client");
+    return AddServerImpl(clients_, program, "client");
   }
 
   void SetAdversary(adversary::Strategy strategy) {
@@ -199,14 +199,14 @@ class WorldImpl {
   static ITimeModelPtr DefaultTimeModel();
 
   // Returns host name
-  std::string AddServerImpl(Servers& pool, node::INodeFactoryPtr node, std::string pool_name) {
+  std::string AddServerImpl(Servers& pool, node::Program program, std::string pool_name) {
     size_t id = server_ids_.NextId();
 
     wheels::StringBuilder name;
     name << (char)toupper(pool_name[0]) << pool_name.substr(1, 256);
     name << "-" << pool.size() + 1;
 
-    pool.emplace_back(network_, ServerConfig{id, name.String(), pool_name}, node);
+    pool.emplace_back(network_, ServerConfig{id, name.String(), pool_name}, program);
 
     network_.AddServer(&pool.back());
     AddActor(&pool.back());

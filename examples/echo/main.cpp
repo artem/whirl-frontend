@@ -1,4 +1,4 @@
-#include <whirl/node/node_base.hpp>
+#include <whirl/program/main.hpp>
 
 #include <whirl/logger/log.hpp>
 
@@ -9,7 +9,7 @@
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
-#include <whirl/engines/matrix/client/client.hpp>
+#include <whirl/engines/matrix/client/main.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
 
 #include <await/fibers/sync/future.hpp>
@@ -71,50 +71,54 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 
 // Echo server node
 
-class EchoNode final: public node::NodeBase {
- protected:
-  void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
-    rpc_server->RegisterService(
-        "Echo", std::make_shared<EchoService>());
-  }
-};
+void EchoNode() {
+  node::MainPrologue();
+
+  auto rpc_server = node::MakeRPCServer();
+  rpc_server->RegisterService(
+    "Echo", std::make_shared<EchoService>());
+
+  rpc_server->Start();
+
+  node::BlockForever();
+}
 
 //////////////////////////////////////////////////////////////////////
 
-class ClientNode final: public matrix::ClientBase {
- public:
-  ClientNode() {
-  }
+[[noreturn]] void EchoClient() {
+  matrix::ClientPrologue();
 
- protected:
-  [[noreturn]] void MainRoutine() override {
-    while (true) {
-      // Печатаем локальное время
-      WHIRL_LOG_INFO("I am {}", node::rt::HostName());
-      WHIRL_LOG_INFO("Local wall time: {}", node::rt::WallTimeNow());
+  auto client_channel = matrix::MakeClientChannel();
 
-      // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
-      // Результат вызова - Future, она типизируется вызовом .As<std::string>()
+  Logger logger_{"Client"};
 
-      // Фьючу дожидаемся синхронно с помощью функции Await
-      // Она распаковывает фьючу в Result<std::string>
-      // См. <await/fibers/sync/future.hpp>
+  while (true) {
+    // Печатаем локальное время
+    WHIRL_LOG_INFO("I am {}", node::rt::HostName());
+    WHIRL_LOG_INFO("Local wall time: {}", node::rt::WallTimeNow());
 
-      Future<proto::Echo::Response> future = rpc::Call("Echo.Echo", proto::Echo::Request{"Hello"}).Via(Channel());
-      auto result = Await(std::move(future));
+    // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
+    // Результат вызова - Future, она типизируется вызовом .As<std::string>()
 
-      if (result.IsOk()) {
-        WHIRL_LOG_INFO("Echo response: '{}'", result->data);
-      } else {
-        WHIRL_LOG_INFO("Echo request failed: {}", result.GetError().GetErrorCode().message());
-      }
+    // Фьючу дожидаемся синхронно с помощью функции Await
+    // Она распаковывает фьючу в Result<std::string>
+    // См. <await/fibers/sync/future.hpp>
 
-      // SleepFor – приостановить текущий файбер (не поток!) на заданное время
-      // RandomNumber(lo, hi) - генерация случайного числа
-      node::rt::SleepFor(node::rt::RandomNumber(1, 100));
+    Future<proto::Echo::Response> future = rpc::Call("Echo.Echo", proto::Echo::Request{"Hello"})
+                                               .Via(client_channel);
+    auto result = Await(std::move(future));
+
+    if (result.IsOk()) {
+      WHIRL_LOG_INFO("Echo response: '{}'", result->data);
+    } else {
+      WHIRL_LOG_INFO("Echo request failed: {}", result.GetError().GetErrorCode().message());
     }
+
+    // SleepFor – приостановить текущий файбер (не поток!) на заданное время
+    // RandomNumber(lo, hi) - генерация случайного числа
+    node::rt::SleepFor(node::rt::RandomNumber(1, 100));
   }
-};
+}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -123,13 +127,10 @@ int main() {
 
   matrix::World world{kSeed};
 
-  // Cluster nodes
-  auto node = node::Make<EchoNode>();
-  world.AddServers(3, node);
+  world.AddServers(3, EchoNode);
 
   // Clients
-  auto client = node::Make<ClientNode>();
-  world.AddClient(client);
+  world.AddClient(EchoClient);
 
   world.Start();
   world.MakeSteps(256);

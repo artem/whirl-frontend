@@ -4,7 +4,7 @@
 #include <whirl/engines/matrix/adversary/strategy.hpp>
 #include <whirl/engines/matrix/log/event.hpp>
 #include <whirl/history/history.hpp>
-#include <whirl/node/node.hpp>
+#include <whirl/program/program.hpp>
 
 #include <memory>
 #include <ostream>
@@ -25,11 +25,11 @@ class World {
 
   size_t Seed() const;
 
-  std::string AddServer(node::INodeFactoryPtr node);
-  void AddServers(size_t count, node::INodeFactoryPtr node);
+  std::string AddServer(node::Program program);
+  void AddServers(size_t count, node::Program program);
 
-  std::string AddClient(node::INodeFactoryPtr node);
-  void AddClients(size_t count, node::INodeFactoryPtr node);
+  std::string AddClient(node::Program program);
+  void AddClients(size_t count, node::Program program);
 
   void SetTimeModel(ITimeModelPtr time_model);
 

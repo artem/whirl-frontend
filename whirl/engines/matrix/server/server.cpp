@@ -16,14 +16,13 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-Server::Server(net::Network& net, ServerConfig config, node::INodeFactoryPtr factory)
+Server::Server(net::Network& net, ServerConfig config, node::Program program)
     : config_(config),
-      node_factory_(std::move(factory)),
+      program_(program),
       transport_(net, config.hostname, heap_, scheduler_) {
 }
 
 Server::~Server() {
-  node_factory_.reset();
   WHEELS_VERIFY(state_ == State::Crashed, "Invalid state");
 }
 
@@ -112,24 +111,22 @@ void Server::Start() {
 
   WHIRL_LOG_INFO("Start node at server {}", HostName());
 
-  auto g = heap_.Use();
+  {
+    auto g = heap_.Use();
 
-  // Start node process
+    // Start node process
 
-  runtime_ = MakeNodeRuntime();
-  // Now runtime is accessible from node via GetRuntime()
-
-  // TODO: this is ugly, we need abstractions for program/process
-  auto node = node_factory_->CreateNode();
-  StartNodeMain(node.get());
-  MoveToHeap(std::move(node));
+    runtime_ = MakeNodeRuntime();
+    // Now runtime is accessible from node via GetRuntime()
+    StartProgram();
+  }
 
   state_ = State::Running;
 }
 
-void Server::StartNodeMain(node::INode* node) {
-  await::fibers::Go([node]() {
-    node->Start();
+void Server::StartProgram() {
+  await::fibers::Go([program = program_]() {
+    program();
     }, runtime_->Executor());
 }
 

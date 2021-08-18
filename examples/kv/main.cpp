@@ -1,4 +1,4 @@
-#include <whirl/node/node_base.hpp>
+#include <whirl/program/main.hpp>
 #include <whirl/peer/peer.hpp>
 #include <whirl/db/store/kv.hpp>
 #include <whirl/logger/log.hpp>
@@ -10,12 +10,12 @@
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
-#include <whirl/engines/matrix/client/client.hpp>
 #include <whirl/engines/matrix/world/global/vars.hpp>
+#include <whirl/engines/matrix/client/main.hpp>
 #include <whirl/engines/matrix/test/random.hpp>
-#include <whirl/engines/matrix/memory/new.hpp>
 #include <whirl/engines/matrix/test/main.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
+#include <whirl/engines/matrix/memory/new.hpp>
 
 #include <whirl/history/printers/kv.hpp>
 #include <whirl/history/checker/check.hpp>
@@ -224,30 +224,21 @@ class Replica : public rpc::ServiceBase<Replica> {
   Logger logger_{"KVNode.Replica"};
 };
 
-class KVNode final : public node::NodeBase {
- public:
-  KVNode() {
-  }
+void KVNode() {
+  node::MainPrologue();
 
- protected:
-  void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
-    rpc_server->RegisterService("KV", MakeCoordinatorService());
-    rpc_server->RegisterService("Replica", MakeReplicaService());
-  }
+  auto rpc_server = node::MakeRPCServer();
 
-  void MainRoutine() override {
-    // Do nothing
-  }
+  rpc_server->RegisterService("KV",
+    std::make_shared<Coordinator>());
 
- private:
-  rpc::IServicePtr MakeCoordinatorService() {
-    return std::make_shared<Coordinator>();
-  }
+  rpc_server->RegisterService("Replica",
+    std::make_shared<Replica>());
 
-  rpc::IServicePtr MakeReplicaService() {
-    return std::make_shared<Replica>();
-  }
-};
+  rpc_server->Start();
+
+  node::BlockForever();
+}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -272,46 +263,38 @@ class KVBlockingStub {
 
 static const std::vector<std::string> kKeys({"a", "b", "c"});
 
+const std::string& ChooseRandomKey() {
+  return kKeys.at(node::rt::RandomNumber(matrix::GetGlobal<size_t>("keys")));
+}
+
 //////////////////////////////////////////////////////////////////////
 
-class KVClient final : public matrix::ClientBase {
- public:
-  KVClient() {
-  }
+[[noreturn]] void Client() {
+  matrix::ClientPrologue();
 
- protected:
-  [[noreturn]] void MainRoutine() override {
-    KVBlockingStub kv_store{Channel()};
+  Logger logger_{"Client"};
 
-    for (size_t i = 1;; ++i) {
-      if (Either()) {
-        Key key = ChooseKey();
-        Value value = node::rt::RandomNumber(1, 100);
-        WHIRL_LOG_INFO("Execute Put({}, {})", key, value);
-        kv_store.Set(key, value);
-        WHIRL_LOG_INFO("Put completed");
-      } else {
-        Key key = ChooseKey();
-        WHIRL_LOG_INFO("Execute Get({})", key);
-        [[maybe_unused]] Value result = kv_store.Get(key);
-        WHIRL_LOG_INFO("Get({}) -> {}", key, result);
-      }
+  KVBlockingStub kv_store{matrix::MakeClientChannel()};
 
-      matrix::GlobalCounter("requests").Increment();
-
-      // Random pause
-      node::rt::SleepFor(node::rt::RandomNumber(1, 100));
+  for (size_t i = 1;; ++i) {
+    Key key = ChooseRandomKey();
+    if (node::rt::RandomNumber(2) == 1) {
+      Value value = node::rt::RandomNumber(1, 100);
+      WHIRL_LOG_INFO("Execute Put({}, {})", key, value);
+      kv_store.Set(key, value);
+      WHIRL_LOG_INFO("Put completed");
+    } else {
+      WHIRL_LOG_INFO("Execute Get({})", key);
+      [[maybe_unused]] Value result = kv_store.Get(key);
+      WHIRL_LOG_INFO("Get({}) -> {}", key, result);
     }
-  }
 
- private:
-  const std::string& ChooseKey() const {
-    return kKeys.at(node::rt::RandomNumber(matrix::GetGlobal<size_t>("keys")));
-  }
+    matrix::GlobalCounter("requests").Increment();
 
- private:
-  Logger logger_{"KVClient"};
-};
+    // Random pause
+    node::rt::SleepFor(node::rt::RandomNumber(1, 100));
+  }
+}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -355,12 +338,10 @@ size_t RunSimulation(size_t seed) {
   matrix::World world{seed};
 
   // Cluster nodes
-  auto node = node::Make<KVNode>();
-  world.AddServers(replicas, node);
+  world.AddServers(replicas, KVNode);
 
   // Clients
-  auto client = node::Make<KVClient>();
-  world.AddClients(clients, client);
+  world.AddClients(clients, Client);
 
   // Globals
   world.SetGlobal("keys", keys);

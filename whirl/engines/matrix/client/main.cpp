@@ -1,5 +1,8 @@
-#include <whirl/engines/matrix/client/client.hpp>
+#include <whirl/engines/matrix/client/main.hpp>
 
+#include <whirl/runtime/methods.hpp>
+
+#include <whirl/rpc/client.hpp>
 #include <whirl/rpc/random.hpp>
 #include <whirl/rpc/retries.hpp>
 #include <whirl/engines/matrix/history/channel.hpp>
@@ -12,17 +15,19 @@ static rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
-//////////////////////////////////////////////////////////////////////
-
-rpc::IClientPtr ClientBase::MakeRpcClient() {
+static rpc::IClientPtr MakeRpcClient() {
   return rpc::MakeClient(node::rt::NetTransport(), node::rt::Executor());
 }
 
-rpc::IChannelPtr ClientBase::MakeClientChannel() {
+rpc::IChannelPtr MakeClientChannel() {
+  auto cluster = node::rt::Dns()->GetPool("server");
+
+  auto client = MakeRpcClient();
+
   // Peer channels
   std::vector<rpc::IChannelPtr> channels;
-  for (const auto& addr : Cluster()) {
-    channels.push_back(client_->Dial(addr));
+  for (const auto& addr : cluster) {
+    channels.push_back(client->Dial(addr));
   }
 
   // Retries -> History -> Random -> Peers
@@ -35,13 +40,17 @@ rpc::IChannelPtr ClientBase::MakeClientChannel() {
   return retries;
 }
 
-void ClientBase::MainThread() {
-  await::fibers::self::SetName("main");
+//////////////////////////////////////////////////////////////////////
 
+static void RandomPause() {
+  node::rt::SleepFor(node::rt::RandomNumber(50));
+}
+
+//////////////////////////////////////////////////////////////////////
+
+void ClientPrologue() {
+  await::fibers::self::SetName("main");
   RandomPause();
-  DiscoverCluster();
-  ConnectToClusterNodes();
-  MainRoutine();
 }
 
 }  // namespace whirl::matrix

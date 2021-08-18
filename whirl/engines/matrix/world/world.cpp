@@ -14,23 +14,23 @@ size_t World::Seed() const {
   return impl_->Seed();
 }
 
-std::string World::AddServer(node::INodeFactoryPtr node) {
-  return impl_->AddServer(node);
+std::string World::AddServer(node::Program program) {
+  return impl_->AddServer(program);
 }
 
-void World::AddServers(size_t count, node::INodeFactoryPtr node) {
+void World::AddServers(size_t count, node::Program program) {
   for (size_t i = 0; i < count; ++i) {
-    AddServer(node);
+    AddServer(program);
   }
 }
 
-std::string World::AddClient(node::INodeFactoryPtr node) {
-  return impl_->AddClient(std::move(node));
+std::string World::AddClient(node::Program program) {
+  return impl_->AddClient(std::move(program));
 }
 
-void World::AddClients(size_t count, node::INodeFactoryPtr node) {
+void World::AddClients(size_t count, node::Program program) {
   for (size_t i = 0; i < count; ++i) {
-    AddClient(node);
+    AddClient(program);
   }
 }
 
