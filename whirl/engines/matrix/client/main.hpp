@@ -2,10 +2,10 @@
 
 #include <whirl/rpc/channel.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::client {
 
-void ClientPrologue();
+void Prologue();
 
-rpc::IChannelPtr MakeClientChannel();
+rpc::IChannelPtr MakeRpcChannel();
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::client

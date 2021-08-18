@@ -11,7 +11,7 @@ using namespace whirl;
 //////////////////////////////////////////////////////////////////////
 
 void HelloWorld() {
-  node::MainPrologue();
+  node::main::Prologue();
   node::rt::PrintLine("Hello, World!");
 }
 

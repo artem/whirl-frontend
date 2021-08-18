@@ -227,9 +227,9 @@ class Replica : public rpc::ServiceBase<Replica> {
 };
 
 void KVNode() {
-  node::MainPrologue();
+  node::main::Prologue();
 
-  auto rpc_server = node::MakeRPCServer();
+  auto rpc_server = node::main::MakeRPCServer();
 
   rpc_server->RegisterService("KV",
     std::make_shared<Coordinator>());
@@ -239,7 +239,7 @@ void KVNode() {
 
   rpc_server->Start();
 
-  node::BlockForever();
+  node::main::BlockForever();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -272,11 +272,11 @@ const std::string& ChooseRandomKey() {
 //////////////////////////////////////////////////////////////////////
 
 [[noreturn]] void Client() {
-  matrix::ClientPrologue();
+  matrix::client::Prologue();
 
   Logger logger_{"Client"};
 
-  KVBlockingStub kv_store{matrix::MakeClientChannel()};
+  KVBlockingStub kv_store{matrix::client::MakeRpcChannel()};
 
   for (size_t i = 1;; ++i) {
     Key key = ChooseRandomKey();

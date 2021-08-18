@@ -21,7 +21,7 @@ using namespace whirl;
 //////////////////////////////////////////////////////////////////////
 
 void TestNode() {
-  node::MainPrologue();
+  node::main::Prologue();
 
   if (!node::rt::FileSystem()->Exists("/flag")) {
     node::fs::FileWriter file_writer(node::rt::FileSystem(), "/file");

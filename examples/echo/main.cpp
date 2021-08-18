@@ -72,23 +72,23 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 // Echo server node
 
 void EchoNode() {
-  node::MainPrologue();
+  node::main::Prologue();
 
-  auto rpc_server = node::MakeRPCServer();
+  auto rpc_server = node::main::MakeRPCServer();
   rpc_server->RegisterService(
     "Echo", std::make_shared<EchoService>());
 
   rpc_server->Start();
 
-  node::BlockForever();
+  node::main::BlockForever();
 }
 
 //////////////////////////////////////////////////////////////////////
 
 [[noreturn]] void EchoClient() {
-  matrix::ClientPrologue();
+  matrix::client::Prologue();
 
-  auto client_channel = matrix::MakeClientChannel();
+  auto channel = matrix::client::MakeRpcChannel();
 
   Logger logger_{"Client"};
 
@@ -107,7 +107,7 @@ void EchoNode() {
     Future<proto::Echo::Response> future =
       rpc::Call("Echo.Echo")
         .Args(proto::Echo::Request{"Hello"})
-        .Via(client_channel);
+        .Via(channel);
 
     auto result = Await(std::move(future));
 

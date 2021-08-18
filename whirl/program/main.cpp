@@ -7,9 +7,9 @@
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>
 
-namespace whirl::node {
+namespace whirl::node::main {
 
-void MainPrologue() {
+void Prologue() {
   await::fibers::self::SetName("main");
 
   rt::PrintLine("Starting at T{}", rt::WallTimeNow());
@@ -28,4 +28,4 @@ void BlockForever() {
   std::abort();
 }
 
-}  // namespace whirl::node
+}  // namespace whirl::node::main

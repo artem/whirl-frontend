@@ -1,13 +1,14 @@
 #include <whirl/engines/matrix/client/main.hpp>
 
+#include <whirl/engines/matrix/history/channel.hpp>
+
 #include <whirl/runtime/methods.hpp>
 
 #include <whirl/rpc/client.hpp>
 #include <whirl/rpc/random.hpp>
 #include <whirl/rpc/retries.hpp>
-#include <whirl/engines/matrix/history/channel.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::client {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -19,7 +20,7 @@ static rpc::IClientPtr MakeRpcClient() {
   return rpc::MakeClient(node::rt::NetTransport(), node::rt::Executor());
 }
 
-rpc::IChannelPtr MakeClientChannel() {
+rpc::IChannelPtr MakeRpcChannel() {
   auto cluster = node::rt::Dns()->GetPool("server");
 
   auto client = MakeRpcClient();
@@ -48,9 +49,9 @@ static void RandomPause() {
 
 //////////////////////////////////////////////////////////////////////
 
-void ClientPrologue() {
+void Prologue() {
   await::fibers::self::SetName("main");
   RandomPause();
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::client

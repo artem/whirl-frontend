@@ -2,12 +2,12 @@
 
 #include <whirl/rpc/server.hpp>
 
-namespace whirl::node {
+namespace whirl::node::main {
 
-void MainPrologue();
+void Prologue();
 
 rpc::IServerPtr MakeRPCServer();
 
 [[noreturn]] void BlockForever();
 
-}  // namespace whirl::node
+}  // namespace whirl::node::main
