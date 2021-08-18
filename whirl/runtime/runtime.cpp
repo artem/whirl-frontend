@@ -1,4 +1,4 @@
-#include <whirl/node/runtime.hpp>
+#include <whirl/runtime/runtime.hpp>
 
 #include <whirl/engines/reflect.hpp>
 

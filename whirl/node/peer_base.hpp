@@ -1,7 +1,5 @@
 #pragma once
 
-#include <whirl/node/runtime_methods_base.hpp>
-
 #include <whirl/rpc/client.hpp>
 #include <whirl/rpc/channel.hpp>
 
@@ -10,7 +8,7 @@
 
 namespace whirl::node {
 
-class PeerBase : public RuntimeMethodsBase {
+class PeerBase {
  public:
   PeerBase();
 

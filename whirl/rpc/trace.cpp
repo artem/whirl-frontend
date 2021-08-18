@@ -6,7 +6,7 @@
 #include <wheels/support/assert.hpp>
 
 // TODO: ???
-#include <whirl/node/runtime.hpp>
+#include <whirl/runtime/runtime.hpp>
 
 #include <fmt/core.h>
 

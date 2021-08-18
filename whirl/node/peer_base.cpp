@@ -1,5 +1,7 @@
 #include <whirl/node/peer_base.hpp>
 
+#include <whirl/runtime/methods.hpp>
+
 #include <whirl/rpc/retries.hpp>
 
 namespace whirl::node {
@@ -28,11 +30,11 @@ rpc::IChannelPtr& PeerBase::PeerChannel(const std::string& peer) const {
 }
 
 rpc::IChannelPtr& PeerBase::SelfChannel() const {
-  return PeerChannel(HostName());
+  return PeerChannel(rt::HostName());
 }
 
 rpc::IClientPtr PeerBase::MakeRpcClient() const {
-  return rpc::MakeClient(NetTransport(), Executor());
+  return rpc::MakeClient(rt::NetTransport(), rt::Executor());
 }
 
 void PeerBase::LazyInit() const {
@@ -43,11 +45,11 @@ void PeerBase::LazyInit() const {
 }
 
 void PeerBase::ConnectToPeers() const {
-  cluster_ = DiscoverCluster();
+  cluster_ = rt::DiscoverCluster();
 
   // peers = cluster \ {HostName()}
   for (const auto& host : cluster_) {
-    if (host != HostName()) {
+    if (host != rt::HostName()) {
       peers_.push_back(host);
     }
   }
@@ -64,7 +66,7 @@ static rpc::BackoffParams RetriesBackoff() {
 rpc::IChannelPtr PeerBase::MakeChannel(const std::string& peer) const {
   auto transport = client_->Dial(peer);
   auto retries =
-      rpc::WithRetries(std::move(transport), TimeService(), RetriesBackoff());
+      rpc::WithRetries(std::move(transport), rt::TimeService(), RetriesBackoff());
   return retries;
 }
 

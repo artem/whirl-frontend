@@ -1,9 +1,9 @@
 #pragma once
 
 #include <whirl/node/node.hpp>
-#include <whirl/node/runtime.hpp>
+#include <whirl/runtime/runtime.hpp>
 #include <whirl/engines/matrix/process/threads.hpp>
-#include <whirl/node/runtime_methods_base.hpp>
+#include <whirl/runtime/methods.hpp>
 
 #include <whirl/rpc/client.hpp>
 #include <whirl/rpc/channel.hpp>
@@ -18,12 +18,12 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class ClientBase : public node::INode, public node::RuntimeMethodsBase {
+class ClientBase : public node::INode {
  public:
   void Start() override {
-    await::fibers::Go([this]() {
-          MainThread();
-    }, Executor());
+    node::rt::Go([this]() {
+      MainThread();
+    });
   }
 
  protected:
@@ -35,7 +35,7 @@ class ClientBase : public node::INode, public node::RuntimeMethodsBase {
 
  private:
   void RandomPause() {
-    SleepFor(RandomNumber(50));
+    node::rt::SleepFor(node::rt::RandomNumber(50));
   }
 
   rpc::IClientPtr MakeRpcClient();
@@ -55,7 +55,7 @@ class ClientBase : public node::INode, public node::RuntimeMethodsBase {
   // Common functions
 
   bool Either() const {
-    return RandomNumber(2) == 1;
+    return node::rt::RandomNumber(2) == 1;
   }
 
   // Cluster

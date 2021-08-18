@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/runtime.hpp>
+#include <whirl/runtime/runtime.hpp>
 #include <whirl/engines/matrix/server/services/runtime.hpp>
 
 namespace whirl::matrix {

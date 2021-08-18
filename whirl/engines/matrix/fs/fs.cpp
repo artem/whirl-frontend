@@ -134,6 +134,7 @@ void FileSystem::RaiseError(const std::string& message) {
 // Simulation
 
 void FileSystem::Corrupt(const Path& file_path) {
+  WHEELS_UNUSED(file_path);
   // TODO
 }
 

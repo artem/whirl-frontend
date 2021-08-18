@@ -5,6 +5,8 @@
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
 
+#include <whirl/runtime/methods.hpp>
+
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
 #include <whirl/engines/matrix/client/client.hpp>
@@ -88,8 +90,8 @@ class ClientNode final: public matrix::ClientBase {
   [[noreturn]] void MainRoutine() override {
     while (true) {
       // Печатаем локальное время
-      WHIRL_LOG_INFO("I am {}", HostName());
-      WHIRL_LOG_INFO("Local wall time: {}", WallTimeNow());
+      WHIRL_LOG_INFO("I am {}", node::rt::HostName());
+      WHIRL_LOG_INFO("Local wall time: {}", node::rt::WallTimeNow());
 
       // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
       // Результат вызова - Future, она типизируется вызовом .As<std::string>()
@@ -109,7 +111,7 @@ class ClientNode final: public matrix::ClientBase {
 
       // SleepFor – приостановить текущий файбер (не поток!) на заданное время
       // RandomNumber(lo, hi) - генерация случайного числа
-      SleepFor(RandomNumber(1, 100));
+      node::rt::SleepFor(node::rt::RandomNumber(1, 100));
     }
   }
 };

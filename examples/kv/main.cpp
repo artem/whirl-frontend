@@ -5,6 +5,8 @@
 #include <whirl/rpc/call.hpp>
 #include <whirl/cereal/serializable.hpp>
 
+#include <whirl/runtime/methods.hpp>
+
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
 #include <whirl/engines/matrix/client/client.hpp>
@@ -97,6 +99,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     WHIRL_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
+
+    // Broadcast
     for (const auto& peer : Peers(/*with_me=*/true)) {
       writes.push_back(
           rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
@@ -145,7 +149,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
   Timestamp ChooseWriteTimestamp() const {
     // Local wall clock may be out of sync with other replicas
     // Use TrueTime (TrueTime() method)
-    return WallTimeNow();
+    return node::rt::WallTimeNow();
   }
 
   // Find value with the largest timestamp
@@ -169,11 +173,10 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
 // Storage replica role
 
-class Replica : public rpc::ServiceBase<Replica>,
-                public node::RuntimeMethodsBase {
+class Replica : public rpc::ServiceBase<Replica> {
  public:
   Replica()
-    : kv_store_(Database(), "abd") {
+    : kv_store_(node::rt::Database(), "abd") {
   }
 
   void RegisterRPCMethods() override {
@@ -282,7 +285,7 @@ class KVClient final : public matrix::ClientBase {
     for (size_t i = 1;; ++i) {
       if (Either()) {
         Key key = ChooseKey();
-        Value value = RandomNumber(1, 100);
+        Value value = node::rt::RandomNumber(1, 100);
         WHIRL_LOG_INFO("Execute Set({}, {})", key, value);
         kv_store.Set(key, value);
         WHIRL_LOG_INFO("Set completed");
@@ -296,13 +299,13 @@ class KVClient final : public matrix::ClientBase {
       matrix::GlobalCounter("requests").Increment();
 
       // Random pause
-      SleepFor(RandomNumber(1, 100));
+      node::rt::SleepFor(node::rt::RandomNumber(1, 100));
     }
   }
 
  private:
   const std::string& ChooseKey() const {
-    return kKeys.at(RandomNumber(matrix::GetGlobal<size_t>("keys")));
+    return kKeys.at(node::rt::RandomNumber(matrix::GetGlobal<size_t>("keys")));
   }
 
  private:

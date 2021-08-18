@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/runtime.hpp>
+#include <whirl/runtime/runtime.hpp>
 #include <whirl/node/node.hpp>
 
 #include <whirl/engines/matrix/world/actor.hpp>

@@ -15,7 +15,7 @@ static rpc::BackoffParams RetriesBackoff() {
 //////////////////////////////////////////////////////////////////////
 
 rpc::IClientPtr ClientBase::MakeRpcClient() {
-  return rpc::MakeClient(NetTransport(), Executor());
+  return rpc::MakeClient(node::rt::NetTransport(), node::rt::Executor());
 }
 
 rpc::IChannelPtr ClientBase::MakeClientChannel() {
@@ -27,10 +27,10 @@ rpc::IChannelPtr ClientBase::MakeClientChannel() {
 
   // Retries -> History -> Random -> Peers
 
-  auto random = rpc::MakeRandomChannel(std::move(channels), RandomService());
+  auto random = rpc::MakeRandomChannel(std::move(channels), node::rt::RandomService());
   auto history = MakeHistoryChannel(std::move(random));
   auto retries =
-      rpc::WithRetries(std::move(history), TimeService(), RetriesBackoff());
+      rpc::WithRetries(std::move(history), node::rt::TimeService(), RetriesBackoff());
 
   return retries;
 }
