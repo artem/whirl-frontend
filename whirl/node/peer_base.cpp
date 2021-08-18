@@ -45,7 +45,7 @@ void PeerBase::LazyInit() const {
 }
 
 void PeerBase::ConnectToPeers() const {
-  cluster_ = rt::DiscoverCluster();
+  cluster_ = rt::Dns()->GetCluster();
 
   // peers = cluster \ {HostName()}
   for (const auto& host : cluster_) {

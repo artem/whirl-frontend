@@ -100,8 +100,8 @@ inline void Yield() {
 
 // DNS
 
-inline std::vector<std::string> DiscoverCluster() {
-  return GetRuntime().DiscoveryService()->GetCluster();
+inline IDiscoveryService* Dns() {
+  return GetRuntime().DiscoveryService();
 }
 
 // Guids
