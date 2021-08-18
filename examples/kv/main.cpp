@@ -100,7 +100,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     for (const auto& peer : Peers(/*with_me=*/true)) {
       writes.push_back(
           rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
-              .Via(PeerChannel(peer)));
+              .Via(PeerChannel(peer))
+              .AtLeastOnce());
     }
 
     // Await acknowledgements from the majority of storage replicas
@@ -114,7 +115,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     for (const auto& peer : Peers(/*with_me=*/true)) {
       reads.push_back(
           rpc::Call("Replica.LocalRead", key)
-              .Via(PeerChannel(peer)));
+              .Via(PeerChannel(peer))
+              .AtLeastOnce());
     }
 
     // Await responses from the majority of replicas

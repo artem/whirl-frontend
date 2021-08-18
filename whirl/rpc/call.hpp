@@ -89,7 +89,7 @@ class [[nodiscard]] Caller {
   }
 
   template <typename T>
-  operator await::futures::Future<T>() && {
+  operator await::futures::Future<T>() {
     return std::move(*this).Start().As<T>();
   }
 
