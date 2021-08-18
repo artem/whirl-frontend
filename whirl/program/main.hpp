@@ -8,6 +8,6 @@ void MainPrologue();
 
 rpc::IServerPtr MakeRPCServer();
 
-void BlockForever();
+[[noreturn]] void BlockForever();
 
 }  // namespace whirl::node
