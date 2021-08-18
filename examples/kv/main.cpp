@@ -80,7 +80,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 // Coordinator role, stateless
 
 class Coordinator : public rpc::ServiceBase<Coordinator>,
-                    public PeerBase {
+                    public node::PeerBase {
  public:
   Coordinator() {
   }
@@ -168,7 +168,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 // Storage replica role
 
 class Replica : public rpc::ServiceBase<Replica>,
-                       public NodeMethodsBase {
+                public node::NodeMethodsBase {
  public:
   Replica()
     : kv_store_(Database(), "abd") {
@@ -218,7 +218,7 @@ class Replica : public rpc::ServiceBase<Replica>,
   Logger logger_{"KVNode.Replica"};
 };
 
-class KVNode final : public NodeBase {
+class KVNode final : public node::NodeBase {
  public:
   KVNode() {
   }
@@ -349,11 +349,11 @@ size_t RunSimulation(size_t seed) {
   matrix::World world{seed};
 
   // Cluster nodes
-  auto node = MakeNode<KVNode>();
+  auto node = node::MakeNode<KVNode>();
   world.AddServers(replicas, node);
 
   // Clients
-  auto client = MakeNode<KVClient>();
+  auto client = node::MakeNode<KVClient>();
   world.AddClients(clients, client);
 
   // Globals

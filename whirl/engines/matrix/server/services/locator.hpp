@@ -5,7 +5,7 @@
 
 namespace whirl::matrix {
 
-class RuntimeLocator : public INodeRuntime {
+class RuntimeLocator : public node::IRuntime {
  public:
   RuntimeLocator(NodeRuntime* runtime)
       : runtime_(runtime) {

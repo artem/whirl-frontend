@@ -37,7 +37,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   };
 
  public:
-  Server(net::Network& network, ServerConfig config, INodeFactoryPtr factory);
+  Server(net::Network& network, ServerConfig config, node::INodeFactoryPtr factory);
 
   // Non-copyable
   Server(const Server&) = delete;
@@ -89,17 +89,17 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   size_t ComputeDigest() const;
 
-  INodeRuntime& GetNodeRuntime();
+  node::IRuntime& GetNodeRuntime();
 
  private:
-  INodeRuntime* MakeNodeRuntime();
-  void StartNodeMain(INode* node);
+  node::IRuntime* MakeNodeRuntime();
+  void StartNodeMain(node::INode* node);
 
  private:
   State state_{State::Initial};
 
   ServerConfig config_;
-  INodeFactoryPtr node_factory_;
+  node::INodeFactoryPtr node_factory_;
 
   // Hardware
   WallClock wall_clock_;
@@ -113,7 +113,7 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
 
   Stdout stdout_;
 
-  INodeRuntime* runtime_{nullptr};
+  node::IRuntime* runtime_{nullptr};
 
   Logger logger_{"Server"};
 };

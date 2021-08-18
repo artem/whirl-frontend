@@ -5,7 +5,7 @@
 
 #include <whirl/rpc/server.hpp>
 
-namespace whirl {
+namespace whirl::node {
 
 // Peer + Main routine
 
@@ -37,4 +37,4 @@ class NodeBase : public INode, public PeerBase {
   rpc::IServerPtr server_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node

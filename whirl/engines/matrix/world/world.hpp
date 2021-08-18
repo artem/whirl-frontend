@@ -25,11 +25,11 @@ class World {
 
   size_t Seed() const;
 
-  std::string AddServer(INodeFactoryPtr node);
-  void AddServers(size_t count, INodeFactoryPtr node);
+  std::string AddServer(node::INodeFactoryPtr node);
+  void AddServers(size_t count, node::INodeFactoryPtr node);
 
-  std::string AddClient(INodeFactoryPtr node);
-  void AddClients(size_t count, INodeFactoryPtr node);
+  std::string AddClient(node::INodeFactoryPtr node);
+  void AddClients(size_t count, node::INodeFactoryPtr node);
 
   void SetTimeModel(ITimeModelPtr time_model);
 

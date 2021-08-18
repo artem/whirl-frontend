@@ -7,13 +7,13 @@
 
 #include <wheels/support/assert.hpp>
 
-namespace whirl {
+namespace whirl::node {
 
-INodeRuntime& GetRuntime() {
+IRuntime& GetRuntime() {
   if (IsMatrix()) {
     return matrix::ThisServer().GetNodeRuntime();
   }
   WHEELS_PANIC("GetRuntime is not supported for current engine");
 }
 
-}  // namespace whirl
+}  // namespace whirl::node

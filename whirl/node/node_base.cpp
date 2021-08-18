@@ -4,7 +4,7 @@
 
 #include <whirl/rpc/server_impl.hpp>
 
-namespace whirl {
+namespace whirl::node {
 
 void NodeBase::Start() {
   Go([this]() {
@@ -32,4 +32,4 @@ void NodeBase::Main() {
   MainThread();
 }
 
-}  // namespace whirl
+}  // namespace whirl::node

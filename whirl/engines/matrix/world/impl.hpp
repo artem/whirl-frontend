@@ -54,12 +54,12 @@ class WorldImpl {
       : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
   }
 
-  std::string AddServer(INodeFactoryPtr node) {
+  std::string AddServer(node::INodeFactoryPtr node) {
     WorldGuard g(this);
     return AddServerImpl(cluster_, node, "Server");
   }
 
-  std::string AddClient(INodeFactoryPtr node) {
+  std::string AddClient(node::INodeFactoryPtr node) {
     WorldGuard g(this);
     return AddServerImpl(clients_, node, "Client");
   }
@@ -199,7 +199,7 @@ class WorldImpl {
   static ITimeModelPtr DefaultTimeModel();
 
   // Returns host name
-  std::string AddServerImpl(Servers& servers, INodeFactoryPtr node, std::string type) {
+  std::string AddServerImpl(Servers& servers, node::INodeFactoryPtr node, std::string type) {
     size_t id = server_ids_.NextId();
     std::string name = type + "-" + std::to_string(servers.size() + 1);
 

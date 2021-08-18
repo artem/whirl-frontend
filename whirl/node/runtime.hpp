@@ -12,14 +12,14 @@
 #include <whirl/services/net_transport.hpp>
 #include <whirl/services/terminal.hpp>
 
-namespace whirl {
+namespace whirl::node {
 
 //////////////////////////////////////////////////////////////////////
 
 // Service locator
 
-struct INodeRuntime {
-  virtual ~INodeRuntime() = default;
+struct IRuntime {
+  virtual ~IRuntime() = default;
 
   virtual IConfig* Config() = 0;
 
@@ -46,6 +46,6 @@ struct INodeRuntime {
 //////////////////////////////////////////////////////////////////////
 
 // Bridge connecting engine-agnostic node and concrete engine
-INodeRuntime& GetRuntime();
+IRuntime& GetRuntime();
 
-}  // namespace whirl
+}  // namespace whirl::node

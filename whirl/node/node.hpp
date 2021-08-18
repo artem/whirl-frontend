@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace whirl {
+namespace whirl::node {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -39,4 +39,4 @@ INodeFactoryPtr MakeNode() {
   return std::make_shared<TNodeFactory<TNode>>();
 }
 
-}  // namespace whirl
+}  // namespace whirl::node

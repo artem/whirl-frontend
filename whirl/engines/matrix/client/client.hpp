@@ -18,7 +18,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class ClientBase : public INode, public NodeMethodsBase {
+class ClientBase : public node::INode, public node::NodeMethodsBase {
  public:
   void Start() override {
     await::fibers::Go([this]() {
@@ -30,7 +30,7 @@ class ClientBase : public INode, public NodeMethodsBase {
   virtual rpc::IChannelPtr MakeClientChannel();
 
   void DiscoverCluster() {
-    cluster_ = GetRuntime().DiscoveryService()->GetCluster();
+    cluster_ = node::GetRuntime().DiscoveryService()->GetCluster();
   }
 
  private:

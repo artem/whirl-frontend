@@ -2,7 +2,7 @@
 
 #include <whirl/rpc/retries.hpp>
 
-namespace whirl {
+namespace whirl::node {
 
 PeerBase::PeerBase() {
 }
@@ -68,4 +68,4 @@ rpc::IChannelPtr PeerBase::MakeChannel(const std::string& peer) const {
   return retries;
 }
 
-}  // namespace whirl
+}  // namespace whirl::node

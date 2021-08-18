@@ -16,7 +16,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-Server::Server(net::Network& net, ServerConfig config, INodeFactoryPtr factory)
+Server::Server(net::Network& net, ServerConfig config, node::INodeFactoryPtr factory)
     : config_(config),
       node_factory_(std::move(factory)),
       transport_(net, config.hostname, heap_, scheduler_) {
@@ -127,7 +127,7 @@ void Server::Start() {
   state_ = State::Running;
 }
 
-void Server::StartNodeMain(INode* node) {
+void Server::StartNodeMain(node::INode* node) {
   await::fibers::Go([node]() {
     node->Start();
     }, runtime_->Executor());
@@ -174,7 +174,7 @@ size_t Server::ComputeDigest() const {
 
 // Private
 
-INodeRuntime* Server::MakeNodeRuntime() {
+node::IRuntime* Server::MakeNodeRuntime() {
   NodeRuntime* runtime = new NodeRuntime();
 
   runtime->thread_pool.Init(scheduler_);
@@ -203,7 +203,7 @@ INodeRuntime* Server::MakeNodeRuntime() {
   return new RuntimeLocator{runtime};
 }
 
-INodeRuntime& Server::GetNodeRuntime() {
+node::IRuntime& Server::GetNodeRuntime() {
   return *runtime_;
 }
 

@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 
-namespace whirl {
+namespace whirl::node {
 
 class PeerBase : public NodeMethodsBase {
  public:
@@ -37,4 +37,4 @@ class PeerBase : public NodeMethodsBase {
   mutable std::map<std::string, rpc::IChannelPtr> channels_;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node

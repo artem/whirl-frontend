@@ -69,7 +69,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 
 // Echo server node
 
-class EchoNode final: public NodeBase {
+class EchoNode final: public node::NodeBase {
  protected:
   void RegisterRPCServices(const rpc::IServerPtr& rpc_server) override {
     rpc_server->RegisterService(
@@ -122,11 +122,11 @@ int main() {
   matrix::World world{kSeed};
 
   // Cluster nodes
-  auto node = MakeNode<EchoNode>();
+  auto node = node::MakeNode<EchoNode>();
   world.AddServers(3, node);
 
   // Clients
-  auto client = MakeNode<ClientNode>();
+  auto client = node::MakeNode<ClientNode>();
   world.AddClient(client);
 
   world.Start();

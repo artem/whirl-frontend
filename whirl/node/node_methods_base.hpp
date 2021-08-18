@@ -8,14 +8,14 @@
 
 #include <fmt/core.h>
 
-namespace whirl {
+namespace whirl::node {
 
 class NodeMethodsBase {
  protected:
   // Me
 
   NodeId Id() const {
-    return GetRuntime().Config()->Id();
+    return node::GetRuntime().Config()->Id();
   }
 
   const std::string& HostName() const {
@@ -129,4 +129,4 @@ class NodeMethodsBase {
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::node
