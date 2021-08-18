@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/log/file.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
-#include <wheels/support/argparse.hpp>
+#include <wheels/cmdline/argparse.hpp>
 
 #include <iostream>
 #include <sstream>
