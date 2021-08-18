@@ -104,8 +104,11 @@ void EchoNode() {
     // Она распаковывает фьючу в Result<std::string>
     // См. <await/fibers/sync/future.hpp>
 
-    Future<proto::Echo::Response> future = rpc::Call("Echo.Echo", proto::Echo::Request{"Hello"})
-                                               .Via(client_channel);
+    Future<proto::Echo::Response> future =
+      rpc::Call("Echo.Echo")
+        .Args(proto::Echo::Request{"Hello"})
+        .Via(client_channel);
+
     auto result = Await(std::move(future));
 
     if (result.IsOk()) {

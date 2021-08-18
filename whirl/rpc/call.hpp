@@ -131,11 +131,27 @@ class [[nodiscard]] ViaCaller {
   BytesValue input_;
 };
 
+class [[nodiscard]] ArgsCaller {
+ public:
+  ArgsCaller(Method method) : method_(method) {
+  }
+
+  template <typename... TArguments>
+  ViaCaller Args(TArguments&& ... arguments) {
+    auto input = detail::SerializeInput(std::forward<TArguments>(arguments)...);
+    return ViaCaller{method_, input};
+  }
+
+ private:
+  Method method_;
+};
+
 }  // namespace detail
 
 // Unary RPC
 // Usage:
-// auto f = Call("EchoService.Echo", proto::Echo::Request{data})
+// auto f = Call("EchoService.Echo")
+//            .Args(proto::Echo::Request{data})
 //            .Via(channel)
 //            .StopAdvice(stop_token)
 //            .WithTraceId(trace_id)
@@ -148,12 +164,9 @@ class [[nodiscard]] ViaCaller {
 //   Call("EchoService.Echo", proto::Echo::Request{data})
 //      .Via(channel);
 
-template <typename... Arguments>
-detail::ViaCaller Call(const std::string& method_str, Arguments&&... arguments) {
+inline detail::ArgsCaller Call(const std::string& method_str) {
   auto method = Method::Parse(method_str);
-  // Erase argument types
-  auto input = detail::SerializeInput(std::forward<Arguments>(arguments)...);
-  return detail::ViaCaller{method, input};
+  return detail::ArgsCaller{method};
 }
 
 }  // namespace whirl::rpc

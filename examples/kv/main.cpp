@@ -104,7 +104,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     // Broadcast
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
       writes.push_back(
-          rpc::Call("Replica.LocalWrite", key, StampedValue{value, write_ts})
+          rpc::Call("Replica.LocalWrite")
+              .Args(key, StampedValue{value, write_ts})
               .Via(Channel(peer))
               .AtLeastOnce());
     }
@@ -119,7 +120,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     // Broadcast LocalRead request to replicas
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
       reads.push_back(
-          rpc::Call("Replica.LocalRead", key)
+          rpc::Call("Replica.LocalRead")
+              .Args(key)
               .Via(Channel(peer))
               .AtLeastOnce());
     }
@@ -248,11 +250,11 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(rpc::Call("KV.Set", k, v).Via(channel_).Start().As<void>()).ThrowIfError();
+    Await(rpc::Call("KV.Set").Args(k, v).Via(channel_).Start().As<void>()).ThrowIfError();
   }
 
   Value Get(Key k) {
-    return Await(rpc::Call("KV.Get", k).Via(channel_).Start().As<Value>()).ValueOrThrow();
+    return Await(rpc::Call("KV.Get").Args(k).Via(channel_).Start().As<Value>()).ValueOrThrow();
   }
 
  private:
