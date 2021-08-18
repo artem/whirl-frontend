@@ -9,6 +9,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace whirl::matrix::fs {
 
@@ -25,11 +26,39 @@ class FileSystem {
     FileRef file;
   };
 
+  using Files = std::map<node::fs::Path, FileRef>;
+
+  class DirIterator {
+   public:
+    DirIterator(Files& files)
+        : it_(files.begin()), end_(files.end()) {
+    }
+
+    const node::fs::Path& operator*(){
+      return it_->first;
+    }
+
+    bool IsValid() const {
+      return it_ != end_;
+    }
+
+    void operator++() {
+      ++it_;
+    }
+
+   private:
+    Files::const_iterator it_;
+    Files::const_iterator end_;
+  };
+
  public:
   FileSystem() = default;
 
   // System calls
+  // Context: Server
 
+  void Create(const node::fs::Path& file_path);
+  void Delete(const node::fs::Path& file_path);
   bool Exists(const node::fs::Path& file_path) const;
 
   node::fs::Fd Open(
@@ -41,7 +70,7 @@ class FileSystem {
 
   void Close(node::fs::Fd fd);
 
-  void Delete(const node::fs::Path& file_path);
+  DirIterator ListAllFiles();
 
   // Simulation
 
@@ -67,7 +96,7 @@ class FileSystem {
 
  private:
   // Persistent state
-  std::map<node::fs::Path, FileRef> files_;
+  Files files_;
 
   // Process (volatile) state
   std::map<node::fs::Fd, OpenedFile> opened_files_;

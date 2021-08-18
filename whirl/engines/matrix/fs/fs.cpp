@@ -14,6 +14,8 @@ namespace whirl::matrix::fs {
 // System calls
 
 bool FileSystem::Exists(const Path& file_path) const {
+  // No allocations here!
+
   return files_.find(file_path) != files_.end();
 }
 
@@ -59,10 +61,25 @@ void FileSystem::Close(Fd fd) {
   }
 }
 
+void FileSystem::Create(const Path& file_path) {
+  GlobalAllocatorGuard g;
+
+  if (!files_.contains(file_path)) {
+    WHIRL_LOG_INFO("Create file '{}'", file_path);
+    auto f = CreateFile();
+    files_.insert({file_path, f});
+  }
+}
+
 void FileSystem::Delete(const Path& file_path) {
   GlobalAllocatorGuard g;
 
   files_.erase(file_path);
+}
+
+FileSystem::DirIterator FileSystem::ListAllFiles() {
+  // No allocations here!
+  return {files_};
 }
 
 FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path, FileMode open_mode) {
@@ -117,6 +134,7 @@ void FileSystem::RaiseError(const std::string& message) {
 // Simulation
 
 void FileSystem::Reset() {
+  // Reset volatile state
   opened_files_.clear();
   next_fd_ = 0;
 }

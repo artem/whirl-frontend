@@ -14,8 +14,31 @@ class FS: public node::fs::IFileSystem {
     : disk_(time_service), impl_(impl) {
   }
 
+  void Create(const node::fs::Path& file_path) override {
+    impl_->Create(file_path);
+  }
+
+  void Delete(const node::fs::Path& file_path) override {
+    impl_->Delete(file_path);
+  }
+
   bool Exists(const node::fs::Path& file_path) const override {
     return impl_->Exists(file_path);
+  }
+
+  std::vector<std::string> ListFiles(std::string_view prefix) override {
+    // All allocations are made in "userspace"
+    std::vector<std::string> listed;
+
+    auto iter = impl_->ListAllFiles();
+    while (iter.IsValid()) {
+      if ((*iter).starts_with(prefix)) {
+        listed.push_back(*iter);
+      }
+      ++iter;
+    }
+
+    return listed;
   }
 
   // FileMode::Append creates file if it does not exist
@@ -37,10 +60,6 @@ class FS: public node::fs::IFileSystem {
 
   void Close(node::fs::Fd fd) override {
     impl_->Close(fd);
-  }
-
-  void Delete(const node::fs::Path& file_path) override {
-    impl_->Delete(file_path);
   }
 
  private:

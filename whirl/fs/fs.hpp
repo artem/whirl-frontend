@@ -5,6 +5,7 @@
 #include <wheels/support/memspan.hpp>
 
 #include <string>
+#include <vector>
 
 namespace whirl::node::fs {
 
@@ -24,7 +25,16 @@ enum class FileMode {
 struct IFileSystem {
   virtual ~IFileSystem() = default;
 
+  // Existing file is Ok
+  virtual void Create(const Path& file_path) = 0;
+
+  // Missing file is Ok
+  virtual void Delete(const Path& file_path) = 0;
+
   virtual bool Exists(const Path& file_path) const = 0;
+
+  virtual std::vector<std::string> ListFiles(
+      std::string_view prefix) = 0;
 
   // FileMode::Append creates file if it does not exist
   virtual Fd Open(const Path& file_path, FileMode mode) = 0;
@@ -39,9 +49,6 @@ struct IFileSystem {
   virtual size_t Read(Fd fd, wheels::MutableMemView buffer) = 0;
 
   virtual void Close(Fd fd) = 0;
-
-  // Missing file is Ok
-  virtual void Delete(const Path& file_path) = 0;
 };
 
 }  // namespace whirl::node::fs
