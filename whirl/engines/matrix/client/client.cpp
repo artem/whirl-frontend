@@ -35,13 +35,13 @@ rpc::IChannelPtr ClientBase::MakeClientChannel() {
   return retries;
 }
 
-void ClientBase::Main() {
+void ClientBase::MainThread() {
   await::fibers::self::SetName("main");
 
   RandomPause();
   DiscoverCluster();
   ConnectToClusterNodes();
-  MainThread();
+  MainRoutine();
 }
 
 }  // namespace whirl::matrix

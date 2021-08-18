@@ -85,7 +85,7 @@ class ClientNode final: public matrix::ClientBase {
   }
 
  protected:
-  [[noreturn]] void MainThread() override {
+  [[noreturn]] void MainRoutine() override {
     while (true) {
       // Печатаем локальное время
       WHIRL_LOG_INFO("I am {}", HostName());

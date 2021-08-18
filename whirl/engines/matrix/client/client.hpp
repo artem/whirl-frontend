@@ -22,7 +22,7 @@ class ClientBase : public node::INode, public node::RuntimeMethodsBase {
  public:
   void Start() override {
     await::fibers::Go([this]() {
-      Main();
+          MainThread();
     }, Executor());
   }
 
@@ -67,11 +67,11 @@ class ClientBase : public node::INode, public node::RuntimeMethodsBase {
  protected:
   // Override this methods
 
-  virtual void MainThread() {
+  virtual void MainRoutine() {
   }
 
  private:
-  void Main();
+  void MainThread();
 
  private:
   std::vector<std::string> cluster_;

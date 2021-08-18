@@ -20,7 +20,7 @@ class NodeBase : public INode, public PeerBase {
   virtual void RegisterRPCServices(const rpc::IServerPtr& /*rpc_server*/) {
   }
 
-  virtual void MainThread() {
+  virtual void MainRoutine() {
   }
 
   const rpc::IServerPtr& RpcServer() {
@@ -29,7 +29,7 @@ class NodeBase : public INode, public PeerBase {
 
  private:
   // Main fiber routine
-  void Main();
+  void MainThread();
 
   void StartRpcServer();
 

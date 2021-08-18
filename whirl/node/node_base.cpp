@@ -8,7 +8,7 @@ namespace whirl::node {
 
 void NodeBase::Start() {
   Go([this]() {
-    Main();
+    MainThread();
   });
 }
 
@@ -18,7 +18,7 @@ void NodeBase::StartRpcServer() {
 }
 
 // Main fiber routine
-void NodeBase::Main() {
+void NodeBase::MainThread() {
   await::fibers::self::SetName("main");
 
   PrintLine("Starting at T{}", WallTimeNow());
@@ -29,7 +29,7 @@ void NodeBase::Main() {
   StartRpcServer();
   RegisterRPCServices(RpcServer());
 
-  MainThread();
+  MainRoutine();
 }
 
 }  // namespace whirl::node

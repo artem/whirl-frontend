@@ -229,7 +229,7 @@ class KVNode final : public node::NodeBase {
     rpc_server->RegisterService("Replica", MakeReplicaService());
   }
 
-  void MainThread() override {
+  void MainRoutine() override {
     // Do nothing
   }
 
@@ -274,7 +274,7 @@ class KVClient final : public matrix::ClientBase {
   }
 
  protected:
-  [[noreturn]] void MainThread() override {
+  [[noreturn]] void MainRoutine() override {
     KVBlockingStub kv_store{Channel()};
 
     for (size_t i = 1;; ++i) {
