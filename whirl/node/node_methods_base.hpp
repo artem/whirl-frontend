@@ -20,6 +20,12 @@ class NodeMethodsBase {
     return NetTransport()->HostName();
   }
 
+  // File system
+
+  node::fs::IFileSystem* FileSystem() const {
+    return GetRuntime().FileSystem();
+  }
+
   // Randomness
 
   IRandomService* RandomService() const {
@@ -62,10 +68,16 @@ class NodeMethodsBase {
     return GetRuntime().TrueTime();
   }
 
-  // Local storage backend
+  // Database
 
   node::db::IDatabase* Database() const {
     return GetRuntime().Database();
+  }
+
+  // Execution
+
+  const await::executors::IExecutorPtr Executor() const {
+    return GetRuntime().Executor();
   }
 
   void Go(await::fibers::FiberRoutine routine) {
@@ -80,36 +92,26 @@ class NodeMethodsBase {
     await::fibers::self::Yield();
   }
 
-  const await::executors::IExecutorPtr Executor() const {
-    return GetRuntime().Executor();
-  }
-
-  // Guids
-
-  Guid GenerateGuid() const {
-    return GetRuntime().GuidGenerator()->Generate();
-  }
-
   // Cluster
 
   std::vector<std::string> DiscoverCluster() const {
     return GetRuntime().DiscoveryService()->GetCluster();
   }
 
-  // RPC
+  // Net transport
 
   ITransportPtr NetTransport() const {
     return GetRuntime().NetTransport();
   }
 
-  // Local services
+  // Local Guids
 
   IGuidGenerator* GuidsGenerator() const {
     return GetRuntime().GuidGenerator();
   }
 
-  node::fs::IFileSystem* FileSystem() const {
-    return GetRuntime().FileSystem();
+  Guid GenerateGuid() const {
+    return GetRuntime().GuidGenerator()->Generate();
   }
 };
 
