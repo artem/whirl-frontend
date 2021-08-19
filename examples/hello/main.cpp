@@ -13,6 +13,8 @@ using namespace whirl;
 void HelloWorld() {
   node::main::Prologue();
   node::rt::PrintLine("Hello, World!");
+  node::rt::PrintLine("I am '{}' from pool '{}'",
+    node::rt::HostName(), node::rt::Config()->PoolName());
 }
 
 //////////////////////////////////////////////////////////////////////
