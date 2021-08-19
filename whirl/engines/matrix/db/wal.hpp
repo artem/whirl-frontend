@@ -9,6 +9,8 @@
 
 #include <whirl/cereal/serialize.hpp>
 
+#include <wheels/io/buffered.hpp>
+
 #include <cereal/types/vector.hpp>
 
 namespace whirl::matrix::db {
@@ -50,13 +52,15 @@ class WALReader {
  public:
   WALReader(node::fs::IFileSystem *fs, node::fs::Path log_file_path)
       : file_reader_(fs, log_file_path),
-        framed_reader_(&file_reader_) {
+        buf_file_reader_(&file_reader_),
+        framed_reader_(&buf_file_reader_) {
   }
 
   std::optional<node::db::WriteBatch> ReadNext();
 
  private:
   node::fs::FileReader file_reader_;
+  wheels::io::BufferedReader buf_file_reader_;
   FramedReader framed_reader_;
 };
 
