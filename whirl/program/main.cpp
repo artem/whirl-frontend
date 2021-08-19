@@ -18,7 +18,7 @@ void Prologue() {
   rt::Database()->Open("/db");
 }
 
-rpc::IServerPtr MakeRPCServer() {
+rpc::IServerPtr MakeRpcServer() {
   return std::make_shared<rpc::ServerImpl>(
       rt::NetTransport(), rt::Executor());
 }

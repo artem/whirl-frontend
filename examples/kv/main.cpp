@@ -229,7 +229,7 @@ class Replica : public rpc::ServiceBase<Replica> {
 void KVNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::main::MakeRPCServer();
+  auto rpc_server = node::main::MakeRpcServer();
 
   rpc_server->RegisterService("KV",
     std::make_shared<Coordinator>());

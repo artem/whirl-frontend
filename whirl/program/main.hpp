@@ -6,7 +6,7 @@ namespace whirl::node::main {
 
 void Prologue();
 
-rpc::IServerPtr MakeRPCServer();
+rpc::IServerPtr MakeRpcServer();
 
 [[noreturn]] void BlockForever();
 
