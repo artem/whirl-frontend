@@ -1,6 +1,6 @@
 #pragma once
 
-#include <wheels/support/memspan.hpp>
+#include <wheels/support/mem_view.hpp>
 
 #include <vector>
 

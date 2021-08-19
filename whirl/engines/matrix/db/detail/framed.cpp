@@ -4,7 +4,7 @@
 #include <wheels/io/write.hpp>
 #include <wheels/io/limit.hpp>
 
-#include <wheels/support/view_util.hpp>
+#include <wheels/support/mem_view_of.hpp>
 
 namespace whirl {
 

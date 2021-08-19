@@ -74,7 +74,7 @@ class MemoryAllocator : public IMemoryAllocator {
   char* AllocateNewBlock(size_t bytes_pow2);
   bool Overflow(size_t bytes) const;
   static char* WriteBlockHeader(char* addr, size_t size);
-  wheels::MemSpan GetSpan(BlockHeader* block);
+  wheels::MutableMemView GetSpan(BlockHeader* block);
 
  private:
   BlockCache cache_;

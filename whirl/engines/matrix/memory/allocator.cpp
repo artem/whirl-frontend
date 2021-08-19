@@ -202,7 +202,7 @@ char* MemoryAllocator::WriteBlockHeader(char* addr, size_t size) {
   return addr + sizeof(BlockHeader);
 };
 
-wheels::MemSpan MemoryAllocator::GetSpan(BlockHeader* block) {
+wheels::MutableMemView MemoryAllocator::GetSpan(BlockHeader* block) {
   char* start = (char*)block + sizeof(BlockHeader);
   return {start, block->size};
 }

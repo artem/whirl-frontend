@@ -2,7 +2,7 @@
 
 #include <wheels/io/memory.hpp>
 
-#include <wheels/support/view_util.hpp>
+#include <wheels/support/mem_view_of.hpp>
 #include <wheels/support/hash.hpp>
 
 namespace whirl::matrix::fs {
