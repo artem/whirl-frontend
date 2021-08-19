@@ -17,6 +17,11 @@ class Config : public IConfig {
     return pool_;
   }
 
+  std::optional<std::string> Get(const std::string& key) override {
+    WHEELS_UNUSED(key);
+    return std::nullopt;
+  };
+
  private:
   size_t id_;
   std::string pool_;
