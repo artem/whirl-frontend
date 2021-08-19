@@ -1,5 +1,7 @@
 #include <whirl/fs/io.hpp>
 
+#include <whirl/runtime/runtime.hpp>
+
 namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
@@ -7,6 +9,10 @@ namespace whirl::node::fs {
 FileReader::FileReader(IFileSystem* fs, Path file_path)
   : fs_(fs) {
   fd_ = Fs()->Open(file_path, FileMode::Read);
+}
+
+FileReader::FileReader(Path file_path)
+    : FileReader(GetRuntime().FileSystem(), file_path) {
 }
 
 FileReader::~FileReader() {
@@ -26,6 +32,10 @@ IFileSystem* FileReader::Fs() {
 FileWriter::FileWriter(IFileSystem* fs, Path file_path)
     : fs_(fs) {
   fd_ = Fs()->Open(file_path, FileMode::Append);
+}
+
+FileWriter::FileWriter(Path file_path)
+    : FileWriter(GetRuntime().FileSystem(), file_path) {
 }
 
 FileWriter::~FileWriter() {

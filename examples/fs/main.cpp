@@ -24,7 +24,7 @@ void TestNode() {
   node::main::Prologue();
 
   if (!node::rt::FileSystem()->Exists("/flag")) {
-    node::fs::FileWriter file_writer(node::rt::FileSystem(), "/file");
+    node::fs::FileWriter file_writer("/file");
     file_writer.Write(wheels::ViewOf("Hello, World!"));
 
     node::rt::Database()->Put("Test-Put", "Ok!");
