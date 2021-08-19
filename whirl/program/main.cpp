@@ -18,11 +18,6 @@ void Prologue() {
   rt::Database()->Open("/db");
 }
 
-rpc::IServerPtr MakeRpcServer() {
-  return std::make_shared<rpc::ServerImpl>(
-      rt::NetTransport(), rt::Executor());
-}
-
 void BlockForever() {
   await::fibers::Await(await::futures::Never()).ExpectOk();
   std::abort();

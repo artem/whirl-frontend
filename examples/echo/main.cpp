@@ -74,7 +74,8 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 void EchoNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::main::MakeRpcServer();
+  auto rpc_server = node::rt::MakeRpcServer();
+
   rpc_server->RegisterService(
     "Echo", std::make_shared<EchoService>());
 

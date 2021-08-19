@@ -2,6 +2,9 @@
 
 #include <whirl/runtime/runtime.hpp>
 
+#include <whirl/rpc/client.hpp>
+#include <whirl/rpc/server.hpp>
+
 #include <await/fibers/core/api.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>
@@ -129,5 +132,11 @@ inline void PrintLine(Args&& ... args) {
   std::string line = fmt::format(std::forward<Args>(args)...);
   Terminal()->PrintLine(line);
 }
+
+// RPC
+
+rpc::IServerPtr MakeRpcServer();
+
+rpc::IClientPtr MakeRpcClient();
 
 }  // namespace whirl::node::rt
