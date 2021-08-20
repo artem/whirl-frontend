@@ -59,11 +59,11 @@ using Value = int32_t;
 
 // Replicas store versioned (stamped) values
 
-using Timestamp = size_t;
+using WriteTimestamp = size_t;
 
 struct StampedValue {
   Value value;
-  Timestamp timestamp;
+  WriteTimestamp timestamp;
 
   static StampedValue NoValue() {
     return {0, 0};
@@ -101,7 +101,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
   // RPC handlers
 
   void Set(Key key, Value value) {
-    Timestamp write_ts = ChooseWriteTimestamp();
+    WriteTimestamp write_ts = ChooseWriteTimestamp();
     WHIRL_LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
@@ -155,7 +155,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
   }
 
  private:
-  Timestamp ChooseWriteTimestamp() const {
+  WriteTimestamp ChooseWriteTimestamp() const {
     // Local wall clock may be out of sync with other replicas
     // Use TrueTime (TrueTime() method)
     return node::rt::WallTimeNow();
