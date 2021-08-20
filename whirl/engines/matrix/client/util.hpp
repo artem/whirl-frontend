@@ -4,6 +4,6 @@
 
 namespace whirl::matrix::client {
 
-void Prologue();
+bool Either();
 
 }  // namespace whirl::matrix::client

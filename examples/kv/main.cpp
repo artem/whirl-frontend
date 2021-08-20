@@ -12,6 +12,8 @@
 #include <whirl/engines/matrix/world/world.hpp>
 #include <whirl/engines/matrix/world/global/vars.hpp>
 #include <whirl/engines/matrix/client/main.hpp>
+#include <whirl/engines/matrix/client/rpc.hpp>
+#include <whirl/engines/matrix/client/util.hpp>
 #include <whirl/engines/matrix/test/random.hpp>
 #include <whirl/engines/matrix/test/main.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
@@ -277,11 +279,11 @@ const std::string& ChooseRandomKey() {
 
   Logger logger_{"Client"};
 
-  KVBlockingStub kv_store{matrix::client::MakeRpcChannel()};
+  KVBlockingStub kv_store{matrix::client::MakeRpcChannel("server")};
 
   for (size_t i = 1;; ++i) {
     Key key = ChooseRandomKey();
-    if (node::rt::RandomNumber(2) == 1) {
+    if (matrix::client::Either()) {
       Value value = node::rt::RandomNumber(1, 100);
       WHIRL_LOG_INFO("Execute Put({}, {})", key, value);
       kv_store.Set(key, value);

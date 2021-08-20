@@ -10,6 +10,7 @@
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
 #include <whirl/engines/matrix/client/main.hpp>
+#include <whirl/engines/matrix/client/rpc.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
 
 #include <await/fibers/sync/future.hpp>
@@ -88,7 +89,7 @@ void EchoNode() {
 [[noreturn]] void EchoClient() {
   matrix::client::Prologue();
 
-  auto channel = matrix::client::MakeRpcChannel();
+  auto channel = matrix::client::MakeRpcChannel("server");
 
   Logger logger_{"Client"};
 

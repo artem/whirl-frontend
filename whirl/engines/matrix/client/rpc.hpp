@@ -4,6 +4,6 @@
 
 namespace whirl::matrix::client {
 
-void Prologue();
+rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name);
 
 }  // namespace whirl::matrix::client
