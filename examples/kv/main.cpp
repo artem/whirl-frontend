@@ -65,10 +65,6 @@ struct StampedValue {
   Value value;
   WriteTimestamp timestamp;
 
-  static StampedValue NoValue() {
-    return {0, 0};
-  }
-
   // Serialization support for local storage and RPC
   WHIRL_SERIALIZABLE(value, timestamp)
 };
@@ -210,7 +206,7 @@ class Replica : public rpc::ServiceBase<Replica> {
   }
 
   StampedValue LocalRead(Key key) {
-    return kv_store_.GetOr(key, StampedValue::NoValue());
+    return kv_store_.GetOr(key, {0, 0});
   }
 
  private:
@@ -250,13 +246,21 @@ class KVBlockingStub {
   KVBlockingStub(rpc::IChannelPtr channel) : channel_(channel) {
   }
 
-  void Set(Key k, Value v) {
-    Await(rpc::Call("KV.Set").Args(k, v).Via(channel_).Start().As<void>())
+  void Set(Key key, Value value) {
+    Await(rpc::Call("KV.Set")  //
+              .Args(key, value)
+              .Via(channel_)
+              .Start()
+              .As<void>())
         .ThrowIfError();
   }
 
-  Value Get(Key k) {
-    return Await(rpc::Call("KV.Get").Args(k).Via(channel_).Start().As<Value>())
+  Value Get(Key key) {
+    return Await(rpc::Call("KV.Get")  //
+                     .Args(key)
+                     .Via(channel_)
+                     .Start()
+                     .As<Value>())
         .ValueOrThrow();
   }
 
@@ -279,7 +283,7 @@ const std::string& ChooseRandomKey() {
 
   Logger logger_{"Client"};
 
-  KVBlockingStub kv_store{matrix::client::MakeRpcChannel(/*pool_name=*/ "kv")};
+  KVBlockingStub kv_store{matrix::client::MakeRpcChannel(/*pool_name=*/"kv")};
 
   for (size_t i = 1;; ++i) {
     Key key = ChooseRandomKey();
@@ -312,8 +316,7 @@ const std::string& ChooseRandomKey() {
   auto& net = matrix::fault::Network();
 
   while (true) {
-    node::rt::SleepFor(
-        node::rt::RandomNumber(10, 1000));
+    node::rt::SleepFor(node::rt::RandomNumber(10, 1000));
 
     size_t center = node::rt::RandomNumber(pool.size());
 
@@ -321,8 +324,7 @@ const std::string& ChooseRandomKey() {
 
     matrix::fault::MakeStar(pool, center);
 
-    node::rt::SleepFor(
-        node::rt::RandomNumber(100, 300));
+    node::rt::SleepFor(node::rt::RandomNumber(100, 300));
 
     net.Heal();
   }
@@ -371,13 +373,13 @@ size_t RunSimulation(size_t seed) {
 
   // Cluster
   world.MakePool(
-      /*pool_name=*/ "kv",
-      /*program=*/ KVNode,
-      /*size=*/ replicas,
-      /*name_template=*/ "Server");
+      /*pool_name=*/"kv",
+      /*program=*/KVNode,
+      /*size=*/replicas,
+      /*name_template=*/"Server");
 
   // Clients
-  world.AddClients(Client, /*count=*/ clients);
+  world.AddClients(Client, /*count=*/clients);
 
   world.AddAdversary(Adversary);
 
