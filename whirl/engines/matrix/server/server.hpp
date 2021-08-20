@@ -66,7 +66,7 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
   void Crash() override;
   void FastReboot() override;
 
-  void Paquse() override;
+  void Pause() override;
   void Resume() override;
 
   // - Clocks
