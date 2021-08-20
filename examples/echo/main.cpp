@@ -76,8 +76,7 @@ void EchoNode() {
 
   auto rpc_server = node::rt::MakeRpcServer();
 
-  rpc_server->RegisterService(
-    "Echo", std::make_shared<EchoService>());
+  rpc_server->RegisterService("Echo", std::make_shared<EchoService>());
 
   rpc_server->Start();
 
@@ -106,16 +105,17 @@ void EchoNode() {
     // См. <await/fibers/sync/future.hpp>
 
     Future<proto::Echo::Response> future =
-      rpc::Call("Echo.Echo")
-        .Args(proto::Echo::Request{"Hello"})
-        .Via(channel);
+        rpc::Call("Echo.Echo")  //
+            .Args(proto::Echo::Request{"Hello"})
+            .Via(channel);
 
     auto result = Await(std::move(future));
 
     if (result.IsOk()) {
       WHIRL_LOG_INFO("Echo response: '{}'", result->data);
     } else {
-      WHIRL_LOG_INFO("Echo request failed: {}", result.GetError().GetErrorCode().message());
+      WHIRL_LOG_INFO("Echo request failed: {}",
+                     result.GetError().GetErrorCode().message());
     }
 
     // SleepFor – приостановить текущий файбер (не поток!) на заданное время
@@ -140,12 +140,9 @@ int main() {
   world.MakeSteps(256);
   size_t digest = world.Stop();
 
-  std::cout
-      << "Seed: " << kSeed
-      << ", digest: " << digest
-      << ", time: " << world.TimeElapsed()
-      << ", steps: " << world.StepCount()
-      << std::endl;
+  std::cout << "Seed: " << kSeed << ", digest: " << digest
+            << ", time: " << world.TimeElapsed()
+            << ", steps: " << world.StepCount() << std::endl;
 
   std::cout << "Simulation log: " << std::endl;
   matrix::WriteTextLog(world.EventLog(), std::cout);

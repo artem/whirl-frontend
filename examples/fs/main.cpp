@@ -86,12 +86,9 @@ int main() {
 
   size_t digest = world.Stop();
 
-  std::cout
-      << "Seed: " << kSeed
-      << ", digest: " << digest
-      << ", time: " << world.TimeElapsed()
-      << ", steps: " << world.StepCount()
-      << std::endl;
+  std::cout << "Seed: " << kSeed << ", digest: " << digest
+            << ", time: " << world.TimeElapsed()
+            << ", steps: " << world.StepCount() << std::endl;
 
   std::cout << "Simulation log:" << std::endl;
   matrix::WriteTextLog(world.EventLog(), std::cout);

@@ -38,8 +38,8 @@
 #include <random>
 #include <algorithm>
 
-using wheels::Result;
 using await::futures::Future;
+using wheels::Result;
 using namespace await::fibers;
 using namespace whirl;
 using namespace whirl::time_literals;
@@ -70,7 +70,8 @@ struct StampedValue {
 
 // For logging
 std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
-  out << "{" << stamped_value.value << ", ts: " << stamped_value.timestamp << "}";
+  out << "{" << stamped_value.value << ", ts: " << stamped_value.timestamp
+      << "}";
   return out;
 }
 
@@ -82,8 +83,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 // Coordinator role, stateless
 
-class Coordinator : public rpc::ServiceBase<Coordinator>,
-                    public node::Peer {
+class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
  public:
   Coordinator() : Peer(node::rt::Config()->PoolName()) {
   }
@@ -103,7 +103,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
     // Broadcast
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
-      writes.push_back(
+      writes.push_back(  //
           rpc::Call("Replica.LocalWrite")
               .Args(key, StampedValue{value, write_ts})
               .Via(Channel(peer))
@@ -119,7 +119,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
     // Broadcast LocalRead request to replicas
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
-      reads.push_back(
+      reads.push_back(  //
           rpc::Call("Replica.LocalRead")
               .Args(key)
               .Via(Channel(peer))
@@ -137,7 +137,8 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
     std::vector<StampedValue> stamped_values = results.ValueOrThrow();
 
     // Or combine all steps into:
-    // auto stamped_values = Await(Quorum(std::move(reads), Majority())).ValueOrThrow()
+    // auto stamped_values = Await(Quorum(std::move(reads),
+    // Majority())).ValueOrThrow()
 
     for (size_t i = 0; i < stamped_values.size(); ++i) {
       WHIRL_LOG_INFO("{}-th value in read quorum: {}", i + 1,
@@ -156,8 +157,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
   }
 
   // Find value with the largest timestamp
-  StampedValue FindMostRecent(
-      const std::vector<StampedValue>& values) const {
+  StampedValue FindMostRecent(const std::vector<StampedValue>& values) const {
     return *std::max_element(
         values.begin(), values.end(),
         [](const StampedValue& lhs, const StampedValue& rhs) {
@@ -178,8 +178,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>,
 
 class Replica : public rpc::ServiceBase<Replica> {
  public:
-  Replica()
-    : kv_store_(node::rt::Database(), "abd") {
+  Replica() : kv_store_(node::rt::Database(), "abd") {
   }
 
   void RegisterRPCMethods() override {
@@ -231,11 +230,8 @@ void KVNode() {
 
   auto rpc_server = node::rt::MakeRpcServer();
 
-  rpc_server->RegisterService("KV",
-    std::make_shared<Coordinator>());
-
-  rpc_server->RegisterService("Replica",
-    std::make_shared<Replica>());
+  rpc_server->RegisterService("KV", std::make_shared<Coordinator>());
+  rpc_server->RegisterService("Replica", std::make_shared<Replica>());
 
   rpc_server->Start();
 
@@ -250,11 +246,13 @@ class KVBlockingStub {
   }
 
   void Set(Key k, Value v) {
-    Await(rpc::Call("KV.Set").Args(k, v).Via(channel_).Start().As<void>()).ThrowIfError();
+    Await(rpc::Call("KV.Set").Args(k, v).Via(channel_).Start().As<void>())
+        .ThrowIfError();
   }
 
   Value Get(Key k) {
-    return Await(rpc::Call("KV.Get").Args(k).Via(channel_).Start().As<Value>()).ValueOrThrow();
+    return Await(rpc::Call("KV.Get").Args(k).Via(channel_).Start().As<Value>())
+        .ValueOrThrow();
   }
 
  private:
