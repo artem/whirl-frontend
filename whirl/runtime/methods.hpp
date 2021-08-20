@@ -55,6 +55,10 @@ inline size_t RandomNumber(size_t lo, size_t hi) {
   return lo + RandomNumber(hi - lo);
 }
 
+inline size_t RandomIndex(size_t size) {
+  return RandomNumber(size);
+}
+
 // Clocks
 
 inline ITimeService* TimeService() {
