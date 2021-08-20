@@ -10,18 +10,19 @@ static const std::string kPeer = "RR";
 
 class RRChannel : public IChannel {
  public:
-  RRChannel(std::vector<IChannelPtr> channels, IRandomService* random)
-  : channels_(std::move(channels)), random_(std::move(random)) {
+  RRChannel(std::vector<IChannelPtr> channels)
+  : channels_(std::move(channels)) {
   }
 
-  ~RandomChannel() {
+  ~RRChannel() {
     Close();
   }
 
   Future<BytesValue> Call(const Method& method, const BytesValue& input,
                           CallOptions options) override {
-    return channels_[next_index_]->Call(method, input, std::move(options));
+    auto f = channels_[next_index_]->Call(method, input, std::move(options));
     next_index_ = (next_index_ + 1) % channels_.size();
+    return f;
   }
 
   const std::string& Peer() const override {
