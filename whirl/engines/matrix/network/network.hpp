@@ -21,9 +21,7 @@ namespace whirl::matrix::net {
 
 using HostName = std::string;
 
-using Partition = std::set<HostName>;
-
-class Network : public IActor, public IFaultyNetwork {
+class Network : public IActor, public fault::IFaultyNetwork {
   friend class Link;
 
   struct LinkEvent {
@@ -67,10 +65,23 @@ class Network : public IActor, public IFaultyNetwork {
 
   void Shutdown() override;
 
-  // Partitions
+  // IFaultyNetwork
 
-  void Split() override;
-  void Split(const Partition& lhs);
+  std::vector<HostName> ListServers() override;
+
+  // - Links
+
+  void PauseLink(
+      const HostName& start,
+      const HostName& end) override;
+
+  void ResumeLink(
+      const HostName& start,
+      const HostName& end) override;
+
+  // - Partitions
+
+  void Split(const fault::Partition& lhs) override;
   void Heal() override;
 
   // Digest

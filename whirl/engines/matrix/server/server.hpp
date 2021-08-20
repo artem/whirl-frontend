@@ -27,7 +27,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class Server : public IActor, public IFaultyServer, public net::IServer {
+class Server : public IActor, public fault::IFaultyServer, public net::IServer {
  private:
   enum class State {
     Initial,

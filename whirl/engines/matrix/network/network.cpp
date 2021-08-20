@@ -102,62 +102,52 @@ size_t Network::GetLinkIndex(size_t i, size_t j) const {
 
 // Partitions
 
-static bool IsClient(IServer* server) {
-  return server->HostName()[0] == 'C';  // TODO
+static bool IsSystem(IServer* server) {
+  return server->HostName()[0] == 'S';  // TODO
 }
 
-static bool Cross(const Link& link, const Partition& lhs) {
+static bool Cross(const Link& link, const fault::Partition& lhs) {
   return lhs.count(link.Start()->HostName()) !=
          lhs.count(link.End()->HostName());
 }
 
-void Network::Split() {
-  GlobalAllocatorGuard g;
-
-  std::vector<std::string> servers;
-
-  // Exclude clients
-
+std::vector<HostName> Network::ListServers() {
+  std::vector<HostName> listed;
   for (IServer* server : servers_) {
-    if (!IsClient(server)) {
-      servers.push_back(server->HostName());
+    if (IsSystem(server)) {
+      listed.push_back(server->HostName());
     }
   }
+  return listed;
+}
 
-  // Generate random partition
+void Network::PauseLink(const HostName& start, const HostName& end) {
+  GlobalAllocatorGuard g;
 
-  // [1, servers.size())
-  size_t lhs_size = GlobalRandomNumber(1, servers.size());
+  WHIRL_LOG_WARN("Pause link {} - {}", start, end);
+  GetLink(start, end)->Pause();
+}
 
-  Partition lhs;
-  for (auto& hostname : GlobalRandomSelect(servers, lhs_size)) {
-    lhs.insert(hostname);
-  }
+void Network::ResumeLink(const HostName& start, const HostName& end) {
+  GlobalAllocatorGuard g;
 
-  // Print
-  WHIRL_LOG_INFO("Network partitioned: {} / {}", lhs.size(),
-                 servers.size() - lhs.size());
+  WHIRL_LOG_WARN("Resume link {} - {}", start, end);
+  GetLink(start, end)->Resume();
+}
 
-  // Split
+void Network::Split(const fault::Partition& lhs) {
+  WHIRL_LOG_INFO("Network partitioned: {} / ?", lhs.size());
 
   for (auto& link : links_) {
     if (link.IsLoopBack()) {
       continue;
     }
-    if (IsClient(link.Start()) || IsClient(link.End())) {
+    if (!IsSystem(link.Start()) || !IsSystem(link.End())) {
       continue;
     }
     if (Cross(link, lhs)) {
       WHIRL_LOG_WARN("Pause link {} - {}", link.Start()->HostName(),
                      link.End()->HostName());
-      link.Pause();
-    }
-  }
-}
-
-void Network::Split(const Partition& lhs) {
-  for (auto& link : links_) {
-    if (Cross(link, lhs)) {
       link.Pause();
     }
   }

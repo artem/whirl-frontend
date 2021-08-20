@@ -2,14 +2,14 @@
 
 #include <whirl/engines/matrix/world/impl.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::fault {
 
-IFaultyServer& AccessFaultyServer(size_t index) {
+IFaultyServer& Server(size_t index) {
   return WorldImpl::Access()->GetServer(index);
 }
 
-IFaultyNetwork& AccessFaultyNetwork() {
+IFaultyNetwork& Network() {
   return WorldImpl::Access()->GetNetwork();
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::fault
