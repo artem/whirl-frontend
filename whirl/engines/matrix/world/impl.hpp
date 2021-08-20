@@ -53,19 +53,50 @@ class WorldImpl {
       : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
   }
 
-  std::string AddServer(node::Program program) {
+  void AddServer(std::string hostname, node::Program program) {
     WorldGuard g(this);
-    return AddServerImpl(cluster_, program, "server");
+
+    static const std::string kPoolName = "snowflakes";
+
+    Servers& pool = pools_[kPoolName];
+    return AddServerImpl(pool, program, kPoolName, hostname);
   }
 
-  std::string AddClient(node::Program program) {
+  void AddPool(std::string pool_name,
+               node::Program program,
+               size_t size,
+               std::string name_template) {
     WorldGuard g(this);
-    return AddServerImpl(clients_, program, "client");
+
+    Servers& pool = pools_[pool_name];
+    for (size_t i = 0; i < size; ++i) {
+      auto hostname = MakeServerName(name_template, pool.size() + 1);
+      AddServerImpl(pool, program, pool_name, hostname);
+    }
   }
 
-  std::string SetAdversary(node::Program program) {
+  void AddClient(node::Program program) {
     WorldGuard g(this);
-    return AddServerImpl(adversaries_, program, "adversary");
+
+    auto hostname = MakeServerName("Client", clients_.size() + 1);
+
+    AddServerImpl(
+        /*pool=*/ clients_,
+        program,
+        /*pool_name=*/ "clients",
+        hostname);
+  }
+
+  void SetAdversary(node::Program program) {
+    WorldGuard g(this);
+
+    auto hostname = MakeServerName("Adversary", adversaries_.size() + 1);
+
+    AddServerImpl(
+        /*pool=*/ adversaries_,
+        program,
+        /*pool_name=*/ "adversaries",
+        hostname);
   }
 
   bool HasAdversary() const {
@@ -90,10 +121,6 @@ class WorldImpl {
   void RunFor(Duration time_budget);
 
   void RestartServer(const std::string& hostname);
-
-  size_t ClusterSize() const {
-    return cluster_.size();
-  }
 
   size_t NumClients() const {
     return clients_.size();
@@ -133,17 +160,19 @@ class WorldImpl {
 
   // Context: Server
   std::vector<std::string> GetPool(const std::string& name) {
-    if (name != "server") {
-      WHEELS_PANIC("Custom pools are not supported yet!");
+    auto it = pools_.find(name);
+
+    if (it == pools_.end()) {
+      return {};
     }
 
-    std::vector<std::string> cluster;
-    cluster.reserve(cluster_.size());
+    Servers& pool = it->second;
 
-    for (auto& server : cluster_) {
-      cluster.push_back(server.HostName());
+    std::vector<std::string> hosts;
+    for (auto& server : pool) {
+      hosts.push_back(server.HostName());
     }
-    return cluster;
+    return hosts;
   }
 
   const histories::History& History() const {
@@ -194,26 +223,28 @@ class WorldImpl {
  private:
   static ITimeModelPtr DefaultTimeModel();
 
-  // Returns host name
-  std::string AddServerImpl(Servers& pool, node::Program program, std::string pool_name) {
-    size_t id = server_ids_.NextId();
-
+  std::string MakeServerName(std::string name_template, size_t index) {
     wheels::StringBuilder name;
-    name << (char)toupper(pool_name[0]) << pool_name.substr(1, 256);
-    name << "-" << pool.size() + 1;
-
-    pool.emplace_back(network_, ServerConfig{id, name.String(), pool_name}, program);
-
-    network_.AddServer(&pool.back());
-    AddActor(&pool.back());
-
+    name << name_template << '-' << index;
     return name;
   }
 
+  // Returns host name
+  void AddServerImpl(Servers& pool, node::Program program, std::string pool_name, std::string hostname) {
+    size_t id = server_ids_.NextId();
+
+    pool.emplace_back(network_, ServerConfig{id, hostname, pool_name}, program);
+
+    network_.AddServer(&pool.back());
+    AddActor(&pool.back());
+  }
+
   Server* FindServer(const std::string& hostname) {
-    for (Server& server : cluster_) {
-      if (server.HostName() == hostname) {
-        return &server;
+    for (auto& [_, pool] : pools_) {
+      for (Server& server : pool) {
+        if (server.HostName() == hostname) {
+          return &server;
+        }
       }
     }
     return nullptr;
@@ -252,7 +283,7 @@ class WorldImpl {
 
   // Actors
 
-  Servers cluster_;
+  std::map<std::string, Servers> pools_;
   Servers clients_;
   // O or 1
   Servers adversaries_;

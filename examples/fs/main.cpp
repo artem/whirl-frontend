@@ -75,14 +75,16 @@ int main() {
 
   matrix::World world{kSeed};
 
-  std::string host = world.AddServer(TestNode);
+  static const std::string kHostName = "Mars";
+
+  world.AddServer(kHostName, TestNode);
 
   world.Start();
   world.MakeSteps(100);
-  world.RestartServer(host);
+  world.RestartServer(kHostName);
   world.MakeSteps(100);
 
-  auto std_out = world.GetStdout(host);
+  auto std_out = world.GetStdout(kHostName);
 
   size_t digest = world.Stop();
 
@@ -93,7 +95,7 @@ int main() {
   std::cout << "Simulation log:" << std::endl;
   matrix::WriteTextLog(world.EventLog(), std::cout);
 
-  std::cout << "Stdout of '" << host << "':" << std::endl;
+  std::cout << "Stdout of '" << kHostName << "':" << std::endl;
   for (const auto& line : std_out) {
     std::cout << '\t' << line << std::endl;
   }

@@ -43,13 +43,15 @@ void WorldImpl::Start() {
   AddActor(&network_);
   Scope(network_)->Start();
 
-  WHIRL_LOG_INFO("Cluster: {}, clients: {}", cluster_.size(), clients_.size());
+  WHIRL_LOG_INFO("Cluster: ?, clients: {}", clients_.size());
 
   WHIRL_LOG_INFO("Starting cluster...");
 
   // Start servers
-  for (auto& server : cluster_) {
-    Scope(server)->Start();
+  for (auto& [_, pool] : pools_) {
+    for (auto& server : pool) {
+      Scope(server)->Start();
+    }
   }
 
   WHIRL_LOG_INFO("Starting clients...");
@@ -129,11 +131,14 @@ size_t WorldImpl::Stop() {
   WHIRL_LOG_INFO("Network stopped");
 
   // Servers
-  for (auto& server : cluster_) {
-    digest_.Combine(server.ComputeDigest());
-    Scope(server)->Shutdown();
+  for (auto& [_, pool] : pools_) {
+    for (auto& server : pool) {
+      digest_.Combine(server.ComputeDigest());
+      Scope(server)->Shutdown();
+    }
+    pool.clear();
   }
-  cluster_.clear();
+  pools_.clear();
 
   WHIRL_LOG_INFO("Servers stopped");
 

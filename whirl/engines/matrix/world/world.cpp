@@ -14,21 +14,23 @@ size_t World::Seed() const {
   return impl_->Seed();
 }
 
-std::string World::AddServer(node::Program program) {
-  return impl_->AddServer(program);
+void World::AddServer(std::string hostname, node::Program program) {
+  impl_->AddServer(hostname, program);
 }
 
-void World::AddServers(size_t count, node::Program program) {
-  for (size_t i = 0; i < count; ++i) {
-    AddServer(program);
-  }
+void World::MakePool(std::string pool_name,
+                     node::Program program,
+                     size_t size,
+                     std::string server_name_template) {
+
+  impl_->AddPool(pool_name, program, size, server_name_template);
 }
 
-std::string World::AddClient(node::Program program) {
-  return impl_->AddClient(std::move(program));
+void World::AddClient(node::Program program) {
+  impl_->AddClient(program);
 }
 
-void World::AddClients(size_t count, node::Program program) {
+void World::AddClients(node::Program program, size_t count) {
   for (size_t i = 0; i < count; ++i) {
     AddClient(program);
   }

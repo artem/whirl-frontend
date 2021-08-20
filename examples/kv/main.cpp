@@ -279,7 +279,7 @@ const std::string& ChooseRandomKey() {
 
   Logger logger_{"Client"};
 
-  KVBlockingStub kv_store{matrix::client::MakeRpcChannel("server")};
+  KVBlockingStub kv_store{matrix::client::MakeRpcChannel(/*pool_name=*/ "kv")};
 
   for (size_t i = 1;; ++i) {
     Key key = ChooseRandomKey();
@@ -307,7 +307,7 @@ const std::string& ChooseRandomKey() {
   Logger logger_{"Adversary"};
 
   // List system nodes
-  auto pool = node::rt::Dns()->ListPool("server");
+  auto pool = node::rt::Dns()->ListPool("kv");
 
   auto& net = matrix::fault::Network();
 
@@ -369,11 +369,15 @@ size_t RunSimulation(size_t seed) {
 
   matrix::World world{seed};
 
-  // Cluster nodes
-  world.AddServers(replicas, KVNode);
+  // Cluster
+  world.MakePool(
+      /*pool_name=*/ "kv",
+      /*program=*/ KVNode,
+      /*size=*/ replicas,
+      /*name_template=*/ "Server");
 
   // Clients
-  world.AddClients(clients, Client);
+  world.AddClients(Client, /*count=*/ clients);
 
   world.SetAdversary(Adversary);
 

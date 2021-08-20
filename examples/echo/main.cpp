@@ -89,7 +89,7 @@ void EchoNode() {
 [[noreturn]] void EchoClient() {
   matrix::client::Prologue();
 
-  auto channel = matrix::client::MakeRpcChannel("server");
+  auto channel = matrix::client::MakeRpcChannel(/*pool_name=*/"echo");
 
   Logger logger_{"Client"};
 
@@ -132,7 +132,11 @@ int main() {
 
   matrix::World world{kSeed};
 
-  world.AddServers(3, EchoNode);
+  world.MakePool(
+      /*pool_name=*/ "echo",
+      /*program=*/ EchoNode,
+      /*size=*/ 3,
+      /*name_template=*/ "Server");
 
   // Clients
   world.AddClient(EchoClient);

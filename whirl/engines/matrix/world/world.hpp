@@ -24,11 +24,15 @@ class World {
 
   size_t Seed() const;
 
-  std::string AddServer(node::Program program);
-  void AddServers(size_t count, node::Program program);
+  void AddServer(std::string hostname, node::Program program);
 
-  std::string AddClient(node::Program program);
-  void AddClients(size_t count, node::Program program);
+  void MakePool(std::string pool_name,
+               node::Program program,
+               size_t size,
+               std::string server_name_template);
+
+  void AddClient(node::Program program);
+  void AddClients(node::Program program, size_t count);
 
   void SetTimeModel(ITimeModelPtr time_model);
 
