@@ -91,7 +91,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
   Coordinator() : Peer(node::rt::Config()->PoolName()) {
   }
 
-  void RegisterRPCMethods() override {
+  void RegisterMethods() override {
     WHIRL_RPC_REGISTER_METHOD(Set);
     WHIRL_RPC_REGISTER_METHOD(Get);
   };
@@ -184,7 +184,7 @@ class Replica : public rpc::ServiceBase<Replica> {
   Replica() : kv_store_(node::rt::Database(), "abd") {
   }
 
-  void RegisterRPCMethods() override {
+  void RegisterMethods() override {
     WHIRL_RPC_REGISTER_METHOD(LocalWrite);
     WHIRL_RPC_REGISTER_METHOD(LocalRead);
   };

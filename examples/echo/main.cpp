@@ -59,7 +59,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
   }
 
  protected:
-  void RegisterRPCMethods() override {
+  void RegisterMethods() override {
     WHIRL_RPC_REGISTER_METHOD(Echo);
   }
 

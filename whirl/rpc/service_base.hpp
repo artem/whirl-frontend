@@ -35,13 +35,13 @@ class ServiceBase : public IService {
   }
 
   void Initialize() override {
-    RegisterRPCMethods();
+    RegisterMethods();
   }
 
  protected:
   // Override this
-  virtual void RegisterRPCMethods() {
-    // Use RPC_REGISTER_METHOD macro
+  virtual void RegisterMethods() {
+    // Use WHIRL_RPC_REGISTER_METHOD macro
   }
 
   template <typename R, typename... Args>
