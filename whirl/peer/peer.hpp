@@ -14,7 +14,7 @@ namespace whirl::node {
 
 class Peer {
  public:
-  Peer(const std::string& pool);
+  Peer(const std::string& pool_name);
 
   size_t NodeCount() const;
 

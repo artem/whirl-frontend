@@ -6,8 +6,8 @@
 
 namespace whirl::node {
 
-Peer::Peer(const std::string& pool)
-  : pool_name_(pool) {
+Peer::Peer(const std::string& pool_name)
+  : pool_name_(pool_name) {
   ConnectToPeers();
 }
 
@@ -37,11 +37,11 @@ rpc::IClientPtr Peer::MakeRpcClient() {
 }
 
 void Peer::ConnectToPeers() {
-  client_ = MakeRpcClient();
-
   pool_ = rt::Dns()->ListPool(pool_name_);
 
-  // peers = cluster \ {HostName()}
+  client_ = MakeRpcClient();
+
+  // others_ = pool_ \ {rt::HostName()}
   for (const auto& host : pool_) {
     if (host != rt::HostName()) {
       others_.push_back(host);

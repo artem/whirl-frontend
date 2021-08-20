@@ -9,9 +9,8 @@ class Random {
   Random(size_t seed) : twister_(seed) {
   }
 
-  // Random number in range [from, to]
-  size_t Get(size_t from, size_t to) {
-    return from + Generate() % (to - from + 1);
+  size_t Get(size_t min_value, size_t max_value) {
+    return min_value + Generate() % (max_value - min_value + 1);
   }
 
  private:
