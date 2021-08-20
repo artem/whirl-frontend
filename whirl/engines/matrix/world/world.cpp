@@ -38,8 +38,8 @@ void World::SetTimeModel(ITimeModelPtr time_model) {
   impl_->SetTimeModel(std::move(time_model));
 }
 
-void World::SetAdversary(adversary::Strategy strategy) {
-  impl_->SetAdversary(std::move(strategy));
+void World::SetAdversary(node::Program program) {
+  impl_->SetAdversary(program);
 }
 
 void World::Start() {

@@ -5,7 +5,6 @@
 #include <whirl/engines/matrix/network/network.hpp>
 #include <whirl/engines/matrix/world/actor.hpp>
 #include <whirl/engines/matrix/world/actor_ctx.hpp>
-#include <whirl/engines/matrix/adversary/process.hpp>
 #include <whirl/engines/matrix/world/random_source.hpp>
 #include <whirl/engines/matrix/world/time_model.hpp>
 #include <whirl/engines/matrix/history/recorder.hpp>
@@ -64,16 +63,13 @@ class WorldImpl {
     return AddServerImpl(clients_, program, "client");
   }
 
-  void SetAdversary(adversary::Strategy strategy) {
+  std::string SetAdversary(node::Program program) {
     WorldGuard g(this);
-
-    WHEELS_VERIFY(!adversary_.has_value(), "Adversary already set");
-    adversary_.emplace(std::move(strategy));
-    AddActor(&adversary_.value());
+    return AddServerImpl(adversaries_, program, "adversary");
   }
 
   bool HasAdversary() const {
-    return adversary_.has_value();
+    return !adversaries_.empty();
   }
 
   void SetTimeModel(ITimeModelPtr time_model) {
@@ -258,12 +254,12 @@ class WorldImpl {
 
   Servers cluster_;
   Servers clients_;
+  // O or 1
+  Servers adversaries_;
 
   wheels::IdGenerator server_ids_;
 
   net::Network network_;
-
-  std::optional<adversary::Process> adversary_;
 
   // Event loop
 

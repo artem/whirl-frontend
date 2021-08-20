@@ -1,7 +1,6 @@
 #pragma once
 
 #include <whirl/engines/matrix/world/time_model.hpp>
-#include <whirl/engines/matrix/adversary/strategy.hpp>
 #include <whirl/engines/matrix/log/event.hpp>
 #include <whirl/history/history.hpp>
 #include <whirl/program/program.hpp>
@@ -33,7 +32,7 @@ class World {
 
   void SetTimeModel(ITimeModelPtr time_model);
 
-  void SetAdversary(adversary::Strategy strategy);
+  void SetAdversary(node::Program program);
 
   // Globals
 

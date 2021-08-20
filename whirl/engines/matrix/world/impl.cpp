@@ -60,9 +60,9 @@ void WorldImpl::Start() {
   }
 
   // Start adversary
-  if (adversary_.has_value()) {
+  if (!adversaries_.empty()) {
     WHIRL_LOG_INFO("Starting adversary...");
-    Scope(*adversary_)->Start();
+    Scope(adversaries_.front())->Start();
   }
 
   WHIRL_LOG_INFO("World started");
@@ -116,8 +116,8 @@ size_t WorldImpl::Stop() {
   WorldGuard g(this);
 
   // Adversary
-  if (adversary_.has_value()) {
-    Scope(*adversary_)->Shutdown();
+  if (!adversaries_.empty()) {
+    Scope(adversaries_.front())->Shutdown();
   }
 
   WHIRL_LOG_INFO("Adversary stopped");
