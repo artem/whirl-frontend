@@ -5,7 +5,7 @@
 
 namespace whirl::matrix::fault {
 
-IFaultyServer& Server(size_t index);
+IFaultyServer& Server(const std::string& hostname);
 IFaultyNetwork& Network();
 
 }  // namespace whirl::matrix::fault

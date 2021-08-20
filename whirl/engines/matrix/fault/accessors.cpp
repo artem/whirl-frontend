@@ -4,8 +4,8 @@
 
 namespace whirl::matrix::fault {
 
-IFaultyServer& Server(size_t index) {
-  return WorldImpl::Access()->GetServer(index);
+IFaultyServer& Server(const std::string& hostname) {
+  return WorldImpl::Access()->GetServer(hostname);
 }
 
 IFaultyNetwork& Network() {

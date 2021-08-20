@@ -111,8 +111,8 @@ class WorldImpl {
     return digest_.GetValue();
   }
 
-  Server& GetServer(size_t index) {
-    return cluster_.at(index);
+  Server& GetServer(const std::string& hostname) {
+    return *FindServer(hostname);
   }
 
   net::Network& GetNetwork() {
