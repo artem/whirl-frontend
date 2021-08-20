@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::clocks {
 
 class WallClock {
  public:
@@ -29,4 +29,4 @@ class WallClock {
   Duration offset_{0};
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::clocks

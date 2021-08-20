@@ -5,7 +5,7 @@
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::clocks {
 
 class MonotonicClock {
  public:
@@ -39,4 +39,4 @@ class MonotonicClock {
   TimePoint init_;
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::clocks

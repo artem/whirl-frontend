@@ -102,8 +102,8 @@ class Server : public IActor, public IFaultyServer, public net::IServer {
   node::Program program_;
 
   // Hardware
-  WallClock wall_clock_;
-  MonotonicClock monotonic_clock_;
+  clocks::WallClock wall_clock_;
+  clocks::MonotonicClock monotonic_clock_;
 
   // Operating system
   TaskScheduler scheduler_;

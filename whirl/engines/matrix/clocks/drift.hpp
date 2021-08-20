@@ -1,6 +1,6 @@
 #pragma once
 
-namespace whirl::matrix {
+namespace whirl::matrix::clocks {
 
 /* Value \in [-99, +inf]
  * Effect:
@@ -32,4 +32,4 @@ class Drift {
   int drift_;
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::clocks
