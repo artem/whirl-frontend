@@ -1,18 +1,14 @@
 #include <whirl/rpc/random.hpp>
 
-using namespace whirl::rpc;
 using await::futures::Future;
-using await::StopToken;
 
 namespace whirl::rpc {
-
-using ChannelVector = std::vector<IChannelPtr>;
 
 static const std::string kRandomPeer = "Random";
 
 class RandomChannel : public IChannel {
  public:
-  RandomChannel(ChannelVector channels, IRandomService* random)
+  RandomChannel(std::vector<IChannelPtr> channels, IRandomService* random)
       : channels_(std::move(channels)), random_(std::move(random)) {
   }
 
@@ -43,11 +39,11 @@ class RandomChannel : public IChannel {
   }
 
  private:
-  ChannelVector channels_;
+  std::vector<IChannelPtr> channels_;
   IRandomService* random_;
 };
 
-IChannelPtr MakeRandomChannel(ChannelVector&& channels,
+IChannelPtr MakeRandomChannel(std::vector<IChannelPtr>&& channels,
                               IRandomService* random) {
   return std::make_shared<RandomChannel>(std::move(channels),
                                          std::move(random));
