@@ -39,7 +39,7 @@ rpc::IClientPtr Peer::MakeRpcClient() {
 void Peer::ConnectToPeers() {
   pool_ = rt::Dns()->ListPool(pool_name_);
 
-  client_ = MakeRpcClient();
+  auto client = MakeRpcClient();
 
   // others_ = pool_ \ {rt::HostName()}
   for (const auto& host : pool_) {
@@ -49,7 +49,7 @@ void Peer::ConnectToPeers() {
   }
 
   for (const auto& host : pool_) {
-    channels_.emplace(host, MakeChannel(host));
+    channels_.emplace(host, MakeRpcChannel(client, host));
   }
 }
 
@@ -57,8 +57,9 @@ static rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
-rpc::IChannelPtr Peer::MakeChannel(const std::string& host) {
-  auto transport = client_->Dial(host);
+rpc::IChannelPtr Peer::MakeRpcChannel(
+    rpc::IClientPtr client, const std::string& host) {
+  auto transport = client->Dial(host);
   auto retries =
       rpc::WithRetries(std::move(transport), rt::TimeService(), RetriesBackoff());
   return retries;

@@ -25,15 +25,16 @@ class Peer {
 
  private:
   rpc::IClientPtr MakeRpcClient();
+  rpc::IChannelPtr MakeRpcChannel(
+      rpc::IClientPtr client, const std::string& host);
   void ConnectToPeers();
-  rpc::IChannelPtr MakeChannel(const std::string& host);
 
  private:
   const std::string& pool_name_;
 
-  rpc::IClientPtr client_;
   std::vector<std::string> pool_;
-  std::vector<std::string> others_;  // cluster without this node
+  std::vector<std::string> others_;  // pool without this node
+
   std::map<std::string, rpc::IChannelPtr> channels_;
 };
 
