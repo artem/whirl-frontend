@@ -302,21 +302,22 @@ const std::string& ChooseRandomKey() {
 //////////////////////////////////////////////////////////////////////
 
 [[noreturn]] void Adversary() {
-  auto& net = matrix::fault::Network();
-
   Logger logger_{"Adversary"};
 
-  auto servers = net.ListServers();
+  // List system nodes
+  auto pool = node::rt::Dns()->GetPool("server");
+
+  auto& net = matrix::fault::Network();
 
   while (true) {
     node::rt::SleepFor(
         node::rt::RandomNumber(10, 1000));
 
-    size_t center = node::rt::RandomNumber(servers.size());
+    size_t center = node::rt::RandomNumber(pool.size());
 
-    WHIRL_LOG_INFO("Make star with center {}", servers[center]);
+    WHIRL_LOG_INFO("Make star with center at {}", pool[center]);
 
-    matrix::fault::MakeStar(center);
+    matrix::fault::MakeStar(pool, center);
 
     node::rt::SleepFor(
         node::rt::RandomNumber(100, 300));
