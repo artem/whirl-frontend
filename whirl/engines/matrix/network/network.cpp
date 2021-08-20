@@ -111,16 +111,6 @@ static bool Cross(const Link& link, const fault::Partition& lhs) {
          lhs.count(link.End()->HostName());
 }
 
-std::vector<HostName> Network::ListServers() {
-  std::vector<HostName> listed;
-  for (IServer* server : servers_) {
-    if (IsSystem(server)) {
-      listed.push_back(server->HostName());
-    }
-  }
-  return listed;
-}
-
 void Network::PauseLink(const HostName& start, const HostName& end) {
   GlobalAllocatorGuard g;
 

@@ -21,7 +21,7 @@ static rpc::IClientPtr MakeRpcClient() {
 }
 
 rpc::IChannelPtr MakeRpcChannel() {
-  auto cluster = node::rt::Dns()->GetPool("server");
+  auto cluster = node::rt::Dns()->ListPool("server");
 
   auto client = MakeRpcClient();
 

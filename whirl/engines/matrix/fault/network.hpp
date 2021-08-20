@@ -17,8 +17,6 @@ using Partition = std::set<std::string>;
 struct IFaultyNetwork {
   virtual ~IFaultyNetwork() = default;
 
-  virtual std::vector<std::string> ListServers() = 0;
-
   // Links
 
   virtual void PauseLink(

@@ -67,8 +67,6 @@ class Network : public IActor, public fault::IFaultyNetwork {
 
   // IFaultyNetwork
 
-  std::vector<HostName> ListServers() override;
-
   // - Links
 
   void PauseLink(

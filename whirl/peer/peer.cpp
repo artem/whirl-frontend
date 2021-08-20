@@ -39,7 +39,7 @@ rpc::IClientPtr Peer::MakeRpcClient() {
 void Peer::ConnectToPeers() {
   client_ = MakeRpcClient();
 
-  pool_ = rt::Dns()->GetPool(pool_name_);
+  pool_ = rt::Dns()->ListPool(pool_name_);
 
   // peers = cluster \ {HostName()}
   for (const auto& host : pool_) {

@@ -12,7 +12,7 @@ struct IDiscoveryService {
   // List of hostnames
   using Pool = std::vector<std::string>;
 
-  virtual Pool GetPool(const std::string& name) = 0;
+  virtual Pool ListPool(const std::string& name) = 0;
 };
 
 }  // namespace whirl
