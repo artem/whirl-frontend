@@ -17,7 +17,13 @@ namespace whirl::rpc {
 
 namespace detail {
 
-// --Call--> ViaCaller --Via--> Caller --Start--> CallResult --As-> Future<T>
+// Pipeline:
+// --Call--> ArgsCaller
+// --Args--> ViaCaller
+// --Via--> Caller
+// [-->StopToken --> Caller]
+// --Start--> CallResult
+// --As-> Future<T>
 
 class [[nodiscard]] CallResult {
   template <typename T>
@@ -59,12 +65,12 @@ class [[nodiscard]] Caller {
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller& StopAdvice(await::StopToken stop_token) && {
+  Caller& StopToken(await::StopToken stop_token) && {
     stop_token_ = std::move(stop_token);
     return *this;
   }
 
-  Caller& WithTraceId(TraceId trace_id) && {
+  Caller& TraceWith(TraceId trace_id) && {
     trace_id_ = trace_id;
     return *this;
   }
@@ -153,8 +159,8 @@ class [[nodiscard]] ArgsCaller {
 // auto f = Call("EchoService.Echo")
 //            .Args(proto::Echo::Request{data})
 //            .Via(channel)
-//            .StopAdvice(stop_token)
-//            .WithTraceId(trace_id)
+//            .StopToken(stop_token)
+//            .TraceWith(trace_id)
 //            .AtLeastOnce() or .AtMostOnce() or .LimitAttempts(3)
 //            .Start()
 //            .As<proto::Echo::Response>();
