@@ -17,6 +17,9 @@
 #include <whirl/engines/matrix/test/event_log.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
+#include <whirl/engines/matrix/fault/accessors.hpp>
+#include <whirl/engines/matrix/fault/net/star.hpp>
+
 #include <whirl/history/printers/kv.hpp>
 #include <whirl/history/checker/check.hpp>
 #include <whirl/history/models/kv.hpp>
@@ -298,6 +301,32 @@ const std::string& ChooseRandomKey() {
 
 //////////////////////////////////////////////////////////////////////
 
+[[noreturn]] void Adversary() {
+  auto& net = matrix::fault::Network();
+
+  Logger logger_{"Adversary"};
+
+  auto servers = net.ListServers();
+
+  while (true) {
+    node::rt::SleepFor(
+        node::rt::RandomNumber(10, 1000));
+
+    size_t center = node::rt::RandomNumber(servers.size());
+
+    WHIRL_LOG_INFO("Make star with center {}", servers[center]);
+
+    matrix::fault::MakeStar(center);
+
+    node::rt::SleepFor(
+        node::rt::RandomNumber(100, 300));
+
+    net.Heal();
+  }
+}
+
+//////////////////////////////////////////////////////////////////////
+
 // Sequential specification for KV storage
 // Used by linearizability checker
 using KVStoreModel = histories::KVStoreModel<Key, Value>;
@@ -342,6 +371,8 @@ size_t RunSimulation(size_t seed) {
 
   // Clients
   world.AddClients(clients, Client);
+
+  world.SetAdversary(Adversary);
 
   // Globals
   world.SetGlobal("keys", keys);
