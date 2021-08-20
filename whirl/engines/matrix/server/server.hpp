@@ -61,13 +61,22 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
 
   bool IsAlive() const override;
 
+  // - Execution
+
   void Crash() override;
   void FastReboot() override;
 
-  void Pause() override;
+  void Paquse() override;
   void Resume() override;
 
+  // - Clocks
+
   void AdjustWallClock() override;
+
+  // - Filesystem
+
+  node::fs::FileList ListFiles(std::string_view prefix) override;
+  void CorruptFile(const node::fs::Path& target) override;
 
   // IActor
 

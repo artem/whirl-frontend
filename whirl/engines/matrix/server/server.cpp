@@ -97,6 +97,24 @@ void Server::AdjustWallClock() {
   wall_clock_.AdjustOffset();
 }
 
+node::fs::FileList Server::ListFiles(std::string_view prefix) {
+  node::fs::FileList listed;
+
+  auto iter = filesystem_.ListAllFiles();
+  while (iter.IsValid()) {
+    if ((*iter).starts_with(prefix)) {
+      listed.push_back(*iter);
+    }
+  }
+
+  return listed;
+}
+
+void Server::CorruptFile(const node::fs::Path& file_path) {
+  GlobalAllocatorGuard g;
+  filesystem_.Corrupt(file_path);
+}
+
 // IActor
 
 const std::string& Server::Name() const {

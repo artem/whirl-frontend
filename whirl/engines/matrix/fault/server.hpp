@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/fs/path.hpp>
+
 #include <cstdlib>
 #include <string>
 
@@ -12,6 +14,8 @@ struct IFaultyServer {
 
   virtual bool IsAlive() const = 0;
 
+  // Execution
+
   virtual void Pause() = 0;
   // After Pause
   virtual void Resume() = 0;
@@ -22,7 +26,16 @@ struct IFaultyServer {
 
   virtual void FastReboot() = 0;
 
+  // Clocks
+
   virtual void AdjustWallClock() = 0;
+
+  // Files
+
+  virtual node::fs::FileList ListFiles(
+      std::string_view prefix) = 0;
+
+  virtual void CorruptFile(const node::fs::Path& path) = 0;
 };
 
 }  // namespace whirl::matrix::fault
