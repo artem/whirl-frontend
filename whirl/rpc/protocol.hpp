@@ -27,7 +27,7 @@ struct Request {
   Method method;
   BytesValue input;  // std::tuple
 
-  WHIRL_SERIALIZE(id, trace_id, to, method, input)
+  WHIRL_SERIALIZABLE(id, trace_id, to, method, input)
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ struct Response {
   BytesValue result;  // wheels::Unit for handlers with void return type
   RPCErrorCode error;
 
-  WHIRL_SERIALIZE(request_id, method, result, error)
+  WHIRL_SERIALIZABLE(request_id, method, result, error)
 
   bool IsOk() const {
     return error == RPCErrorCode::Ok;

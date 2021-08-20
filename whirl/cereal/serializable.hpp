@@ -9,11 +9,11 @@
  *   int32_t a;
  *   std::string b;
  *
- *   WHIRL_SERIALIZE(a, b)
+ *   WHIRL_SERIALIZABLE(a, b)
  * };
  */
 
-#define WHIRL_SERIALIZE(...)              \
+#define WHIRL_SERIALIZABLE(...)              \
   template <typename Archive>             \
   void serialize(Archive& a) {            \
     a(MAP_LIST(CEREAL_NVP, __VA_ARGS__)); \

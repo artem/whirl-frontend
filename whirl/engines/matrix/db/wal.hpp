@@ -20,7 +20,7 @@ namespace whirl::matrix::db {
 struct WALEntry {
   std::vector<node::db::Mutation> muts;
 
-  WHIRL_SERIALIZE(muts);
+  WHIRL_SERIALIZABLE(muts);
 };
 
 //////////////////////////////////////////////////////////////////////

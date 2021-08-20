@@ -15,7 +15,7 @@ struct Method {
   // Format: "{service}.{name}"
   static Method Parse(std::string method);
 
-  WHIRL_SERIALIZE(service, name)
+  WHIRL_SERIALIZABLE(service, name)
 };
 
 std::ostream& operator<<(std::ostream& out, const Method& method);

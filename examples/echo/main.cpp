@@ -36,13 +36,13 @@ struct Echo {
   struct Request {
     std::string data;
 
-    WHIRL_SERIALIZE(data);
+    WHIRL_SERIALIZABLE(data);
   };
 
   struct Response {
     std::string data;
 
-    WHIRL_SERIALIZE(data);
+    WHIRL_SERIALIZABLE(data);
   };
 };
 

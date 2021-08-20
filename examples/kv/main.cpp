@@ -65,7 +65,7 @@ struct StampedValue {
   }
 
   // Serialization support for local storage and RPC
-  WHIRL_SERIALIZE(value, timestamp)
+  WHIRL_SERIALIZABLE(value, timestamp)
 };
 
 // For logging

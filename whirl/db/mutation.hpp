@@ -25,7 +25,7 @@ struct Mutation {
   Key key;
   std::optional<Value> value;
 
-  WHIRL_SERIALIZE(type, key, value)
+  WHIRL_SERIALIZABLE(type, key, value)
 };
 
 }  // namespace whirl::node::db
