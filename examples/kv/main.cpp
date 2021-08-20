@@ -108,7 +108,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
       writes.push_back(  //
           rpc::Call("Replica.LocalWrite")
-              .Args(key, StampedValue{value, write_ts})
+              .Args<Key, StampedValue>(key, {value, write_ts})
               .Via(Channel(peer))
               .AtLeastOnce());
     }

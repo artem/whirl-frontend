@@ -143,7 +143,7 @@ class [[nodiscard]] ArgsCaller {
   }
 
   template <typename... TArguments>
-  ViaCaller Args(TArguments&& ... arguments) {
+  ViaCaller Args(TArguments ... arguments) {
     auto input = detail::SerializeInput(std::forward<TArguments>(arguments)...);
     return ViaCaller{method_, input};
   }
