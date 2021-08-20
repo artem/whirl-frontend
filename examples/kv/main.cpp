@@ -379,7 +379,7 @@ size_t RunSimulation(size_t seed) {
   // Clients
   world.AddClients(Client, /*count=*/ clients);
 
-  world.SetAdversary(Adversary);
+  world.AddAdversary(Adversary);
 
   // Globals
   world.SetGlobal("keys", keys);

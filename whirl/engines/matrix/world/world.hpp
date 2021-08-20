@@ -36,7 +36,7 @@ class World {
 
   void SetTimeModel(ITimeModelPtr time_model);
 
-  void SetAdversary(node::Program program);
+  void AddAdversary(node::Program program);
 
   // Globals
 

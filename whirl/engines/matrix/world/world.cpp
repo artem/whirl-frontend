@@ -40,7 +40,7 @@ void World::SetTimeModel(ITimeModelPtr time_model) {
   impl_->SetTimeModel(std::move(time_model));
 }
 
-void World::SetAdversary(node::Program program) {
+void World::AddAdversary(node::Program program) {
   impl_->SetAdversary(program);
 }
 
