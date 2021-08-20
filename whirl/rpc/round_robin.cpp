@@ -4,6 +4,8 @@ using await::futures::Future;
 
 namespace whirl::rpc {
 
+//////////////////////////////////////////////////////////////////////
+
 static const std::string kPeer = "RR";
 
 class RRChannel : public IChannel {
@@ -37,6 +39,8 @@ class RRChannel : public IChannel {
   std::vector<IChannelPtr> channels_;
   size_t next_index_{0};
 };
+
+//////////////////////////////////////////////////////////////////////
 
 IChannelPtr MakeRoundRobinChannel(std::vector<IChannelPtr> channels) {
   return std::make_shared<RRChannel>(std::move(channels));

@@ -4,6 +4,8 @@ using await::futures::Future;
 
 namespace whirl::rpc {
 
+//////////////////////////////////////////////////////////////////////
+
 static const std::string kRandomPeer = "Random";
 
 class RandomChannel : public IChannel {
@@ -42,6 +44,8 @@ class RandomChannel : public IChannel {
   std::vector<IChannelPtr> channels_;
   IRandomService* random_;
 };
+
+//////////////////////////////////////////////////////////////////////
 
 IChannelPtr MakeRandomChannel(std::vector<IChannelPtr>&& channels,
                               IRandomService* random) {

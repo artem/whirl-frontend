@@ -181,6 +181,8 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   BackoffParams backoff_params_;
 };
 
+//////////////////////////////////////////////////////////////////////
+
 IChannelPtr WithRetries(IChannelPtr channel, ITimeService* time,
                         BackoffParams backoff_params) {
   return std::make_shared<RetriesChannel>(std::move(channel), time,
