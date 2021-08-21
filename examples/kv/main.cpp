@@ -19,7 +19,7 @@
 #include <whirl/engines/matrix/test/event_log.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
-#include <whirl/engines/matrix/fault/accessors.hpp>
+#include <whirl/engines/matrix/fault/access.hpp>
 #include <whirl/engines/matrix/fault/net/star.hpp>
 
 #include <whirl/history/printers/kv.hpp>

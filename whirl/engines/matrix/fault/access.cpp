@@ -1,4 +1,4 @@
-#include <whirl/engines/matrix/fault/accessors.hpp>
+#include <whirl/engines/matrix/fault/access.hpp>
 
 #include <whirl/engines/matrix/world/impl.hpp>
 

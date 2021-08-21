@@ -2,7 +2,7 @@
 
 #include <whirl/runtime/methods.hpp>
 
-#include <whirl/engines/matrix/fault/accessors.hpp>
+#include <whirl/engines/matrix/fault/access.hpp>
 
 namespace whirl::matrix::fault {
 
