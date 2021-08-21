@@ -8,7 +8,7 @@ namespace whirl::rpc {
 
 class Client : public IClient {
  public:
-  Client(ITransportPtr t, IExecutorPtr e) : t_(std::move(t)), e_(std::move(e)) {
+  Client(ITransport* t, IExecutorPtr e) : t_(t), e_(std::move(e)) {
   }
 
   IChannelPtr Dial(const std::string& peer) override {
@@ -16,11 +16,11 @@ class Client : public IClient {
   }
 
  private:
-  ITransportPtr t_;
+  ITransport* t_;
   IExecutorPtr e_;
 };
 
-IClientPtr MakeClient(ITransportPtr t, IExecutorPtr e) {
+IClientPtr MakeClient(ITransport* t, IExecutorPtr e) {
   return std::make_shared<Client>(t, e);
 }
 

@@ -25,7 +25,7 @@ inline NodeId Id() {
 
 // Net
 
-inline ITransportPtr NetTransport() {
+inline ITransport* NetTransport() {
   return GetRuntime().NetTransport();
 }
 

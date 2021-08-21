@@ -59,8 +59,6 @@ struct ITransport {
                                         ITransportHandlerPtr handler) = 0;
 };
 
-using ITransportPtr = ITransport*;
-
 //////////////////////////////////////////////////////////////////////
 
 }  // namespace whirl

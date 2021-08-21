@@ -25,7 +25,7 @@ class ServerImpl : public IServer,
                    public std::enable_shared_from_this<ServerImpl>,
                    public ITransportHandler {
  public:
-  ServerImpl(ITransportPtr t,
+  ServerImpl(ITransport* t,
              await::executors::IExecutorPtr e,
              await::fibers::IFiberManager* fm)
       : transport_(t),
@@ -56,7 +56,7 @@ class ServerImpl : public IServer,
 
  private:
   // Services
-  ITransportPtr transport_;
+  ITransport* transport_;
   await::executors::IExecutorPtr executor_;
   await::fibers::IFiberManager* fiber_manager_;
 

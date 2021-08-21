@@ -37,7 +37,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   using ActiveRequests = std::map<RequestId, ActiveRequest>;
 
  public:
-  TransportChannel(ITransportPtr t, await::executors::IExecutorPtr e, TransportAddress peer)
+  TransportChannel(ITransport* t, await::executors::IExecutorPtr e, TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
         peer_(peer),
@@ -95,7 +95,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   void Fail(ActiveRequest& request, std::error_code e);
 
  private:
-  ITransportPtr transport_;
+  ITransport* transport_;
   await::executors::IExecutorPtr executor_;  // For callbacks
 
   const TransportAddress peer_;
