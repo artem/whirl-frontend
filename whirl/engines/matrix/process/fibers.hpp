@@ -2,8 +2,6 @@
 
 #include <await/fibers/core/manager.hpp>
 
-#include <wheels/support/id.hpp>
-
 namespace whirl::matrix::process {
 
 //////////////////////////////////////////////////////////////////////
@@ -17,7 +15,7 @@ struct FiberStack {
 class FiberManager : public await::fibers::IFiberManager {
  public:
   await::fibers::FiberId GenerateId() override {
-    return ids_.NextId();
+    return ++next_id_;
   }
 
   wheels::MutableMemView AcquireStack() override {
@@ -31,7 +29,7 @@ class FiberManager : public await::fibers::IFiberManager {
   }
 
  private:
-  wheels::IdGenerator ids_;
+  size_t next_id_{0};
 };
 
 }  // namespace whirl::matrix::process
