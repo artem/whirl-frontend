@@ -18,7 +18,7 @@
 #include <whirl/engines/matrix/network/network.hpp>
 #include <whirl/engines/matrix/network/transport.hpp>
 
-#include <whirl/engines/matrix/process/heap.hpp>
+#include <whirl/engines/matrix/process/memory.hpp>
 #include <whirl/engines/matrix/process/scheduler.hpp>
 
 #include <whirl/logger/log.hpp>

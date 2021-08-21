@@ -5,7 +5,7 @@
 #include <whirl/engines/matrix/network/timestamp.hpp>
 #include <whirl/engines/matrix/network/socket.hpp>
 
-#include <whirl/engines/matrix/process/heap.hpp>
+#include <whirl/engines/matrix/process/memory.hpp>
 #include <whirl/engines/matrix/process/scheduler.hpp>
 
 #include <whirl/logger/log.hpp>
