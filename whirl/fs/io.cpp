@@ -6,8 +6,7 @@ namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
 
-FileReader::FileReader(IFileSystem* fs, Path file_path)
-  : fs_(fs) {
+FileReader::FileReader(IFileSystem* fs, Path file_path) : fs_(fs) {
   fd_ = Fs()->Open(file_path, FileMode::Read);
 }
 
@@ -29,8 +28,7 @@ IFileSystem* FileReader::Fs() {
 
 //////////////////////////////////////////////////////////////////////
 
-FileWriter::FileWriter(IFileSystem* fs, Path file_path)
-    : fs_(fs) {
+FileWriter::FileWriter(IFileSystem* fs, Path file_path) : fs_(fs) {
   fd_ = Fs()->Open(file_path, FileMode::Append);
 }
 

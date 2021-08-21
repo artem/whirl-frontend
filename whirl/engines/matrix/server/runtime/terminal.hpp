@@ -17,6 +17,7 @@ class Terminal : public ITerminal {
     WHIRL_LOG_INFO("Stdout(\"{}\")", line);
     stdout_.PrintLine(line);
   }
+
  private:
   Stdout& stdout_;
   Logger logger_{"Terminal"};

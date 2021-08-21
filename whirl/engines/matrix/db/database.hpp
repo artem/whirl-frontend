@@ -22,8 +22,7 @@ class Database : public node::db::IDatabase {
 
   void Open(const std::string& directory) override;
 
-  void Put(const node::db::Key& key,
-           const node::db::Value& value) override;
+  void Put(const node::db::Key& key, const node::db::Value& value) override;
 
   void Delete(const node::db::Key& key) override;
 
@@ -39,7 +38,6 @@ class Database : public node::db::IDatabase {
   void ReplayWAL();
 
   bool ReadCacheMiss() const;
-
 
  private:
   node::fs::IFileSystem* fs_;

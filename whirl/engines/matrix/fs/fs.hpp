@@ -30,11 +30,10 @@ class FileSystem {
 
   class DirIterator {
    public:
-    DirIterator(Files& files)
-        : it_(files.begin()), end_(files.end()) {
+    DirIterator(Files& files) : it_(files.begin()), end_(files.end()) {
     }
 
-    const node::fs::Path& operator*(){
+    const node::fs::Path& operator*() {
       return it_->first;
     }
 
@@ -61,9 +60,7 @@ class FileSystem {
   void Delete(const node::fs::Path& file_path);
   bool Exists(const node::fs::Path& file_path) const;
 
-  node::fs::Fd Open(
-      const node::fs::Path& file_path,
-      node::fs::FileMode mode);
+  node::fs::Fd Open(const node::fs::Path& file_path, node::fs::FileMode mode);
 
   size_t Read(node::fs::Fd fd, wheels::MutableMemView buffer);
   void Append(node::fs::Fd fd, wheels::ConstMemView data);
@@ -83,9 +80,8 @@ class FileSystem {
   size_t ComputeDigest() const;
 
  private:
-  FileRef FindOrCreateFile(
-      const node::fs::Path& file_path,
-      node::fs::FileMode open_mode);
+  FileRef FindOrCreateFile(const node::fs::Path& file_path,
+                           node::fs::FileMode open_mode);
 
   static FileRef CreateFile();
 

@@ -60,9 +60,7 @@ class WorldImpl {
     return AddServerImpl(pool, program, kPoolName, hostname);
   }
 
-  void AddPool(std::string pool_name,
-               node::ProgramMain program,
-               size_t size,
+  void AddPool(std::string pool_name, node::ProgramMain program, size_t size,
                std::string name_template) {
     WorldGuard g(this);
 
@@ -76,16 +74,16 @@ class WorldImpl {
     WorldGuard g(this);
 
     AddToPoolImpl(clients_, program,
-                  /*pool_name=*/ "clients",
-                  /*host_name_template=*/ "Client");
+                  /*pool_name=*/"clients",
+                  /*host_name_template=*/"Client");
   }
 
   void SetAdversary(node::ProgramMain program) {
     WorldGuard g(this);
 
     AddToPoolImpl(adversaries_, program,
-                  /*pool_name=*/ "adversaries",
-                  /*host_name_template=*/ "Adversary");
+                  /*pool_name=*/"adversaries",
+                  /*host_name_template=*/"Adversary");
   }
 
   bool HasAdversary() const {
@@ -218,13 +216,15 @@ class WorldImpl {
     return name;
   }
 
-  void AddToPoolImpl(Servers& pool, node::ProgramMain program, std::string pool_name, std::string host_name_template) {
+  void AddToPoolImpl(Servers& pool, node::ProgramMain program,
+                     std::string pool_name, std::string host_name_template) {
     auto host_name = MakeServerName(host_name_template, pool.size() + 1);
     AddServerImpl(pool, program, pool_name, host_name);
   }
 
   // Returns host name
-  void AddServerImpl(Servers& pool, node::ProgramMain program, std::string pool_name, std::string hostname) {
+  void AddServerImpl(Servers& pool, node::ProgramMain program,
+                     std::string pool_name, std::string hostname) {
     size_t id = server_ids_.NextId();
 
     pool.emplace_back(network_, ServerConfig{id, hostname, pool_name}, program);

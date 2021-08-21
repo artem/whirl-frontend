@@ -7,7 +7,6 @@
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>
 
-
 namespace whirl::matrix {
 
 void PauseThisThread() {

@@ -19,11 +19,9 @@ struct IFaultyNetwork {
 
   // Links
 
-  virtual void PauseLink(
-      const std::string& start, const std::string& end) = 0;
+  virtual void PauseLink(const std::string& start, const std::string& end) = 0;
 
-  virtual void ResumeLink(
-      const std::string& start, const std::string& end) = 0;
+  virtual void ResumeLink(const std::string& start, const std::string& end) = 0;
 
   // Partitions
 
@@ -33,4 +31,4 @@ struct IFaultyNetwork {
   virtual void Heal() = 0;
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::fault

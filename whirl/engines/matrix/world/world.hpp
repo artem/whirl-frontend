@@ -128,9 +128,7 @@ class World {
   std::vector<std::string> GetStdout(const std::string& hostname) const;
 
  private:
-  void AddPool(std::string pool_name,
-               node::ProgramMain program,
-               size_t size,
+  void AddPool(std::string pool_name, node::ProgramMain program, size_t size,
                std::string server_name_template);
 
   void SetGlobalImpl(const std::string& key, std::any value);

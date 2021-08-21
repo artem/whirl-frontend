@@ -6,8 +6,8 @@
 #include <whirl/engines/matrix/memory/new.hpp>
 
 using whirl::node::fs::Fd;
-using whirl::node::fs::Path;
 using whirl::node::fs::FileMode;
+using whirl::node::fs::Path;
 
 namespace whirl::matrix::fs {
 
@@ -82,7 +82,8 @@ FileSystem::DirIterator FileSystem::ListAllFiles() {
   return {files_};
 }
 
-FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path, FileMode open_mode) {
+FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path,
+                                                 FileMode open_mode) {
   auto it = files_.find(file_path);
 
   if (it != files_.end()) {
@@ -112,10 +113,8 @@ void FileSystem::CheckMode(OpenedFile& of, FileMode expected) {
 
 size_t FileSystem::InitOffset(FileRef f, FileMode open_mode) {
   switch (open_mode) {
-    case FileMode::Read:
-      return 0;
-    case FileMode::Append:
-      return f->Size();
+    case FileMode::Read: return 0;
+    case FileMode::Append: return f->Size();
   }
 }
 

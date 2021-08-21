@@ -8,8 +8,7 @@ using whirl::node::db::WriteBatch;
 
 namespace whirl::matrix::db {
 
-Database::Database(node::fs::IFileSystem* fs)
-: fs_(fs) {
+Database::Database(node::fs::IFileSystem* fs) : fs_(fs) {
 }
 
 void Database::Open(const std::string& directory) {
@@ -71,7 +70,7 @@ void Database::ApplyToMemTable(const node::db::WriteBatch& batch) {
 }
 
 bool Database::ReadCacheMiss() const {
-  //return GlobalRandomNumber(10) == 1;  // Move to time model?
+  // return GlobalRandomNumber(10) == 1;  // Move to time model?
   return false;
 }
 

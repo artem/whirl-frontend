@@ -22,7 +22,8 @@ class ServiceBase : public IService {
     return methods_.find(method_name) != methods_.end();
   }
 
-  BytesValue Invoke(const std::string& method_name, const BytesValue& input) override {
+  BytesValue Invoke(const std::string& method_name,
+                    const BytesValue& input) override {
     auto method_it = methods_.find(method_name);
     WHEELS_VERIFY(method_it != methods_.end(),
                   "RPC method not found: " << method_name);

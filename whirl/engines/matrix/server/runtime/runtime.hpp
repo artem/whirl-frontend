@@ -27,8 +27,8 @@ namespace whirl::matrix {
 template <typename T>
 class StaticObject {
  public:
-  template <typename ... Args>
-  void Init(Args&& ... args) {
+  template <typename... Args>
+  void Init(Args&&... args) {
     object_.emplace(std::forward<Args>(args)...);
   }
 

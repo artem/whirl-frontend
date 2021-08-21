@@ -27,8 +27,7 @@ class ThreadPool {
 
  public:
   ThreadPool(process::Scheduler& scheduler)
-      : scheduler_(scheduler),
-        pool_executor_(MakeExecutor()) {
+      : scheduler_(scheduler), pool_executor_(MakeExecutor()) {
   }
 
   void Submit(await::executors::Task&& task) {
@@ -46,14 +45,14 @@ class ThreadPool {
 
   class TaskAdapter : public process::ITask {
    public:
-    TaskAdapter(await::executors::Task&& impl)
-        : impl_(std::move(impl)) {
+    TaskAdapter(await::executors::Task&& impl) : impl_(std::move(impl)) {
     }
 
     void Run() override {
       impl_();
       delete this;
     }
+
    private:
     await::executors::Task impl_;
   };

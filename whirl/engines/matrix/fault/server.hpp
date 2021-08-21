@@ -32,8 +32,7 @@ struct IFaultyServer {
 
   // Files
 
-  virtual node::fs::FileList ListFiles(
-      std::string_view prefix) = 0;
+  virtual node::fs::FileList ListFiles(std::string_view prefix) = 0;
 
   virtual void CorruptFile(const node::fs::Path& path) = 0;
 };

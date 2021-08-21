@@ -69,13 +69,9 @@ class Network : public IActor, public fault::IFaultyNetwork {
 
   // - Links
 
-  void PauseLink(
-      const HostName& start,
-      const HostName& end) override;
+  void PauseLink(const HostName& start, const HostName& end) override;
 
-  void ResumeLink(
-      const HostName& start,
-      const HostName& end) override;
+  void ResumeLink(const HostName& start, const HostName& end) override;
 
   // - Partitions
 

@@ -14,7 +14,8 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-Server::Server(net::Network& net, ServerConfig config, node::ProgramMain program)
+Server::Server(net::Network& net, ServerConfig config,
+               node::ProgramMain program)
     : config_(config),
       program_(program),
       transport_(net, config.hostname, heap_, scheduler_) {
@@ -145,7 +146,6 @@ bool Server::IsRunnable() const {
 
 TimePoint Server::NextStepTime() const {
   return scheduler_.NextTaskTime();
-
 }
 
 void Server::Step() {
@@ -183,8 +183,7 @@ node::IRuntime* Server::MakeNodeRuntime() {
   runtime->thread_pool.Init(scheduler_);
   runtime->fibers.Init();
 
-  runtime->time
-      .Init(wall_clock_, monotonic_clock_, scheduler_);
+  runtime->time.Init(wall_clock_, monotonic_clock_, scheduler_);
 
   runtime->fs.Init(&filesystem_, runtime->time.Get());
 

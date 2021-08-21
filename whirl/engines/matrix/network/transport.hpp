@@ -42,7 +42,8 @@ class Transport {
   friend class ServerSocket;
 
  public:
-  Transport(Network& net, const std::string& host, process::Memory& heap, process::Scheduler& scheduler);
+  Transport(Network& net, const std::string& host, process::Memory& heap,
+            process::Scheduler& scheduler);
 
   // Context: Server
   const std::string& HostName() const {

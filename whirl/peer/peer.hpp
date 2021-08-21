@@ -25,8 +25,8 @@ class Peer {
 
  private:
   rpc::IClientPtr MakeRpcClient();
-  rpc::IChannelPtr MakeRpcChannel(
-      rpc::IClientPtr client, const std::string& host);
+  rpc::IChannelPtr MakeRpcChannel(rpc::IClientPtr client,
+                                  const std::string& host);
   void ConnectToPeers();
 
  private:

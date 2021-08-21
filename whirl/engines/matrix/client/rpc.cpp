@@ -33,10 +33,11 @@ rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name) {
 
   // Retries -> History -> Random -> Transport-s
 
-  auto random = rpc::MakeRandomChannel(std::move(transports), node::rt::RandomService());
+  auto random =
+      rpc::MakeRandomChannel(std::move(transports), node::rt::RandomService());
   auto history = MakeHistoryChannel(std::move(random));
-  auto retries =
-      rpc::WithRetries(std::move(history), node::rt::TimeService(), RetriesBackoff());
+  auto retries = rpc::WithRetries(std::move(history), node::rt::TimeService(),
+                                  RetriesBackoff());
 
   return retries;
 }

@@ -30,8 +30,8 @@ class TransportTask : public process::ITask {
 
 }  // namespace detail
 
-
-Transport::Transport(Network& net, const std::string& host, process::Memory& heap, process::Scheduler& scheduler)
+Transport::Transport(Network& net, const std::string& host,
+                     process::Memory& heap, process::Scheduler& scheduler)
     : net_(net), host_(host), heap_(heap), scheduler_(scheduler) {
 }
 
@@ -170,9 +170,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
     // Disconnect
     auto g = heap_.Use();
 
-    auto callback = [
-        handler = endpoint.handler,
-        host = from.host]() {
+    auto callback = [handler = endpoint.handler, host = from.host]() {
       handler->HandleDisconnect(host);
     };
 
@@ -189,10 +187,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     auto g = heap_.Use();
 
-    auto callback = [
-      handler = endpoint.handler,
-      message = packet.message,
-      reply_socket = ReplySocket(packet.header, out)]() {
+    auto callback = [handler = endpoint.handler, message = packet.message,
+                     reply_socket = ReplySocket(packet.header, out)]() {
       handler->HandleMessage(message, reply_socket);
     };
 
@@ -200,8 +196,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     scheduler_.ScheduleAsap(task);
 
-//    endpoint.handler->HandleMessage(packet.message,
-//                                    ReplySocket(packet.header, out));
+    //    endpoint.handler->HandleMessage(packet.message,
+    //                                    ReplySocket(packet.header, out));
     return;
   }
 }

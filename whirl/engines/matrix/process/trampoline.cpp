@@ -11,10 +11,7 @@ void MainTrampoline(node::ProgramMain main) {
     main();
   };
 
-  await::fibers::Go(
-      main_fiber,
-      node::rt::FiberManager(),
-      node::rt::Executor());
+  await::fibers::Go(main_fiber, node::rt::FiberManager(), node::rt::Executor());
 }
 
 }  // namespace whirl::matrix::process

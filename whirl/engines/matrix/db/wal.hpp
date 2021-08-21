@@ -50,7 +50,7 @@ class WALWriter {
 
 class WALReader {
  public:
-  WALReader(node::fs::IFileSystem *fs, node::fs::Path log_file_path)
+  WALReader(node::fs::IFileSystem* fs, node::fs::Path log_file_path)
       : file_reader_(fs, log_file_path),
         buf_file_reader_(&file_reader_),
         framed_reader_(&buf_file_reader_) {

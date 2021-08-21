@@ -8,10 +8,10 @@
 
 namespace whirl::matrix {
 
-class FS: public node::fs::IFileSystem {
+class FS : public node::fs::IFileSystem {
  public:
   FS(matrix::fs::FileSystem* impl, ITimeService* time_service)
-    : disk_(time_service), impl_(impl) {
+      : disk_(time_service), impl_(impl) {
   }
 
   void Create(const node::fs::Path& file_path) override {
@@ -42,7 +42,8 @@ class FS: public node::fs::IFileSystem {
   }
 
   // FileMode::Append creates file if it does not exist
-  node::fs::Fd Open(const node::fs::Path& file_path, node::fs::FileMode mode) override {
+  node::fs::Fd Open(const node::fs::Path& file_path,
+                    node::fs::FileMode mode) override {
     return impl_->Open(file_path, mode);
   }
 

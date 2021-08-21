@@ -30,25 +30,24 @@ class [[nodiscard]] CallResult {
   using Future = await::futures::Future<T>;
 
  public:
-  CallResult(Future<BytesValue> f)
-      : raw_future_(std::move(f)) {
+  CallResult(Future<BytesValue> f) : raw_future_(std::move(f)) {
   }
 
   template <typename T>
-  Future<T> As() && {
+  Future<T> As()&& {
     return std::move(raw_future_).Then([](BytesValue raw) {
       return Deserialize<T>(raw);
     });
   }
 
   template <>
-  Future<void> As() && {
+  Future<void> As()&& {
     return await::futures::JustStatus(std::move(raw_future_));
   }
 
   // Implicit cast
   template <typename T>
-  operator Future<T>() && {
+  operator Future<T>()&& {
     return std::move(*this).As<T>();
   }
 
@@ -65,32 +64,32 @@ class [[nodiscard]] Caller {
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller& StopToken(await::StopToken stop_token) && {
+  Caller& StopToken(await::StopToken stop_token)&& {
     stop_token_ = std::move(stop_token);
     return *this;
   }
 
-  Caller& TraceWith(TraceId trace_id) && {
+  Caller& TraceWith(TraceId trace_id)&& {
     trace_id_ = trace_id;
     return *this;
   }
 
-  Caller& AtMostOnce() && {
+  Caller& AtMostOnce()&& {
     attempts_limit_ = 1;
     return *this;
   }
 
-  Caller& AtLeastOnce() && {
+  Caller& AtLeastOnce()&& {
     attempts_limit_ = 0;
     return *this;
   }
 
-  Caller& LimitAttempts(size_t limit) && {
+  Caller& LimitAttempts(size_t limit)&& {
     attempts_limit_ = limit;
     return *this;
   }
 
-  CallResult Start() && {
+  CallResult Start()&& {
     return {Call()};
   }
 
@@ -128,7 +127,7 @@ class [[nodiscard]] ViaCaller {
       : method_(method), input_(std::move(input)) {
   }
 
-  Caller Via(IChannelPtr channel) && {
+  Caller Via(IChannelPtr channel)&& {
     return Caller(std::move(method_), std::move(input_), std::move(channel));
   }
 
@@ -143,7 +142,7 @@ class [[nodiscard]] ArgsCaller {
   }
 
   template <typename... TArguments>
-  ViaCaller Args(TArguments ... arguments) {
+  ViaCaller Args(TArguments... arguments) {
     auto input = detail::SerializeInput(std::forward<TArguments>(arguments)...);
     return ViaCaller{method_, input};
   }

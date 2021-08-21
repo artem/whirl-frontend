@@ -12,6 +12,7 @@ struct AllocRecord : public wheels::IntrusiveListNode<AllocRecord> {
 
 class GlobalAllocTracker {
   static const size_t kAllocLimit = 100500;
+
  public:
   void Activate() {
     active_ = true;

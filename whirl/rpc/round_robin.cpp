@@ -11,7 +11,7 @@ static const std::string kPeer = "RR";
 class RRChannel : public IChannel {
  public:
   RRChannel(std::vector<IChannelPtr> channels)
-  : channels_(std::move(channels)) {
+      : channels_(std::move(channels)) {
   }
 
   ~RRChannel() {

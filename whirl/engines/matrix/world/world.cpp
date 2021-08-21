@@ -22,11 +22,8 @@ void World::AddServer(std::string hostname, node::ProgramMain program) {
   impl_->AddServer(hostname, program);
 }
 
-void World::AddPool(std::string pool_name,
-                     node::ProgramMain program,
-                     size_t size,
-                     std::string server_name_template) {
-
+void World::AddPool(std::string pool_name, node::ProgramMain program,
+                    size_t size, std::string server_name_template) {
   impl_->AddPool(pool_name, program, size, server_name_template);
 }
 

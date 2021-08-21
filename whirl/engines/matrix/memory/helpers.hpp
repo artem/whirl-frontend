@@ -10,8 +10,8 @@ T MakeCopy(const T& object) {
   return copy;
 }
 
-template <typename T, typename ... Args>
-T* MakeStaticLikeObject(Args&& ... args) {
+template <typename T, typename... Args>
+T* MakeStaticLikeObject(Args&&... args) {
   return new T(std::forward<Args>(args)...);
 }
 

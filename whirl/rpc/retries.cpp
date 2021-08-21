@@ -155,9 +155,7 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
  public:
   RetriesChannel(IChannelPtr impl, ITimeService* time,
                  BackoffParams backoff_params)
-      : impl_(std::move(impl)),
-        time_(time),
-        backoff_params_(backoff_params) {
+      : impl_(std::move(impl)), time_(time), backoff_params_(backoff_params) {
   }
 
   void Close() override {

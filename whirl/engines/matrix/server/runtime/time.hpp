@@ -18,7 +18,8 @@ namespace whirl::matrix {
 
 class TimeService : public ITimeService {
  public:
-  TimeService(clocks::WallClock& wall_clock, clocks::MonotonicClock& monotonic_clock,
+  TimeService(clocks::WallClock& wall_clock,
+              clocks::MonotonicClock& monotonic_clock,
               process::Scheduler& scheduler)
       : wall_clock_(wall_clock),
         monotonic_clock_(monotonic_clock),

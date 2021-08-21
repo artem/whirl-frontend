@@ -6,8 +6,7 @@
 
 namespace whirl::node {
 
-Peer::Peer(const std::string& pool_name)
-  : pool_name_(pool_name) {
+Peer::Peer(const std::string& pool_name) : pool_name_(pool_name) {
   ConnectToPeers();
 }
 
@@ -57,11 +56,11 @@ static rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
-rpc::IChannelPtr Peer::MakeRpcChannel(
-    rpc::IClientPtr client, const std::string& host) {
+rpc::IChannelPtr Peer::MakeRpcChannel(rpc::IClientPtr client,
+                                      const std::string& host) {
   auto transport = client->Dial(host);
-  auto retries =
-      rpc::WithRetries(std::move(transport), rt::TimeService(), RetriesBackoff());
+  auto retries = rpc::WithRetries(std::move(transport), rt::TimeService(),
+                                  RetriesBackoff());
   return retries;
 }
 
