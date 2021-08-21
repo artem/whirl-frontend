@@ -14,7 +14,7 @@ struct KVCallPrinter {
   static std::string Print(const Call& call) {
     std::stringstream out;
 
-    if (call.method == "Put") {
+    if (call.method == "Set") {
       PrintSet(call, out);
     } else if (call.method == "Get") {
       PrintGet(call, out);
