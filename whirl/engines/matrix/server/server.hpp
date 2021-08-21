@@ -122,6 +122,7 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
 
   Stdout stdout_;
 
+  // Node process
   node::IRuntime* runtime_{nullptr};
 
   Logger logger_{"Server"};

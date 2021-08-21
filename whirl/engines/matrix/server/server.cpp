@@ -6,9 +6,7 @@
 
 #include <whirl/engines/matrix/process/trampoline.hpp>
 
-// TODO
-#include <whirl/engines/matrix/server/services/runtime.hpp>
-#include <whirl/engines/matrix/server/services/locator.hpp>
+#include <whirl/engines/matrix/server/runtime/runtime.hpp>
 
 #include <whirl/engines/matrix/helpers/digest.hpp>
 
@@ -183,7 +181,6 @@ node::IRuntime* Server::MakeNodeRuntime() {
   NodeRuntime* runtime = new NodeRuntime();
 
   runtime->thread_pool.Init(scheduler_);
-
   runtime->fibers.Init();
 
   runtime->time
@@ -207,7 +204,7 @@ node::IRuntime* Server::MakeNodeRuntime() {
 
   runtime->terminal.Init(stdout_);
 
-  return new RuntimeLocator{runtime};
+  return runtime;
 }
 
 node::IRuntime& Server::GetNodeRuntime() {
