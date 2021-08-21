@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/services/executor.hpp>
-
 #include <whirl/engines/matrix/process/scheduler.hpp>
 #include <whirl/engines/matrix/world/global/time.hpp>
+
+#include <await/executors/executor.hpp>
 
 #include <memory>
 
@@ -31,7 +31,7 @@ class ThreadPool {
         pool_executor_(MakeExecutor()) {
   }
 
-  void Submit(Task&& task) {
+  void Submit(await::executors::Task&& task) {
     scheduler_.Schedule(ScheduleTask(), ConvertTask(std::move(task)));
   }
 
@@ -46,7 +46,7 @@ class ThreadPool {
 
   class TaskAdapter : public process::ITask {
    public:
-    TaskAdapter(Task&& impl)
+    TaskAdapter(await::executors::Task&& impl)
         : impl_(std::move(impl)) {
     }
 
@@ -55,10 +55,10 @@ class ThreadPool {
       delete this;
     }
    private:
-    Task impl_;
+    await::executors::Task impl_;
   };
 
-  process::ITask* ConvertTask(Task&& task) {
+  process::ITask* ConvertTask(await::executors::Task&& task) {
     return new TaskAdapter(std::move(task));
   }
 
@@ -68,7 +68,7 @@ class ThreadPool {
 
  private:
   process::Scheduler& scheduler_;
-  IExecutorPtr pool_executor_;
+  await::executors::IExecutorPtr pool_executor_;
 };
 
 }  // namespace whirl::matrix
