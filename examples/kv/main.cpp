@@ -373,8 +373,7 @@ size_t RunSimulation(size_t seed) {
 
   // Cluster
   world.MakePool("kv", KVNode)  //
-      .Size(replicas)
-      .NameTemplate("KV-Server");
+      .Size(replicas);
 
   // Clients
   world.AddClients(Client, /*count=*/clients);

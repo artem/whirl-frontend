@@ -21,8 +21,11 @@ class World;
 
 class PoolBuilder {
  public:
-  PoolBuilder(World* world, std::string name, node::Program program)
-    : world_(world), pool_name_(name), program_(program) {
+  PoolBuilder(World* world, std::string pool_name, node::Program program)
+      : world_(world),
+        pool_name_(pool_name),
+        program_(program),
+        name_template_(MakeNameTemplate(pool_name)) {
   }
 
   PoolBuilder& Size(size_t value) {
@@ -39,12 +42,17 @@ class PoolBuilder {
   ~PoolBuilder();
 
  private:
+  static std::string MakeNameTemplate(std::string pool_name) {
+    return std::string("Server-") + pool_name;
+  }
+
+ private:
   World* world_;
 
   std::string pool_name_;
   node::Program program_;
   size_t size_ = 1;
-  std::string name_template_{"Server"};
+  std::string name_template_;
 };
 
 //////////////////////////////////////////////////////////////////////
