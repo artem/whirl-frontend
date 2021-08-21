@@ -42,7 +42,7 @@ class Transport {
   friend class ServerSocket;
 
  public:
-  Transport(Network& net, const std::string& host, ProcessHeap& heap, TaskScheduler& scheduler);
+  Transport(Network& net, const std::string& host, process::Memory& heap, process::Scheduler& scheduler);
 
   // Context: Server
   const std::string& HostName() const {
@@ -78,8 +78,8 @@ class Transport {
   Port next_port_{1};
 
   // To invoke ISocketHandler methods
-  ProcessHeap& heap_;
-  TaskScheduler& scheduler_;
+  process::Memory& heap_;
+  process::Scheduler& scheduler_;
 
   Logger logger_{"Transport"};
 };

@@ -115,9 +115,9 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
   clocks::MonotonicClock monotonic_clock_;
 
   // Operating system
-  TaskScheduler scheduler_;
+  process::Scheduler scheduler_;
   fs::FileSystem filesystem_;
-  mutable ProcessHeap heap_;
+  mutable process::Memory heap_;
   net::Transport transport_;
 
   Stdout stdout_;

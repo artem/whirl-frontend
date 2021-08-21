@@ -14,7 +14,7 @@ namespace whirl::matrix::net {
 namespace detail {
 
 template <typename Callback>
-class TransportTask : public ITask {
+class TransportTask : public process::ITask {
  public:
   TransportTask(Callback cb) : cb_(std::move(cb)) {
   }
@@ -31,7 +31,7 @@ class TransportTask : public ITask {
 }  // namespace detail
 
 
-Transport::Transport(Network& net, const std::string& host, ProcessHeap& heap, TaskScheduler& scheduler)
+Transport::Transport(Network& net, const std::string& host, process::Memory& heap, process::Scheduler& scheduler)
     : net_(net), host_(host), heap_(heap), scheduler_(scheduler) {
 }
 

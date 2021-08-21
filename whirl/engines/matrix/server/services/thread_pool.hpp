@@ -26,7 +26,7 @@ class ThreadPool {
   };
 
  public:
-  ThreadPool(TaskScheduler& scheduler)
+  ThreadPool(process::Scheduler& scheduler)
       : scheduler_(scheduler),
         pool_executor_(MakeExecutor()) {
   }
@@ -44,7 +44,7 @@ class ThreadPool {
     return GlobalNow();  // TODO: ITimeModel?
   }
 
-  class TaskAdapter : public ITask {
+  class TaskAdapter : public process::ITask {
    public:
     TaskAdapter(Task&& impl)
         : impl_(std::move(impl)) {
@@ -58,7 +58,7 @@ class ThreadPool {
     Task impl_;
   };
 
-  ITask* ConvertTask(Task&& task) {
+  process::ITask* ConvertTask(Task&& task) {
     return new TaskAdapter(std::move(task));
   }
 
@@ -67,7 +67,7 @@ class ThreadPool {
   }
 
  private:
-  TaskScheduler& scheduler_;
+  process::Scheduler& scheduler_;
   IExecutorPtr pool_executor_;
 };
 

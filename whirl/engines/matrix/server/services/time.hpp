@@ -19,7 +19,7 @@ namespace whirl::matrix {
 class TimeService : public ITimeService {
  public:
   TimeService(clocks::WallClock& wall_clock, clocks::MonotonicClock& monotonic_clock,
-              TaskScheduler& scheduler)
+              process::Scheduler& scheduler)
       : wall_clock_(wall_clock),
         monotonic_clock_(monotonic_clock),
         scheduler_(scheduler) {
@@ -54,7 +54,7 @@ class TimeService : public ITimeService {
   clocks::WallClock& wall_clock_;
   clocks::MonotonicClock& monotonic_clock_;
 
-  TaskScheduler& scheduler_;
+  process::Scheduler& scheduler_;
 
   Logger logger_{"Time"};
 };

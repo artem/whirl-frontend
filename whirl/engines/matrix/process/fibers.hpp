@@ -4,7 +4,7 @@
 
 #include <wheels/support/id.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::process {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -34,4 +34,4 @@ class FiberManager : public await::fibers::IFiberManager {
   wheels::IdGenerator ids_;
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::process

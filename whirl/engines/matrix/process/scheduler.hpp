@@ -8,7 +8,7 @@
 
 #include <whirl/engines/matrix/world/global/time.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::process {
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ struct ITask {
 
 ////////////////////////////////////////////////////////////////////////
 
-class TaskScheduler {
+class Scheduler {
  public:
   struct ScheduledTask {
     TimePoint at_time;
@@ -35,7 +35,7 @@ class TaskScheduler {
   };
 
  public:
-  TaskScheduler() = default;
+  Scheduler() = default;
 
   void Schedule(TimePoint at, ITask* task) {
     GlobalAllocatorGuard g;
@@ -112,9 +112,9 @@ class AutomaticStorageTask : public ITask {
 }  // namespace detail
 
 template <typename F>
-void Schedule(TaskScheduler& scheduler, TimePoint t, F&& f) {
+void Schedule(Scheduler& scheduler, TimePoint t, F&& f) {
   ITask* task = new detail::AutomaticStorageTask(std::move(f));
   scheduler.Schedule(t, task);
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::process

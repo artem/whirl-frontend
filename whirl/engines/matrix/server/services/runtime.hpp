@@ -46,7 +46,7 @@ class StaticObject {
 
 struct NodeRuntime {
   StaticObject<ThreadPool> thread_pool;
-  StaticObject<FiberManager> fibers;
+  StaticObject<process::FiberManager> fibers;
   StaticObject<TimeService> time;
   StaticObject<FS> fs;
   StaticObject<NetTransport> transport;

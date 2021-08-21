@@ -2,8 +2,8 @@
 
 #include <whirl/program/program.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::process {
 
 void MainTrampoline(node::Program main);
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::process

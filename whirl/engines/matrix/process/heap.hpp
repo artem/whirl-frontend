@@ -3,9 +3,9 @@
 #include <whirl/engines/matrix/memory/allocator.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::process {
 
-class ProcessHeap {
+class Memory {
  public:
   AllocatorGuard Use() {
     return AllocatorGuard(&impl_);
@@ -27,4 +27,4 @@ class ProcessHeap {
   MemoryAllocator impl_;
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::process

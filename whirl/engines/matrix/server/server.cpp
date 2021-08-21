@@ -133,8 +133,8 @@ void Server::StartProcess() {
   runtime_ = MakeNodeRuntime();
 
   // Run user program
-  Schedule(scheduler_, GlobalNow(), [this]() {
-    MainTrampoline(program_);
+  process::Schedule(scheduler_, GlobalNow(), [this]() {
+    process::MainTrampoline(program_);
   });
 }
 
@@ -151,7 +151,7 @@ TimePoint Server::NextStepTime() const {
 }
 
 void Server::Step() {
-  ITask* task = scheduler_.TakeNext();
+  process::ITask* task = scheduler_.TakeNext();
   {
     auto g = heap_.Use();
     task->Run();

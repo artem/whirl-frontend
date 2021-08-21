@@ -4,7 +4,7 @@
 
 #include <await/fibers/core/api.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::process {
 
 void MainTrampoline(node::Program main) {
   auto main_fiber = [main]() {
@@ -17,4 +17,4 @@ void MainTrampoline(node::Program main) {
       node::rt::Executor());
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::process
