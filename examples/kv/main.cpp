@@ -372,11 +372,9 @@ size_t RunSimulation(size_t seed) {
   matrix::World world{seed};
 
   // Cluster
-  world.MakePool(
-      /*pool_name=*/"kv",
-      /*program=*/KVNode,
-      /*size=*/replicas,
-      /*name_template=*/"Server");
+  world.MakePool("kv", KVNode)  //
+      .Size(replicas)
+      .NameTemplate("KV-Server");
 
   // Clients
   world.AddClients(Client, /*count=*/clients);

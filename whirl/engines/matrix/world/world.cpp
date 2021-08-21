@@ -4,6 +4,10 @@
 
 namespace whirl::matrix {
 
+PoolBuilder::~PoolBuilder() {
+  world_->AddPool(pool_name_, program_, size_, name_template_);
+}
+
 World::World(size_t seed) : impl_(std::make_unique<WorldImpl>(seed)) {
 }
 
@@ -18,7 +22,7 @@ void World::AddServer(std::string hostname, node::Program program) {
   impl_->AddServer(hostname, program);
 }
 
-void World::MakePool(std::string pool_name,
+void World::AddPool(std::string pool_name,
                      node::Program program,
                      size_t size,
                      std::string server_name_template) {

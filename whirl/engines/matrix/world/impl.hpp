@@ -70,33 +70,24 @@ class WorldImpl {
 
     Servers& pool = pools_[pool_name];
     for (size_t i = 0; i < size; ++i) {
-      auto hostname = MakeServerName(name_template, pool.size() + 1);
-      AddServerImpl(pool, program, pool_name, hostname);
+      AddToPoolImpl(pool, program, pool_name, name_template);
     }
   }
 
   void AddClient(node::Program program) {
     WorldGuard g(this);
 
-    auto hostname = MakeServerName("Client", clients_.size() + 1);
-
-    AddServerImpl(
-        /*pool=*/ clients_,
-        program,
-        /*pool_name=*/ "clients",
-        hostname);
+    AddToPoolImpl(clients_, program,
+                  /*pool_name=*/ "clients",
+                  /*host_name_template=*/ "Client");
   }
 
   void SetAdversary(node::Program program) {
     WorldGuard g(this);
 
-    auto hostname = MakeServerName("Adversary", adversaries_.size() + 1);
-
-    AddServerImpl(
-        /*pool=*/ adversaries_,
-        program,
-        /*pool_name=*/ "adversaries",
-        hostname);
+    AddToPoolImpl(adversaries_, program,
+                  /*pool_name=*/ "adversaries",
+                  /*host_name_template=*/ "Adversary");
   }
 
   bool HasAdversary() const {
@@ -227,6 +218,11 @@ class WorldImpl {
     wheels::StringBuilder name;
     name << name_template << '-' << index;
     return name;
+  }
+
+  void AddToPoolImpl(Servers& pool, node::Program program, std::string pool_name, std::string host_name_template) {
+    auto host_name = MakeServerName(host_name_template, pool.size() + 1);
+    AddServerImpl(pool, program, pool_name, host_name);
   }
 
   // Returns host name

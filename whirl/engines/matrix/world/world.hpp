@@ -11,12 +11,50 @@
 
 namespace whirl::matrix {
 
-class WorldImpl;
-
 // Facade
+
+//////////////////////////////////////////////////////////////////////
+
+class World;
+
+//////////////////////////////////////////////////////////////////////
+
+class PoolBuilder {
+ public:
+  PoolBuilder(World* world, std::string name, node::Program program)
+    : world_(world), pool_name_(name), program_(program) {
+  }
+
+  PoolBuilder& Size(size_t value) {
+    size_ = value;
+    return *this;
+  }
+
+  PoolBuilder& NameTemplate(std::string value) {
+    name_template_ = value;
+    return *this;
+  }
+
+  // Add pool to the world
+  ~PoolBuilder();
+
+ private:
+  World* world_;
+
+  std::string pool_name_;
+  node::Program program_;
+  size_t size_ = 1;
+  std::string name_template_{"Server"};
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class WorldImpl;
 
 class World {
   static const size_t kDefaultSeed = 42;
+
+  friend class PoolBuilder;
 
  public:
   World(size_t seed = kDefaultSeed);
@@ -26,10 +64,9 @@ class World {
 
   void AddServer(std::string hostname, node::Program program);
 
-  void MakePool(std::string pool_name,
-               node::Program program,
-               size_t size,
-               std::string server_name_template);
+  PoolBuilder MakePool(std::string pool_name, node::Program program) {
+    return PoolBuilder{this, pool_name, program};
+  }
 
   void AddClient(node::Program program);
   void AddClients(node::Program program, size_t count);
@@ -83,6 +120,11 @@ class World {
   std::vector<std::string> GetStdout(const std::string& hostname) const;
 
  private:
+  void AddPool(std::string pool_name,
+               node::Program program,
+               size_t size,
+               std::string server_name_template);
+
   void SetGlobalImpl(const std::string& key, std::any value);
   std::any GetGlobalImpl(const std::string& key) const;
 

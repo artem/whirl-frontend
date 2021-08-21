@@ -132,11 +132,9 @@ int main() {
 
   matrix::World world{kSeed};
 
-  world.MakePool(
-      /*pool_name=*/ "echo",
-      /*program=*/ EchoNode,
-      /*size=*/ 3,
-      /*name_template=*/ "Server");
+  world.MakePool("echo", EchoNode)
+      .Size(3)
+      .NameTemplate("Server");
 
   // Clients
   world.AddClient(EchoClient);
