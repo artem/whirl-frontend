@@ -51,7 +51,7 @@ class WorldImpl {
       : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
   }
 
-  void AddServer(std::string hostname, node::Program program) {
+  void AddServer(std::string hostname, node::ProgramMain program) {
     WorldGuard g(this);
 
     static const std::string kPoolName = "snowflakes";
@@ -61,7 +61,7 @@ class WorldImpl {
   }
 
   void AddPool(std::string pool_name,
-               node::Program program,
+               node::ProgramMain program,
                size_t size,
                std::string name_template) {
     WorldGuard g(this);
@@ -72,7 +72,7 @@ class WorldImpl {
     }
   }
 
-  void AddClient(node::Program program) {
+  void AddClient(node::ProgramMain program) {
     WorldGuard g(this);
 
     AddToPoolImpl(clients_, program,
@@ -80,7 +80,7 @@ class WorldImpl {
                   /*host_name_template=*/ "Client");
   }
 
-  void SetAdversary(node::Program program) {
+  void SetAdversary(node::ProgramMain program) {
     WorldGuard g(this);
 
     AddToPoolImpl(adversaries_, program,
@@ -218,13 +218,13 @@ class WorldImpl {
     return name;
   }
 
-  void AddToPoolImpl(Servers& pool, node::Program program, std::string pool_name, std::string host_name_template) {
+  void AddToPoolImpl(Servers& pool, node::ProgramMain program, std::string pool_name, std::string host_name_template) {
     auto host_name = MakeServerName(host_name_template, pool.size() + 1);
     AddServerImpl(pool, program, pool_name, host_name);
   }
 
   // Returns host name
-  void AddServerImpl(Servers& pool, node::Program program, std::string pool_name, std::string hostname) {
+  void AddServerImpl(Servers& pool, node::ProgramMain program, std::string pool_name, std::string hostname) {
     size_t id = server_ids_.NextId();
 
     pool.emplace_back(network_, ServerConfig{id, hostname, pool_name}, program);

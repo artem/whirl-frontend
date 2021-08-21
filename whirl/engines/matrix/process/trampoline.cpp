@@ -6,7 +6,7 @@
 
 namespace whirl::matrix::process {
 
-void MainTrampoline(node::Program main) {
+void MainTrampoline(node::ProgramMain main) {
   auto main_fiber = [main]() {
     main();
   };

@@ -4,6 +4,6 @@
 
 namespace whirl::matrix::process {
 
-void MainTrampoline(node::Program main);
+void MainTrampoline(node::ProgramMain main);
 
 }  // namespace whirl::matrix::process

@@ -2,6 +2,6 @@
 
 namespace whirl::node {
 
-typedef void (*Program)(void);
+typedef void (*ProgramMain)(void);
 
 }  // namespace whirl::node

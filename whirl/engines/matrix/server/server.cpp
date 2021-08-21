@@ -16,7 +16,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-Server::Server(net::Network& net, ServerConfig config, node::Program program)
+Server::Server(net::Network& net, ServerConfig config, node::ProgramMain program)
     : config_(config),
       program_(program),
       transport_(net, config.hostname, heap_, scheduler_) {

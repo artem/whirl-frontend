@@ -18,23 +18,23 @@ size_t World::Seed() const {
   return impl_->Seed();
 }
 
-void World::AddServer(std::string hostname, node::Program program) {
+void World::AddServer(std::string hostname, node::ProgramMain program) {
   impl_->AddServer(hostname, program);
 }
 
 void World::AddPool(std::string pool_name,
-                     node::Program program,
+                     node::ProgramMain program,
                      size_t size,
                      std::string server_name_template) {
 
   impl_->AddPool(pool_name, program, size, server_name_template);
 }
 
-void World::AddClient(node::Program program) {
+void World::AddClient(node::ProgramMain program) {
   impl_->AddClient(program);
 }
 
-void World::AddClients(node::Program program, size_t count) {
+void World::AddClients(node::ProgramMain program, size_t count) {
   for (size_t i = 0; i < count; ++i) {
     AddClient(program);
   }
@@ -44,7 +44,7 @@ void World::SetTimeModel(ITimeModelPtr time_model) {
   impl_->SetTimeModel(std::move(time_model));
 }
 
-void World::AddAdversary(node::Program program) {
+void World::AddAdversary(node::ProgramMain program) {
   impl_->SetAdversary(program);
 }
 
