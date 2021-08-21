@@ -365,8 +365,7 @@ size_t RunSimulation(size_t seed) {
             << "clients = " << clients << ", "
             << "keys = " << keys << std::endl;
 
-  // Reset RPC and fiber ids
-  await::fibers::ResetIds();
+  // Reset RPC ids
   whirl::rpc::ResetIds();
 
   matrix::World world{seed};

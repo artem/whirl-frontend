@@ -13,6 +13,8 @@
 #include <whirl/services/terminal.hpp>
 #include <whirl/services/fault.hpp>
 
+#include <await/fibers/core/manager.hpp>
+
 namespace whirl::node {
 
 //////////////////////////////////////////////////////////////////////
@@ -25,6 +27,8 @@ struct IRuntime {
   virtual IConfig* Config() = 0;
 
   virtual const await::executors::IExecutorPtr& Executor() = 0;
+
+  virtual await::fibers::IFiberManager* FiberManager() = 0;
 
   virtual ITimeService* TimeService() = 0;
 

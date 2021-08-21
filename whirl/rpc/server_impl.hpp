@@ -9,6 +9,7 @@
 #include <whirl/logger/log.hpp>
 
 #include <await/executors/executor.hpp>
+#include <await/fibers/core/manager.hpp>
 
 #include <functional>
 #include <memory>
@@ -24,7 +25,12 @@ class ServerImpl : public IServer,
                    public std::enable_shared_from_this<ServerImpl>,
                    public ITransportHandler {
  public:
-  ServerImpl(ITransportPtr t, await::executors::IExecutorPtr e) : transport_(t), executor_(e) {
+  ServerImpl(ITransportPtr t,
+             await::executors::IExecutorPtr e,
+             await::fibers::IFiberManager* fm)
+      : transport_(t),
+        executor_(e),
+        fiber_manager_(fm) {
   }
 
   void Start() override;
@@ -52,6 +58,7 @@ class ServerImpl : public IServer,
   // Services
   ITransportPtr transport_;
   await::executors::IExecutorPtr executor_;
+  await::fibers::IFiberManager* fiber_manager_;
 
   ITransportServerPtr server_;
 

@@ -6,7 +6,8 @@
 namespace whirl::node::rt {
 
 rpc::IServerPtr MakeRpcServer() {
-  return std::make_shared<rpc::ServerImpl>(NetTransport(), Executor());
+  return std::make_shared<rpc::ServerImpl>(
+      NetTransport(), Executor(), FiberManager());
 }
 
 rpc::IClientPtr MakeRpcClient() {

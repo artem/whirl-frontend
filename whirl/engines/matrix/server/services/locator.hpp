@@ -15,6 +15,10 @@ class RuntimeLocator : public node::IRuntime {
     return runtime_->thread_pool->GetExecutor();
   }
 
+  await::fibers::IFiberManager* FiberManager() {
+    return runtime_->fibers.Get();
+  }
+
   ITimeService* TimeService() {
     return runtime_->time.Get();
   }

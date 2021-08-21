@@ -97,8 +97,12 @@ inline const await::executors::IExecutorPtr Executor() {
   return GetRuntime().Executor();
 }
 
+inline await::fibers::IFiberManager* FiberManager() {
+  return GetRuntime().FiberManager();
+}
+
 inline void Go(await::fibers::FiberRoutine routine) {
-  await::fibers::Go(std::move(routine), Executor());
+  await::fibers::Go(std::move(routine), FiberManager(), Executor());
 }
 
 inline void SleepFor(Duration delay) {

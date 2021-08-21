@@ -150,8 +150,6 @@ size_t WorldImpl::Stop() {
 
   WHIRL_LOG_INFO("Clients stopped");
 
-  CheckNoFibersLeft();
-
   actors_.clear();
 
   history_recorder_.Finalize();

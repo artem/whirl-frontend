@@ -19,8 +19,6 @@
 
 #include <wheels/support/id.hpp>
 
-#include <await/fibers/core/guts.hpp>
-
 #include <deque>
 #include <vector>
 
@@ -263,10 +261,6 @@ class WorldImpl {
   }
 
   NextStep FindNextStep();
-
-  void CheckNoFibersLeft() {
-    WHEELS_VERIFY(await::fibers::AliveFibers().IsEmpty(), "Alive fibers!");
-  }
 
  private:
   const size_t seed_;

@@ -14,6 +14,8 @@
 #include <whirl/engines/matrix/server/services/config.hpp>
 #include <whirl/engines/matrix/server/services/terminal.hpp>
 
+#include <whirl/engines/matrix/process/fibers.hpp>
+
 #include <optional>
 
 //////////////////////////////////////////////////////////////////////
@@ -44,6 +46,7 @@ class StaticObject {
 
 struct NodeRuntime {
   StaticObject<ThreadPool> thread_pool;
+  StaticObject<FiberManager> fibers;
   StaticObject<TimeService> time;
   StaticObject<FS> fs;
   StaticObject<NetTransport> transport;
@@ -51,12 +54,9 @@ struct NodeRuntime {
   StaticObject<RandomGenerator> random;
   StaticObject<GuidGenerator> guids;
   StaticObject<TrueTimeService> true_time;
-  StaticObject<Terminal> terminal;
-
-  // TODO
-  StaticObject<Config> config;
-  // TODO
   StaticObject<DiscoveryService> discovery;
+  StaticObject<Config> config;
+  StaticObject<Terminal> terminal;
 };
 
 }  // namespace whirl::matrix

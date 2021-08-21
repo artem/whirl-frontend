@@ -40,6 +40,7 @@ void ServerImpl::HandleMessage(const TransportMessage& message,
       [self = shared_from_this(), message, back = std::move(back)]() mutable {
         self->ProcessRequest(message, back);
       },
+      fiber_manager_,
       executor_);
 }
 

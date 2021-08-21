@@ -2,9 +2,9 @@
 
 #include <whirl/engines/matrix/memory/helpers.hpp>
 
-#include <whirl/engines/matrix/process/crash.hpp>
-
 #include <whirl/engines/matrix/world/global/actor.hpp>
+
+#include <whirl/engines/matrix/process/trampoline.hpp>
 
 // TODO
 #include <whirl/engines/matrix/server/services/runtime.hpp>
@@ -47,21 +47,14 @@ void Server::Crash() {
 
   // Remove all network endpoints
   transport_.Reset();
-
-  // Close open files
+  // Close opened files
   filesystem_.Reset();
-
   // Drop scheduled tasks
   scheduler_.Reset();
-
-  // 2) Reset process heap
-  // WHIRL_LOG("Bytes allocated on process heap: " << heap_.BytesAllocated());
-  {
-    auto g = heap_.Use();
-    runtime_ = nullptr;
-    ReleaseFiberResourcesOnCrash(heap_);
-  }
+  // 2) Clean memory
   heap_.Reset();
+
+  runtime_ = nullptr;
 
   // Clear stdout?
 
@@ -127,25 +120,22 @@ void Server::Start() {
 
   monotonic_clock_.Reset();
 
-  WHIRL_LOG_INFO("Start node at server {}", HostName());
-
-  {
-    auto g = heap_.Use();
-
-    // Start node process
-
-    runtime_ = MakeNodeRuntime();
-    // Now runtime is accessible from node via GetRuntime()
-    StartProgram();
-  }
+  WHIRL_LOG_INFO("Starting process");
+  StartProcess();
 
   state_ = State::Running;
 }
 
-void Server::StartProgram() {
-  await::fibers::Go([program = program_]() {
-    program();
-    }, runtime_->Executor());
+void Server::StartProcess() {
+  auto guard = heap_.Use();
+
+  // Prepare runtime
+  runtime_ = MakeNodeRuntime();
+
+  // Run user program
+  Schedule(scheduler_, GlobalNow(), [this]() {
+    MainTrampoline(program_);
+  });
 }
 
 bool Server::IsRunnable() const {
@@ -193,6 +183,8 @@ node::IRuntime* Server::MakeNodeRuntime() {
   NodeRuntime* runtime = new NodeRuntime();
 
   runtime->thread_pool.Init(scheduler_);
+
+  runtime->fibers.Init();
 
   runtime->time
       .Init(wall_clock_, monotonic_clock_, scheduler_);

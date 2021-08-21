@@ -102,7 +102,7 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
 
  private:
   node::IRuntime* MakeNodeRuntime();
-  void StartProgram();
+  void StartProcess();
 
  private:
   State state_{State::Initial};
