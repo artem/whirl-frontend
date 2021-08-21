@@ -17,11 +17,14 @@ struct IDatabase {
 
   virtual void Open(const std::string& directory) = 0;
 
-  // Atomic, blocking
+  // All operations are blocking!
+
+  // Single-key atomic ops
   virtual void Put(const Key& key, const Value& value) = 0;
   virtual std::optional<Value> TryGet(const Key& key) const = 0;
   virtual void Delete(const Key& key) = 0;
 
+  // Multi-key atomic write
   virtual void Write(WriteBatch batch) = 0;
 };
 

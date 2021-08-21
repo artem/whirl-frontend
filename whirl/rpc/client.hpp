@@ -10,6 +10,8 @@
 
 namespace whirl::rpc {
 
+//////////////////////////////////////////////////////////////////////
+
 struct IClient {
   virtual ~IClient() = default;
 
@@ -17,6 +19,8 @@ struct IClient {
 };
 
 using IClientPtr = std::shared_ptr<IClient>;
+
+//////////////////////////////////////////////////////////////////////
 
 IClientPtr MakeClient(ITransport* t, await::executors::IExecutorPtr e);
 

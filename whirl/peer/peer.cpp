@@ -27,7 +27,7 @@ const rpc::IChannelPtr& Peer::Channel(const std::string& peer) const {
   return it->second;  // Or UB =(
 }
 
-const rpc::IChannelPtr& Peer::SelfChannel() const {
+const rpc::IChannelPtr& Peer::LoopBack() const {
   return Channel(rt::HostName());
 }
 

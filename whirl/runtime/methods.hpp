@@ -2,9 +2,11 @@
 
 #include <whirl/runtime/runtime.hpp>
 
+// RPC
 #include <whirl/rpc/client.hpp>
 #include <whirl/rpc/server.hpp>
 
+// Concurrency
 #include <await/fibers/core/api.hpp>
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>

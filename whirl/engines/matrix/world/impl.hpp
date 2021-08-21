@@ -66,24 +66,24 @@ class WorldImpl {
 
     Servers& pool = pools_[pool_name];
     for (size_t i = 0; i < size; ++i) {
-      AddToPoolImpl(pool, program, pool_name, name_template);
+      AddToPool(pool, program, pool_name, name_template);
     }
   }
 
   void AddClient(node::ProgramMain program) {
     WorldGuard g(this);
 
-    AddToPoolImpl(clients_, program,
-                  /*pool_name=*/"clients",
-                  /*host_name_template=*/"Client");
+    AddToPool(clients_, program,
+              /*pool_name=*/"clients",
+              /*host_name_template=*/"Client");
   }
 
   void SetAdversary(node::ProgramMain program) {
     WorldGuard g(this);
 
-    AddToPoolImpl(adversaries_, program,
-                  /*pool_name=*/"adversaries",
-                  /*host_name_template=*/"Adversary");
+    AddToPool(adversaries_, program,
+              /*pool_name=*/"adversaries",
+              /*host_name_template=*/"Adversary");
   }
 
   bool HasAdversary() const {
@@ -105,6 +105,7 @@ class WorldImpl {
   // Returns number of steps actually made
   size_t MakeSteps(size_t steps);
 
+  // Time budget is _virtual_!
   void RunFor(Duration time_budget);
 
   void RestartServer(const std::string& hostname);
@@ -216,8 +217,8 @@ class WorldImpl {
     return name;
   }
 
-  void AddToPoolImpl(Servers& pool, node::ProgramMain program,
-                     std::string pool_name, std::string host_name_template) {
+  void AddToPool(Servers& pool, node::ProgramMain program,
+                 std::string pool_name, std::string host_name_template) {
     auto host_name = MakeServerName(host_name_template, pool.size() + 1);
     AddServerImpl(pool, program, pool_name, host_name);
   }

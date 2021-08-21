@@ -8,11 +8,6 @@
 
 #include <fmt/core.h>
 
-/*
-#include <whirl/matrix/memory/allocator.hpp>
-#include <whirl/matrix/memory/copy.hpp>
-*/
-
 #include <sstream>
 
 namespace whirl {
@@ -66,8 +61,6 @@ std::string GetTypeName() {
 
 template <typename T>
 void Serialize(const T& object, std::ostream& output) {
-  // GlobalHeapScope g;
-
   // Prepare header
   detail::SerializedObjectHeader header;
   header.type_name = detail::GetTypeName<T>();
@@ -77,8 +70,6 @@ void Serialize(const T& object, std::ostream& output) {
     oarchive(CEREAL_NVP(header));
     oarchive(CEREAL_NVP(object));
   }  // archive goes out of scope, ensuring all contents are flushed
-
-  // return CopyToHeap(str, g.ParentScopeHeap());
 }
 
 template <typename T>
@@ -90,8 +81,6 @@ std::string Serialize(const T& object) {
 
 template <typename T>
 T Deserialize(std::istream& input) {
-  // GlobalHeapScope g;
-
   const auto type_name = detail::GetTypeName<T>();
 
   detail::SerializedObjectHeader header;
@@ -112,8 +101,6 @@ T Deserialize(std::istream& input) {
   }
 
   return object;
-
-  // return CopyToHeap(object, g.ParentScopeHeap());
 }
 
 template <typename T>

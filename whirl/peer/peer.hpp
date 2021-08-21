@@ -16,12 +16,16 @@ class Peer {
  public:
   Peer(const std::string& pool_name);
 
+  const std::string& PoolName() const {
+    return pool_name_;
+  }
+
   size_t NodeCount() const;
 
   std::vector<std::string> ListPeers(bool with_me = true) const;
 
   const rpc::IChannelPtr& Channel(const std::string& peer) const;
-  const rpc::IChannelPtr& SelfChannel() const;
+  const rpc::IChannelPtr& LoopBack() const;
 
  private:
   rpc::IClientPtr MakeRpcClient();
@@ -30,7 +34,7 @@ class Peer {
   void ConnectToPeers();
 
  private:
-  const std::string& pool_name_;
+  const std::string pool_name_;
 
   std::vector<std::string> pool_;
   std::vector<std::string> others_;  // pool without this node

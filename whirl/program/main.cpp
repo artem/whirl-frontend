@@ -1,7 +1,6 @@
 #include <whirl/program/main.hpp>
 
 #include <whirl/runtime/methods.hpp>
-#include <whirl/rpc/server_impl.hpp>
 
 #include <await/futures/util/never.hpp>
 #include <await/fibers/core/await.hpp>

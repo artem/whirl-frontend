@@ -1,5 +1,8 @@
 #pragma once
 
+#include <await/executors/executor.hpp>
+#include <await/fibers/core/manager.hpp>
+
 #include <whirl/fs/fs.hpp>
 #include <whirl/db/database.hpp>
 
@@ -13,37 +16,44 @@
 #include <whirl/services/terminal.hpp>
 #include <whirl/services/fault.hpp>
 
-#include <await/fibers/core/manager.hpp>
-
 namespace whirl::node {
 
 //////////////////////////////////////////////////////////////////////
 
-// Service locator
-
 struct IRuntime {
   virtual ~IRuntime() = default;
 
-  virtual IConfig* Config() = 0;
+  // Execution
 
   virtual const await::executors::IExecutorPtr& Executor() = 0;
 
   virtual await::fibers::IFiberManager* FiberManager() = 0;
 
+  // Time
+
   virtual ITimeService* TimeService() = 0;
-
-  virtual IDiscoveryService* DiscoveryService() = 0;
-
-  virtual ITransport* NetTransport() = 0;
-
-  virtual db::IDatabase* Database() = 0;
-
-  virtual IRandomService* RandomService() = 0;
-  virtual IGuidGenerator* GuidGenerator() = 0;
 
   virtual ITrueTimeService* TrueTime() = 0;
 
+  // Persistence
+
   virtual fs::IFileSystem* FileSystem() = 0;
+
+  virtual db::IDatabase* Database() = 0;
+
+  // Network
+
+  virtual ITransport* NetTransport() = 0;
+
+  virtual IDiscoveryService* DiscoveryService() = 0;
+
+  // Misc
+
+  virtual IConfig* Config() = 0;
+
+  virtual IRandomService* RandomService() = 0;
+
+  virtual IGuidGenerator* GuidGenerator() = 0;
 
   virtual ITerminal* Terminal() = 0;
 };

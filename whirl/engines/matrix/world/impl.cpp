@@ -180,8 +180,8 @@ void WorldImpl::RunFor(Duration time_budget) {
 
 void WorldImpl::RestartServer(const std::string& hostname) {
   WorldGuard g(this);
-  Server* target = FindServer(hostname);
-  target->FastReboot();
+
+  FindServer(hostname)->FastReboot();
 }
 
 }  // namespace whirl::matrix

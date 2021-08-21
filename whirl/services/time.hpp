@@ -12,11 +12,9 @@ struct ITimeService {
   virtual ~ITimeService() = default;
 
   // Wall clock
-  // NB: Constant within simulation step
   virtual TimePoint WallTimeNow() = 0;
 
   // Monotonic (steady) clock
-  // NB: Constant withing simulation step
   virtual TimePoint MonotonicNow() = 0;
 
   // Timeouts and delays

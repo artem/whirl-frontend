@@ -11,11 +11,15 @@
 
 namespace whirl::rpc {
 
+//////////////////////////////////////////////////////////////////////
+
 struct CallOptions {
   TraceId trace_id;
   await::StopToken stop_advice;
   size_t attempts_limit;
 };
+
+//////////////////////////////////////////////////////////////////////
 
 // Communication line between client and remote service
 // Untyped
@@ -28,9 +32,9 @@ struct IChannel {
                                                   const BytesValue& input,
                                                   CallOptions options) = 0;
 
-  virtual void Close() = 0;
-
   virtual const std::string& Peer() const = 0;
+
+  virtual void Close() = 0;
 };
 
 using IChannelPtr = std::shared_ptr<IChannel>;
