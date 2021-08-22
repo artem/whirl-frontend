@@ -1,6 +1,6 @@
 #pragma once
 
-#include <wheels/support/intrusive_list.hpp>
+#include <wheels/intrusive/list.hpp>
 
 // No dynamic allocations allowed!
 
