@@ -38,13 +38,12 @@ class ServiceBase : public IService {
 
  protected:
   // Override this
-  virtual void RegisterMethods() {
-    // Use WHIRL_RPC_REGISTER_METHOD macro
-  }
+  // Use WHIRL_RPC_REGISTER_METHOD to register methods
+  virtual void RegisterMethods() = 0;
 
   template <typename R, typename... Args>
-  void RegisterRPCMethod(const std::string& method_name,
-                         R (TService::*method)(Args...)) {
+  void RegisterMethod(const std::string& method_name,
+                      R (TService::*method)(Args...)) {
     TService* self = static_cast<TService*>(this);
 
     auto closure = [self, method](Args&&... args) -> R {
@@ -71,4 +70,4 @@ class ServiceBase : public IService {
 //////////////////////////////////////////////////////////////////////
 
 #define WHIRL_RPC_REGISTER_METHOD(method) \
-  RegisterRPCMethod(TO_STRING(method), &ThisService::method)
+  RegisterMethod(TO_STRING(method), &ThisService::method)
