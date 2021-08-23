@@ -5,6 +5,8 @@
 
 #include <wheels/support/assert.hpp>
 
+#include <await/executors/execute.hpp>
+
 // TODO: ???
 #include <whirl/runtime/runtime.hpp>
 
@@ -50,7 +52,7 @@ std::optional<TraceId> TLTraceContext::TryGet() {
 //////////////////////////////////////////////////////////////////////
 
 using await::executors::IExecutor;
-using await::executors::Task;
+using await::executors::TaskBase;
 
 class TracingExecutor : public IExecutor {
  public:
@@ -58,12 +60,12 @@ class TracingExecutor : public IExecutor {
       : e_(std::move(e)), id_(std::move(id)) {
   }
 
-  void Execute(Task&& task) {
+  void Execute(TaskBase* task) {
     auto wrapper = [id = id_, task = std::move(task)]() mutable {
       TLTraceContext context{id};
-      task();
+      task->Run();
     };
-    e_->Execute(std::move(wrapper));
+    await::executors::Execute(e_, std::move(wrapper));
   }
 
  private:

@@ -13,8 +13,8 @@
 #include <whirl/engines/matrix/client/rpc.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
 
+#include <await/fibers/core/api.hpp>
 #include <await/fibers/sync/future.hpp>
-#include <await/fibers/core/await.hpp>
 
 #include <cereal/types/string.hpp>
 

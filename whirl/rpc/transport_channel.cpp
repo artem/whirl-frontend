@@ -24,7 +24,7 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
 
   auto future = request.promise.MakeFuture();
 
-  strand_->Execute(
+  await::executors::Execute(strand_,
       [self = shared_from_this(), request = std::move(request)]() mutable {
         self->SendRequest(std::move(request));
       });

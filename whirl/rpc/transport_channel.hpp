@@ -9,7 +9,7 @@
 
 #include <whirl/logger/log.hpp>
 
-#include <await/executors/executor.hpp>
+#include <await/executors/execute.hpp>
 #include <await/executors/strand.hpp>
 
 #include <await/futures/util/promise.hpp>
@@ -67,13 +67,13 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
   void HandleMessage(const TransportMessage& message,
                      ITransportSocketPtr /*back*/) override {
-    strand_->Execute([self = shared_from_this(), message]() {
+    await::executors::Execute(strand_, [self = shared_from_this(), message]() {
       self->ProcessResponse(message);
     });
   }
 
   void HandleDisconnect(const std::string& /*peer*/) override {
-    strand_->Execute([self = shared_from_this()]() {
+    await::executors::Execute(strand_, [self = shared_from_this()]() {
       self->LostPeer();
     });
   }

@@ -8,7 +8,6 @@
 
 // Concurrency
 #include <await/fibers/core/api.hpp>
-#include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>
 
 #include <fmt/core.h>
@@ -109,10 +108,6 @@ inline void Go(await::fibers::FiberRoutine routine) {
 
 inline void SleepFor(Duration delay) {
   await::fibers::Await(After(delay)).ExpectOk();
-}
-
-inline void Yield() {
-  await::fibers::self::Yield();
 }
 
 // DNS

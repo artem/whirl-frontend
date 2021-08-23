@@ -30,8 +30,8 @@
 #include <whirl/rpc/id.hpp>
 
 // Concurrency
+#include <await/fibers/core/api.hpp>
 #include <await/fibers/sync/future.hpp>
-#include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/mutex.hpp>
 #include <await/futures/combine/quorum.hpp>
 

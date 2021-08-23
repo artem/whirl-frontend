@@ -17,8 +17,8 @@ class ThreadPool {
     Executor(ThreadPool* pool) : pool_(pool) {
     }
 
-    void Execute(await::executors::Task&& task) override {
-      pool_->Submit(std::move(task));
+    void Execute(await::executors::TaskBase* task) override {
+      pool_->Submit(task);
     }
 
    private:
@@ -30,8 +30,8 @@ class ThreadPool {
       : scheduler_(scheduler), pool_executor_(MakeExecutor()) {
   }
 
-  void Submit(await::executors::Task&& task) {
-    scheduler_.Schedule(ScheduleTask(), ConvertTask(std::move(task)));
+  void Submit(await::executors::TaskBase* user_task) {
+    scheduler_.Schedule(ScheduleTask(), ConvertTask(user_task));
   }
 
   const await::executors::IExecutorPtr& GetExecutor() {
@@ -45,20 +45,20 @@ class ThreadPool {
 
   class TaskAdapter : public process::ITask {
    public:
-    TaskAdapter(await::executors::Task&& impl) : impl_(std::move(impl)) {
+    TaskAdapter(await::executors::TaskBase* impl) : impl_(impl) {
     }
 
     void Run() override {
-      impl_();
+      impl_->Run();
       delete this;
     }
 
    private:
-    await::executors::Task impl_;
+    await::executors::TaskBase* impl_;
   };
 
-  process::ITask* ConvertTask(await::executors::Task&& task) {
-    return new TaskAdapter(std::move(task));
+  process::ITask* ConvertTask(await::executors::TaskBase* user_task) {
+    return new TaskAdapter(user_task);
   }
 
   await::executors::IExecutorPtr MakeExecutor() {
