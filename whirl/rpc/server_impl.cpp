@@ -36,11 +36,10 @@ void ServerImpl::Shutdown() {
 void ServerImpl::HandleMessage(const TransportMessage& message,
                                ITransportSocketPtr back) {
   // Process request
-  await::fibers::Go(
+  handlers_.Spawn(
       [self = shared_from_this(), message, back = std::move(back)]() mutable {
         self->ProcessRequest(message, back);
-      },
-      fiber_manager_, executor_);
+      });
 }
 
 void ServerImpl::HandleDisconnect(const std::string& /*client*/) {

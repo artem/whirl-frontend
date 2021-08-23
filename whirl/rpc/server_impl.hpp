@@ -10,6 +10,7 @@
 
 #include <await/executors/executor.hpp>
 #include <await/fibers/core/manager.hpp>
+#include <await/fibers/sync/nursery.hpp>
 
 #include <functional>
 #include <memory>
@@ -27,7 +28,7 @@ class ServerImpl : public IServer,
  public:
   ServerImpl(ITransport* t, await::executors::IExecutorPtr e,
              await::fibers::IFiberManager* fm)
-      : transport_(t), executor_(e), fiber_manager_(fm) {
+      : transport_(t), handlers_(fm, e) {
   }
 
   void Start() override;
@@ -54,8 +55,8 @@ class ServerImpl : public IServer,
  private:
   // Services
   ITransport* transport_;
-  await::executors::IExecutorPtr executor_;
-  await::fibers::IFiberManager* fiber_manager_;
+
+  await::fibers::Nursery handlers_;
 
   ITransportServerPtr server_;
 
