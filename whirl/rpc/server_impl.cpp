@@ -29,6 +29,8 @@ void ServerImpl::Shutdown() {
   if (server_) {
     server_->Shutdown();
   }
+  handlers_.Cancel();
+  handlers_.Join();
 }
 
 // ITransportHandler
