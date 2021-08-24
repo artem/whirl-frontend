@@ -55,7 +55,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   auto trace = MakeTraceContext(request.trace_id);
   await::context::StopScope scope{trace};
 
-  await::fibers::self::SetContext(scope.Context());
+  await::fibers::self::SetContext(scope.GetContext());
 
   WHIRL_LOG_INFO("Process {} request from {}, id = {}", request.method,
                  back->Peer(), request.id);
