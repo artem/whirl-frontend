@@ -8,6 +8,8 @@
 #include <wheels/support/exception.hpp>
 #include <wheels/support/panic.hpp>
 
+#include <await/util/context.hpp>
+
 namespace whirl::rpc {
 
 void ServerImpl::Start() {
@@ -50,7 +52,10 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
                                 const ITransportSocketPtr& back) {
   auto request = Deserialize<proto::Request>(message);
 
-  SetThisFiberTraceId(request.trace_id);
+  auto trace = MakeTraceContext(request.trace_id);
+  await::context::StopScope scope{trace};
+
+  await::fibers::self::SetContext(scope.Context());
 
   WHIRL_LOG_INFO("Process {} request from {}, id = {}", request.method,
                  back->Peer(), request.id);

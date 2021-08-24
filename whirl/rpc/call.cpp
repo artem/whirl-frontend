@@ -6,6 +6,15 @@ namespace whirl::rpc {
 
 namespace detail {
 
+Caller& Caller::Context(await::context::Context context) {
+  auto trace_id = rpc::TryGetTraceId(context);
+  if (trace_id.has_value()) {
+    trace_id_.emplace(*trace_id);
+  }
+  stop_token_ = context.StopToken();
+  return *this;
+}
+
 await::StopToken Caller::DefaultStopToken() {
   if (await::fibers::AmIFiber()) {
     return await::fibers::self::GetLifetimeToken();

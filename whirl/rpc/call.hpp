@@ -8,6 +8,7 @@
 #include <whirl/cereal/serialize.hpp>
 
 #include <await/futures/helpers.hpp>
+#include <await/util/context.hpp>
 
 #include <cereal/types/string.hpp>
 
@@ -66,32 +67,34 @@ class [[nodiscard]] Caller {
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller& StopToken(await::StopToken stop_token)&& {
+  Caller& StopToken(await::StopToken stop_token) {
     stop_token_ = std::move(stop_token);
     return *this;
   }
 
-  Caller& TraceWith(TraceId trace_id)&& {
+  Caller& TraceWith(TraceId trace_id) {
     trace_id_ = trace_id;
     return *this;
   }
 
-  Caller& AtMostOnce()&& {
+  Caller& Context(await::context::Context context);
+
+  Caller& AtMostOnce() {
     attempts_limit_ = 1;
     return *this;
   }
 
-  Caller& AtLeastOnce()&& {
+  Caller& AtLeastOnce() {
     attempts_limit_ = 0;
     return *this;
   }
 
-  Caller& LimitAttempts(size_t limit)&& {
+  Caller& LimitAttempts(size_t limit) {
     attempts_limit_ = limit;
     return *this;
   }
 
-  CallResult Start()&& {
+  CallResult Start() {
     return {Call()};
   }
 

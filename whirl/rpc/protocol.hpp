@@ -22,7 +22,7 @@ namespace proto {
 
 struct Request {
   RequestId id;
-  TraceId trace_id;
+  rpc::TraceId trace_id;
   std::string to;  // For debugging
   Method method;
   BytesValue input;  // std::tuple

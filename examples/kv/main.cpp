@@ -108,6 +108,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
           rpc::Call("Replica.LocalWrite")
               .Args<Key, StampedValue>(key, {value, write_ts})
               .Via(Channel(peer))
+              .Context(await::context::ThisFiber())
               .AtLeastOnce());
     }
 
@@ -124,6 +125,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
           rpc::Call("Replica.LocalRead")
               .Args(key)
               .Via(Channel(peer))
+              .Context(await::context::ThisFiber())
               .AtLeastOnce());
     }
 

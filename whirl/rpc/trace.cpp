@@ -1,7 +1,6 @@
 #include <whirl/rpc/trace.hpp>
 
 #include <await/fibers/core/api.hpp>
-#include <await/fibers/core/fls.hpp>
 
 #include <wheels/support/assert.hpp>
 
@@ -18,12 +17,12 @@ namespace whirl::rpc {
 
 // Fiber context
 
-void SetThisFiberTraceId(TraceId id) {
-  await::fibers::self::SetLocal("rpc_trace_id", id);
+await::context::Context MakeTraceContext(TraceId trace_id) {
+  return await::context::New().Set("trace_id", trace_id);
 }
 
-std::optional<TraceId> TryGetThisFiberTraceId() {
-  return await::fibers::self::GetLocal<TraceId>("rpc_trace_id");
+std::optional<TraceId> TryGetTraceId(const await::context::Context& context) {
+  return context.TryGet<TraceId>("trace_id");
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -82,7 +81,7 @@ IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id) {
 std::optional<TraceId> TryGetCurrentTraceId() {
   if (await::fibers::AmIFiber()) {
     // Fiber local
-    return TryGetThisFiberTraceId();
+    return TryGetTraceId(await::context::ThisFiber());
   } else {
     // Thread local
     return TLTraceContext::TryGet();

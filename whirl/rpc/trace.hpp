@@ -3,6 +3,7 @@
 #include <whirl/rpc/id.hpp>
 
 #include <await/executors/executor.hpp>
+#include <await/util/context.hpp>
 
 #include <string>
 #include <optional>
@@ -16,7 +17,9 @@ using TraceId = std::string;
 
 // Fiber context
 
-void SetThisFiberTraceId(TraceId id);
+await::context::Context MakeTraceContext(TraceId trace_id);
+
+std::optional<TraceId> TryGetTraceId(const await::context::Context& context);
 
 //////////////////////////////////////////////////////////////////////
 
