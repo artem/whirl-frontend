@@ -101,7 +101,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
   const TransportAddress peer_;
 
-  IExecutorPtr strand_;
+  await::executors::IExecutorPtr strand_;
   // State guarded by strand_
   ITransportSocketPtr socket_{nullptr};
   ActiveRequests requests_;

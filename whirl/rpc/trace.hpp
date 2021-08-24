@@ -2,7 +2,6 @@
 
 #include <whirl/rpc/id.hpp>
 
-#include <await/executors/executor.hpp>
 #include <await/util/context.hpp>
 
 #include <string>
@@ -31,12 +30,6 @@ struct TLTraceContext {
 
   static std::optional<TraceId> TryGet();
 };
-
-//////////////////////////////////////////////////////////////////////
-
-using await::executors::IExecutorPtr;
-
-IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id);
 
 //////////////////////////////////////////////////////////////////////
 

@@ -20,8 +20,6 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
   auto request = MakeRequest(method, input, options);
   auto trace_id = request.trace_id;
 
-  auto e = MakeTracingExecutor(executor_, trace_id);
-
   auto future = request.promise.MakeFuture();
 
   await::executors::Execute(strand_,
@@ -29,7 +27,7 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
         self->SendRequest(std::move(request));
       });
 
-  return std::move(future).Via(std::move(e));
+  return std::move(future).Via(executor_);
 }
 
 void TransportChannel::Close() {

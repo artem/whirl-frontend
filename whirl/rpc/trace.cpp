@@ -50,34 +50,6 @@ std::optional<TraceId> TLTraceContext::TryGet() {
 
 //////////////////////////////////////////////////////////////////////
 
-using await::executors::IExecutor;
-using await::executors::TaskBase;
-
-class TracingExecutor : public IExecutor {
- public:
-  TracingExecutor(IExecutorPtr e, TraceId id)
-      : e_(std::move(e)), id_(std::move(id)) {
-  }
-
-  void Execute(TaskBase* task) {
-    auto wrapper = [id = id_, task = std::move(task)]() mutable {
-      TLTraceContext context{id};
-      task->Run();
-    };
-    await::executors::Execute(e_, std::move(wrapper));
-  }
-
- private:
-  IExecutorPtr e_;
-  TraceId id_;
-};
-
-IExecutorPtr MakeTracingExecutor(IExecutorPtr e, TraceId id) {
-  return std::make_shared<TracingExecutor>(std::move(e), std::move(id));
-}
-
-//////////////////////////////////////////////////////////////////////
-
 std::optional<TraceId> TryGetCurrentTraceId() {
   if (await::fibers::AmIFiber()) {
     // Fiber local
