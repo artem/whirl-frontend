@@ -43,6 +43,8 @@ class FileWriter : public wheels::io::IWriter, private wheels::NonCopyable {
 
   void Write(wheels::ConstMemView data) override;
 
+  void Flush() override;
+
  private:
   IFileSystem* Fs();
 

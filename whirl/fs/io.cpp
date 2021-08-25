@@ -44,6 +44,10 @@ void FileWriter::Write(wheels::ConstMemView data) {
   Fs()->Append(fd_, data);
 }
 
+void FileWriter::Flush() {
+  // Nothing to do
+}
+
 IFileSystem* FileWriter::Fs() {
   return fs_;
 }
