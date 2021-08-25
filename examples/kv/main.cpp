@@ -349,6 +349,7 @@ void FailTest() {
 //////////////////////////////////////////////////////////////////////
 
 // Seed -> simulation digest
+// Deterministic
 size_t RunSimulation(size_t seed) {
   static const size_t kTimeLimit = 10000;
   static const size_t kRequestsThreshold = 7;
@@ -373,8 +374,7 @@ size_t RunSimulation(size_t seed) {
   matrix::World world{seed};
 
   // Cluster
-  world.MakePool("kv", KVNode)  //
-      .Size(replicas);
+  world.MakePool("kv", KVNode).Size(replicas);
 
   // Clients
   world.AddClients(Client, /*count=*/clients);
