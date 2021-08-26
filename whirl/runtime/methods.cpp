@@ -1,9 +1,24 @@
 #include <whirl/runtime/methods.hpp>
 
+#include <await/fibers/core/fiber.hpp>
+#include <await/fibers/core/static/access.hpp>
+
 #include <whirl/rpc/server_impl.hpp>
 #include <whirl/rpc/client.hpp>
 
 namespace whirl::node::rt {
+
+void Go(await::fibers::FiberRoutine routine) {
+  auto* f = await::fibers::CreateFiber(
+      std::move(routine),
+      FiberManager(),
+      Executor(),
+      await::fibers::BackgroundSupervisor(),
+      await::NeverStop());
+
+  f->Schedule();
+}
+
 
 rpc::IServerPtr MakeRpcServer() {
   return std::make_shared<rpc::ServerImpl>(NetTransport(), Executor(),

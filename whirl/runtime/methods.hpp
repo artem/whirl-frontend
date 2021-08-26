@@ -102,9 +102,7 @@ inline await::fibers::IFiberManager* FiberManager() {
   return GetRuntime().FiberManager();
 }
 
-inline void Go(await::fibers::FiberRoutine routine) {
-  await::fibers::Go(std::move(routine), FiberManager(), Executor());
-}
+void Go(await::fibers::FiberRoutine routine);
 
 inline void SleepFor(Duration delay) {
   await::fibers::Await(After(delay)).ExpectOk();
