@@ -14,8 +14,8 @@ class FS : public node::fs::IFileSystem {
       : disk_(time_service), impl_(impl) {
   }
 
-  void Create(const node::fs::Path& file_path) override {
-    impl_->Create(file_path);
+  bool Create(const node::fs::Path& file_path) override {
+    return impl_->Create(file_path);
   }
 
   void Delete(const node::fs::Path& file_path) override {

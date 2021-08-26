@@ -61,14 +61,17 @@ void FileSystem::Close(Fd fd) {
   }
 }
 
-void FileSystem::Create(const Path& file_path) {
+bool FileSystem::Create(const Path& file_path) {
   GlobalAllocatorGuard g;
 
-  if (!files_.contains(file_path)) {
-    WHIRL_LOG_INFO("Create file '{}'", file_path);
-    auto f = CreateFile();
-    files_.insert({file_path, f});
+  if (files_.contains(file_path)) {
+    return false;
   }
+
+  WHIRL_LOG_INFO("Create new file '{}'", file_path);
+  auto f = CreateFile();
+  files_.insert({file_path, f});
+  return true;
 }
 
 void FileSystem::Delete(const Path& file_path) {

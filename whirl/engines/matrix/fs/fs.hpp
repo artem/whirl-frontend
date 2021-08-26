@@ -56,7 +56,7 @@ class FileSystem {
   // System calls
   // Context: Server
 
-  void Create(const node::fs::Path& file_path);
+  bool Create(const node::fs::Path& file_path);
   void Delete(const node::fs::Path& file_path);
   bool Exists(const node::fs::Path& file_path) const;
 

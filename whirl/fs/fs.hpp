@@ -29,8 +29,10 @@ struct IFileSystem {
 
   // Metadata
 
-  // Existing file is Ok
-  virtual void Create(const Path& file_path) = 0;
+  // Creates new empty file and returns true
+  // if file with path `file_path` does not exist yet,
+  // returns false otherwise
+  virtual bool Create(const Path& file_path) = 0;
 
   // Missing file is Ok
   virtual void Delete(const Path& file_path) = 0;
