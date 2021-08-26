@@ -291,9 +291,9 @@ const std::string& ChooseRandomKey() {
     Key key = ChooseRandomKey();
     if (matrix::client::Either()) {
       Value value = node::rt::RandomNumber(1, 100);
-      WHIRL_LOG_INFO("Execute Put({}, {})", key, value);
+      WHIRL_LOG_INFO("Execute Set({}, {})", key, value);
       kv_store.Set(key, value);
-      WHIRL_LOG_INFO("Put completed");
+      WHIRL_LOG_INFO("Set completed");
     } else {
       WHIRL_LOG_INFO("Execute Get({})", key);
       [[maybe_unused]] Value result = kv_store.Get(key);
