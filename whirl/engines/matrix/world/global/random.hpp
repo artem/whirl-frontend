@@ -9,8 +9,6 @@ namespace whirl::matrix {
 
 // Deterministic randomness
 
-uint64_t StepRandomNumber();
-
 uint64_t GlobalRandomNumber();
 
 // [0, bound)

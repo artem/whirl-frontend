@@ -180,10 +180,6 @@ class WorldImpl {
     return time_.Now() - start_time_;
   }
 
-  size_t StepRandomNumber() const {
-    return step_random_number_;
-  }
-
   uint64_t RandomNumber() {
     return random_source_.Next();
   }
@@ -293,8 +289,6 @@ class WorldImpl {
   Logger logger_{"World"};
 
   TimePoint start_time_;
-
-  size_t step_random_number_{0};
 
   DigestCalculator digest_;
   LogBackend log_;
