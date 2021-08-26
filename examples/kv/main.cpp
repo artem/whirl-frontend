@@ -1,6 +1,6 @@
 #include <whirl/program/main.hpp>
 #include <whirl/peer/peer.hpp>
-#include <whirl/db/store/kv.hpp>
+#include <whirl/store/kv.hpp>
 #include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
@@ -220,7 +220,7 @@ class Replica : public rpc::ServiceBase<Replica> {
  private:
   // Local persistent K/V storage
   // strings -> StampedValues
-  node::db::KVStore<StampedValue> kv_store_;
+  node::store::KVStore<StampedValue> kv_store_;
   // Mutex for _fibers_
   // Guards writes to kv_store_
   await::fibers::Mutex write_mutex_;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/storage/database.hpp>
+#include <whirl/db/database.hpp>
 
 #include <whirl/cereal/bytes.hpp>
 
@@ -8,7 +8,7 @@
 
 #include <stdexcept>
 
-namespace whirl::node::db {
+namespace whirl::node::store {
 
 // Persistent map from string to arbitrary values
 
@@ -18,7 +18,7 @@ namespace whirl::node::db {
 
 class Store {
  public:
-  Store(IDatabase* db, const std::string& name = "default")
+  Store(db::IDatabase* db, const std::string& name = "default")
       : db_(db), namespace_(MakeNamespace(name)) {
   }
 
@@ -69,7 +69,7 @@ class Store {
 
  private:
   static std::string MakeNamespace(const std::string& name) {
-    return fmt::format("just:{}:", name);
+    return fmt::format("struct:{}:", name);
   }
 
   std::string WithNamespace(const std::string& user_key) const {
@@ -77,8 +77,8 @@ class Store {
   }
 
  private:
-  IDatabase* db_;
+  db::IDatabase* db_;
   std::string namespace_;
 };
 
-}  // namespace whirl::node::db
+}  // namespace whirl::node::store

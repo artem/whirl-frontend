@@ -8,14 +8,14 @@
 
 #include <stdexcept>
 
-namespace whirl::node::db {
+namespace whirl::node::store {
 
 // Persistent mapping: string -> V
 
 template <typename V>
 class KVStore {
  public:
-  KVStore(IDatabase* db, const std::string& name)
+  KVStore(db::IDatabase* db, const std::string& name)
       : db_(db), namespace_(MakeNamespace(name)) {
   }
 
@@ -70,8 +70,8 @@ class KVStore {
   }
 
  private:
-  IDatabase* db_;
+  db::IDatabase* db_;
   std::string namespace_;
 };
 
-}  // namespace whirl::node::db
+}  // namespace whirl::node::store
