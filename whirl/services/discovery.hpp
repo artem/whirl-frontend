@@ -10,9 +10,9 @@ struct IDiscoveryService {
   virtual ~IDiscoveryService() = default;
 
   // List of hostnames
-  using Pool = std::vector<std::string>;
+  using PoolListing = std::vector<std::string>;
 
-  virtual Pool ListPool(const std::string& name) = 0;
+  virtual PoolListing ListPool(const std::string& name) = 0;
 };
 
 }  // namespace whirl
