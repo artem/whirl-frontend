@@ -135,7 +135,7 @@ class WorldImpl {
   }
 
   size_t CurrentStep() const {
-    return step_count_;
+    return step_number_;
   }
 
   LogBackend& GetLog() {
@@ -284,7 +284,7 @@ class WorldImpl {
   std::vector<IActor*> actors_;
   ActorContext active_;
 
-  size_t step_count_{0};
+  size_t step_number_{0};
 
   Logger logger_{"World"};
 

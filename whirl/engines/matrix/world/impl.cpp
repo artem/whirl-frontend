@@ -78,7 +78,7 @@ bool WorldImpl::Step() {
     return false;
   }
 
-  ++step_count_;
+  ++step_number_;
 
   digest_.Eat(next.time).Eat(next.actor_index);
 
