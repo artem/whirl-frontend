@@ -1,5 +1,5 @@
 #include <whirl/program/main.hpp>
-#include <whirl/peer/peer.hpp>
+#include <whirl/cluster/peer.hpp>
 #include <whirl/store/kv.hpp>
 #include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 // Coordinator role, stateless
 
-class Coordinator : public rpc::ServiceBase<Coordinator>, public node::Peer {
+class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
  public:
   Coordinator() : Peer(node::rt::Config()->PoolName()) {
   }

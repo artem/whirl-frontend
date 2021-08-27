@@ -1,10 +1,10 @@
-#include <whirl/peer/peer.hpp>
+#include <whirl/cluster/peer.hpp>
 
 #include <whirl/runtime/methods.hpp>
 
 #include <whirl/rpc/retries.hpp>
 
-namespace whirl::node {
+namespace whirl::node::cluster {
 
 Peer::Peer(const std::string& pool_name) : pool_name_(pool_name) {
   ConnectToPeers();
@@ -64,4 +64,4 @@ rpc::IChannelPtr Peer::MakeRpcChannel(rpc::IClientPtr client,
   return retries;
 }
 
-}  // namespace whirl::node
+}  // namespace whirl::node::cluster

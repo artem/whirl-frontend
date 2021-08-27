@@ -8,7 +8,7 @@
 #include <map>
 #include <memory>
 
-namespace whirl::node {
+namespace whirl::node::cluster {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -50,4 +50,4 @@ inline PeerPtr MakePeer(const std::string& pool) {
   return std::make_shared<Peer>(pool);
 }
 
-}  // namespace whirl::node
+}  // namespace whirl::node::cluster
