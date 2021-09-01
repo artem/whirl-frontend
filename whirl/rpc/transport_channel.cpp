@@ -35,7 +35,7 @@ void TransportChannel::Close() {
   auto close = [self = shared_from_this()]() {
     self->DoClose();
   };
-  await::futures::SyncVia(strand_, std::move(close));
+  await::futures::SyncVia(&strand_, std::move(close));
 }
 
 TransportChannel::ActiveRequest TransportChannel::MakeRequest(

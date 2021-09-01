@@ -94,7 +94,7 @@ inline db::IDatabase* Database() {
 
 // Execution
 
-inline const await::executors::IExecutorPtr Executor() {
+inline await::executors::IExecutor* Executor() {
   return GetRuntime().Executor();
 }
 

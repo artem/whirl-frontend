@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/memory/new.hpp>
 
-#include <wheels/support/mmap_allocation.hpp>
+#include <wheels/memory/mmap_allocation.hpp>
 
 #include <cstdlib>
 

@@ -64,7 +64,7 @@ struct NodeRuntime : node::IRuntime {
 
   // Accessors
 
-  const await::executors::IExecutorPtr& Executor() {
+  await::executors::IExecutor* Executor() {
     return thread_pool->GetExecutor();
   }
 

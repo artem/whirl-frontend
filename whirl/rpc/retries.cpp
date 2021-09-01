@@ -11,7 +11,7 @@
 
 using wheels::Result;
 using namespace await::futures;
-using await::executors::IExecutorPtr;
+using await::executors::IExecutor;
 using await::StopToken;
 
 namespace whirl::rpc {
@@ -87,7 +87,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     std::move(f).Subscribe(std::move(handler));
   }
 
-  void Handle(Result<BytesValue> result, IExecutorPtr e) {
+  void Handle(Result<BytesValue> result, IExecutor* e) {
     if (result.IsOk() || !IsRetriableError(result.GetError())) {
       std::move(promise_).Set(std::move(result));
     } else {
@@ -100,7 +100,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
            error.GetErrorCode() == RPCErrorCode::TransportError;
   }
 
-  void ScheduleRetry(IExecutorPtr e) {
+  void ScheduleRetry(IExecutor* e) {
     if (Enough()) {
       Cancel();
       return;

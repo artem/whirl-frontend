@@ -37,12 +37,12 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   using ActiveRequests = std::map<RequestId, ActiveRequest>;
 
  public:
-  TransportChannel(ITransport* t, await::executors::IExecutorPtr e,
+  TransportChannel(ITransport* t, await::executors::IExecutor* e,
                    TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
         peer_(peer),
-        strand_(await::executors::MakeStrand(e)) {
+        strand_(e) {
   }
 
   void Start() {
@@ -97,11 +97,11 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
  private:
   ITransport* transport_;
-  await::executors::IExecutorPtr executor_;  // For callbacks
+  await::executors::IExecutor* executor_;  // For callbacks
 
   const TransportAddress peer_;
 
-  await::executors::IExecutorPtr strand_;
+  await::executors::Strand strand_;
   // State guarded by strand_
   ITransportSocketPtr socket_{nullptr};
   ActiveRequests requests_;

@@ -5,13 +5,13 @@
 
 #include <whirl/fs/fs.hpp>
 #include <whirl/db/database.hpp>
+#include <whirl/cluster/discovery.hpp>
 
 #include <whirl/services/config.hpp>
 #include <whirl/services/time.hpp>
 #include <whirl/services/random.hpp>
 #include <whirl/services/guid.hpp>
 #include <whirl/services/true_time.hpp>
-#include <whirl/services/discovery.hpp>
 #include <whirl/services/net_transport.hpp>
 #include <whirl/services/terminal.hpp>
 #include <whirl/services/fault.hpp>
@@ -25,7 +25,7 @@ struct IRuntime {
 
   // Execution
 
-  virtual const await::executors::IExecutorPtr& Executor() = 0;
+  virtual await::executors::IExecutor* Executor() = 0;
 
   virtual await::fibers::IFiberManager* FiberManager() = 0;
 

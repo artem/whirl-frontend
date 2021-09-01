@@ -27,15 +27,15 @@ class ThreadPool {
 
  public:
   ThreadPool(process::Scheduler& scheduler)
-      : scheduler_(scheduler), pool_executor_(MakeExecutor()) {
+      : scheduler_(scheduler), executor_(this) {
   }
 
   void Submit(await::executors::TaskBase* user_task) {
     scheduler_.Schedule(ScheduleTask(), ConvertTask(user_task));
   }
 
-  const await::executors::IExecutorPtr& GetExecutor() {
-    return pool_executor_;
+  await::executors::IExecutor* GetExecutor() {
+    return &executor_;
   }
 
  private:
@@ -61,13 +61,9 @@ class ThreadPool {
     return new TaskAdapter(user_task);
   }
 
-  await::executors::IExecutorPtr MakeExecutor() {
-    return std::make_shared<Executor>(this);
-  }
-
  private:
   process::Scheduler& scheduler_;
-  await::executors::IExecutorPtr pool_executor_;
+  Executor executor_;
 };
 
 }  // namespace whirl::matrix

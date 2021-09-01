@@ -2,7 +2,7 @@
 
 #include <whirl/fs/path.hpp>
 
-#include <wheels/support/mem_view.hpp>
+#include <wheels/memory/view.hpp>
 
 #include <string>
 #include <vector>

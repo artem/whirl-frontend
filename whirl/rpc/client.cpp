@@ -2,13 +2,13 @@
 
 #include <whirl/rpc/transport_channel.hpp>
 
-using await::executors::IExecutorPtr;
+using await::executors::IExecutor;
 
 namespace whirl::rpc {
 
 class Client : public IClient {
  public:
-  Client(ITransport* t, IExecutorPtr e) : t_(t), e_(std::move(e)) {
+  Client(ITransport* t, IExecutor* e) : t_(t), e_(e) {
   }
 
   IChannelPtr Dial(const std::string& peer) override {
@@ -17,10 +17,10 @@ class Client : public IClient {
 
  private:
   ITransport* t_;
-  IExecutorPtr e_;
+  IExecutor* e_;
 };
 
-IClientPtr MakeClient(ITransport* t, IExecutorPtr e) {
+IClientPtr MakeClient(ITransport* t, IExecutor* e) {
   return std::make_shared<Client>(t, e);
 }
 

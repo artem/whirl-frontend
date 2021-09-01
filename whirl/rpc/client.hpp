@@ -22,6 +22,6 @@ using IClientPtr = std::shared_ptr<IClient>;
 
 //////////////////////////////////////////////////////////////////////
 
-IClientPtr MakeClient(ITransport* t, await::executors::IExecutorPtr e);
+IClientPtr MakeClient(ITransport* t, await::executors::IExecutor* e);
 
 }  // namespace whirl::rpc
