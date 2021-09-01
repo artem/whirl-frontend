@@ -313,7 +313,7 @@ const std::string& ChooseRandomKey() {
   Logger logger_{"Adversary"};
 
   // List system nodes
-  auto pool = node::rt::Dns()->ListPool("kv");
+  auto pool = node::rt::Discovery()->ListPool("kv");
 
   auto& net = matrix::fault::Network();
 

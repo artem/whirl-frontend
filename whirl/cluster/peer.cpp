@@ -36,7 +36,7 @@ rpc::IClientPtr Peer::MakeRpcClient() {
 }
 
 void Peer::ConnectToPeers() {
-  pool_ = rt::Dns()->ListPool(pool_name_);
+  pool_ = rt::Discovery()->ListPool(pool_name_);
 
   auto client = MakeRpcClient();
 

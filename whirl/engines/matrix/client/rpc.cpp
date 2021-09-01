@@ -21,7 +21,7 @@ static rpc::IClientPtr MakeRpcClient() {
 }
 
 rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name) {
-  auto pool = node::rt::Dns()->ListPool(pool_name);
+  auto pool = node::rt::Discovery()->ListPool(pool_name);
 
   auto client = MakeRpcClient();
 

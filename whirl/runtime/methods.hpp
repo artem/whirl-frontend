@@ -110,7 +110,7 @@ inline void SleepFor(Duration delay) {
 
 // DNS
 
-inline IDiscoveryService* Dns() {
+inline IDiscoveryService* Discovery() {
   return GetRuntime().DiscoveryService();
 }
 
