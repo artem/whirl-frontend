@@ -1,7 +1,7 @@
 #include <whirl/runtime/methods.hpp>
 
 #include <await/fibers/core/fiber.hpp>
-#include <await/fibers/core/static/access.hpp>
+#include <await/fibers/static/services.hpp>
 
 #include <whirl/rpc/server_impl.hpp>
 #include <whirl/rpc/client.hpp>

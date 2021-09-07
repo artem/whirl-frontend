@@ -3,7 +3,7 @@
 #include <whirl/runtime/methods.hpp>
 
 #include <await/fibers/core/fiber.hpp>
-#include <await/fibers/core/static/access.hpp>
+#include <await/fibers/static/services.hpp>
 
 namespace whirl::matrix::process {
 
