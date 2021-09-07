@@ -130,9 +130,11 @@ inline ITerminal* Terminal() {
   return GetRuntime().Terminal();
 }
 
-template <typename... Args>
-inline void PrintLine(Args&&... args) {
-  std::string line = fmt::format(std::forward<Args>(args)...);
+template <typename FormatString, typename... Args>
+inline void PrintLine(FormatString&& format_string, Args&&... args) {
+  std::string line =
+      fmt::format(fmt::runtime(std::forward<FormatString>(format_string)),
+                  std::forward<Args>(args)...);
   Terminal()->PrintLine(line);
 }
 
