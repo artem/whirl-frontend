@@ -2,6 +2,8 @@
 
 #include <whirl/rpc/bytes_value.hpp>
 
+#include <memory>
+
 namespace whirl::rpc {
 
 struct IService {
