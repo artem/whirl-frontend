@@ -1,7 +1,7 @@
 #include <whirl/program/main.hpp>
 
 #include <whirl/logger/log.hpp>
-#include <whirl/db/store/kv.hpp>
+#include <whirl/db/kv.hpp>
 
 #include <whirl/fs/io.hpp>
 
@@ -11,7 +11,7 @@
 #include <whirl/engines/matrix/world/world.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
 
-#include <wheels/support/mem_view_of.hpp>
+#include <wheels/memory/view_of.hpp>
 #include <wheels/io/read.hpp>
 
 #include <chrono>
