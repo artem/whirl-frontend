@@ -109,7 +109,7 @@ MemoryAllocator::~MemoryAllocator() {
 }
 
 static bool IsAllocationTooLarge(size_t bytes) {
-  return bytes > std::numeric_limits<uint32_t>::max();
+  return bytes > (size_t)std::numeric_limits<uint32_t>::max();
 }
 
 void* MemoryAllocator::Allocate(size_t bytes) {
