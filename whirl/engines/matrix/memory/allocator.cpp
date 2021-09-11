@@ -8,6 +8,7 @@
 #include <wheels/support/bithacks.hpp>
 
 #include <cstring>
+#include <limits>
 
 #define WHIRL_ALLOC_PANIC(error) \
   do {                           \
