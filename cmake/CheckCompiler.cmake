@@ -1,5 +1,5 @@
 set(REQUIRED_CXX_COMPILER "Clang")
-set(CXX_COMPILER_MIN_VERSION 8.0)
+set(CXX_COMPILER_MIN_VERSION 10.0)
 
 message(STATUS "Checking compiler...")
 
