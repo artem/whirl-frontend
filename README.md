@@ -91,4 +91,6 @@ cmake -DWHIRL_EXAMPLES=ON ..
 # Build kv example
 make whirl_example_kv
 # Run kv example
-./examples/kv/bin/whirl_example_kv
+# --det - run determinism check
+# --sims - number of simulations to run
+./examples/kv/whirl_example_kv --det --sims 12345
