@@ -12,7 +12,7 @@
 using wheels::Result;
 using namespace await::futures;
 using await::executors::IExecutor;
-using await::StopToken;
+using await::context::StopToken;
 
 namespace whirl::rpc {
 

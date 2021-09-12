@@ -15,11 +15,11 @@ Caller& Caller::Context(await::context::Context context) {
   return *this;
 }
 
-await::StopToken Caller::DefaultStopToken() {
+await::context::StopToken Caller::DefaultStopToken() {
   if (await::fibers::AmIFiber()) {
     return await::fibers::self::GetLifetimeToken();
   }
-  return await::NeverStop();
+  return await::context::NeverStop();
 }
 
 TraceId Caller::GetTraceId() {

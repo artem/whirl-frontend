@@ -8,7 +8,7 @@
 #include <wheels/support/exception.hpp>
 #include <wheels/support/panic.hpp>
 
-#include <await/util/context.hpp>
+#include <await/context/context.hpp>
 
 namespace whirl::rpc {
 
@@ -53,7 +53,7 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
   auto request = Deserialize<proto::Request>(message);
 
   auto trace = MakeTraceContext(request.trace_id);
-  await::context::StopScope scope{trace};
+  await::context::Scope scope{trace};
 
   await::fibers::self::SetContext(scope.GetContext());
 

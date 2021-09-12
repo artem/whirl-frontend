@@ -8,7 +8,7 @@
 #include <whirl/cereal/serialize.hpp>
 
 #include <await/futures/helpers.hpp>
-#include <await/util/context.hpp>
+#include <await/context/context.hpp>
 
 #include <cereal/types/string.hpp>
 
@@ -67,7 +67,7 @@ class [[nodiscard]] Caller {
         stop_token_(DefaultStopToken()) {
   }
 
-  Caller& StopToken(await::StopToken stop_token) {
+  Caller& StopToken(await::context::StopToken stop_token) {
     stop_token_ = std::move(stop_token);
     return *this;
   }
@@ -104,7 +104,7 @@ class [[nodiscard]] Caller {
   }
 
  private:
-  await::StopToken DefaultStopToken();
+  await::context::StopToken DefaultStopToken();
   TraceId GetTraceId();
 
   CallOptions MakeCallOptions() {
@@ -122,7 +122,7 @@ class [[nodiscard]] Caller {
 
   // Call options
   std::optional<TraceId> trace_id_;
-  await::StopToken stop_token_;
+  await::context::StopToken stop_token_;
   size_t attempts_limit_{0};  // 0 == Infinite
 };
 

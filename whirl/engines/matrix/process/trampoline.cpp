@@ -22,7 +22,7 @@ void MainTrampoline(node::ProgramMain main) {
       node::rt::FiberManager(),
       node::rt::Executor(),
       await::fibers::BackgroundSupervisor(),
-      await::NeverStop());
+      await::context::NeverStop());
 
   f->Schedule();
 }

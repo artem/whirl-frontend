@@ -5,7 +5,7 @@
 #include <whirl/rpc/trace.hpp>
 
 #include <await/futures/core/future.hpp>
-#include <await/util/stop_token.hpp>
+#include <await/context/stop_token.hpp>
 
 #include <memory>
 
@@ -15,7 +15,7 @@ namespace whirl::rpc {
 
 struct CallOptions {
   TraceId trace_id;
-  await::StopToken stop_advice;
+  await::context::StopToken stop_advice;
   size_t attempts_limit;
 };
 

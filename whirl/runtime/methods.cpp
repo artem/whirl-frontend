@@ -14,7 +14,7 @@ void Go(await::fibers::FiberRoutine routine) {
       FiberManager(),
       Executor(),
       await::fibers::BackgroundSupervisor(),
-      await::NeverStop());
+      await::context::NeverStop());
 
   f->Schedule();
 }
