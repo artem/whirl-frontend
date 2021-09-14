@@ -2,7 +2,7 @@
 
 #include <whirl/rpc/channel.hpp>
 
-#include <whirl/services/time.hpp>
+#include <whirl/time/time.hpp>
 
 #include <timber/backend.hpp>
 
@@ -18,7 +18,7 @@ struct BackoffParams {
 
 //////////////////////////////////////////////////////////////////////
 
-IChannelPtr WithRetries(IChannelPtr channel, ITimeService* time,
+IChannelPtr WithRetries(IChannelPtr channel, node::time::ITimeService* time,
                         timber::ILogBackend* log,
                         BackoffParams backoff_params);
 

@@ -42,7 +42,7 @@ class Backoff {
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
   Retrier(const IChannelPtr& channel, timber::ILogBackend* log, const Method& method,
-          const BytesValue& input, CallOptions options, ITimeService* time,
+          const BytesValue& input, CallOptions options, node::time::ITimeService* time,
           BackoffParams backoff_params)
       : channel_(channel),
         method_(method),
@@ -142,7 +142,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
   CallOptions options_;
 
-  ITimeService* time_;
+  node::time::ITimeService* time_;
 
   size_t attempt_{0};
   Backoff backoff_;
@@ -155,7 +155,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public IChannel {
  public:
-  RetriesChannel(IChannelPtr impl, ITimeService* time,
+  RetriesChannel(IChannelPtr impl, node::time::ITimeService* time,
                  timber::ILogBackend* log,
                  BackoffParams backoff_params)
       : impl_(std::move(impl)), time_(time), log_(log), backoff_params_(backoff_params) {
@@ -178,14 +178,14 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
 
  private:
   IChannelPtr impl_;
-  ITimeService* time_;
+  node::time::ITimeService* time_;
   timber::ILogBackend* log_;
   BackoffParams backoff_params_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-IChannelPtr WithRetries(IChannelPtr channel, ITimeService* time,
+IChannelPtr WithRetries(IChannelPtr channel, node::time::ITimeService* time,
                         timber::ILogBackend* log,
                         BackoffParams backoff_params) {
   return std::make_shared<RetriesChannel>(std::move(channel), time, log,

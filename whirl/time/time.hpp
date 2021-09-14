@@ -6,7 +6,7 @@
 
 #include <memory>
 
-namespace whirl {
+namespace whirl::node::time {
 
 struct ITimeService {
   virtual ~ITimeService() = default;
@@ -21,4 +21,4 @@ struct ITimeService {
   virtual await::futures::Future<void> After(Duration d) = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node::time

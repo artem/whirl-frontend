@@ -1,15 +1,15 @@
 #pragma once
 
-#include <whirl/services/true_time.hpp>
+#include <whirl/time/true_time.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
 namespace whirl::matrix {
 
-class TrueTimeService : public ITrueTimeService {
+class TrueTimeService : public node::time::ITrueTimeService {
  public:
-  TTInterval Now() const override {
+  node::time::TTInterval Now() const override {
     // TODO: better
 
     // Access world clock

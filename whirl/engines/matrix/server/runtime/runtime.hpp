@@ -74,7 +74,7 @@ struct NodeRuntime : node::IRuntime {
     return fibers.Get();
   }
 
-  ITimeService* TimeService() {
+  node::time::ITimeService* TimeService() {
     return time.Get();
   }
 
@@ -94,7 +94,7 @@ struct NodeRuntime : node::IRuntime {
     return random.Get();
   }
 
-  ITrueTimeService* TrueTime() {
+  node::time::ITrueTimeService* TrueTime() {
     return true_time.Get();
   }
 

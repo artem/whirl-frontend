@@ -10,10 +10,10 @@
 #include <whirl/cluster/discovery.hpp>
 
 #include <whirl/services/config.hpp>
-#include <whirl/services/time.hpp>
+#include <whirl/time/time.hpp>
 #include <whirl/services/random.hpp>
 #include <whirl/services/guid.hpp>
-#include <whirl/services/true_time.hpp>
+#include <whirl/time/true_time.hpp>
 #include <whirl/services/net_transport.hpp>
 #include <whirl/services/terminal.hpp>
 #include <whirl/services/fault.hpp>
@@ -33,9 +33,9 @@ struct IRuntime {
 
   // Time
 
-  virtual ITimeService* TimeService() = 0;
+  virtual time::ITimeService* TimeService() = 0;
 
-  virtual ITrueTimeService* TrueTime() = 0;
+  virtual time::ITrueTimeService* TrueTime() = 0;
 
   // Persistence
 

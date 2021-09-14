@@ -4,7 +4,7 @@
 
 #include <memory>
 
-namespace whirl {
+namespace whirl::node::time {
 
 // TrueTime from Spanner
 // Spanner: Google's Globally-Distributed Database"
@@ -34,4 +34,4 @@ struct ITrueTimeService {
   }
 };
 
-}  // namespace whirl
+}  // namespace whirl::node::time

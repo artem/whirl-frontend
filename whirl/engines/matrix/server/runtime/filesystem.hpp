@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/fs/fs.hpp>
-#include <whirl/services/time.hpp>
+#include <whirl/time/time.hpp>
 
 #include <whirl/engines/matrix/server/runtime/detail/disk.hpp>
 #include <whirl/engines/matrix/fs/fs.hpp>
@@ -10,7 +10,7 @@ namespace whirl::matrix {
 
 class FS : public node::fs::IFileSystem {
  public:
-  FS(matrix::fs::FileSystem* impl, ITimeService* time_service)
+  FS(matrix::fs::FileSystem* impl, node::time::ITimeService* time_service)
       : disk_(time_service), impl_(impl) {
   }
 

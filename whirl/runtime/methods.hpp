@@ -68,7 +68,7 @@ inline size_t RandomIndex(size_t size) {
 
 // Clocks
 
-inline ITimeService* TimeService() {
+inline time::ITimeService* TimeService() {
   return GetRuntime().TimeService();
 }
 
@@ -88,7 +88,7 @@ inline await::futures::Future<void> After(Duration delay) {
 
 // TrueTime
 
-inline ITrueTimeService* TrueTime() {
+inline time::ITrueTimeService* TrueTime() {
   return GetRuntime().TrueTime();
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/time.hpp>
+#include <whirl/time/time.hpp>
 
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
@@ -13,7 +13,7 @@ namespace detail {
 
 class Disk {
  public:
-  Disk(ITimeService* time_service) : time_service_(std::move(time_service)) {
+  Disk(node::time::ITimeService* time_service) : time_service_(std::move(time_service)) {
   }
 
   void Read(size_t bytes) const {
@@ -31,7 +31,7 @@ class Disk {
   }
 
  private:
-  ITimeService* time_service_;
+  node::time::ITimeService* time_service_;
 };
 
 }  // namespace detail

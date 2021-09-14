@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/time.hpp>
+#include <whirl/time/time.hpp>
 
 #include <whirl/engines/matrix/clocks/wall.hpp>
 #include <whirl/engines/matrix/clocks/monotonic.hpp>
@@ -14,7 +14,7 @@ namespace whirl::matrix {
 
 // Time service impl
 
-class TimeService : public ITimeService {
+class TimeService : public node::time::ITimeService {
  public:
   TimeService(clocks::WallClock& wall_clock,
               clocks::MonotonicClock& monotonic_clock,
