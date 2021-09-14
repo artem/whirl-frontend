@@ -24,6 +24,10 @@ inline NodeId Id() {
   return Config()->Id();
 }
 
+inline std::string PoolName() {
+  return Config()->PoolName();
+}
+
 // Net
 
 inline ITransport* NetTransport() {

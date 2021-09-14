@@ -86,7 +86,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
  public:
-  Coordinator() : Peer(node::rt::Config()->PoolName()) {
+  Coordinator() : Peer(node::rt::PoolName()) {
   }
 
   void RegisterMethods() override {
