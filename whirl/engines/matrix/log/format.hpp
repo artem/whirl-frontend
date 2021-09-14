@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 void FormatLogEventTo(const LogEvent& event, std::ostream& out);
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log

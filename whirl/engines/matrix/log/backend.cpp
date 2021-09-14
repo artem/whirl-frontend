@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 LogBackend::LogBackend() {
 #ifndef NDEBUG
@@ -42,4 +42,4 @@ void LogBackend::Log(timber::Event event) {
   Write(MakeLogEvent(event));
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log

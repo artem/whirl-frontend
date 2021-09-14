@@ -4,7 +4,7 @@
 
 namespace whirl::matrix {
 
-void WriteTextLog(const EventLog& events, std::ostream& out) {
+void WriteTextLog(const log::EventLog& events, std::ostream& out) {
   static const size_t kHeadLines = 100;
   static const size_t kTailLines = 256;
   static const size_t kLinesLimit = kHeadLines + kTailLines;

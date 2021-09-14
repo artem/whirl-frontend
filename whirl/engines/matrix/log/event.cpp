@@ -8,7 +8,7 @@
 
 #include <wheels/support/string_builder.hpp>
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -62,4 +62,4 @@ LogEvent MakeLogEvent(const timber::Event& e) {
   return event;
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log

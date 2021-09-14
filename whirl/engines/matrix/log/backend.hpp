@@ -10,7 +10,7 @@
 #include <sstream>
 #include <vector>
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 class LogBackend : public timber::ILogBackend {
  public:
@@ -38,4 +38,4 @@ class LogBackend : public timber::ILogBackend {
   std::ofstream file_;
 };
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log

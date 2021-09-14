@@ -6,6 +6,6 @@
 
 namespace whirl::matrix {
 
-void WriteTextLog(const EventLog& log, std::ostream& out);
+void WriteTextLog(const log::EventLog& log, std::ostream& out);
 
 }  // namespace whirl::matrix

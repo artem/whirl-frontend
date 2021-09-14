@@ -139,7 +139,7 @@ class WorldImpl {
     return step_number_;
   }
 
-  LogBackend& GetLog() {
+  log::LogBackend& GetLog() {
     return log_;
   }
 
@@ -269,7 +269,7 @@ class WorldImpl {
 
   ITimeModelPtr time_model_;
 
-  LogBackend log_;
+  log::LogBackend log_;
 
   // Actors
 

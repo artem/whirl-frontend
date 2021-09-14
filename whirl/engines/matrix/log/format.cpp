@@ -4,7 +4,7 @@
 
 #include <iomanip>
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 static std::string_view LimitWidth(std::string_view str, size_t width) {
   if (str.length() < width) {
@@ -38,4 +38,4 @@ void FormatLogEventTo(const LogEvent& event, std::ostream& out) {
   // clang-format on
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log

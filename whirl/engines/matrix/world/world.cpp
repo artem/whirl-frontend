@@ -69,7 +69,7 @@ size_t World::Digest() const {
   return impl_->Digest();
 }
 
-const EventLog& World::EventLog() const {
+const log::EventLog& World::EventLog() const {
   return impl_->GetLog().GetEvents();
 }
 

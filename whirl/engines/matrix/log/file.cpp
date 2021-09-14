@@ -16,7 +16,7 @@
 
 namespace fs = std::filesystem;
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 class LogFileManager {
  public:
@@ -104,11 +104,11 @@ std::ofstream GetLogFile() {
   return log_file_manager.NextLog();
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log
 
 #else
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 void SetLogFile(const std::string& path) {
   WHEELS_PANIC("Not supported");
@@ -121,6 +121,6 @@ std::ofstream GetLogFile() {
   return std::ofstream(*log_path, std::ofstream::out);
 }
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log
 
 #endif

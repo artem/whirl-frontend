@@ -122,7 +122,7 @@ class World {
   size_t StepCount() const;
   Duration TimeElapsed() const;
 
-  const EventLog& EventLog() const;
+  const log::EventLog& EventLog() const;
   const histories::History& History() const;
 
   std::vector<std::string> GetStdout(const std::string& hostname) const;

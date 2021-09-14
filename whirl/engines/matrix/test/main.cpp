@@ -100,10 +100,10 @@ int Main(int argc, const char** argv, Simulation sim) {
 
   if (args.Has("log")) {
     std::string log_fpath = args.Get("log");
-    SetLogFile(log_fpath);
+    log::SetLogFile(log_fpath);
   }
   // Initialize
-  GetLogFile();
+  log::GetLogFile();
 
   if (args.Has("seed")) {
     RunSimulation(sim, FromString<size_t>(args.Get("seed")));

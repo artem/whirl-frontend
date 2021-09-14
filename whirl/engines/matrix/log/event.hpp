@@ -9,7 +9,7 @@
 #include <optional>
 #include <vector>
 
-namespace whirl::matrix {
+namespace whirl::matrix::log {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -32,4 +32,4 @@ LogEvent MakeLogEvent(const timber::Event& event);
 
 using EventLog = std::vector<LogEvent>;
 
-}  // namespace whirl::matrix
+}  // namespace whirl::matrix::log
