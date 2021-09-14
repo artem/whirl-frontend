@@ -2,7 +2,7 @@
 
 #include <whirl/rpc/errors.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/log.hpp>
 
 #include <await/futures/util/promise.hpp>
 
@@ -20,7 +20,7 @@ namespace whirl::rpc {
 
 class Backoff {
  public:
-  Backoff(BackoffParams params) : params_(params), next_(params.init) {
+  explicit Backoff(BackoffParams params) : params_(params), next_(params.init) {
   }
 
   Duration Next() {
@@ -41,7 +41,7 @@ class Backoff {
 
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
-  Retrier(const IChannelPtr& channel, const Method& method,
+  Retrier(const IChannelPtr& channel, timber::ILogBackend* log, const Method& method,
           const BytesValue& input, CallOptions options, ITimeService* time,
           BackoffParams backoff_params)
       : channel_(channel),
@@ -49,7 +49,8 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
         input_(input),
         options_(std::move(options)),
         time_(std::move(time)),
-        backoff_(backoff_params) {
+        backoff_(backoff_params),
+        logger_("Retries-Channel", log) {
   }
 
   Future<BytesValue> Start() {
@@ -68,7 +69,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
  private:
   void Retry() {
-    WHIRL_LOG_INFO("Retry {}.{} request, attempt {}", channel_->Peer(), method_,
+    LOG_INFO("Retry {}.{} request, attempt {}", channel_->Peer(), method_,
                    attempt_);
 
     ++attempt_;
@@ -115,7 +116,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
   void Cancel() {
-    WHIRL_LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
+    LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
                    channel_->Peer(), method_);
     std::move(promise_).SetError(wheels::Error(RPCErrorCode::Cancelled));
   }
@@ -146,7 +147,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   size_t attempt_{0};
   Backoff backoff_;
 
-  Logger logger_{"Retries-Channel"};
+  timber::Logger logger_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -155,8 +156,9 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public IChannel {
  public:
   RetriesChannel(IChannelPtr impl, ITimeService* time,
+                 timber::ILogBackend* log,
                  BackoffParams backoff_params)
-      : impl_(std::move(impl)), time_(time), backoff_params_(backoff_params) {
+      : impl_(std::move(impl)), time_(time), log_(log), backoff_params_(backoff_params) {
   }
 
   void Close() override {
@@ -170,21 +172,23 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
   Future<BytesValue> Call(const Method& method, const BytesValue& input,
                           CallOptions options) override {
     auto retrier = std::make_shared<Retrier>(
-        impl_, method, input, std::move(options), time_, backoff_params_);
+        impl_, log_, method, input, std::move(options), time_, backoff_params_);
     return retrier->Start();
   }
 
  private:
   IChannelPtr impl_;
   ITimeService* time_;
+  timber::ILogBackend* log_;
   BackoffParams backoff_params_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
 IChannelPtr WithRetries(IChannelPtr channel, ITimeService* time,
+                        timber::ILogBackend* log,
                         BackoffParams backoff_params) {
-  return std::make_shared<RetriesChannel>(std::move(channel), time,
+  return std::make_shared<RetriesChannel>(std::move(channel), time, log,
                                           backoff_params);
 }
 

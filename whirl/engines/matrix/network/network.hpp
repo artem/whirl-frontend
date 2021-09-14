@@ -8,7 +8,7 @@
 
 #include <whirl/engines/matrix/helpers/digest.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 #include <string>
 #include <cstdlib>
@@ -36,7 +36,7 @@ class Network : public IActor, public fault::IFaultyNetwork {
   using LinkEvents = PriorityQueue<LinkEvent>;
 
  public:
-  Network() = default;
+  Network(timber::ILogBackend* log);
 
   // Non-copyable
   Network(const Network&) = delete;
@@ -100,7 +100,7 @@ class Network : public IActor, public fault::IFaultyNetwork {
 
   DigestCalculator digest_;
 
-  Logger logger_{"Network"};
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::matrix::net

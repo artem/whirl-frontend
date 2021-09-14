@@ -2,8 +2,6 @@
 
 #include <whirl/engines/matrix/log/format.hpp>
 
-#include <whirl/logger/enabled.hpp>
-
 #include <whirl/engines/matrix/memory/new.hpp>
 
 #include <iostream>
@@ -11,7 +9,7 @@
 namespace whirl::matrix {
 
 LogBackend::LogBackend() {
-#if defined(__WHIRL_LOGGING_ENABLED)
+#ifndef NDEBUG
   file_ = GetLogFile();
 #endif
   InitLevels();
@@ -20,29 +18,28 @@ LogBackend::LogBackend() {
 void LogBackend::Write(const LogEvent& event) {
   events_.push_back(event);
 
-#if defined(__WHIRL_LOGGING_ENABLED)
+#ifndef NDEBUG
   FormatLogEventTo(event, file_);
   file_ << std::endl;
 #endif
 }
 
-static LogLevel kDefaultMinLogLevel = LogLevel::Info;
+static timber::Level kDefaultMinLogLevel = timber::Level::Info;
 
 void LogBackend::InitLevels() {
   levels_ = GetLogLevelsFromEnv();
 }
 
-LogLevel LogBackend::GetMinLevelFor(const std::string& component) const {
+timber::Level LogBackend::GetMinLevelFor(const std::string& component) const {
   if (auto it = levels_.find(component); it != levels_.end()) {
     return it->second;
   }
   return kDefaultMinLogLevel;
 }
 
-void LogBackend::Log(const std::string& component, LogLevel level,
-                     const std::string& message) {
+void LogBackend::Log(timber::Event event) {
   GlobalAllocatorGuard g;
-  Write(MakeLogEvent(component, level, message));
+  Write(MakeLogEvent(event));
 }
 
 }  // namespace whirl::matrix

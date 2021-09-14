@@ -6,8 +6,6 @@
 #include <whirl/engines/matrix/clocks/monotonic.hpp>
 #include <whirl/engines/matrix/process/scheduler.hpp>
 
-#include <whirl/logger/log.hpp>
-
 #include <await/futures/core/future.hpp>
 
 namespace whirl::matrix {
@@ -56,8 +54,6 @@ class TimeService : public ITimeService {
   clocks::MonotonicClock& monotonic_clock_;
 
   process::Scheduler& scheduler_;
-
-  Logger logger_{"Time"};
 };
 
 }  // namespace whirl::matrix

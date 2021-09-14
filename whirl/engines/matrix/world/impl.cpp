@@ -2,6 +2,8 @@
 
 #include <whirl/engines/matrix/world/time_models/crazy.hpp>
 
+#include <timber/log.hpp>
+
 namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
@@ -30,11 +32,7 @@ ITimeModelPtr WorldImpl::DefaultTimeModel() {
 void WorldImpl::Start() {
   WorldGuard g(this);
 
-  SetLoggerBackend([backend = &log_]() {
-    return backend;
-  });
-
-  WHIRL_LOG_INFO("Seed: {}", seed_);
+  LOG_INFO("Seed: {}", seed_);
 
   SetStartTime();
   start_time_ = time_.Now();
@@ -43,9 +41,9 @@ void WorldImpl::Start() {
   AddActor(&network_);
   Scope(network_)->Start();
 
-  WHIRL_LOG_INFO("Cluster: ?, clients: {}", clients_.size());
+  LOG_INFO("Cluster: ?, clients: {}", clients_.size());
 
-  WHIRL_LOG_INFO("Starting cluster...");
+  LOG_INFO("Starting cluster...");
 
   // Start servers
   for (auto& [_, pool] : pools_) {
@@ -54,7 +52,7 @@ void WorldImpl::Start() {
     }
   }
 
-  WHIRL_LOG_INFO("Starting clients...");
+  LOG_INFO("Starting clients...");
 
   // Start clients
   for (auto& client : clients_) {
@@ -63,11 +61,11 @@ void WorldImpl::Start() {
 
   // Start adversary
   if (!adversaries_.empty()) {
-    WHIRL_LOG_INFO("Starting adversary...");
+    LOG_INFO("Starting adversary...");
     Scope(adversaries_.front())->Start();
   }
 
-  WHIRL_LOG_INFO("World started");
+  LOG_INFO("World started");
 }
 
 bool WorldImpl::Step() {
@@ -120,13 +118,13 @@ size_t WorldImpl::Stop() {
     Scope(adversaries_.front())->Shutdown();
   }
 
-  WHIRL_LOG_INFO("Adversary stopped");
+  LOG_INFO("Adversary stopped");
 
   // Network
   digest_.Combine(network_.Digest());
   Scope(network_)->Shutdown();
 
-  WHIRL_LOG_INFO("Network stopped");
+  LOG_INFO("Network stopped");
 
   // Servers
   for (auto& [_, pool] : pools_) {
@@ -138,7 +136,7 @@ size_t WorldImpl::Stop() {
   }
   pools_.clear();
 
-  WHIRL_LOG_INFO("Servers stopped");
+  LOG_INFO("Servers stopped");
 
   // Clients
   for (auto& client : clients_) {
@@ -146,13 +144,13 @@ size_t WorldImpl::Stop() {
   }
   clients_.clear();
 
-  WHIRL_LOG_INFO("Clients stopped");
+  LOG_INFO("Clients stopped");
 
   actors_.clear();
 
   history_recorder_.Finalize();
 
-  WHIRL_LOG_INFO("Simulation stopped");
+  LOG_INFO("Simulation stopped");
 
   return Digest();
 }

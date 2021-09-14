@@ -6,6 +6,9 @@
 
 // IsThereAdversary
 #include <whirl/engines/matrix/world/global/global.hpp>
+#include <whirl/engines/matrix/world/global/log.hpp>
+
+#include <timber/log.hpp>
 
 #include <wheels/support/assert.hpp>
 
@@ -32,7 +35,8 @@ class TransportTask : public process::ITask {
 
 Transport::Transport(Network& net, const std::string& host,
                      process::Memory& heap, process::Scheduler& scheduler)
-    : net_(net), host_(host), heap_(heap), scheduler_(scheduler) {
+    : net_(net), host_(host), heap_(heap), scheduler_(scheduler),
+      logger_("Transport", GetLogBackend()) {
 }
 
 ClientSocket Transport::ConnectTo(const Address& address,
@@ -44,7 +48,7 @@ ClientSocket Transport::ConnectTo(const Address& address,
   Port port = FindFreePort();
   Timestamp ts = GetNewEndpointTimestamp();
 
-  WHIRL_LOG_INFO("Connecting to {}: local port = {}", address, port);
+  LOG_INFO("Connecting to {}: local port = {}", address, port);
 
   endpoints_.emplace(port, Endpoint{handler, ts});
 
@@ -67,7 +71,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
   auto ts = GetNewEndpointTimestamp();
   endpoints_.emplace(port, Endpoint{handler, ts});
 
-  WHIRL_LOG_INFO("Start serving at port {}", port);
+  LOG_INFO("Start serving at port {}", port);
 
   {
     auto g = heap_.Use();
@@ -78,7 +82,7 @@ ServerSocket Transport::Serve(Port port, ISocketHandler* handler) {
 void Transport::RemoveEndpoint(Port port) {
   GlobalAllocatorGuard g;
 
-  WHIRL_LOG_INFO("Remove endpoint at port {}", port);
+  LOG_INFO("Remove endpoint at port {}", port);
   endpoints_.erase(port);
 }
 
@@ -86,7 +90,7 @@ void Transport::Reset() {
   GlobalAllocatorGuard g;
 
   for ([[maybe_unused]] const auto& [port, _] : endpoints_) {
-    WHIRL_LOG_INFO("Remove endpoint at port {}", port);
+    LOG_INFO("Remove endpoint at port {}", port);
   }
   endpoints_.clear();
 }
@@ -145,7 +149,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     if (packet.header.type != Packet::Type::Reset) {
       if (packet.header.type == Packet::Type::Data) {
-        WHIRL_LOG_WARN("Endpoint {} not found, drop incoming packet from {}",
+        LOG_WARN("Endpoint {} not found, drop incoming packet from {}",
                        to, from);
       }
       replier.Reset();
@@ -182,7 +186,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.header.type == Packet::Type::Data) {
     // Message
 
-    WHIRL_LOG_INFO("Handle message at {} from {}: <{}>", host_, from,
+    LOG_INFO("Handle message at {} from {}: <{}>", host_, from,
                    packet.message);
 
     auto g = heap_.Use();

@@ -7,7 +7,7 @@
 
 #include <whirl/engines/matrix/helpers/priority_queue.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 namespace whirl::matrix::net {
 
@@ -28,9 +28,7 @@ class Link {
   using PacketQueue = PriorityQueue<PacketEvent>;
 
  public:
-  Link(Network* net, IServer* start, IServer* end)
-      : net_(net), start_(start), end_(end) {
-  }
+  Link(Network* net, IServer* start, IServer* end);
 
   IServer* Start() const {
     return start_;
@@ -91,7 +89,7 @@ class Link {
 
   Link* opposite_{nullptr};
 
-  Logger logger_{"Network"};
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::matrix::net

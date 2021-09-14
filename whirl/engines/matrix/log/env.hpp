@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/logger/level.hpp>
+#include <timber/level.hpp>
 
 #include <map>
 #include <string>
@@ -9,7 +9,7 @@
 namespace whirl::matrix {
 
 // Component -> Min log level
-using LogLevels = std::map<std::string, LogLevel>;
+using LogLevels = std::map<std::string, timber::Level>;
 
 // Usage: WHIRL_LOG_LEVELS=Network=Off,Server=Off
 LogLevels GetLogLevelsFromEnv();

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <whirl/logger/backend.hpp>
-
 #include <whirl/engines/matrix/log/event.hpp>
 #include <whirl/engines/matrix/log/env.hpp>
 #include <whirl/engines/matrix/log/file.hpp>
+
+#include <timber/backend.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -12,16 +12,15 @@
 
 namespace whirl::matrix {
 
-class LogBackend : public ILoggerBackend {
+class LogBackend : public timber::ILogBackend {
  public:
   LogBackend();
 
   // Context: Server
-  LogLevel GetMinLevelFor(const std::string& component) const override;
+  timber::Level GetMinLevelFor(const std::string& component) const override;
 
   // Context: Server
-  void Log(const std::string& component, LogLevel level,
-           const std::string& message) override;
+  void Log(timber::Event event) override;
 
   const EventLog& GetEvents() const {
     return events_;

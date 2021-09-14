@@ -15,7 +15,7 @@
 
 #include <whirl/services/guid.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 #include <wheels/support/id.hpp>
 
@@ -48,7 +48,8 @@ class WorldImpl {
 
  public:
   WorldImpl(size_t seed)
-      : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()) {
+      : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()),
+      network_(&log_), logger_("World", &log_) {
   }
 
   void AddServer(std::string hostname, node::ProgramMain program) {
@@ -268,6 +269,8 @@ class WorldImpl {
 
   ITimeModelPtr time_model_;
 
+  LogBackend log_;
+
   // Actors
 
   std::map<std::string, Servers> pools_;
@@ -286,15 +289,14 @@ class WorldImpl {
 
   size_t step_number_{0};
 
-  Logger logger_{"World"};
-
   TimePoint start_time_;
 
   DigestCalculator digest_;
-  LogBackend log_;
   HistoryRecorder history_recorder_;
 
   UntypedDict globals_;
+
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::matrix

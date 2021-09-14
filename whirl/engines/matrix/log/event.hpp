@@ -1,6 +1,7 @@
 #pragma once
 
-#include <whirl/logger/level.hpp>
+#include <timber/level.hpp>
+#include <timber/event.hpp>
 
 #include <whirl/time.hpp>
 
@@ -15,7 +16,7 @@ namespace whirl::matrix {
 struct LogEvent {
   TimePoint time;
   size_t step;
-  LogLevel level;
+  timber::Level level;
   std::string actor;
   std::string component;
   std::optional<std::string> trace_id;
@@ -25,8 +26,7 @@ struct LogEvent {
 //////////////////////////////////////////////////////////////////////
 
 // Capture event context
-LogEvent MakeLogEvent(const std::string& component, LogLevel level,
-                      const std::string& message);
+LogEvent MakeLogEvent(const timber::Event& event);
 
 //////////////////////////////////////////////////////////////////////
 

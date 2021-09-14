@@ -1,6 +1,5 @@
 #include <whirl/program/main.hpp>
 
-#include <whirl/logger/log.hpp>
 #include <whirl/db/kv.hpp>
 
 #include <whirl/fs/io.hpp>

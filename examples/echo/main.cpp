@@ -1,11 +1,11 @@
 #include <whirl/program/main.hpp>
 
-#include <whirl/logger/log.hpp>
-
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
 
 #include <whirl/runtime/methods.hpp>
+
+#include <timber/log.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
@@ -51,11 +51,16 @@ struct Echo {
 
 class EchoService : public rpc::ServiceBase<EchoService> {
  public:
+  EchoService()
+    : logger_("EchoService", node::rt::LogBackend()) {
+
+  }
+
   proto::Echo::Response Echo(proto::Echo::Request req) {
     // Каждый обработчик – отдельный файбер
     assert(await::fibers::AmIFiber());
 
-    WHIRL_LOG_INFO("Echo({})", req.data);
+    LOG_INFO("Echo({})", req.data);
     return {req.data};
   }
 
@@ -65,7 +70,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
   }
 
  private:
-  Logger logger_{"EchoService"};
+  timber::Logger logger_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -91,12 +96,12 @@ void EchoNode() {
 
   auto channel = matrix::client::MakeRpcChannel(/*pool_name=*/"echo");
 
-  Logger logger_{"Client"};
+  timber::Logger logger_{"Client", node::rt::LogBackend()};
 
   while (true) {
     // Печатаем локальное время
-    WHIRL_LOG_INFO("I am {}", node::rt::HostName());
-    WHIRL_LOG_INFO("Local wall time: {}", node::rt::WallTimeNow());
+    LOG_INFO("I am {}", node::rt::HostName());
+    LOG_INFO("Local wall time: {}", node::rt::WallTimeNow());
 
     // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
     // Результат вызова - Future, она типизируется вызовом .As<std::string>()
@@ -113,9 +118,9 @@ void EchoNode() {
     auto result = Await(std::move(future));
 
     if (result.IsOk()) {
-      WHIRL_LOG_INFO("Echo response: '{}'", result->data);
+      LOG_INFO("Echo response: '{}'", result->data);
     } else {
-      WHIRL_LOG_INFO("Echo request failed: {}",
+      LOG_INFO("Echo request failed: {}",
                      result.GetError().GetErrorCode().message());
     }
 

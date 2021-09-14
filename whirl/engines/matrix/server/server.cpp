@@ -3,12 +3,15 @@
 #include <whirl/engines/matrix/memory/helpers.hpp>
 
 #include <whirl/engines/matrix/world/global/actor.hpp>
+#include <whirl/engines/matrix/world/global/log.hpp>
 
 #include <whirl/engines/matrix/process/trampoline.hpp>
 
 #include <whirl/engines/matrix/server/runtime/runtime.hpp>
 
 #include <whirl/engines/matrix/helpers/digest.hpp>
+
+#include <timber/log.hpp>
 
 namespace whirl::matrix {
 
@@ -18,7 +21,8 @@ Server::Server(net::Network& net, ServerConfig config,
                node::ProgramMain program)
     : config_(config),
       program_(program),
-      transport_(net, config.hostname, heap_, scheduler_) {
+      transport_(net, config.hostname, heap_, scheduler_),
+      logger_("Server", GetLogBackend()) {
 }
 
 Server::~Server() {
@@ -42,7 +46,7 @@ void Server::Crash() {
 
   WHEELS_VERIFY(state_ != State::Crashed, "Server already crashed");
 
-  WHIRL_LOG_INFO("Crash server {}", HostName());
+  LOG_INFO("Crash server {}", HostName());
 
   // Remove all network endpoints
   transport_.Reset();
@@ -119,7 +123,7 @@ void Server::Start() {
 
   monotonic_clock_.Reset();
 
-  WHIRL_LOG_INFO("Starting process");
+  LOG_INFO("Starting process");
   StartProcess();
 
   state_ = State::Running;

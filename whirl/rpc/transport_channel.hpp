@@ -7,12 +7,12 @@
 #include <whirl/rpc/protocol.hpp>
 #include <whirl/rpc/channel.hpp>
 
-#include <whirl/logger/log.hpp>
-
 #include <await/executors/execute.hpp>
 #include <await/executors/strand.hpp>
 
 #include <await/futures/util/promise.hpp>
+
+#include <timber/logger.hpp>
 
 #include <map>
 
@@ -38,11 +38,12 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
  public:
   TransportChannel(ITransport* t, await::executors::IExecutor* e,
-                   TransportAddress peer)
+                   timber::ILogBackend* log, TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
         peer_(peer),
-        strand_(e) {
+        strand_(e),
+        logger_("RPC-Channel", log) {
   }
 
   void Start() {
@@ -106,7 +107,7 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   ITransportSocketPtr socket_{nullptr};
   ActiveRequests requests_;
 
-  Logger logger_{"RPC-Channel"};
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::rpc

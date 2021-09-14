@@ -1,5 +1,7 @@
 #include <whirl/engines/matrix/log/env.hpp>
 
+#include <timber/level/string.hpp>
+
 #include <wheels/support/panic.hpp>
 #include <wheels/support/assert.hpp>
 #include <wheels/support/env.hpp>
@@ -23,7 +25,7 @@ static LogLevels ParseLogLevels(const std::string& levels_str) {
     std::string component = parts[0];
     std::string level = parts[1];
 
-    levels.emplace(component, LogLevelFromString(level));
+    levels.emplace(component, timber::LevelFromString(level));
   }
   return levels;
 }

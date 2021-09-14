@@ -21,7 +21,7 @@
 #include <whirl/engines/matrix/process/memory.hpp>
 #include <whirl/engines/matrix/process/scheduler.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 namespace whirl::matrix {
 
@@ -125,7 +125,7 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
   // Node process
   node::IRuntime* runtime_{nullptr};
 
-  Logger logger_{"Server"};
+  timber::Logger logger_;
 };
 
 //////////////////////////////////////////////////////////////////////

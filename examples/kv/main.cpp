@@ -1,12 +1,13 @@
 #include <whirl/program/main.hpp>
 #include <whirl/cluster/peer.hpp>
 #include <whirl/store/kv.hpp>
-#include <whirl/logger/log.hpp>
 #include <whirl/rpc/service_base.hpp>
 #include <whirl/rpc/call.hpp>
 #include <whirl/cereal/serializable.hpp>
 
 #include <whirl/runtime/methods.hpp>
+
+#include <timber/log.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
@@ -86,7 +87,8 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
  public:
-  Coordinator() : Peer(node::rt::PoolName()) {
+  Coordinator() : Peer(node::rt::PoolName()),
+    logger_("KVNode.Coordinator", node::rt::LogBackend()) {
   }
 
   void RegisterMethods() override {
@@ -98,7 +100,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
 
   void Set(Key key, Value value) {
     WriteTimestamp write_ts = ChooseWriteTimestamp();
-    WHIRL_LOG_INFO("Write timestamp: {}", write_ts);
+    LOG_INFO("Write timestamp: {}", write_ts);
 
     std::vector<Future<void>> writes;
 
@@ -144,7 +146,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
     // Majority())).ValueOrThrow()
 
     for (size_t i = 0; i < stamped_values.size(); ++i) {
-      WHIRL_LOG_INFO("{}-th value in read quorum: {}", i + 1,
+      LOG_INFO("{}-th value in read quorum: {}", i + 1,
                      stamped_values[i]);
     }
 
@@ -174,14 +176,15 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
   }
 
  private:
-  Logger logger_{"KVNode.Coordinator"};
+  timber::Logger logger_;
 };
 
 // Storage replica role
 
 class Replica : public rpc::ServiceBase<Replica> {
  public:
-  Replica() : kv_store_(node::rt::Database(), "abd") {
+  Replica() : kv_store_(node::rt::Database(), "abd"),
+    logger_("KVNode.Replica", node::rt::LogBackend()) {
   }
 
   void RegisterMethods() override {
@@ -213,7 +216,7 @@ class Replica : public rpc::ServiceBase<Replica> {
 
  private:
   void Update(Key key, StampedValue target_value) {
-    WHIRL_LOG_INFO("Write '{}' -> {}", key, target_value);
+    LOG_INFO("Write '{}' -> {}", key, target_value);
     kv_store_.Put(key, target_value);
   }
 
@@ -225,7 +228,7 @@ class Replica : public rpc::ServiceBase<Replica> {
   // Guards writes to kv_store_
   await::fibers::Mutex write_mutex_;
 
-  Logger logger_{"KVNode.Replica"};
+  timber::Logger logger_;
 };
 
 void KVNode() {
@@ -283,7 +286,7 @@ const std::string& ChooseRandomKey() {
 [[noreturn]] void Client() {
   matrix::client::Prologue();
 
-  Logger logger_{"Client"};
+  timber::Logger logger_{"Client", node::rt::LogBackend()};
 
   KVBlockingStub kv_store{matrix::client::MakeRpcChannel(/*pool_name=*/"kv")};
 
@@ -291,13 +294,13 @@ const std::string& ChooseRandomKey() {
     Key key = ChooseRandomKey();
     if (matrix::client::Either()) {
       Value value = node::rt::RandomNumber(1, 100);
-      WHIRL_LOG_INFO("Execute Set({}, {})", key, value);
+      LOG_INFO("Execute Set({}, {})", key, value);
       kv_store.Set(key, value);
-      WHIRL_LOG_INFO("Set completed");
+      LOG_INFO("Set completed");
     } else {
-      WHIRL_LOG_INFO("Execute Get({})", key);
+      LOG_INFO("Execute Get({})", key);
       [[maybe_unused]] Value result = kv_store.Get(key);
-      WHIRL_LOG_INFO("Get({}) -> {}", key, result);
+      LOG_INFO("Get({}) -> {}", key, result);
     }
 
     matrix::GlobalCounter("requests").Increment();
@@ -310,7 +313,7 @@ const std::string& ChooseRandomKey() {
 //////////////////////////////////////////////////////////////////////
 
 [[noreturn]] void Adversary() {
-  Logger logger_{"Adversary"};
+  timber::Logger logger_{"Adversary", node::rt::LogBackend()};
 
   // List system nodes
   auto pool = node::rt::Discovery()->ListPool("kv");
@@ -322,7 +325,7 @@ const std::string& ChooseRandomKey() {
 
     size_t center = node::rt::RandomNumber(pool.size());
 
-    WHIRL_LOG_INFO("Make star with center at {}", pool[center]);
+    LOG_INFO("Make star with center at {}", pool[center]);
 
     matrix::fault::MakeStar(pool, center);
 

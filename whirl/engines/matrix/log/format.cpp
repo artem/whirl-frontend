@@ -1,5 +1,7 @@
 #include <whirl/engines/matrix/log/format.hpp>
 
+#include <timber/level/string.hpp>
+
 #include <iomanip>
 
 namespace whirl::matrix {
@@ -20,7 +22,7 @@ void FormatLogEventTo(const LogEvent& event, std::ostream& out) {
   out << std::left
       << "[T " << event.time << " | " << event.step << ']'
       << '\t'
-      << '[' << _FMT(LogLevelToString(event.level), 7) << ']'
+      << '[' << _FMT(timber::LevelToString(event.level), 7) << ']'
       << '\t'
       << '[' << _FMT(event.actor, 15) << ']'
       << '\t'

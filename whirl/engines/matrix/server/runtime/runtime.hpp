@@ -18,6 +18,8 @@
 
 #include <whirl/engines/matrix/process/fibers.hpp>
 
+#include <whirl/engines/matrix/world/global/log.hpp>
+
 #include <optional>
 
 //////////////////////////////////////////////////////////////////////
@@ -98,6 +100,10 @@ struct NodeRuntime : node::IRuntime {
 
   node::fs::IFileSystem* FileSystem() {
     return fs.Get();
+  }
+
+  timber::ILogBackend* LogBackend() {
+    return GetLogBackend();
   }
 
   IConfig* Config() {

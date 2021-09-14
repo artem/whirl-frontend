@@ -8,7 +8,7 @@
 #include <whirl/engines/matrix/db/mem_table.hpp>
 #include <whirl/engines/matrix/db/wal.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 #include <await/fibers/sync/mutex.hpp>
 
@@ -48,7 +48,7 @@ class Database : public node::db::IDatabase {
   std::optional<WALWriter> wal_;
   await::fibers::Mutex write_mutex_;
 
-  mutable Logger logger_{"Database"};
+  mutable timber::Logger logger_;
 };
 
 }  // namespace whirl::matrix::db

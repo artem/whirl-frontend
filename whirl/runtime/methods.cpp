@@ -22,11 +22,12 @@ void Go(await::fibers::FiberRoutine routine) {
 
 rpc::IServerPtr MakeRpcServer() {
   return std::make_shared<rpc::ServerImpl>(NetTransport(), Executor(),
-                                           FiberManager());
+                                           FiberManager(), LogBackend());
 }
 
 rpc::IClientPtr MakeRpcClient() {
-  return rpc::MakeClient(NetTransport(), Executor());
+  return rpc::MakeClient(
+      NetTransport(), Executor(), LogBackend());
 }
 
 }  // namespace whirl::node::rt

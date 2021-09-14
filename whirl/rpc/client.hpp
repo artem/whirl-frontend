@@ -6,6 +6,8 @@
 
 #include <await/executors/executor.hpp>
 
+#include <timber/backend.hpp>
+
 #include <memory>
 
 namespace whirl::rpc {
@@ -22,6 +24,7 @@ using IClientPtr = std::shared_ptr<IClient>;
 
 //////////////////////////////////////////////////////////////////////
 
-IClientPtr MakeClient(ITransport* t, await::executors::IExecutor* e);
+IClientPtr MakeClient(ITransport* t, await::executors::IExecutor* e,
+                      timber::ILogBackend* log);
 
 }  // namespace whirl::rpc

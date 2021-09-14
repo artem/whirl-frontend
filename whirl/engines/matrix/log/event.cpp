@@ -48,17 +48,16 @@ static std::string DescribeThisActor() {
 
 //////////////////////////////////////////////////////////////////////
 
-LogEvent MakeLogEvent(const std::string& component, LogLevel level,
-                      const std::string& message) {
+LogEvent MakeLogEvent(const timber::Event& e) {
   LogEvent event;
 
   event.time = GlobalNow();
   event.step = WorldStepNumber();
-  event.level = level;
+  event.level = e.level;
   event.actor = DescribeThisActor();
-  event.component = component;
+  event.component = e.component;
   event.trace_id = rpc::TryGetCurrentTraceId();
-  event.message = message;
+  event.message = e.message;
 
   return event;
 }

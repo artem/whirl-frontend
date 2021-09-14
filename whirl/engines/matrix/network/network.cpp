@@ -3,10 +3,17 @@
 #include <whirl/engines/matrix/memory/new.hpp>
 #include <whirl/engines/matrix/world/global/random.hpp>
 
+#include <timber/log.hpp>
+
 #include <wheels/support/assert.hpp>
 #include <wheels/support/compiler.hpp>
 
+
 namespace whirl::matrix::net {
+
+Network::Network(timber::ILogBackend* log)
+    : logger_("Network", log) {
+}
 
 void Network::AddServer(IServer* server) {
   servers_.push_back(server);
@@ -114,19 +121,19 @@ static bool Cross(const Link& link, const fault::Partition& lhs) {
 void Network::PauseLink(const HostName& start, const HostName& end) {
   GlobalAllocatorGuard g;
 
-  WHIRL_LOG_WARN("Pause link {} - {}", start, end);
+  LOG_WARN("Pause link {} - {}", start, end);
   GetLink(start, end)->Pause();
 }
 
 void Network::ResumeLink(const HostName& start, const HostName& end) {
   GlobalAllocatorGuard g;
 
-  WHIRL_LOG_WARN("Resume link {} - {}", start, end);
+  LOG_WARN("Resume link {} - {}", start, end);
   GetLink(start, end)->Resume();
 }
 
 void Network::Split(const fault::Partition& lhs) {
-  WHIRL_LOG_INFO("Network partitioned: {} / ?", lhs.size());
+  LOG_INFO("Network partitioned: {} / ?", lhs.size());
 
   for (auto& link : links_) {
     if (link.IsLoopBack()) {
@@ -136,7 +143,7 @@ void Network::Split(const fault::Partition& lhs) {
       continue;
     }
     if (Cross(link, lhs)) {
-      WHIRL_LOG_WARN("Pause link {} - {}", link.Start()->HostName(),
+      LOG_WARN("Pause link {} - {}", link.Start()->HostName(),
                      link.End()->HostName());
       link.Pause();
     }

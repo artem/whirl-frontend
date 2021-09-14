@@ -8,7 +8,7 @@
 #include <whirl/engines/matrix/process/memory.hpp>
 #include <whirl/engines/matrix/process/scheduler.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 #include <map>
 
@@ -82,7 +82,7 @@ class Transport {
   process::Memory& heap_;
   process::Scheduler& scheduler_;
 
-  Logger logger_{"Transport"};
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::matrix::net

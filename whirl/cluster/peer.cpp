@@ -32,7 +32,7 @@ const rpc::IChannelPtr& Peer::LoopBack() const {
 }
 
 rpc::IClientPtr Peer::MakeRpcClient() {
-  return rpc::MakeClient(rt::NetTransport(), rt::Executor());
+  return rpc::MakeClient(rt::NetTransport(), rt::Executor(), rt::LogBackend());
 }
 
 void Peer::ConnectToPeers() {
@@ -60,7 +60,7 @@ rpc::IChannelPtr Peer::MakeRpcChannel(rpc::IClientPtr client,
                                       const std::string& host) {
   auto transport = client->Dial(host);
   auto retries = rpc::WithRetries(std::move(transport), rt::TimeService(),
-                                  RetriesBackoff());
+                                  rt::LogBackend(), RetriesBackoff());
   return retries;
 }
 

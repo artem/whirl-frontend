@@ -6,7 +6,7 @@
 #include <whirl/rpc/protocol.hpp>
 #include <whirl/rpc/server.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 #include <await/executors/executor.hpp>
 #include <await/fibers/core/manager.hpp>
@@ -27,8 +27,10 @@ class ServerImpl : public IServer,
                    public ITransportHandler {
  public:
   ServerImpl(ITransport* t, await::executors::IExecutor* e,
-             await::fibers::IFiberManager* fm)
-      : transport_(t), handlers_(fm, e) {
+             await::fibers::IFiberManager* fm, timber::ILogBackend* log)
+      : transport_(t),
+        handlers_(fm, e),
+        logger_("RPC-Server", log) {
   }
 
   void Start() override;
@@ -63,7 +65,7 @@ class ServerImpl : public IServer,
   // Names -> Services
   std::map<std::string, IServicePtr> services_;
 
-  Logger logger_{"RPC-Server"};
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::rpc

@@ -5,11 +5,19 @@
 #include <whirl/engines/matrix/helpers/digest.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>
 
+#include <whirl/engines/matrix/world/global/log.hpp>
+
+#include <timber/log.hpp>
+
 using whirl::node::fs::Fd;
 using whirl::node::fs::FileMode;
 using whirl::node::fs::Path;
 
 namespace whirl::matrix::fs {
+
+FileSystem::FileSystem()
+    : logger_("Filesystem", GetLogBackend()) {
+}
 
 // System calls
 
@@ -35,7 +43,7 @@ size_t FileSystem::Read(Fd fd, wheels::MutableMemView buffer) {
   OpenedFile& of = GetOpenedFile(fd);
   CheckMode(of, FileMode::Read);
 
-  WHIRL_LOG_DEBUG("Read {} bytes from '{}'", buffer.Size(), of.path);
+  LOG_DEBUG("Read {} bytes from '{}'", buffer.Size(), of.path);
   size_t bytes_read = of.file->PRead(of.offset, buffer);
   of.offset += bytes_read;
   return bytes_read;
@@ -46,7 +54,7 @@ void FileSystem::Append(Fd fd, wheels::ConstMemView data) {
 
   OpenedFile& of = GetOpenedFile(fd);
   CheckMode(of, FileMode::Append);
-  WHIRL_LOG_DEBUG("Append {} bytes to '{}'", data.Size(), of.path);
+  LOG_DEBUG("Append {} bytes to '{}'", data.Size(), of.path);
   of.file->Append(data);
 }
 
@@ -68,7 +76,7 @@ bool FileSystem::Create(const Path& file_path) {
     return false;
   }
 
-  WHIRL_LOG_INFO("Create new file '{}'", file_path);
+  LOG_INFO("Create new file '{}'", file_path);
   auto f = CreateFile();
   files_.insert({file_path, f});
   return true;
@@ -94,7 +102,7 @@ FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path,
   } else {
     // File does not exist
     if (open_mode == FileMode::Append) {
-      WHIRL_LOG_INFO("Create file '{}'", file_path);
+      LOG_INFO("Create file '{}'", file_path);
       auto f = CreateFile();
       files_.insert({file_path, f});
       return f;

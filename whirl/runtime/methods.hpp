@@ -10,6 +10,8 @@
 #include <await/fibers/core/api.hpp>
 #include <await/fibers/sync/future.hpp>
 
+#include <timber/backend.hpp>
+
 #include <fmt/core.h>
 
 namespace whirl::node::rt {
@@ -140,6 +142,12 @@ inline void PrintLine(FormatString&& format_string, Args&&... args) {
       fmt::format(fmt::runtime(std::forward<FormatString>(format_string)),
                   std::forward<Args>(args)...);
   Terminal()->PrintLine(line);
+}
+
+// Logging
+
+inline timber::ILogBackend* LogBackend() {
+  return GetRuntime().LogBackend();
 }
 
 // RPC

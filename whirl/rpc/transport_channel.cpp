@@ -5,6 +5,8 @@
 #include <await/futures/helpers.hpp>
 #include <await/futures/util/await.hpp>
 
+#include <timber/log.hpp>
+
 using await::futures::Future;
 
 namespace whirl::rpc {
@@ -53,7 +55,7 @@ TransportChannel::ActiveRequest TransportChannel::MakeRequest(
 void TransportChannel::SendRequest(ActiveRequest request) {
   TLTraceContext tg{request.trace_id};
 
-  WHIRL_LOG_INFO("Request {}.{}", peer_, request.method);
+  LOG_INFO("Request {}.{}", peer_, request.method);
 
   ITransportSocketPtr& socket = GetTransportSocket();
 
@@ -72,14 +74,14 @@ void TransportChannel::SendRequest(ActiveRequest request) {
 }
 
 void TransportChannel::ProcessResponse(const TransportMessage& message) {
-  WHIRL_LOG_DEBUG("Process response message from {}", peer_);
+  LOG_DEBUG("Process response message from {}", peer_);
 
   auto response = ParseResponse(message);
 
   auto request_it = requests_.find(response.request_id);
 
   if (request_it == requests_.end()) {
-    WHIRL_LOG_WARN("Request with id {} not found", response.request_id);
+    LOG_WARN("Request with id {} not found", response.request_id);
     return;  // Probably duplicated response message from transport layer?
   }
 
@@ -89,7 +91,7 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
   TLTraceContext tg{request.trace_id};
 
   if (response.IsOk()) {
-    WHIRL_LOG_INFO("Request {}.{} with id = {} completed", peer_,
+    LOG_INFO("Request {}.{} with id = {} completed", peer_,
                    request.method, response.request_id);
     std::move(request.promise).SetValue(response.result);
   } else {
@@ -107,7 +109,7 @@ void TransportChannel::LostPeer() {
   auto requests = std::move(requests_);
   requests_.clear();
 
-  WHIRL_LOG_WARN(
+  LOG_WARN(
       "Transport connection to peer {} lost, fail {} pending request(s)", peer_,
       requests.size());
 
@@ -121,7 +123,7 @@ void TransportChannel::LostPeer() {
 }
 
 void TransportChannel::DoClose() {
-  WHIRL_LOG_INFO("Close transport socket");
+  LOG_INFO("Close transport socket");
   if (socket_ && socket_->IsConnected()) {
     socket_->Close();
   }
@@ -131,13 +133,13 @@ ITransportSocketPtr& TransportChannel::GetTransportSocket() {
   if (socket_ && socket_->IsConnected()) {
     return socket_;
   }
-  WHIRL_LOG_DEBUG("Reconnect to {}", peer_);
+  LOG_DEBUG("Reconnect to {}", peer_);
   socket_ = transport_->ConnectTo(peer_, weak_from_this());
   return socket_;
 }
 
 void TransportChannel::Fail(ActiveRequest& request, std::error_code e) {
-  WHIRL_LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_, request.method,
+  LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_, request.method,
                  request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));
 }

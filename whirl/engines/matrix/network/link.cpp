@@ -4,15 +4,22 @@
 
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>
+#include <whirl/engines/matrix/world/global/log.hpp>
+
+#include <timber/log.hpp>
 
 #include <wheels/support/assert.hpp>
 
 namespace whirl::matrix::net {
 
+Link::Link(Network* net, IServer* start, IServer* end)
+: net_(net), start_(start), end_(end), logger_("Network", GetLogBackend()) {
+}
+
 void Link::Add(Packet packet) {
   if (packet.header.type == Packet::Type::Data) {
     Address to{End()->HostName(), packet.header.dest_port};
-    WHIRL_LOG_INFO("Send packet to {}: <{}>", to, packet.message);
+    LOG_INFO("Send packet to {}: <{}>", to, packet.message);
   }
   Add(std::move(packet), ChooseDeliveryTime(packet));
 }

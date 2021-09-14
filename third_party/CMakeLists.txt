@@ -30,6 +30,17 @@ FetchContent_MakeAvailable(wheels)
 
 # --------------------------------------------------------------------
 
+message(STATUS "FetchContent: timber")
+
+FetchContent_Declare(
+        timber
+        GIT_REPOSITORY https://gitlab.com/Lipovsky/timber.git
+        GIT_TAG main
+)
+FetchContent_MakeAvailable(timber)
+
+# --------------------------------------------------------------------
+
 message(STATUS "FetchContent: cereal")
 
 FetchContent_Declare(

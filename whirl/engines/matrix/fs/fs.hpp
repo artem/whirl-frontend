@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/fs/file.hpp>
 
-#include <whirl/logger/log.hpp>
+#include <timber/logger.hpp>
 
 #include <map>
 #include <string>
@@ -51,7 +51,7 @@ class FileSystem {
   };
 
  public:
-  FileSystem() = default;
+  FileSystem();
 
   // System calls
   // Context: Server
@@ -101,7 +101,7 @@ class FileSystem {
   std::map<node::fs::Fd, OpenedFile> opened_files_;
   node::fs::Fd next_fd_{0};
 
-  Logger logger_{"Filesystem"};
+  timber::Logger logger_;
 };
 
 }  // namespace whirl::matrix::fs

@@ -3,6 +3,8 @@
 #include <await/executors/executor.hpp>
 #include <await/fibers/core/manager.hpp>
 
+#include <timber/logger.hpp>
+
 #include <whirl/fs/fs.hpp>
 #include <whirl/db/database.hpp>
 #include <whirl/cluster/discovery.hpp>
@@ -46,6 +48,10 @@ struct IRuntime {
   virtual ITransport* NetTransport() = 0;
 
   virtual IDiscoveryService* DiscoveryService() = 0;
+
+  // Logging
+
+  virtual timber::ILogBackend* LogBackend() = 0;
 
   // Misc
 
