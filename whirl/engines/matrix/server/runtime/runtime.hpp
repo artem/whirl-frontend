@@ -110,7 +110,7 @@ struct NodeRuntime : node::IRuntime {
     return config.Get();
   }
 
-  IDiscoveryService* DiscoveryService() {
+  node::cluster::IDiscoveryService* DiscoveryService() {
     return discovery.Get();
   }
 

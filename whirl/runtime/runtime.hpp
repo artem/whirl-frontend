@@ -47,7 +47,7 @@ struct IRuntime {
 
   virtual ITransport* NetTransport() = 0;
 
-  virtual IDiscoveryService* DiscoveryService() = 0;
+  virtual cluster::IDiscoveryService* DiscoveryService() = 0;
 
   // Logging
 

@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-namespace whirl {
+namespace whirl::node::cluster {
 
 struct IDiscoveryService {
   virtual ~IDiscoveryService() = default;
@@ -15,4 +15,4 @@ struct IDiscoveryService {
   virtual PoolListing ListPool(const std::string& name) = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node::cluster

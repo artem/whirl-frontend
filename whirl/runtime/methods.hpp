@@ -116,7 +116,7 @@ inline void SleepFor(Duration delay) {
 
 // DNS
 
-inline IDiscoveryService* Discovery() {
+inline cluster::IDiscoveryService* Discovery() {
   return GetRuntime().DiscoveryService();
 }
 
