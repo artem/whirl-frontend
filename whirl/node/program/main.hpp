@@ -1,9 +1,7 @@
 #pragma once
 
-namespace whirl::node::main {
+namespace whirl::node {
 
-void Prologue();
+typedef void (*ProgramMain)(void);
 
-[[noreturn]] void BlockForever();
-
-}  // namespace whirl::node::main
+}  // namespace whirl::node

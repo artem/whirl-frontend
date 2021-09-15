@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/runtime/runtime.hpp>
-#include <whirl/node/program/program.hpp>
+#include <whirl/node/program/main.hpp>
 
 #include <whirl/engines/matrix/world/actor.hpp>
 #include <whirl/engines/matrix/fault/server.hpp>
