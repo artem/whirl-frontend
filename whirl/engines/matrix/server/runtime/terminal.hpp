@@ -10,7 +10,7 @@
 
 namespace whirl::matrix {
 
-class Terminal : public ITerminal {
+class Terminal : public node::ITerminal {
  public:
   Terminal(Stdout& stdout)
       : stdout_(stdout), logger_("Terminal", GetLogBackend()) {

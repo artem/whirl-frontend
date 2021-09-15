@@ -4,7 +4,7 @@
 
 namespace whirl::matrix {
 
-class Config : public IConfig {
+class Config : public node::IConfig {
  public:
   Config(size_t id, std::string pool) : id_(id), pool_(pool) {
   }

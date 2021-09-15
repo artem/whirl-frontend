@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 
-namespace whirl {
+namespace whirl::node {
 
 using NodeId = size_t;
 
@@ -21,4 +21,4 @@ struct IConfig {
   // TODO: attributes
 };
 
-}  // namespace whirl
+}  // namespace whirl::node

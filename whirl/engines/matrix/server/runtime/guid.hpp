@@ -10,11 +10,11 @@
 
 namespace whirl::matrix {
 
-struct GuidGenerator : public IGuidGenerator {
+struct GuidGenerator : public node::IGuidGenerator {
   GuidGenerator(size_t server_id) : server_id_(server_id) {
   }
 
-  Guid Generate() override {
+  node::Guid Generate() override {
     // return GenerateLocal();
 
     // Short and globally unique id
@@ -23,7 +23,7 @@ struct GuidGenerator : public IGuidGenerator {
 
  private:
   // {random-number}-{server-id}-{global-time}-{uid-request}
-  Guid GenerateLocal() {
+  node::Guid GenerateLocal() {
     return wheels::StringBuilder() << GlobalRandomNumber() << "-" << server_id_
                                    << "-" << GlobalNow() << "-" << ++request_;
   }

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-namespace whirl {
+namespace whirl::node {
 
 //////////////////////////////////////////////////////////////////////
 
@@ -19,4 +19,4 @@ struct IGuidGenerator {
   virtual Guid Generate() = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node

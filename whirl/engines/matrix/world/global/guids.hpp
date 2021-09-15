@@ -4,6 +4,6 @@
 
 namespace whirl::matrix {
 
-Guid GenerateGuid();
+node::Guid GenerateGuid();
 
 }  // namespace whirl::matrix

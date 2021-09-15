@@ -64,57 +64,57 @@ struct NodeRuntime : node::IRuntime {
   StaticObject<matrix::Config> config;
   StaticObject<matrix::Terminal> terminal;
 
-  // Accessors
+  // IRuntime
 
-  await::executors::IExecutor* Executor() {
+  await::executors::IExecutor* Executor() override {
     return thread_pool->GetExecutor();
   }
 
-  await::fibers::IFiberManager* FiberManager() {
+  await::fibers::IFiberManager* FiberManager() override {
     return fibers.Get();
   }
 
-  node::time::ITimeService* TimeService() {
+  node::time::ITimeService* TimeService() override {
     return time.Get();
   }
 
-  node::net::ITransport* NetTransport() {
+  node::net::ITransport* NetTransport() override {
     return transport.Get();
   }
 
-  node::db::IDatabase* Database() {
+  node::db::IDatabase* Database() override {
     return db.Get();
   }
 
-  IGuidGenerator* GuidGenerator() {
+  node::IGuidGenerator* GuidGenerator() override {
     return guids.Get();
   }
 
-  node::IRandomService* RandomService() {
+  node::IRandomService* RandomService() override {
     return random.Get();
   }
 
-  node::time::ITrueTimeService* TrueTime() {
+  node::time::ITrueTimeService* TrueTime() override {
     return true_time.Get();
   }
 
-  node::fs::IFileSystem* FileSystem() {
+  node::fs::IFileSystem* FileSystem() override {
     return fs.Get();
   }
 
-  timber::ILogBackend* LogBackend() {
+  timber::ILogBackend* LogBackend() override {
     return GetLogBackend();
   }
 
-  IConfig* Config() {
+  node::IConfig* Config() override {
     return config.Get();
   }
 
-  node::cluster::IDiscoveryService* DiscoveryService() {
+  node::cluster::IDiscoveryService* DiscoveryService() override {
     return discovery.Get();
   }
 
-  ITerminal* Terminal() {
+  node::ITerminal* Terminal() override {
     return terminal.Get();
   }
 };

@@ -204,7 +204,7 @@ class WorldImpl {
     return globals_.Get(name);
   }
 
-  Guid GenerateGuid() {
+  node::Guid GenerateGuid() {
     return fmt::format("guid-{}", guids_.NextId());
   }
 
