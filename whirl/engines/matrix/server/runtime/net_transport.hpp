@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/net/transport.hpp>
+#include <whirl/node/net/transport.hpp>
 
 #include <whirl/engines/matrix/network/transport.hpp>
 

@@ -1,8 +1,8 @@
 #include <whirl/engines/matrix/history/channel.hpp>
 
-#include <whirl/rpc/channel.hpp>
-#include <whirl/rpc/errors.hpp>
-#include <whirl/rpc/trace.hpp>
+#include <whirl/node/rpc/channel.hpp>
+#include <whirl/node/rpc/errors.hpp>
+#include <whirl/node/rpc/trace.hpp>
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 

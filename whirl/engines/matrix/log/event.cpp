@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
-#include <whirl/rpc/trace.hpp>
+#include <whirl/node/rpc/trace.hpp>
 
 #include <await/fibers/core/api.hpp>
 

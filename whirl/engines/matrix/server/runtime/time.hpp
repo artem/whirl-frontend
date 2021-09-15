@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/time/time.hpp>
+#include <whirl/node/time/time.hpp>
 
 #include <whirl/engines/matrix/clocks/wall.hpp>
 #include <whirl/engines/matrix/clocks/monotonic.hpp>

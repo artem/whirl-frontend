@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/rpc/channel.hpp>
+#include <whirl/node/rpc/channel.hpp>
 
 namespace whirl::matrix::client {
 

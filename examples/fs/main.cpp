@@ -1,8 +1,6 @@
-#include <whirl/program/main.hpp>
-
-#include <whirl/db/kv.hpp>
-
-#include <whirl/fs/io.hpp>
+#include <whirl/node/program/main.hpp>
+#include <whirl/node/db/kv.hpp>
+#include <whirl/node/fs/io.hpp>
 
 #include <whirl/runtime/methods.hpp>
 

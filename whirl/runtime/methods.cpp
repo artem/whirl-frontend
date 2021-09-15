@@ -3,8 +3,8 @@
 #include <await/fibers/core/fiber.hpp>
 #include <await/fibers/static/services.hpp>
 
-#include <whirl/rpc/server_impl.hpp>
-#include <whirl/rpc/client.hpp>
+#include <whirl/node/rpc/server_impl.hpp>
+#include <whirl/node/rpc/client.hpp>
 
 namespace whirl::node::rt {
 

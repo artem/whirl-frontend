@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/world/time_model.hpp>
 #include <whirl/engines/matrix/log/event.hpp>
 #include <whirl/history/history.hpp>
-#include <whirl/program/program.hpp>
+#include <whirl/node/program/program.hpp>
 
 #include <memory>
 #include <ostream>

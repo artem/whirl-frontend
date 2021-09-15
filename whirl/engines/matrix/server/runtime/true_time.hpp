@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/time/true_time.hpp>
+#include <whirl/node/time/true_time.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>

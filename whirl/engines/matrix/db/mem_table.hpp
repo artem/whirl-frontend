@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/db/kv.hpp>
+#include <whirl/node/db/kv.hpp>
 
 #include <map>
 

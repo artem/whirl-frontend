@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/db/write_batch.hpp>
+#include <whirl/node/db/write_batch.hpp>
 
-#include <whirl/fs/fs.hpp>
-#include <whirl/fs/io.hpp>
+#include <whirl/node/fs/fs.hpp>
+#include <whirl/node/fs/io.hpp>
 
 #include <whirl/engines/matrix/db/detail/framed.hpp>
 

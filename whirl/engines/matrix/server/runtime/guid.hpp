@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/guid.hpp>
+#include <whirl/node/misc/guid.hpp>
 
 #include <whirl/engines/matrix/world/global/random.hpp>
 #include <whirl/engines/matrix/world/global/time.hpp>

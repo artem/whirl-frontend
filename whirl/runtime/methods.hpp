@@ -3,8 +3,8 @@
 #include <whirl/runtime/runtime.hpp>
 
 // RPC
-#include <whirl/rpc/client.hpp>
-#include <whirl/rpc/server.hpp>
+#include <whirl/node/rpc/client.hpp>
+#include <whirl/node/rpc/server.hpp>
 
 // Concurrency
 #include <await/fibers/core/api.hpp>

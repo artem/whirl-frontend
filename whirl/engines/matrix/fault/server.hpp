@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/fs/path.hpp>
+#include <whirl/node/fs/path.hpp>
 
 #include <cstdlib>
 #include <string>

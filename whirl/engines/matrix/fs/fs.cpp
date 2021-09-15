@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/fs/fs.hpp>
 
-#include <whirl/fs/error.hpp>
+#include <whirl/node/fs/error.hpp>
 
 #include <whirl/engines/matrix/helpers/digest.hpp>
 #include <whirl/engines/matrix/memory/new.hpp>

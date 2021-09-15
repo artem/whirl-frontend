@@ -1,8 +1,9 @@
-#include <whirl/program/main.hpp>
-#include <whirl/cluster/peer.hpp>
-#include <whirl/store/kv.hpp>
-#include <whirl/rpc/service_base.hpp>
-#include <whirl/rpc/call.hpp>
+#include <whirl/node/program/main.hpp>
+#include <whirl/node/cluster/peer.hpp>
+#include <whirl/node/store/kv.hpp>
+#include <whirl/node/rpc/service_base.hpp>
+#include <whirl/node/rpc/call.hpp>
+
 #include <whirl/cereal/serializable.hpp>
 
 #include <whirl/runtime/methods.hpp>
@@ -18,7 +19,6 @@
 #include <whirl/engines/matrix/test/random.hpp>
 #include <whirl/engines/matrix/test/main.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
-#include <whirl/engines/matrix/memory/new.hpp>
 
 #include <whirl/engines/matrix/fault/access.hpp>
 #include <whirl/engines/matrix/fault/net/star.hpp>
@@ -28,7 +28,7 @@
 #include <whirl/history/models/kv.hpp>
 
 #include <await/fibers/core/id.hpp>
-#include <whirl/rpc/id.hpp>
+#include <whirl/node/rpc/id.hpp>
 
 // Concurrency
 #include <await/fibers/core/api.hpp>

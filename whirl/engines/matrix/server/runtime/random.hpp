@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/random/random.hpp>
+#include <whirl/node/random/random.hpp>
 
 // Impl
 #include <whirl/engines/matrix/world/global/random.hpp>

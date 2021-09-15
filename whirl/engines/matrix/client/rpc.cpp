@@ -4,9 +4,9 @@
 
 #include <whirl/runtime/methods.hpp>
 
-#include <whirl/rpc/client.hpp>
-#include <whirl/rpc/random.hpp>
-#include <whirl/rpc/retries.hpp>
+#include <whirl/node/rpc/client.hpp>
+#include <whirl/node/rpc/random.hpp>
+#include <whirl/node/rpc/retries.hpp>
 
 namespace whirl::matrix::client {
 

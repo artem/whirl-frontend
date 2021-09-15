@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/db/database.hpp>
-#include <whirl/db/mutation.hpp>
+#include <whirl/node/db/database.hpp>
+#include <whirl/node/db/mutation.hpp>
 
-#include <whirl/fs/fs.hpp>
+#include <whirl/node/fs/fs.hpp>
 
 #include <whirl/engines/matrix/db/mem_table.hpp>
 #include <whirl/engines/matrix/db/wal.hpp>

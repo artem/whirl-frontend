@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/terminal.hpp>
+#include <whirl/node/misc/terminal.hpp>
 
 #include <whirl/engines/matrix/server/stdout.hpp>
 

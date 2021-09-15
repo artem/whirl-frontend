@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/program/program.hpp>
+#include <whirl/node/program/program.hpp>
 
 namespace whirl::matrix::process {
 

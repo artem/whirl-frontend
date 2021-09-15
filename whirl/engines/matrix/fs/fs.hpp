@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/fs/fs.hpp>
+#include <whirl/node/fs/fs.hpp>
 
 #include <whirl/engines/matrix/fs/file.hpp>
 

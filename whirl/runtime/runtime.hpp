@@ -5,18 +5,18 @@
 
 #include <timber/logger.hpp>
 
-#include <whirl/fs/fs.hpp>
-#include <whirl/db/database.hpp>
-#include <whirl/cluster/discovery.hpp>
+#include <whirl/node/fs/fs.hpp>
+#include <whirl/node/db/database.hpp>
+#include <whirl/node/cluster/discovery.hpp>
 
-#include <whirl/services/config.hpp>
-#include <whirl/time/time.hpp>
-#include <whirl/random/random.hpp>
-#include <whirl/services/guid.hpp>
-#include <whirl/time/true_time.hpp>
-#include <whirl/net/transport.hpp>
-#include <whirl/services/terminal.hpp>
-#include <whirl/services/fault.hpp>
+#include <whirl/node/misc/config.hpp>
+#include <whirl/node/time/time.hpp>
+#include <whirl/node/random/random.hpp>
+#include <whirl/node/misc/guid.hpp>
+#include <whirl/node/time/true_time.hpp>
+#include <whirl/node/net/transport.hpp>
+#include <whirl/node/misc/terminal.hpp>
+#include <whirl/node/misc/fault.hpp>
 
 namespace whirl::node {
 

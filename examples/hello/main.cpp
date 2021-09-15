@@ -1,5 +1,5 @@
 // Node
-#include <whirl/program/main.hpp>
+#include <whirl/node/program/main.hpp>
 #include <whirl/runtime/methods.hpp>
 
 // Simulation

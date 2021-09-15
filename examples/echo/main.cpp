@@ -1,7 +1,6 @@
-#include <whirl/program/main.hpp>
-
-#include <whirl/rpc/service_base.hpp>
-#include <whirl/rpc/call.hpp>
+#include <whirl/node/program/main.hpp>
+#include <whirl/node/rpc/service_base.hpp>
+#include <whirl/node/rpc/call.hpp>
 
 #include <whirl/runtime/methods.hpp>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/cluster/discovery.hpp>
+#include <whirl/node/cluster/discovery.hpp>
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
