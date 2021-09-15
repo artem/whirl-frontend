@@ -29,11 +29,11 @@ class WallTime {
   Jiffies jfs_;
 };
 
-WallTime operator+(WallTime t, Jiffies d) {
+inline WallTime operator+(WallTime t, Jiffies d) {
   return {t.ToJiffies() + d};
 }
 
-WallTime operator+(Jiffies d, WallTime t) {
+inline WallTime operator+(Jiffies d, WallTime t) {
   return t + d;
 }
 
@@ -53,7 +53,7 @@ class MonotonicTime {
   Jiffies jfs_;
 };
 
-Jiffies operator - (MonotonicTime end, MonotonicTime start) {
+inline Jiffies operator - (MonotonicTime end, MonotonicTime start) {
   return start.ToJiffies() - end.ToJiffies();
 }
 
