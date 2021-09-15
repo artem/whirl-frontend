@@ -2,13 +2,13 @@
 
 #include <whirl/rpc/channel.hpp>
 
-#include <whirl/services/random.hpp>
+#include <whirl/random/random.hpp>
 
 #include <vector>
 
 namespace whirl::rpc {
 
 IChannelPtr MakeRandomChannel(std::vector<IChannelPtr>&& channels,
-                              IRandomService* random);
+                              node::IRandomService* random);
 
 }  // namespace whirl::rpc

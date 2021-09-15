@@ -11,7 +11,7 @@
 
 #include <whirl/services/config.hpp>
 #include <whirl/time/time.hpp>
-#include <whirl/services/random.hpp>
+#include <whirl/random/random.hpp>
 #include <whirl/services/guid.hpp>
 #include <whirl/time/true_time.hpp>
 #include <whirl/net/transport.hpp>

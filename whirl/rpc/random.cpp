@@ -10,7 +10,7 @@ static const std::string kRandomPeer = "Random";
 
 class RandomChannel : public IChannel {
  public:
-  RandomChannel(std::vector<IChannelPtr> channels, IRandomService* random)
+  RandomChannel(std::vector<IChannelPtr> channels, node::IRandomService* random)
       : channels_(std::move(channels)), random_(std::move(random)) {
   }
 
@@ -42,13 +42,13 @@ class RandomChannel : public IChannel {
 
  private:
   std::vector<IChannelPtr> channels_;
-  IRandomService* random_;
+  node::IRandomService* random_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
 IChannelPtr MakeRandomChannel(std::vector<IChannelPtr>&& channels,
-                              IRandomService* random) {
+                              node::IRandomService* random) {
   return std::make_shared<RandomChannel>(std::move(channels),
                                          std::move(random));
 }

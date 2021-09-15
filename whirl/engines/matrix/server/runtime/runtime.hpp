@@ -90,7 +90,7 @@ struct NodeRuntime : node::IRuntime {
     return guids.Get();
   }
 
-  IRandomService* RandomService() {
+  node::IRandomService* RandomService() {
     return random.Get();
   }
 

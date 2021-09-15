@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <memory>
 
-namespace whirl {
+namespace whirl::node {
 
 struct IRandomService {
   virtual ~IRandomService() = default;
@@ -12,4 +12,4 @@ struct IRandomService {
   virtual uint64_t GenerateNumber(uint64_t bound) = 0;
 };
 
-}  // namespace whirl
+}  // namespace whirl::node

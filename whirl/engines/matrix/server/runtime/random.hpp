@@ -1,13 +1,13 @@
 #pragma once
 
-#include <whirl/services/random.hpp>
+#include <whirl/random/random.hpp>
 
 // Impl
 #include <whirl/engines/matrix/world/global/random.hpp>
 
 namespace whirl::matrix {
 
-struct RandomGenerator : public IRandomService {
+struct RandomGenerator : public node::IRandomService {
   uint64_t GenerateNumber(uint64_t bound) override {
     return GlobalRandomNumber() % bound;
   }
