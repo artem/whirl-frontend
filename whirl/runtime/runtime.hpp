@@ -9,10 +9,10 @@
 #include <whirl/node/db/database.hpp>
 #include <whirl/node/cluster/discovery.hpp>
 
-#include <whirl/node/misc/config.hpp>
+#include <whirl/node/config/config.hpp>
 #include <whirl/node/time/time.hpp>
-#include <whirl/node/random/random.hpp>
-#include <whirl/node/misc/guid.hpp>
+#include <whirl/node/random/service.hpp>
+#include <whirl/node/guid/guid.hpp>
 #include <whirl/node/time/true_time.hpp>
 #include <whirl/node/net/transport.hpp>
 #include <whirl/node/misc/terminal.hpp>

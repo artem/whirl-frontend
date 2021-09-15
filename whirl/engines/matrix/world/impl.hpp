@@ -13,7 +13,7 @@
 #include <whirl/engines/matrix/helpers/digest.hpp>
 #include <whirl/engines/matrix/helpers/untyped_dict.hpp>
 
-#include <whirl/node/misc/guid.hpp>
+#include <whirl/node/guid/guid.hpp>
 
 #include <timber/logger.hpp>
 

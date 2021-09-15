@@ -2,7 +2,7 @@
 
 #include <whirl/node/rpc/channel.hpp>
 
-#include <whirl/node/random/random.hpp>
+#include <whirl/node/random/service.hpp>
 
 #include <vector>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/misc/guid.hpp>
+#include <whirl/node/guid/guid.hpp>
 
 namespace whirl::matrix {
 
