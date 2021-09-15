@@ -1,6 +1,6 @@
 #include <whirl/node/cluster/peer.hpp>
 
-#include <whirl/runtime/methods.hpp>
+#include <whirl/node/runtime/methods.hpp>
 
 #include <whirl/node/rpc/retries.hpp>
 

@@ -1,6 +1,6 @@
 #include <whirl/node/program/main.hpp>
 
-#include <whirl/runtime/methods.hpp>
+#include <whirl/node/runtime/methods.hpp>
 
 #include <await/futures/util/never.hpp>
 #include <await/fibers/core/await.hpp>

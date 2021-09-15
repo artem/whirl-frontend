@@ -1,6 +1,6 @@
 // Node
 #include <whirl/node/program/main.hpp>
-#include <whirl/runtime/methods.hpp>
+#include <whirl/node/runtime/methods.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>

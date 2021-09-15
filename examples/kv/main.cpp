@@ -3,10 +3,9 @@
 #include <whirl/node/store/kv.hpp>
 #include <whirl/node/rpc/service_base.hpp>
 #include <whirl/node/rpc/call.hpp>
+#include <whirl/node/runtime/methods.hpp>
 
 #include <whirl/cereal/serializable.hpp>
-
-#include <whirl/runtime/methods.hpp>
 
 #include <timber/log.hpp>
 

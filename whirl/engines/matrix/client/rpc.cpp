@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/history/channel.hpp>
 
-#include <whirl/runtime/methods.hpp>
+#include <whirl/node/runtime/methods.hpp>
 
 #include <whirl/node/rpc/client.hpp>
 #include <whirl/node/rpc/random.hpp>

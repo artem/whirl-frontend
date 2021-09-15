@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/client/util.hpp>
 
-#include <whirl/runtime/methods.hpp>
+#include <whirl/node/runtime/methods.hpp>
 
 namespace whirl::matrix::client {
 
