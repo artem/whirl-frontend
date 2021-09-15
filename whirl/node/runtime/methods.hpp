@@ -2,6 +2,8 @@
 
 #include <whirl/runtime/runtime.hpp>
 
+#include <whirl/node/time/time_point.hpp>
+
 // RPC
 #include <whirl/node/rpc/client.hpp>
 #include <whirl/node/rpc/server.hpp>
@@ -72,11 +74,11 @@ inline time::ITimeService* TimeService() {
   return GetRuntime().TimeService();
 }
 
-inline TimePoint WallTimeNow() {
+inline time::WallTime WallTimeNow() {
   return TimeService()->WallTimeNow();
 }
 
-inline TimePoint MonotonicNow() {
+inline time::MonotonicTime MonotonicNow() {
   return TimeService()->MonotonicNow();
 }
 

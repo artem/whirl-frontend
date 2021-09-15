@@ -2,6 +2,8 @@
 
 #include <whirl/time.hpp>
 
+#include <whirl/node/time/time_point.hpp>
+
 #include <memory>
 
 namespace whirl::node::time {
@@ -12,8 +14,8 @@ namespace whirl::node::time {
 
 // [earliest, latest]
 struct TTInterval {
-  TimePoint earliest;
-  TimePoint latest;
+  WallTime earliest;
+  WallTime latest;
 };
 
 struct ITrueTimeService {
@@ -24,12 +26,12 @@ struct ITrueTimeService {
   virtual TTInterval Now() const = 0;
 
   // True if `t` has definitely passed
-  bool After(TimePoint t) const {
+  bool After(WallTime t) const {
     return Now().earliest > t;
   }
 
   // True if `t` has definitely not arrived
-  bool Before(TimePoint t) const {
+  bool Before(WallTime t) const {
     return Now().latest < t;
   }
 };

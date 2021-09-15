@@ -24,12 +24,12 @@ class TimeService : public node::time::ITimeService {
         scheduler_(scheduler) {
   }
 
-  TimePoint WallTimeNow() override {
-    return wall_clock_.Now();
+  node::time::WallTime WallTimeNow() override {
+    return {wall_clock_.Now()};
   }
 
-  TimePoint MonotonicNow() override {
-    return monotonic_clock_.Now();
+  node::time::MonotonicTime MonotonicNow() override {
+    return {monotonic_clock_.Now()};
   }
 
   await::futures::Future<void> After(Jiffies d) override {

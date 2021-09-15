@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/node/time/time_point.hpp>
+
 #include <whirl/time.hpp>
 
 #include <await/futures/core/future.hpp>
@@ -12,10 +14,10 @@ struct ITimeService {
   virtual ~ITimeService() = default;
 
   // Wall clock
-  virtual TimePoint WallTimeNow() = 0;
+  virtual WallTime WallTimeNow() = 0;
 
   // Monotonic (steady) clock
-  virtual TimePoint MonotonicNow() = 0;
+  virtual MonotonicTime MonotonicNow() = 0;
 
   // Timeouts and delays
   virtual await::futures::Future<void> After(Jiffies d) = 0;
