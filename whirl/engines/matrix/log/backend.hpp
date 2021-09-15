@@ -16,11 +16,14 @@ class LogBackend : public timber::ILogBackend {
  public:
   LogBackend();
 
+  // ILogBackend
+
   // Context: Server
   timber::Level GetMinLevelFor(const std::string& component) const override;
 
   // Context: Server
   void Log(timber::Event event) override;
+
 
   const EventLog& GetEvents() const {
     return events_;
