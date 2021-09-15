@@ -25,11 +25,11 @@ class TimeService : public node::time::ITimeService {
   }
 
   node::time::WallTime WallTimeNow() override {
-    return {wall_clock_.Now()};
+    return wall_clock_.Now();
   }
 
   node::time::MonotonicTime MonotonicNow() override {
-    return {monotonic_clock_.Now()};
+    return monotonic_clock_.Now();
   }
 
   await::futures::Future<void> After(Jiffies d) override {

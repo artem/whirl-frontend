@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/node/time/time_point.hpp>
+
 #include <whirl/engines/matrix/world/global/time.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
@@ -16,8 +18,8 @@ class WallClock {
     // they rely on monotonic clock
   }
 
-  TimePoint Now() const {
-    return GlobalNow() + offset_;
+  node::time::WallTime Now() const {
+    return {GlobalNow() + offset_};
   }
 
  private:

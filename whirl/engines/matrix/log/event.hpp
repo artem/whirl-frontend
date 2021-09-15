@@ -1,6 +1,5 @@
 #pragma once
 
-#include <timber/level.hpp>
 #include <timber/event.hpp>
 
 #include <whirl/time.hpp>

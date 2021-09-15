@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/node/time/time_point.hpp>
+
 #include <whirl/engines/matrix/clocks/drift.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
@@ -18,8 +20,8 @@ class MonotonicClock {
     last_reset_ = GlobalNow();
   }
 
-  TimePoint Now() const {
-    return drift_.Elapsed(ElapsedSinceLastReset()) + init_;
+  node::time::MonotonicTime Now() const {
+    return {drift_.Elapsed(ElapsedSinceLastReset()) + init_};
   }
 
   // For timeouts and sleeps
