@@ -23,13 +23,13 @@ class MonotonicClock {
   }
 
   // For timeouts and sleeps
-  Duration SleepOrTimeout(Duration d) const {
+  Jiffies SleepOrTimeout(Jiffies d) const {
     return drift_.SleepOrTimeout(d);
   }
 
  private:
   // Global time
-  Duration ElapsedSinceLastReset() const {
+  Jiffies ElapsedSinceLastReset() const {
     return GlobalNow() - last_reset_;
   }
 

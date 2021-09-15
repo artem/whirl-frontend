@@ -11,8 +11,8 @@ namespace whirl::rpc {
 //////////////////////////////////////////////////////////////////////
 
 struct BackoffParams {
-  Duration init;
-  Duration max;
+  Jiffies init;
+  Jiffies max;
   size_t factor;
 };
 

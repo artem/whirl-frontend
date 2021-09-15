@@ -166,7 +166,7 @@ size_t WorldImpl::MakeSteps(size_t steps) {
   return steps_made;
 }
 
-void WorldImpl::RunFor(Duration time_budget) {
+void WorldImpl::RunFor(Jiffies time_budget) {
   while (TimeElapsed() < time_budget) {
     if (!Step()) {
       break;

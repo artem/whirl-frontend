@@ -23,7 +23,6 @@
 
 using namespace await::fibers;
 using await::futures::Future;
-using namespace whirl::time_literals;
 using namespace whirl;
 
 //////////////////////////////////////////////////////////////////////

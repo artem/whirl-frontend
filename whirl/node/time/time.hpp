@@ -18,7 +18,7 @@ struct ITimeService {
   virtual TimePoint MonotonicNow() = 0;
 
   // Timeouts and delays
-  virtual await::futures::Future<void> After(Duration d) = 0;
+  virtual await::futures::Future<void> After(Jiffies d) = 0;
 };
 
 }  // namespace whirl::node::time

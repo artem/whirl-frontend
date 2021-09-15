@@ -12,23 +12,19 @@ namespace whirl {
 
 using TimePoint = size_t;
 
-using Duration = size_t;
+using Jiffies = size_t;
 
 //////////////////////////////////////////////////////////////////////
 
-namespace time_literals {
-
 // Literals for jiffies
 
-inline Duration operator""_jiffies(unsigned long long int d) {
-  return Duration{d};
+inline Jiffies operator""_jiffies(unsigned long long int d) {
+  return Jiffies{d};
 }
 
 // More compact
-inline Duration operator""_jfs(unsigned long long int d) {
-  return Duration{d};
+inline Jiffies operator""_jfs(unsigned long long int d) {
+  return Jiffies{d};
 }
-
-}  // namespace time_literals
 
 }  // namespace whirl

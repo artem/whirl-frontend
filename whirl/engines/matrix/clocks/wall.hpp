@@ -21,12 +21,12 @@ class WallClock {
   }
 
  private:
-  static Duration InitLocalClockOffset() {
+  static Jiffies InitLocalClockOffset() {
     return GetTimeModel()->InitWallClockOffset();
   }
 
  private:
-  Duration offset_{0};
+  Jiffies offset_{0};
 };
 
 }  // namespace whirl::matrix::clocks

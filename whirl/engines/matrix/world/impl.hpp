@@ -107,7 +107,7 @@ class WorldImpl {
   size_t MakeSteps(size_t steps);
 
   // Time budget is _virtual_!
-  void RunFor(Duration time_budget);
+  void RunFor(Jiffies time_budget);
 
   void RestartServer(const std::string& hostname);
 
@@ -177,7 +177,7 @@ class WorldImpl {
     return time_.Now();
   }
 
-  Duration TimeElapsed() const {
+  Jiffies TimeElapsed() const {
     return time_.Now() - start_time_;
   }
 

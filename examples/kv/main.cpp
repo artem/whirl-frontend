@@ -48,7 +48,6 @@ using await::futures::Future;
 using wheels::Result;
 using namespace await::fibers;
 using namespace whirl;
-using namespace whirl::time_literals;
 
 //////////////////////////////////////////////////////////////////////
 

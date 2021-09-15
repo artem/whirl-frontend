@@ -39,15 +39,15 @@ class CrazyTimeModel : public ITimeModel {
     return GlobalRandomNumber(1000);
   }
 
-  Duration TrueTimeUncertainty() override {
+  Jiffies TrueTimeUncertainty() override {
     return GlobalRandomNumber(5, 500);
   }
 
-  Duration DiskWrite(size_t /*bytes*/) override {
+  Jiffies DiskWrite(size_t /*bytes*/) override {
     return GlobalRandomNumber(10, 250);
   }
 
-  Duration DiskRead(size_t /*bytes*/) override {
+  Jiffies DiskRead(size_t /*bytes*/) override {
     return GlobalRandomNumber(10, 50);
   }
 
@@ -69,7 +69,7 @@ class CrazyTimeModel : public ITimeModel {
 
   // Threads
 
-  Duration ThreadPause() override {
+  Jiffies ThreadPause() override {
     return GlobalRandomNumber(5, 50);
   }
 };

@@ -25,7 +25,7 @@ class Disk {
   }
 
  private:
-  void BlockFor(Duration latency) const {
+  void BlockFor(Jiffies latency) const {
     auto after = time_service_->After(latency);
     await::fibers::Await(std::move(after)).ExpectOk();
   }

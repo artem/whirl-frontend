@@ -82,7 +82,7 @@ inline TimePoint MonotonicNow() {
 
 // Timeouts
 
-inline await::futures::Future<void> After(Duration delay) {
+inline await::futures::Future<void> After(Jiffies delay) {
   return TimeService()->After(delay);
 }
 
@@ -110,7 +110,7 @@ inline await::fibers::IFiberManager* FiberManager() {
 
 void Go(await::fibers::FiberRoutine routine);
 
-inline void SleepFor(Duration delay) {
+inline void SleepFor(Jiffies delay) {
   await::fibers::Await(After(delay)).ExpectOk();
 }
 

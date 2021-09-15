@@ -23,18 +23,18 @@ class Backoff {
   explicit Backoff(BackoffParams params) : params_(params), next_(params.init) {
   }
 
-  Duration Next() {
+  Jiffies Next() {
     return std::exchange(next_, ComputeNext(next_));
   }
 
  private:
-  Duration ComputeNext(Duration curr) const {
-    return std::min<Duration>(curr * params_.factor, params_.max);
+  Jiffies ComputeNext(Jiffies curr) const {
+    return std::min<Jiffies>(curr * params_.factor, params_.max);
   }
 
  private:
   BackoffParams params_;
-  Duration next_;
+  Jiffies next_;
 };
 
 //////////////////////////////////////////////////////////////////////

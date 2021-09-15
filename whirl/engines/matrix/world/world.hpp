@@ -120,7 +120,7 @@ class World {
   size_t Digest() const;
 
   size_t StepCount() const;
-  Duration TimeElapsed() const;
+  Jiffies TimeElapsed() const;
 
   const log::EventLog& EventLog() const;
   const histories::History& History() const;

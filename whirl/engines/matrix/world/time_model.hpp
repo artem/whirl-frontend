@@ -29,23 +29,23 @@ struct ITimeModel {
 
   // TrueTime
 
-  virtual Duration TrueTimeUncertainty() = 0;
+  virtual Jiffies TrueTimeUncertainty() = 0;
 
   // Disk
 
-  virtual Duration DiskWrite(size_t bytes) = 0;
-  virtual Duration DiskRead(size_t bytes) = 0;
+  virtual Jiffies DiskWrite(size_t bytes) = 0;
+  virtual Jiffies DiskRead(size_t bytes) = 0;
 
   // Network
 
   // DPI =)
-  virtual Duration FlightTime(const net::IServer* start,
+  virtual Jiffies FlightTime(const net::IServer* start,
                               const net::IServer* end,
                               const net::Packet& packet) = 0;
 
   // Threads
 
-  virtual Duration ThreadPause() = 0;
+  virtual Jiffies ThreadPause() = 0;
 };
 
 using ITimeModelPtr = std::shared_ptr<ITimeModel>;

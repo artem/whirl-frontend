@@ -85,7 +85,7 @@ size_t World::StepCount() const {
   return impl_->CurrentStep();
 }
 
-Duration World::TimeElapsed() const {
+Jiffies World::TimeElapsed() const {
   return impl_->TimeElapsed();
 }
 

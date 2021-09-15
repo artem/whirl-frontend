@@ -18,13 +18,13 @@ class Drift {
 
   // For now
   // Real time duration -> user duration
-  Duration Elapsed(Duration real) const {
+  Jiffies Elapsed(Jiffies real) const {
     return (real * (100 + drift_)) / 100;
   }
 
   // For sleeps/timeouts
   // User duration -> real time duration
-  Duration SleepOrTimeout(Duration user) const {
+  Jiffies SleepOrTimeout(Jiffies user) const {
     return (user * 100) / (100 + drift_);
   }
 

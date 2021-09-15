@@ -32,7 +32,7 @@ class TimeService : public node::time::ITimeService {
     return monotonic_clock_.Now();
   }
 
-  await::futures::Future<void> After(Duration d) override {
+  await::futures::Future<void> After(Jiffies d) override {
     auto after = AfterGlobalTime(d);
 
     auto [f, p] = await::futures::MakeContract<void>();
@@ -45,7 +45,7 @@ class TimeService : public node::time::ITimeService {
   }
 
  private:
-  TimePoint AfterGlobalTime(Duration d) const {
+  TimePoint AfterGlobalTime(Jiffies d) const {
     return GlobalNow() + monotonic_clock_.SleepOrTimeout(d);
   }
 
