@@ -53,7 +53,7 @@ struct IRuntime {
 
   // Logging
 
-  virtual timber::ILogBackend* LogBackend() = 0;
+  virtual timber::ILogBackend* LoggerBackend() = 0;
 
   // Random
 

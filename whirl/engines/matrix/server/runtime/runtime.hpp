@@ -102,7 +102,7 @@ struct NodeRuntime : node::IRuntime {
     return fs.Get();
   }
 
-  timber::ILogBackend* LogBackend() override {
+  timber::ILogBackend* LoggerBackend() override {
     return GetLogBackend();
   }
 

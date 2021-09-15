@@ -146,8 +146,8 @@ inline void PrintLine(FormatString&& format_string, Args&&... args) {
 
 // Logging
 
-inline timber::ILogBackend* LogBackend() {
-  return GetRuntime().LogBackend();
+inline timber::ILogBackend* LoggerBackend() {
+  return GetRuntime().LoggerBackend();
 }
 
 // RPC

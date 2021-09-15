@@ -86,7 +86,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
  public:
   Coordinator() : Peer(node::rt::PoolName()),
-    logger_("KVNode.Coordinator", node::rt::LogBackend()) {
+    logger_("KVNode.Coordinator", node::rt::LoggerBackend()) {
   }
 
   void RegisterMethods() override {
@@ -182,7 +182,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
 class Replica : public rpc::ServiceBase<Replica> {
  public:
   Replica() : kv_store_(node::rt::Database(), "abd"),
-    logger_("KVNode.Replica", node::rt::LogBackend()) {
+    logger_("KVNode.Replica", node::rt::LoggerBackend()) {
   }
 
   void RegisterMethods() override {
@@ -284,7 +284,7 @@ const std::string& ChooseRandomKey() {
 [[noreturn]] void Client() {
   matrix::client::Prologue();
 
-  timber::Logger logger_{"Client", node::rt::LogBackend()};
+  timber::Logger logger_{"Client", node::rt::LoggerBackend()};
 
   KVBlockingStub kv_store{matrix::client::MakeRpcChannel(/*pool_name=*/"kv")};
 
@@ -311,7 +311,7 @@ const std::string& ChooseRandomKey() {
 //////////////////////////////////////////////////////////////////////
 
 [[noreturn]] void Adversary() {
-  timber::Logger logger_{"Adversary", node::rt::LogBackend()};
+  timber::Logger logger_{"Adversary", node::rt::LoggerBackend()};
 
   // List system nodes
   auto pool = node::rt::Discovery()->ListPool("kv");

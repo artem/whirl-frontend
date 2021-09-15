@@ -50,7 +50,7 @@ struct Echo {
 class EchoService : public rpc::ServiceBase<EchoService> {
  public:
   EchoService()
-    : logger_("EchoService", node::rt::LogBackend()) {
+    : logger_("EchoService", node::rt::LoggerBackend()) {
 
   }
 
@@ -94,7 +94,7 @@ void EchoNode() {
 
   auto channel = matrix::client::MakeRpcChannel(/*pool_name=*/"echo");
 
-  timber::Logger logger_{"Client", node::rt::LogBackend()};
+  timber::Logger logger_{"Client", node::rt::LoggerBackend()};
 
   while (true) {
     // Печатаем локальное время
