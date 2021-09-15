@@ -155,7 +155,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
  private:
   WriteTimestamp ChooseWriteTimestamp() const {
     // Local wall clock may be out of sync with other replicas
-    // Use TrueTime (TrueTime() method)
+    // Use TrueTime service (node::rt::TrueTime())
     return node::rt::WallTimeNow().ToJiffies();
   }
 
