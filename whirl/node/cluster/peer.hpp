@@ -10,8 +10,6 @@
 
 namespace whirl::node::cluster {
 
-//////////////////////////////////////////////////////////////////////
-
 class Peer {
  public:
   Peer(const std::string& pool_name);
@@ -41,13 +39,5 @@ class Peer {
 
   std::map<std::string, rpc::IChannelPtr> channels_;
 };
-
-//////////////////////////////////////////////////////////////////////
-
-using PeerPtr = std::shared_ptr<Peer>;
-
-inline PeerPtr MakePeer(const std::string& pool) {
-  return std::make_shared<Peer>(pool);
-}
 
 }  // namespace whirl::node::cluster
