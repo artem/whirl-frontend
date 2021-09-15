@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/net_transport.hpp>
+#include <whirl/net/transport.hpp>
 
 #include <whirl/rpc/method.hpp>
 #include <whirl/rpc/id.hpp>
@@ -24,7 +24,7 @@ namespace whirl::rpc {
 
 class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
                          public IChannel,
-                         public ITransportHandler {
+                         public node::net::ITransportHandler {
  private:
   struct ActiveRequest {
     RequestId id;
@@ -37,8 +37,8 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
   using ActiveRequests = std::map<RequestId, ActiveRequest>;
 
  public:
-  TransportChannel(ITransport* t, await::executors::IExecutor* e,
-                   timber::ILogBackend* log, TransportAddress peer)
+  TransportChannel(node::net::ITransport* t, await::executors::IExecutor* e,
+                   timber::ILogBackend* log, node::net::TransportAddress peer)
       : transport_(std::move(t)),
         executor_(e),
         peer_(peer),
@@ -66,8 +66,8 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
   // ITransportHandler
 
-  void HandleMessage(const TransportMessage& message,
-                     ITransportSocketPtr /*back*/) override {
+  void HandleMessage(const node::net::TransportMessage& message,
+                     node::net::ITransportSocketPtr /*back*/) override {
     await::executors::Execute(strand_, [self = shared_from_this(), message]() {
       self->ProcessResponse(message);
     });
@@ -85,26 +85,26 @@ class TransportChannel : public std::enable_shared_from_this<TransportChannel>,
 
   // Inside strand executor
   void SendRequest(ActiveRequest request);
-  void ProcessResponse(const TransportMessage& message);
+  void ProcessResponse(const node::net::TransportMessage& message);
   void LostPeer();
   void DoClose();
 
-  proto::Response ParseResponse(const TransportMessage& message);
+  proto::Response ParseResponse(const node::net::TransportMessage& message);
 
  private:
-  ITransportSocketPtr& GetTransportSocket();
+  node::net::ITransportSocketPtr& GetTransportSocket();
 
   void Fail(ActiveRequest& request, std::error_code e);
 
  private:
-  ITransport* transport_;
+  node::net::ITransport* transport_;
   await::executors::IExecutor* executor_;  // For callbacks
 
-  const TransportAddress peer_;
+  const node::net::TransportAddress peer_;
 
   await::executors::Strand strand_;
   // State guarded by strand_
-  ITransportSocketPtr socket_{nullptr};
+  node::net::ITransportSocketPtr socket_{nullptr};
   ActiveRequests requests_;
 
   timber::Logger logger_;

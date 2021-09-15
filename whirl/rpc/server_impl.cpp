@@ -37,8 +37,8 @@ void ServerImpl::Shutdown() {
 
 // ITransportHandler
 
-void ServerImpl::HandleMessage(const TransportMessage& message,
-                               ITransportSocketPtr back) {
+void ServerImpl::HandleMessage(const node::net::TransportMessage& message,
+                               node::net::ITransportSocketPtr back) {
   // Process request
   handlers_.Spawn(
       [self = shared_from_this(), message, back = std::move(back)]() mutable {
@@ -50,8 +50,8 @@ void ServerImpl::HandleDisconnect(const std::string& /*client*/) {
   // Client disconnected
 }
 
-void ServerImpl::ProcessRequest(const TransportMessage& message,
-                                const ITransportSocketPtr& back) {
+void ServerImpl::ProcessRequest(const node::net::TransportMessage& message,
+                                const node::net::ITransportSocketPtr& back) {
   auto request = Deserialize<proto::Request>(message);
 
   auto trace = MakeTraceContext(request.trace_id);
@@ -96,13 +96,13 @@ void ServerImpl::ProcessRequest(const TransportMessage& message,
 }
 
 void ServerImpl::RespondWithError(const proto::Request& request,
-                                  const ITransportSocketPtr& back,
+                                  const node::net::ITransportSocketPtr& back,
                                   RPCErrorCode error) {
   SendResponse({request.id, request.method, "", error}, back);
 }
 
 void ServerImpl::SendResponse(proto::Response response,
-                              const ITransportSocketPtr& back) {
+                              const node::net::ITransportSocketPtr& back) {
   back->Send(Serialize(response));
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/net_transport.hpp>
+#include <whirl/net/transport.hpp>
 
 #include <whirl/rpc/bytes_value.hpp>
 #include <whirl/rpc/protocol.hpp>
@@ -24,9 +24,9 @@ namespace whirl::rpc {
 
 class ServerImpl : public IServer,
                    public std::enable_shared_from_this<ServerImpl>,
-                   public ITransportHandler {
+                   public node::net::ITransportHandler {
  public:
-  ServerImpl(ITransport* t, await::executors::IExecutor* e,
+  ServerImpl(node::net::ITransport* t, await::executors::IExecutor* e,
              await::fibers::IFiberManager* fm, timber::ILogBackend* log)
       : transport_(t),
         handlers_(fm, e),
@@ -39,28 +39,28 @@ class ServerImpl : public IServer,
 
   // ITransportHandler
 
-  void HandleMessage(const TransportMessage& message,
-                     ITransportSocketPtr back) override;
+  void HandleMessage(const node::net::TransportMessage& message,
+                     node::net::ITransportSocketPtr back) override;
 
   void HandleDisconnect(const std::string& client) override;
 
  private:
   // In separate fiber
-  void ProcessRequest(const TransportMessage& message,
-                      const ITransportSocketPtr& back);
+  void ProcessRequest(const node::net::TransportMessage& message,
+                      const node::net::ITransportSocketPtr& back);
 
   void RespondWithError(const proto::Request& request,
-                        const ITransportSocketPtr& back, RPCErrorCode error);
+                        const node::net::ITransportSocketPtr& back, RPCErrorCode error);
 
-  void SendResponse(proto::Response response, const ITransportSocketPtr& back);
+  void SendResponse(proto::Response response, const node::net::ITransportSocketPtr& back);
 
  private:
   // Services
-  ITransport* transport_;
+  node::net::ITransport* transport_;
 
   await::fibers::Nursery handlers_;
 
-  ITransportServerPtr server_;
+  node::net::ITransportServerPtr server_;
 
   // Names -> Services
   std::map<std::string, IServicePtr> services_;

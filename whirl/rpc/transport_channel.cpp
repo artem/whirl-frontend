@@ -57,7 +57,7 @@ void TransportChannel::SendRequest(ActiveRequest request) {
 
   LOG_INFO("Request {}.{}", peer_, request.method);
 
-  ITransportSocketPtr& socket = GetTransportSocket();
+  node::net::ITransportSocketPtr& socket = GetTransportSocket();
 
   if (!socket->IsConnected()) {
     // Fail RPC immediately
@@ -73,7 +73,7 @@ void TransportChannel::SendRequest(ActiveRequest request) {
   requests_.emplace(id, std::move(request));
 }
 
-void TransportChannel::ProcessResponse(const TransportMessage& message) {
+void TransportChannel::ProcessResponse(const node::net::TransportMessage& message) {
   LOG_DEBUG("Process response message from {}", peer_);
 
   auto response = ParseResponse(message);
@@ -101,7 +101,7 @@ void TransportChannel::ProcessResponse(const TransportMessage& message) {
 }
 
 proto::Response TransportChannel::ParseResponse(
-    const TransportMessage& message) {
+    const node::net::TransportMessage& message) {
   return Deserialize<proto::Response>(message);
 }
 
@@ -129,7 +129,7 @@ void TransportChannel::DoClose() {
   }
 }
 
-ITransportSocketPtr& TransportChannel::GetTransportSocket() {
+node::net::ITransportSocketPtr& TransportChannel::GetTransportSocket() {
   if (socket_ && socket_->IsConnected()) {
     return socket_;
   }

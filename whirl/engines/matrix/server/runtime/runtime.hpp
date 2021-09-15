@@ -78,7 +78,7 @@ struct NodeRuntime : node::IRuntime {
     return time.Get();
   }
 
-  ITransport* NetTransport() {
+  node::net::ITransport* NetTransport() {
     return transport.Get();
   }
 

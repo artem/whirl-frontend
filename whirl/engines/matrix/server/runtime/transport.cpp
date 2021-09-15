@@ -4,7 +4,7 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class ReplyTransportSocket : public ITransportSocket {
+class ReplyTransportSocket : public node::net::ITransportSocket {
  public:
   ReplyTransportSocket(net::ReplySocket socket) : socket_(socket) {
   }

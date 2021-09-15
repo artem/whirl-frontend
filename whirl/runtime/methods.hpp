@@ -32,7 +32,7 @@ inline std::string PoolName() {
 
 // Net
 
-inline ITransport* NetTransport() {
+inline net::ITransport* NetTransport() {
   return GetRuntime().NetTransport();
 }
 

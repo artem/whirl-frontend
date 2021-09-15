@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/services/net_transport.hpp>
+#include <whirl/net/transport.hpp>
 
 #include <whirl/rpc/channel.hpp>
 
@@ -24,7 +24,7 @@ using IClientPtr = std::shared_ptr<IClient>;
 
 //////////////////////////////////////////////////////////////////////
 
-IClientPtr MakeClient(ITransport* t, await::executors::IExecutor* e,
+IClientPtr MakeClient(node::net::ITransport* t, await::executors::IExecutor* e,
                       timber::ILogBackend* log);
 
 }  // namespace whirl::rpc

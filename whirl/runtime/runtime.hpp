@@ -14,7 +14,7 @@
 #include <whirl/services/random.hpp>
 #include <whirl/services/guid.hpp>
 #include <whirl/time/true_time.hpp>
-#include <whirl/services/net_transport.hpp>
+#include <whirl/net/transport.hpp>
 #include <whirl/services/terminal.hpp>
 #include <whirl/services/fault.hpp>
 
@@ -45,7 +45,7 @@ struct IRuntime {
 
   // Network
 
-  virtual ITransport* NetTransport() = 0;
+  virtual net::ITransport* NetTransport() = 0;
 
   virtual cluster::IDiscoveryService* DiscoveryService() = 0;
 

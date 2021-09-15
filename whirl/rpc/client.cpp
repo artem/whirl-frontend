@@ -2,6 +2,7 @@
 
 #include <whirl/rpc/transport_channel.hpp>
 
+using whirl::node::net::ITransport;
 using await::executors::IExecutor;
 using timber::ILogBackend;
 
