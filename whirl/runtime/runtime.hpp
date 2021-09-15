@@ -47,19 +47,27 @@ struct IRuntime {
 
   virtual net::ITransport* NetTransport() = 0;
 
+  // Cluster
+
   virtual cluster::IDiscoveryService* DiscoveryService() = 0;
 
   // Logging
 
   virtual timber::ILogBackend* LogBackend() = 0;
 
-  // Misc
-
-  virtual IConfig* Config() = 0;
+  // Random
 
   virtual IRandomService* RandomService() = 0;
 
+  // Guids
+
   virtual IGuidGenerator* GuidGenerator() = 0;
+
+  // Configuration
+
+  virtual IConfig* Config() = 0;
+
+  // Misc
 
   virtual ITerminal* Terminal() = 0;
 };
