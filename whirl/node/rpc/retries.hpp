@@ -19,7 +19,6 @@ struct BackoffParams {
 //////////////////////////////////////////////////////////////////////
 
 IChannelPtr WithRetries(IChannelPtr channel, node::time::ITimeService* time,
-                        timber::ILogBackend* log,
-                        BackoffParams backoff_params);
+                        timber::ILogBackend* log, BackoffParams backoff_params);
 
 }  // namespace whirl::rpc

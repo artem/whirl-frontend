@@ -13,7 +13,7 @@
 namespace whirl::matrix::net {
 
 Link::Link(Network* net, IServer* start, IServer* end)
-: net_(net), start_(start), end_(end), logger_("Network", GetLogBackend()) {
+    : net_(net), start_(start), end_(end), logger_("Network", GetLogBackend()) {
 }
 
 void Link::Add(Packet packet) {

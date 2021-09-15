@@ -24,7 +24,6 @@ class LogBackend : public timber::ILogBackend {
   // Context: Server
   void Log(timber::Event event) override;
 
-
   const EventLog& GetEvents() const {
     return events_;
   }

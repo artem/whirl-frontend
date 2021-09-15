@@ -13,7 +13,8 @@ namespace detail {
 
 class Disk {
  public:
-  Disk(node::time::ITimeService* time_service) : time_service_(std::move(time_service)) {
+  Disk(node::time::ITimeService* time_service)
+      : time_service_(std::move(time_service)) {
   }
 
   void Read(size_t bytes) const {

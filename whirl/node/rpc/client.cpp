@@ -2,15 +2,16 @@
 
 #include <whirl/node/rpc/transport_channel.hpp>
 
-using whirl::node::net::ITransport;
 using await::executors::IExecutor;
 using timber::ILogBackend;
+using whirl::node::net::ITransport;
 
 namespace whirl::rpc {
 
 class Client : public IClient {
  public:
-  Client(ITransport* t, IExecutor* e, ILogBackend* log) : t_(t), e_(e), log_(log) {
+  Client(ITransport* t, IExecutor* e, ILogBackend* log)
+      : t_(t), e_(e), log_(log) {
   }
 
   IChannelPtr Dial(const std::string& peer) override {

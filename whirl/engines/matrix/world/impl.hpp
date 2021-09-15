@@ -48,8 +48,11 @@ class WorldImpl {
 
  public:
   WorldImpl(size_t seed)
-      : seed_(seed), random_source_(seed), time_model_(DefaultTimeModel()),
-      network_(&log_), logger_("World", &log_) {
+      : seed_(seed),
+        random_source_(seed),
+        time_model_(DefaultTimeModel()),
+        network_(&log_),
+        logger_("World", &log_) {
   }
 
   void AddServer(std::string hostname, node::ProgramMain program) {

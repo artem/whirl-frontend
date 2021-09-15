@@ -15,8 +15,7 @@ using whirl::node::fs::Path;
 
 namespace whirl::matrix::fs {
 
-FileSystem::FileSystem()
-    : logger_("Filesystem", GetLogBackend()) {
+FileSystem::FileSystem() : logger_("Filesystem", GetLogBackend()) {
 }
 
 // System calls

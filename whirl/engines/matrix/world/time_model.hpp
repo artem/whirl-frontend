@@ -39,9 +39,8 @@ struct ITimeModel {
   // Network
 
   // DPI =)
-  virtual Jiffies FlightTime(const net::IServer* start,
-                              const net::IServer* end,
-                              const net::Packet& packet) = 0;
+  virtual Jiffies FlightTime(const net::IServer* start, const net::IServer* end,
+                             const net::Packet& packet) = 0;
 
   // Threads
 

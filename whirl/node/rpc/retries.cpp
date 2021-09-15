@@ -11,8 +11,8 @@
 
 using wheels::Result;
 using namespace await::futures;
-using await::executors::IExecutor;
 using await::context::StopToken;
+using await::executors::IExecutor;
 
 namespace whirl::rpc {
 
@@ -41,9 +41,9 @@ class Backoff {
 
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
-  Retrier(const IChannelPtr& channel, timber::ILogBackend* log, const Method& method,
-          const BytesValue& input, CallOptions options, node::time::ITimeService* time,
-          BackoffParams backoff_params)
+  Retrier(const IChannelPtr& channel, timber::ILogBackend* log,
+          const Method& method, const BytesValue& input, CallOptions options,
+          node::time::ITimeService* time, BackoffParams backoff_params)
       : channel_(channel),
         method_(method),
         input_(input),
@@ -70,7 +70,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
  private:
   void Retry() {
     LOG_INFO("Retry {}.{} request, attempt {}", channel_->Peer(), method_,
-                   attempt_);
+             attempt_);
 
     ++attempt_;
     auto f = channel_->Call(method_, input_, options_);
@@ -117,7 +117,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
 
   void Cancel() {
     LOG_INFO("Call {}.{} cancelled via stop token, stop retrying",
-                   channel_->Peer(), method_);
+             channel_->Peer(), method_);
     std::move(promise_).SetError(wheels::Error(RPCErrorCode::Cancelled));
   }
 
@@ -156,9 +156,11 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
                        public IChannel {
  public:
   RetriesChannel(IChannelPtr impl, node::time::ITimeService* time,
-                 timber::ILogBackend* log,
-                 BackoffParams backoff_params)
-      : impl_(std::move(impl)), time_(time), log_(log), backoff_params_(backoff_params) {
+                 timber::ILogBackend* log, BackoffParams backoff_params)
+      : impl_(std::move(impl)),
+        time_(time),
+        log_(log),
+        backoff_params_(backoff_params) {
   }
 
   void Close() override {

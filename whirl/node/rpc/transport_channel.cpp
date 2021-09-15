@@ -24,10 +24,10 @@ Future<BytesValue> TransportChannel::Call(const Method& method,
 
   auto future = request.promise.MakeFuture();
 
-  await::executors::Execute(strand_,
-      [self = shared_from_this(), request = std::move(request)]() mutable {
-        self->SendRequest(std::move(request));
-      });
+  await::executors::Execute(strand_, [self = shared_from_this(),
+                                      request = std::move(request)]() mutable {
+    self->SendRequest(std::move(request));
+  });
 
   return std::move(future).Via(executor_);
 }
@@ -73,7 +73,8 @@ void TransportChannel::SendRequest(ActiveRequest request) {
   requests_.emplace(id, std::move(request));
 }
 
-void TransportChannel::ProcessResponse(const node::net::TransportMessage& message) {
+void TransportChannel::ProcessResponse(
+    const node::net::TransportMessage& message) {
   LOG_DEBUG("Process response message from {}", peer_);
 
   auto response = ParseResponse(message);
@@ -91,8 +92,8 @@ void TransportChannel::ProcessResponse(const node::net::TransportMessage& messag
   TLTraceContext tg{request.trace_id};
 
   if (response.IsOk()) {
-    LOG_INFO("Request {}.{} with id = {} completed", peer_,
-                   request.method, response.request_id);
+    LOG_INFO("Request {}.{} with id = {} completed", peer_, request.method,
+             response.request_id);
     std::move(request.promise).SetValue(response.result);
   } else {
     // TODO: better error
@@ -109,9 +110,8 @@ void TransportChannel::LostPeer() {
   auto requests = std::move(requests_);
   requests_.clear();
 
-  LOG_WARN(
-      "Transport connection to peer {} lost, fail {} pending request(s)", peer_,
-      requests.size());
+  LOG_WARN("Transport connection to peer {} lost, fail {} pending request(s)",
+           peer_, requests.size());
 
   // Next Call triggers reconnect
   socket_.reset();
@@ -140,7 +140,7 @@ node::net::ITransportSocketPtr& TransportChannel::GetTransportSocket() {
 
 void TransportChannel::Fail(ActiveRequest& request, std::error_code e) {
   LOG_WARN("Request {}.{} (id = {}) failed: {}", peer_, request.method,
-                 request.id, e.message());
+           request.id, e.message());
   std::move(request.promise).SetError(wheels::Error(e));
 }
 

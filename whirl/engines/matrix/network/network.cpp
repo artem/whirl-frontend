@@ -8,11 +8,9 @@
 #include <wheels/support/assert.hpp>
 #include <wheels/support/compiler.hpp>
 
-
 namespace whirl::matrix::net {
 
-Network::Network(timber::ILogBackend* log)
-    : logger_("Network", log) {
+Network::Network(timber::ILogBackend* log) : logger_("Network", log) {
 }
 
 void Network::AddServer(IServer* server) {
@@ -144,7 +142,7 @@ void Network::Split(const fault::Partition& lhs) {
     }
     if (Cross(link, lhs)) {
       LOG_WARN("Pause link {} - {}", link.Start()->HostName(),
-                     link.End()->HostName());
+               link.End()->HostName());
       link.Pause();
     }
   }

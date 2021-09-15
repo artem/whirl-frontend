@@ -10,15 +10,11 @@ namespace whirl::node::rt {
 
 void Go(await::fibers::FiberRoutine routine) {
   auto* f = await::fibers::CreateFiber(
-      std::move(routine),
-      FiberManager(),
-      Executor(),
-      await::fibers::BackgroundSupervisor(),
-      await::context::NeverStop());
+      std::move(routine), FiberManager(), Executor(),
+      await::fibers::BackgroundSupervisor(), await::context::NeverStop());
 
   f->Schedule();
 }
-
 
 rpc::IServerPtr MakeRpcServer() {
   return std::make_shared<rpc::ServerImpl>(NetTransport(), Executor(),
@@ -26,8 +22,7 @@ rpc::IServerPtr MakeRpcServer() {
 }
 
 rpc::IClientPtr MakeRpcClient() {
-  return rpc::MakeClient(
-      NetTransport(), Executor(), LogBackend());
+  return rpc::MakeClient(NetTransport(), Executor(), LogBackend());
 }
 
 }  // namespace whirl::node::rt

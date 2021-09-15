@@ -35,7 +35,10 @@ class TransportTask : public process::ITask {
 
 Transport::Transport(Network& net, const std::string& host,
                      process::Memory& heap, process::Scheduler& scheduler)
-    : net_(net), host_(host), heap_(heap), scheduler_(scheduler),
+    : net_(net),
+      host_(host),
+      heap_(heap),
+      scheduler_(scheduler),
       logger_("Transport", GetLogBackend()) {
 }
 
@@ -149,8 +152,8 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
 
     if (packet.header.type != Packet::Type::Reset) {
       if (packet.header.type == Packet::Type::Data) {
-        LOG_WARN("Endpoint {} not found, drop incoming packet from {}",
-                       to, from);
+        LOG_WARN("Endpoint {} not found, drop incoming packet from {}", to,
+                 from);
       }
       replier.Reset();
     }
@@ -186,8 +189,7 @@ void Transport::HandlePacket(const Packet& packet, Link* out) {
   } else if (packet.header.type == Packet::Type::Data) {
     // Message
 
-    LOG_INFO("Handle message at {} from {}: <{}>", host_, from,
-                   packet.message);
+    LOG_INFO("Handle message at {} from {}: <{}>", host_, from, packet.message);
 
     auto g = heap_.Use();
 

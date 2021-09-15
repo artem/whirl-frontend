@@ -59,8 +59,8 @@ void ServerImpl::ProcessRequest(const node::net::TransportMessage& message,
 
   await::fibers::self::SetContext(scope.GetContext());
 
-  LOG_INFO("Process {} request from {}, id = {}", request.method,
-                 back->Peer(), request.id);
+  LOG_INFO("Process {} request from {}, id = {}", request.method, back->Peer(),
+           request.id);
 
   auto service_it = services_.find(request.method.service);
 
@@ -80,13 +80,13 @@ void ServerImpl::ProcessRequest(const node::net::TransportMessage& message,
   try {
     result = service->Invoke(request.method.name, request.input);
   } catch (rpc::BadRequest& e) {
-    LOG_ERROR("Bad RPC request {} (id = {}): {}", request.method,
-                    request.id, e.what());
+    LOG_ERROR("Bad RPC request {} (id = {}): {}", request.method, request.id,
+              e.what());
     RespondWithError(request, back, RPCErrorCode::BadRequest);
     return;
   } catch (...) {
     LOG_ERROR("Exception in {} (id = {}): {}", request.method, request.id,
-                    wheels::CurrentExceptionMessage());
+              wheels::CurrentExceptionMessage());
     RespondWithError(request, back, RPCErrorCode::ExecutionError);
     return;
   }

@@ -11,8 +11,8 @@ using whirl::node::db::WriteBatch;
 
 namespace whirl::matrix::db {
 
-Database::Database(node::fs::IFileSystem* fs) : fs_(fs),
-  logger_("Database", GetLogBackend()) {
+Database::Database(node::fs::IFileSystem* fs)
+    : fs_(fs), logger_("Database", GetLogBackend()) {
 }
 
 void Database::Open(const std::string& directory) {

@@ -28,9 +28,7 @@ class ServerImpl : public IServer,
  public:
   ServerImpl(node::net::ITransport* t, await::executors::IExecutor* e,
              await::fibers::IFiberManager* fm, timber::ILogBackend* log)
-      : transport_(t),
-        handlers_(fm, e),
-        logger_("RPC-Server", log) {
+      : transport_(t), handlers_(fm, e), logger_("RPC-Server", log) {
   }
 
   void Start() override;
@@ -50,9 +48,11 @@ class ServerImpl : public IServer,
                       const node::net::ITransportSocketPtr& back);
 
   void RespondWithError(const proto::Request& request,
-                        const node::net::ITransportSocketPtr& back, RPCErrorCode error);
+                        const node::net::ITransportSocketPtr& back,
+                        RPCErrorCode error);
 
-  void SendResponse(proto::Response response, const node::net::ITransportSocketPtr& back);
+  void SendResponse(proto::Response response,
+                    const node::net::ITransportSocketPtr& back);
 
  private:
   // Services

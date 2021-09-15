@@ -12,8 +12,8 @@ namespace whirl::matrix {
 
 class Terminal : public ITerminal {
  public:
-  Terminal(Stdout& stdout) : stdout_(stdout),
-        logger_("Terminal", GetLogBackend()) {
+  Terminal(Stdout& stdout)
+      : stdout_(stdout), logger_("Terminal", GetLogBackend()) {
   }
 
   void PrintLine(std::string_view line) override {

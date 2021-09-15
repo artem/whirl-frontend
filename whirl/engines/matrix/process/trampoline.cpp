@@ -18,11 +18,8 @@ void MainTrampoline(node::ProgramMain main) {
   };
 
   auto* f = await::fibers::CreateFiber(
-      main_fiber,
-      node::rt::FiberManager(),
-      node::rt::Executor(),
-      await::fibers::BackgroundSupervisor(),
-      await::context::NeverStop());
+      main_fiber, node::rt::FiberManager(), node::rt::Executor(),
+      await::fibers::BackgroundSupervisor(), await::context::NeverStop());
 
   f->Schedule();
 }

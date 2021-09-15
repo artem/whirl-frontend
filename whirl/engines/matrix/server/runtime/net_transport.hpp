@@ -8,7 +8,8 @@ namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class NetTransportSocket : public node::net::ITransportSocket, public net::ISocketHandler {
+class NetTransportSocket : public node::net::ITransportSocket,
+                           public net::ISocketHandler {
  public:
   NetTransportSocket(net::Transport& transport, std::string host,
                      net::Port port, node::net::ITransportHandlerPtr handler)
@@ -62,7 +63,8 @@ class NetTransportSocket : public node::net::ITransportSocket, public net::ISock
 
 //////////////////////////////////////////////////////////////////////
 
-class NetTransportServer : public node::net::ITransportServer, public net::ISocketHandler {
+class NetTransportServer : public node::net::ITransportServer,
+                           public net::ISocketHandler {
  public:
   NetTransportServer(net::Transport& transport, net::Port port,
                      node::net::ITransportHandlerPtr handler)
@@ -103,12 +105,14 @@ struct NetTransport : public node::net::ITransport {
     return impl_.HostName();
   }
 
-  node::net::ITransportServerPtr Serve(node::net::ITransportHandlerPtr handler) override {
+  node::net::ITransportServerPtr Serve(
+      node::net::ITransportHandlerPtr handler) override {
     return std::make_shared<NetTransportServer>(impl_, port_, handler);
   }
 
-  node::net::ITransportSocketPtr ConnectTo(const node::net::TransportAddress& host,
-                                node::net::ITransportHandlerPtr handler) override {
+  node::net::ITransportSocketPtr ConnectTo(
+      const node::net::TransportAddress& host,
+      node::net::ITransportHandlerPtr handler) override {
     return std::make_shared<NetTransportSocket>(impl_, host, port_, handler);
   }
 
