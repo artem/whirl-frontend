@@ -75,9 +75,9 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 ## Dependencies
 
 - [await](https://gitlab.com/Lipovsky/await) – concurrency: fibers + futures with customizable runtime
-- [cereal](https://github.com/USCiLab/cereal) – serialization
-- [fmt](https://github.com/fmtlib/fmt)
-- [ctti](https://github.com/Manu343726/ctti)
+- [commute](https://gitlab.com/Lipovsky/commute) – net transport + RPC
+- [timber](https://gitlab.com/Lipovsky/timber) – logging frontend (via [fmtlib](https://github.com/fmtlib/fmt))
+- [muesli](https://gitlab.com/Lipovsky/muesli) – serialization (via [cereal](https://github.com/USCiLab/cereal))
 
 ## Build
 
