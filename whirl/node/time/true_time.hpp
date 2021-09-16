@@ -22,7 +22,7 @@ struct ITrueTimeService {
   virtual ~ITrueTimeService() = default;
 
   // Returns a TTInterval that is guaranteed to contain
-  // the absolute time during which TT.now() was invoked
+  // the absolute time during which TT.Now() was invoked
   virtual TTInterval Now() const = 0;
 
   // True if `t` has definitely passed
