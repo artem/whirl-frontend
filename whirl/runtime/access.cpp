@@ -1,4 +1,4 @@
-#include <whirl/runtime/runtime.hpp>
+#include <whirl/runtime/access.hpp>
 
 #include <whirl/engines/reflect.hpp>
 

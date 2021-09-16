@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/runtime/runtime.hpp>
+#include <whirl/runtime/access.hpp>
 
 #include <whirl/node/time/time_point.hpp>
 
