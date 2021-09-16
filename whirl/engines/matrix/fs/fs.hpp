@@ -56,9 +56,15 @@ class FileSystem {
   // System calls
   // Context: Server
 
+  // Metadata
+
   bool Create(const node::fs::Path& file_path);
   void Delete(const node::fs::Path& file_path);
   bool Exists(const node::fs::Path& file_path) const;
+
+  DirIterator ListAllFiles();
+
+  // Data
 
   node::fs::Fd Open(const node::fs::Path& file_path, node::fs::FileMode mode);
 
@@ -66,8 +72,6 @@ class FileSystem {
   void Append(node::fs::Fd fd, wheels::ConstMemView data);
 
   void Close(node::fs::Fd fd);
-
-  DirIterator ListAllFiles();
 
   // Simulation
 

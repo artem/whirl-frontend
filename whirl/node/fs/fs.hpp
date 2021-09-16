@@ -39,7 +39,7 @@ struct IFileSystem {
 
   virtual bool Exists(const Path& file_path) const = 0;
 
-  virtual std::vector<std::string> ListFiles(std::string_view prefix) = 0;
+  virtual FileList ListFiles(std::string_view prefix) = 0;
 
   // Data
 
