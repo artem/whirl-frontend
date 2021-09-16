@@ -78,6 +78,7 @@ Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
 - [commute](https://gitlab.com/Lipovsky/commute) – net transport + RPC
 - [timber](https://gitlab.com/Lipovsky/timber) – logging frontend (via [fmtlib](https://github.com/fmtlib/fmt))
 - [muesli](https://gitlab.com/Lipovsky/muesli) – serialization (via [cereal](https://github.com/USCiLab/cereal))
+- [wheels](https://gitlab.com/Lipovsky/wheels) - core utilities
 
 ## Build
 
