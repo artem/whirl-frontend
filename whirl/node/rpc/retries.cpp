@@ -14,10 +14,10 @@ using namespace await::futures;
 using await::context::StopToken;
 using await::executors::IExecutor;
 
-using commute::rpc::BytesValue;
 using commute::rpc::CallOptions;
 using commute::rpc::IChannel;
 using commute::rpc::IChannelPtr;
+using commute::rpc::Message;
 using commute::rpc::Method;
 
 namespace whirl::rpc {
@@ -48,7 +48,7 @@ class Backoff {
 class Retrier : public std::enable_shared_from_this<Retrier> {
  public:
   Retrier(const IChannelPtr& channel, timber::ILogBackend* log,
-          const Method& method, const BytesValue& input, CallOptions options,
+          const Method& method, const Message& input, CallOptions options,
           node::time::ITimeService* time, BackoffParams backoff_params)
       : channel_(channel),
         method_(method),
@@ -59,7 +59,7 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
         logger_("Retries-Channel", log) {
   }
 
-  Future<BytesValue> Start() {
+  Future<Message> Start() {
     auto f_with_retries = promise_.MakeFuture();
 
     auto self = shared_from_this();
@@ -83,18 +83,18 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
     SubscribeToResult(std::move(f));
   }
 
-  void SubscribeToResult(Future<BytesValue> f) {
+  void SubscribeToResult(Future<Message> f) {
     auto e = f.GetExecutor();
 
     auto handler = [self = shared_from_this(),
-                    e](Result<BytesValue> result) mutable {
+                    e](Result<Message> result) mutable {
       self->Handle(std::move(result), std::move(e));
     };
 
     std::move(f).Subscribe(std::move(handler));
   }
 
-  void Handle(Result<BytesValue> result, IExecutor* e) {
+  void Handle(Result<Message> result, IExecutor* e) {
     if (result.IsOk() || !IsRetriableError(result.GetError())) {
       std::move(promise_).Set(std::move(result));
     } else {
@@ -140,11 +140,11 @@ class Retrier : public std::enable_shared_from_this<Retrier> {
   }
 
  private:
-  await::futures::LazyPromise<BytesValue> promise_;
+  await::futures::LazyPromise<Message> promise_;
 
   IChannelPtr channel_;
   Method method_;
-  BytesValue input_;
+  Message input_;
 
   CallOptions options_;
 
@@ -177,7 +177,7 @@ class RetriesChannel : public std::enable_shared_from_this<RetriesChannel>,
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const Method& method, const BytesValue& input,
+  Future<Message> Call(const Method& method, const Message& input,
                           CallOptions options) override {
     auto retrier = std::make_shared<Retrier>(
         impl_, log_, method, input, std::move(options), time_, backoff_params_);

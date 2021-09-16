@@ -2,10 +2,10 @@
 
 using await::futures::Future;
 
-using commute::rpc::BytesValue;
 using commute::rpc::CallOptions;
 using commute::rpc::IChannel;
 using commute::rpc::IChannelPtr;
+using commute::rpc::Message;
 using commute::rpc::Method;
 
 namespace whirl::rpc {
@@ -24,7 +24,7 @@ class RandomChannel : public IChannel {
     Close();
   }
 
-  Future<BytesValue> Call(const Method& method, const BytesValue& input,
+  Future<Message> Call(const Method& method, const Message& input,
                           CallOptions options) override {
     size_t index = SelectIndex();
     return channels_[index]->Call(method, input, std::move(options));

@@ -30,13 +30,13 @@ class HistoryChannel : public IChannel {
     return impl_->Peer();
   }
 
-  Future<BytesValue> Call(const Method& method, const BytesValue& input,
+  Future<Message> Call(const Method& method, const Message& input,
                           CallOptions options) override {
     auto cookie = GetHistoryRecorder().CallStarted(method.name, input);
 
     auto f = impl_->Call(method, input, std::move(options));
 
-    auto record = [cookie](const Result<BytesValue>& result) mutable {
+    auto record = [cookie](const Result<Message>& result) mutable {
       RecordCallResult(cookie, result);
     };
 
@@ -45,7 +45,7 @@ class HistoryChannel : public IChannel {
 
  private:
   static void RecordCallResult(Cookie cookie,
-                               const Result<BytesValue>& result) {
+                               const Result<Message>& result) {
     auto& recorder = GetHistoryRecorder();
 
     if (auto trace_id = TryGetCurrentTraceId()) {
