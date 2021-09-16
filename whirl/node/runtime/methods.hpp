@@ -5,8 +5,8 @@
 #include <whirl/node/time/time_point.hpp>
 
 // RPC
-#include <whirl/node/rpc/client.hpp>
-#include <whirl/node/rpc/server.hpp>
+#include <commute/rpc/client.hpp>
+#include <commute/rpc/server.hpp>
 
 // Concurrency
 #include <await/fibers/core/api.hpp>
@@ -34,7 +34,7 @@ inline std::string PoolName() {
 
 // Net
 
-inline net::ITransport* NetTransport() {
+inline commute::transport::ITransport* NetTransport() {
   return GetRuntime().NetTransport();
 }
 
@@ -154,8 +154,8 @@ inline timber::ILogBackend* LoggerBackend() {
 
 // RPC
 
-rpc::IServerPtr MakeRpcServer();
+commute::rpc::IServerPtr MakeRpcServer(uint16_t port);
 
-rpc::IClientPtr MakeRpcClient();
+commute::rpc::IClientPtr MakeRpcClient();
 
 }  // namespace whirl::node::rt

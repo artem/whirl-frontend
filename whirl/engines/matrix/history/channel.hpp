@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/node/rpc/channel.hpp>
+#include <commute/rpc/channel.hpp>
 
 namespace whirl::matrix {
 
-rpc::IChannelPtr MakeHistoryChannel(rpc::IChannelPtr channel);
+commute::rpc::IChannelPtr MakeHistoryChannel(commute::rpc::IChannelPtr channel);
 
 }  // namespace whirl::matrix

@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
-#include <whirl/node/rpc/trace.hpp>
+#include <commute/rpc/trace.hpp>
 
 #include <await/fibers/core/api.hpp>
 
@@ -56,7 +56,7 @@ LogEvent MakeLogEvent(const timber::Event& e) {
   event.level = e.level;
   event.actor = DescribeThisActor();
   event.component = e.component;
-  event.trace_id = rpc::TryGetCurrentTraceId();
+  event.trace_id = commute::rpc::TryGetCurrentTraceId();
   event.message = e.message;
 
   return event;

@@ -4,9 +4,12 @@
 
 #include <whirl/node/runtime/methods.hpp>
 
-#include <whirl/node/rpc/client.hpp>
+#include <commute/rpc/client.hpp>
+
 #include <whirl/node/rpc/random.hpp>
 #include <whirl/node/rpc/retries.hpp>
+
+#include <fmt/core.h>
 
 namespace whirl::matrix::client {
 
@@ -16,20 +19,24 @@ static rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
-static rpc::IClientPtr MakeRpcClient() {
-  return rpc::MakeClient(node::rt::NetTransport(), node::rt::Executor(),
+static ::commute::rpc::IClientPtr MakeRpcClient() {
+  return ::commute::rpc::MakeClient(node::rt::NetTransport(), node::rt::Executor(),
                          node::rt::LoggerBackend());
 }
 
-rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name) {
+static std::string MakeAddress(const std::string& host, uint16_t port) {
+  return fmt::format("{}:{}", host, port);
+}
+
+::commute::rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name, uint16_t port) {
   auto pool = node::rt::Discovery()->ListPool(pool_name);
 
   auto client = MakeRpcClient();
 
   // Peer channels
-  std::vector<rpc::IChannelPtr> transports;
+  std::vector<::commute::rpc::IChannelPtr> transports;
   for (const auto& host : pool) {
-    transports.push_back(client->Dial(host));
+    transports.push_back(client->Dial(MakeAddress(host, port)));
   }
 
   // Retries -> History -> Random -> Transport-s

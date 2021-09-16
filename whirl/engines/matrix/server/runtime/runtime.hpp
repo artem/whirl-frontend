@@ -78,7 +78,7 @@ struct NodeRuntime : node::IRuntime {
     return time.Get();
   }
 
-  node::net::ITransport* NetTransport() override {
+  commute::transport::ITransport* NetTransport() override {
     return transport.Get();
   }
 

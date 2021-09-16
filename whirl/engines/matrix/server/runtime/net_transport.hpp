@@ -1,18 +1,22 @@
 #pragma once
 
-#include <whirl/node/net/transport.hpp>
+#include <commute/transport/transport.hpp>
 
 #include <whirl/engines/matrix/network/transport.hpp>
+
+#include <tuple>
+
+namespace transport = commute::transport;
 
 namespace whirl::matrix {
 
 //////////////////////////////////////////////////////////////////////
 
-class NetTransportSocket : public node::net::ITransportSocket,
+class NetTransportSocket : public transport::ISocket,
                            public net::ISocketHandler {
  public:
   NetTransportSocket(net::Transport& transport, std::string host,
-                     net::Port port, node::net::ITransportHandlerPtr handler)
+                     net::Port port, transport::IHandlerPtr handler)
       : socket_(transport.ConnectTo({host, port}, this)), handler_(handler) {
   }
 
@@ -22,9 +26,9 @@ class NetTransportSocket : public node::net::ITransportSocket,
     }
   }
 
-  // ITransportSocket
+  // transport::ISocket
 
-  void Send(const node::net::TransportMessage& message) override {
+  void Send(const transport::Message& message) override {
     socket_.Send(message);
   }
 
@@ -58,20 +62,20 @@ class NetTransportSocket : public node::net::ITransportSocket,
 
  private:
   net::ClientSocket socket_;
-  node::net::ITransportHandlerPtr handler_;
+  transport::IHandlerPtr handler_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-class NetTransportServer : public node::net::ITransportServer,
+class NetTransportServer : public transport::IServer,
                            public net::ISocketHandler {
  public:
   NetTransportServer(net::Transport& transport, net::Port port,
-                     node::net::ITransportHandlerPtr handler)
+                     transport::IHandlerPtr handler)
       : server_socket_(transport.Serve(port, this)), handler_(handler) {
   }
 
-  // ITransportServer
+  // IServer
 
   void Shutdown() override {
     server_socket_.Close();
@@ -90,35 +94,51 @@ class NetTransportServer : public node::net::ITransportServer,
 
  private:
   net::ServerSocket server_socket_;
-  node::net::ITransportHandlerPtr handler_;
+  transport::IHandlerPtr handler_;
 };
 
 //////////////////////////////////////////////////////////////////////
 
-struct NetTransport : public node::net::ITransport {
+struct NetTransport : public transport::ITransport {
  public:
-  NetTransport(net::Transport& impl, net::Port port)
-      : impl_(impl), port_(port) {
+  NetTransport(net::Transport& impl)
+      : impl_(impl) {
   }
 
   const std::string& HostName() const override {
     return impl_.HostName();
   }
 
-  node::net::ITransportServerPtr Serve(
-      node::net::ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportServer>(impl_, port_, handler);
+  transport::IServerPtr Serve(const std::string& port,
+      transport::IHandlerPtr handler) override {
+    return std::make_shared<NetTransportServer>(impl_, ParsePort(port), handler);
   }
 
-  node::net::ITransportSocketPtr ConnectTo(
-      const node::net::TransportAddress& host,
-      node::net::ITransportHandlerPtr handler) override {
-    return std::make_shared<NetTransportSocket>(impl_, host, port_, handler);
+  transport::ISocketPtr ConnectTo(
+      const std::string& address,
+      transport::IHandlerPtr handler) override {
+    auto [host, port] = ParseAddress(address);
+    return std::make_shared<NetTransportSocket>(impl_, host, port, handler);
+  }
+
+ private:
+  // "{port}"
+  static uint16_t ParsePort(const std::string& port_str) {
+    return std::atoi(port_str.c_str());
+  }
+
+  // "{hostname}:{port}"
+  static std::tuple<std::string, uint16_t> ParseAddress(const std::string& address) {
+    auto pos = address.find(':');
+
+    auto lhs = address.substr(0, pos);
+    auto rhs = address.substr(pos + 1, address.length());
+
+    return std::make_tuple(lhs, ParsePort(rhs));
   }
 
  private:
   net::Transport& impl_;
-  net::Port port_;
 };
 
 }  // namespace whirl::matrix

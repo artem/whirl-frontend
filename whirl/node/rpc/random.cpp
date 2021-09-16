@@ -2,6 +2,12 @@
 
 using await::futures::Future;
 
+using commute::rpc::IChannel;
+using commute::rpc::IChannelPtr;
+using commute::rpc::Method;
+using commute::rpc::BytesValue;
+using commute::rpc::CallOptions;
+
 namespace whirl::rpc {
 
 //////////////////////////////////////////////////////////////////////

@@ -2,9 +2,12 @@
 
 #include <whirl/time.hpp>
 
-#include <whirl/cereal/serialize.hpp>
-#include <whirl/cereal/tuple.hpp>
-#include <whirl/cereal/unit.hpp>
+#include <muesli/serialize.hpp>
+#include <muesli/tuple.hpp>
+
+#include <cereal/types/variant.hpp>
+
+#include <wheels/support/unit.hpp>
 
 #include <string>
 #include <vector>
@@ -21,17 +24,17 @@ class Value {
 
   // For functions that return void
   static Value MakeUnit() {
-    return SerializedUnit();
+    return muesli::Serialize(wheels::Unit{});
   }
 
   template <typename T>
   static Value Make(const T& value) {
-    return Value(Serialize<T>(value));
+    return Value(muesli::Serialize<T>(value));
   }
 
   template <typename T>
   T As() const {
-    return Deserialize<T>(bytes_);
+    return muesli::Deserialize<T>(bytes_);
   }
 
   bool operator==(const Value& that) const {
@@ -51,12 +54,12 @@ class Arguments {
 
   // Empty std::tuple
   static Arguments MakeEmpty() {
-    return SerializeValues();
+    return muesli::SerializeValues();
   }
 
   template <typename... Args>
   auto As() const {
-    return Deserialize<std::tuple<Args...>>(bytes_);
+    return muesli::Deserialize<std::tuple<Args...>>(bytes_);
   }
 
  private:

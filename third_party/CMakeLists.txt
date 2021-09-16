@@ -41,16 +41,25 @@ FetchContent_MakeAvailable(timber)
 
 # --------------------------------------------------------------------
 
-message(STATUS "FetchContent: cereal")
+message(STATUS "FetchContent: commute")
 
 FetchContent_Declare(
-        cereal
-        GIT_REPOSITORY https://github.com/USCiLab/cereal.git
+        commute
+        GIT_REPOSITORY https://gitlab.com/Lipovsky/commute.git
         GIT_TAG master
 )
-# FetchContent_MakeAvailable(cereal)
-FetchContent_Populate("cereal")
-set(cereal_INCLUDE_DIR "${cereal_SOURCE_DIR}/include" PARENT_SCOPE)
+FetchContent_MakeAvailable(commute)
+
+# --------------------------------------------------------------------
+
+message(STATUS "FetchContent: muesli")
+
+FetchContent_Declare(
+        muesli
+        GIT_REPOSITORY https://gitlab.com/Lipovsky/muesli.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(muesli)
 
 # --------------------------------------------------------------------
 
@@ -63,13 +72,3 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(fmtlib)
 
-# --------------------------------------------------------------------
-
-message(STATUS "FetchContent: ctti")
-
-FetchContent_Declare(
-        ctti
-        GIT_REPOSITORY https://github.com/Manu343726/ctti
-        GIT_TAG master
-)
-FetchContent_MakeAvailable(ctti)

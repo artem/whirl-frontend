@@ -4,9 +4,12 @@
 
 #include <whirl/node/rpc/retries.hpp>
 
+#include <fmt/core.h>
+
 namespace whirl::node::cluster {
 
-Peer::Peer(const std::string& pool_name) : pool_name_(pool_name) {
+Peer::Peer(const std::string& pool_name, uint64_t port)
+    : pool_name_(pool_name), port_(port) {
   ConnectToPeers();
 }
 
@@ -22,17 +25,17 @@ std::vector<std::string> Peer::ListPeers(bool with_me) const {
   }
 }
 
-const rpc::IChannelPtr& Peer::Channel(const std::string& peer) const {
+const ::commute::rpc::IChannelPtr& Peer::Channel(const std::string& peer) const {
   auto it = channels_.find(peer);
   return it->second;  // Or UB =(
 }
 
-const rpc::IChannelPtr& Peer::LoopBack() const {
+const ::commute::rpc::IChannelPtr& Peer::LoopBack() const {
   return Channel(rt::HostName());
 }
 
-rpc::IClientPtr Peer::MakeRpcClient() {
-  return rpc::MakeClient(rt::NetTransport(), rt::Executor(),
+::commute::rpc::IClientPtr Peer::MakeRpcClient() {
+  return ::commute::rpc::MakeClient(rt::NetTransport(), rt::Executor(),
                          rt::LoggerBackend());
 }
 
@@ -49,7 +52,7 @@ void Peer::ConnectToPeers() {
   }
 
   for (const auto& host : pool_) {
-    channels_.emplace(host, MakeRpcChannel(client, host));
+    channels_.emplace(host, MakeRpcChannel(client, host, port_));
   }
 }
 
@@ -57,9 +60,13 @@ static rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
-rpc::IChannelPtr Peer::MakeRpcChannel(rpc::IClientPtr client,
-                                      const std::string& host) {
-  auto transport = client->Dial(host);
+static std::string PeerAddress(const std::string& host, uint16_t port) {
+  return fmt::format("{}:{}", host, port);
+}
+
+::commute::rpc::IChannelPtr Peer::MakeRpcChannel(::commute::rpc::IClientPtr client,
+                                      const std::string& host, uint16_t port) {
+  auto transport = client->Dial(PeerAddress(host, port));
   auto retries = rpc::WithRetries(std::move(transport), rt::TimeService(),
                                   rt::LoggerBackend(), RetriesBackoff());
   return retries;

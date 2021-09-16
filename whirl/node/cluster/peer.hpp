@@ -1,7 +1,7 @@
 #pragma once
 
-#include <whirl/node/rpc/client.hpp>
-#include <whirl/node/rpc/channel.hpp>
+#include <commute/rpc/client.hpp>
+#include <commute/rpc/channel.hpp>
 
 #include <vector>
 #include <string>
@@ -12,7 +12,7 @@ namespace whirl::node::cluster {
 
 class Peer {
  public:
-  Peer(const std::string& pool_name);
+  Peer(const std::string& pool_name, uint64_t port);
 
   const std::string& PoolName() const {
     return pool_name_;
@@ -22,22 +22,23 @@ class Peer {
 
   std::vector<std::string> ListPeers(bool with_me = true) const;
 
-  const rpc::IChannelPtr& Channel(const std::string& peer) const;
-  const rpc::IChannelPtr& LoopBack() const;
+  const commute::rpc::IChannelPtr& Channel(const std::string& peer) const;
+  const commute::rpc::IChannelPtr& LoopBack() const;
 
  private:
-  rpc::IClientPtr MakeRpcClient();
-  rpc::IChannelPtr MakeRpcChannel(rpc::IClientPtr client,
-                                  const std::string& host);
+  commute::rpc::IClientPtr MakeRpcClient();
+  commute::rpc::IChannelPtr MakeRpcChannel(commute::rpc::IClientPtr client,
+                                  const std::string& host, uint16_t port);
   void ConnectToPeers();
 
  private:
   const std::string pool_name_;
+  uint16_t port_;
 
   std::vector<std::string> pool_;
   std::vector<std::string> others_;  // pool without this node
 
-  std::map<std::string, rpc::IChannelPtr> channels_;
+  std::map<std::string, commute::rpc::IChannelPtr> channels_;
 };
 
 }  // namespace whirl::node::cluster

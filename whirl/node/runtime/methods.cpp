@@ -3,8 +3,8 @@
 #include <await/fibers/core/fiber.hpp>
 #include <await/fibers/static/services.hpp>
 
-#include <whirl/node/rpc/server_impl.hpp>
-#include <whirl/node/rpc/client.hpp>
+#include <commute/rpc/server_impl.hpp>
+#include <commute/rpc/client.hpp>
 
 namespace whirl::node::rt {
 
@@ -16,13 +16,15 @@ void Go(await::fibers::FiberRoutine routine) {
   f->Schedule();
 }
 
-rpc::IServerPtr MakeRpcServer() {
-  return std::make_shared<rpc::ServerImpl>(NetTransport(), Executor(),
-                                           FiberManager(), LoggerBackend());
+commute::rpc::IServerPtr MakeRpcServer(uint16_t port) {
+  return std::make_shared<commute::rpc::ServerImpl>(
+      std::to_string(port),
+      NetTransport(), Executor(), FiberManager(), LoggerBackend());
 }
 
-rpc::IClientPtr MakeRpcClient() {
-  return rpc::MakeClient(NetTransport(), Executor(), LoggerBackend());
+commute::rpc::IClientPtr MakeRpcClient() {
+  return commute::rpc::MakeClient(
+      NetTransport(), Executor(), LoggerBackend());
 }
 
 }  // namespace whirl::node::rt

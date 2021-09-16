@@ -2,7 +2,7 @@
 
 #include <whirl/node/db/database.hpp>
 
-#include <whirl/cereal/bytes.hpp>
+#include <muesli/bytes.hpp>
 
 #include <fmt/core.h>
 
@@ -24,17 +24,17 @@ class KVStore {
   KVStore& operator=(const KVStore&) = delete;
 
   void Put(const std::string& key, const V& value) {
-    auto value_bytes = Serialize(value);
+    auto value_bytes = muesli::Serialize(value);
     db_->Put(WithNamespace(key), value_bytes);
   }
 
   bool Has(const std::string& key) const {
-    std::optional<Bytes> value_bytes = db_->TryGet(WithNamespace(key));
+    auto value_bytes = db_->TryGet(WithNamespace(key));
     return value_bytes.has_value();
   }
 
   std::optional<V> TryGet(const std::string& key) const {
-    std::optional<Bytes> value_bytes = db_->TryGet(WithNamespace(key));
+    std::optional<muesli::Bytes> value_bytes = db_->TryGet(WithNamespace(key));
     if (value_bytes.has_value()) {
       return value_bytes->As<V>();
     } else {

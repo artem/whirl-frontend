@@ -193,8 +193,7 @@ node::IRuntime* Server::MakeNodeRuntime() {
 
   runtime->db.Init(runtime->fs.Get());
 
-  static const net::Port kTransportPort = 42;
-  runtime->transport.Init(transport_, kTransportPort);
+  runtime->transport.Init(transport_);
 
   runtime->random.Init();
   runtime->guids.Init(config_.id);

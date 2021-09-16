@@ -9,7 +9,7 @@ std::optional<WriteBatch> WALReader::ReadNext() {
   if (!frame.has_value()) {
     return std::nullopt;
   }
-  auto entry = Deserialize<WALEntry>(*frame);
+  auto entry = muesli::Deserialize<WALEntry>(*frame);
   return node::db::WriteBatch{entry.muts};
 }
 

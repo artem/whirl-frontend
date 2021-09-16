@@ -2,7 +2,7 @@
 
 #include <whirl/node/db/kv.hpp>
 
-#include <whirl/cereal/serializable.hpp>
+#include <muesli/serializable.hpp>
 
 #include <cereal/types/optional.hpp>
 #include <cereal/types/string.hpp>
@@ -25,7 +25,7 @@ struct Mutation {
   Key key;
   std::optional<Value> value;
 
-  WHIRL_SERIALIZABLE(type, key, value)
+  MUESLI_SERIALIZABLE(type, key, value)
 };
 
 }  // namespace whirl::node::db

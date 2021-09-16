@@ -7,7 +7,8 @@
 
 #include <whirl/engines/matrix/db/detail/framed.hpp>
 
-#include <whirl/cereal/serialize.hpp>
+#include <muesli/serialize.hpp>
+#include <muesli/serializable.hpp>
 
 #include <wheels/io/buffered.hpp>
 
@@ -20,7 +21,7 @@ namespace whirl::matrix::db {
 struct WALEntry {
   std::vector<node::db::Mutation> muts;
 
-  WHIRL_SERIALIZABLE(muts);
+  MUESLI_SERIALIZABLE(muts);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ class WALWriter {
  private:
   // Atomic
   void AppendImpl(WALEntry entry) {
-    framed_writer_.WriteFrame(Serialize(entry));
+    framed_writer_.WriteFrame(muesli::Serialize(entry));
   }
 
  private:

@@ -1,15 +1,15 @@
 #include <whirl/engines/matrix/history/channel.hpp>
 
-#include <whirl/node/rpc/channel.hpp>
-#include <whirl/node/rpc/errors.hpp>
-#include <whirl/node/rpc/trace.hpp>
+#include <commute/rpc/channel.hpp>
+#include <commute/rpc/errors.hpp>
+#include <commute/rpc/trace.hpp>
 
 #include <whirl/engines/matrix/world/global/global.hpp>
 
 #include <await/futures/core/future.hpp>
 #include <await/futures/helpers.hpp>
 
-using namespace whirl::rpc;
+using namespace commute::rpc;
 using await::futures::Future;
 using wheels::Result;
 

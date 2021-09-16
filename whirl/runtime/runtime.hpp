@@ -5,7 +5,7 @@
 
 #include <timber/logger.hpp>
 
-#include <whirl/node/net/transport.hpp>
+#include <commute/transport/transport.hpp>
 
 #include <whirl/node/time/time.hpp>
 #include <whirl/node/time/true_time.hpp>
@@ -46,9 +46,9 @@ struct IRuntime {
 
   virtual db::IDatabase* Database() = 0;
 
-  // Network
+  // Net transport
 
-  virtual net::ITransport* NetTransport() = 0;
+  virtual commute::transport::ITransport* NetTransport() = 0;
 
   // Cluster
 

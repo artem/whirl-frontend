@@ -1,9 +1,9 @@
 #pragma once
 
-#include <whirl/node/rpc/channel.hpp>
+#include <commute/rpc/channel.hpp>
 
 namespace whirl::matrix::client {
 
-rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name);
+commute::rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name, uint16_t port);
 
 }  // namespace whirl::matrix::client

@@ -1,10 +1,13 @@
 #include <whirl/node/program/util.hpp>
-#include <whirl/node/rpc/service_base.hpp>
-#include <whirl/node/rpc/call.hpp>
-
 #include <whirl/node/runtime/methods.hpp>
 
+#include <commute/rpc/service_base.hpp>
+#include <commute/rpc/call.hpp>
+
 #include <timber/log.hpp>
+
+#include <muesli/serializable.hpp>
+#include <cereal/types/string.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
@@ -14,8 +17,6 @@
 
 #include <await/fibers/core/api.hpp>
 #include <await/fibers/sync/future.hpp>
-
-#include <cereal/types/string.hpp>
 
 #include <chrono>
 #include <cstdlib>
@@ -35,19 +36,19 @@ struct Echo {
   struct Request {
     std::string data;
 
-    WHIRL_SERIALIZABLE(data);
+    MUESLI_SERIALIZABLE(data);
   };
 
   struct Response {
     std::string data;
 
-    WHIRL_SERIALIZABLE(data);
+    MUESLI_SERIALIZABLE(data);
   };
 };
 
 }  // namespace proto
 
-class EchoService : public rpc::ServiceBase<EchoService> {
+class EchoService : public commute::rpc::ServiceBase<EchoService> {
  public:
   EchoService()
     : logger_("EchoService", node::rt::LoggerBackend()) {
@@ -64,7 +65,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 
  protected:
   void RegisterMethods() override {
-    WHIRL_RPC_REGISTER_METHOD(Echo);
+    COMM_RPC_REGISTER_METHOD(Echo);
   }
 
  private:
@@ -78,7 +79,7 @@ class EchoService : public rpc::ServiceBase<EchoService> {
 void EchoNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::rt::MakeRpcServer();
+  auto rpc_server = node::rt::MakeRpcServer(/*port=*/42);
 
   rpc_server->RegisterService("Echo", std::make_shared<EchoService>());
 
@@ -92,14 +93,14 @@ void EchoNode() {
 [[noreturn]] void EchoClient() {
   matrix::client::Prologue();
 
-  auto channel = matrix::client::MakeRpcChannel(/*pool_name=*/"echo");
+  auto channel = matrix::client::MakeRpcChannel(/*pool_name=*/"echo", 42);
 
   timber::Logger logger_{"Client", node::rt::LoggerBackend()};
 
   while (true) {
     // Печатаем локальное время
     LOG_INFO("I am {}", node::rt::HostName());
-    LOG_INFO("Local wall time: {}", node::rt::WallTimeNow());
+    LOG_INFO("Local wall time: {}", node::rt::WallTimeNow().ToJiffies());
 
     // Выполняем RPC - вызываем метод "Echo" у сервиса "Echo"
     // Результат вызова - Future, она типизируется вызовом .As<std::string>()
@@ -109,7 +110,7 @@ void EchoNode() {
     // См. <await/fibers/sync/future.hpp>
 
     Future<proto::Echo::Response> future =
-        rpc::Call("Echo.Echo")  //
+        commute::rpc::Call("Echo.Echo")  //
             .Args(proto::Echo::Request{"Hello"})
             .Via(channel);
 

@@ -1,13 +1,24 @@
+// Node
 #include <whirl/node/program/util.hpp>
+#include <whirl/node/runtime/methods.hpp>
 #include <whirl/node/cluster/peer.hpp>
 #include <whirl/node/store/kv.hpp>
-#include <whirl/node/rpc/service_base.hpp>
-#include <whirl/node/rpc/call.hpp>
-#include <whirl/node/runtime/methods.hpp>
 
-#include <whirl/cereal/serializable.hpp>
+// RPC
+#include <commute/rpc/service_base.hpp>
+#include <commute/rpc/call.hpp>
 
+// Serialization
+#include <muesli/serializable.hpp>
+
+// Logging
 #include <timber/log.hpp>
+
+// Concurrency
+#include <await/fibers/core/api.hpp>
+#include <await/fibers/sync/future.hpp>
+#include <await/fibers/sync/mutex.hpp>
+#include <await/futures/combine/quorum.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
@@ -27,13 +38,7 @@
 #include <whirl/history/models/kv.hpp>
 
 #include <await/fibers/core/id.hpp>
-#include <whirl/node/rpc/id.hpp>
-
-// Concurrency
-#include <await/fibers/core/api.hpp>
-#include <await/fibers/sync/future.hpp>
-#include <await/fibers/sync/mutex.hpp>
-#include <await/futures/combine/quorum.hpp>
+#include <commute/rpc/id.hpp>
 
 // Support std::string serialization
 #include <cereal/types/string.hpp>
@@ -65,7 +70,7 @@ struct StampedValue {
   WriteTimestamp timestamp;
 
   // Serialization support for local storage and RPC
-  WHIRL_SERIALIZABLE(value, timestamp)
+  MUESLI_SERIALIZABLE(value, timestamp)
 };
 
 // For logging
@@ -83,15 +88,15 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 // Coordinator role, stateless
 
-class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
+class Coordinator : public commute::rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
  public:
-  Coordinator() : Peer(node::rt::PoolName()),
+  Coordinator() : Peer(node::rt::PoolName(), /*port=*/42),
     logger_("KVNode.Coordinator", node::rt::LoggerBackend()) {
   }
 
   void RegisterMethods() override {
-    WHIRL_RPC_REGISTER_METHOD(Set);
-    WHIRL_RPC_REGISTER_METHOD(Get);
+    COMM_RPC_REGISTER_METHOD(Set);
+    COMM_RPC_REGISTER_METHOD(Get);
   };
 
   // RPC handlers
@@ -105,7 +110,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
     // Broadcast
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
       writes.push_back(  //
-          rpc::Call("Replica.LocalWrite")
+          commute::rpc::Call("Replica.LocalWrite")
               .Args<Key, StampedValue>(key, {value, write_ts})
               .Via(Channel(peer))
               .Context(await::context::ThisFiber())
@@ -122,7 +127,7 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
     // Broadcast LocalRead request to replicas
     for (const auto& peer : ListPeers(/*with_me=*/true)) {
       reads.push_back(  //
-          rpc::Call("Replica.LocalRead")
+          commute::rpc::Call("Replica.LocalRead")
               .Args(key)
               .Via(Channel(peer))
               .Context(await::context::ThisFiber())
@@ -179,15 +184,15 @@ class Coordinator : public rpc::ServiceBase<Coordinator>, public node::cluster::
 
 // Storage replica role
 
-class Replica : public rpc::ServiceBase<Replica> {
+class Replica : public commute::rpc::ServiceBase<Replica> {
  public:
   Replica() : kv_store_(node::rt::Database(), "abd"),
     logger_("KVNode.Replica", node::rt::LoggerBackend()) {
   }
 
   void RegisterMethods() override {
-    WHIRL_RPC_REGISTER_METHOD(LocalWrite);
-    WHIRL_RPC_REGISTER_METHOD(LocalRead);
+    COMM_RPC_REGISTER_METHOD(LocalWrite);
+    COMM_RPC_REGISTER_METHOD(LocalRead);
   };
 
   // RPC handlers
@@ -232,7 +237,7 @@ class Replica : public rpc::ServiceBase<Replica> {
 void KVNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::rt::MakeRpcServer();
+  auto rpc_server = node::rt::MakeRpcServer(/*port=*/42);
 
   rpc_server->RegisterService("KV", std::make_shared<Coordinator>());
   rpc_server->RegisterService("Replica", std::make_shared<Replica>());
@@ -246,11 +251,11 @@ void KVNode() {
 
 class KVBlockingStub {
  public:
-  KVBlockingStub(rpc::IChannelPtr channel) : channel_(channel) {
+  KVBlockingStub(commute::rpc::IChannelPtr channel) : channel_(channel) {
   }
 
   void Set(Key key, Value value) {
-    Await(rpc::Call("KV.Set")  //
+    Await(commute::rpc::Call("KV.Set")  //
               .Args(key, value)
               .Via(channel_)
               .Start()
@@ -259,7 +264,7 @@ class KVBlockingStub {
   }
 
   Value Get(Key key) {
-    return Await(rpc::Call("KV.Get")  //
+    return Await(commute::rpc::Call("KV.Get")  //
                      .Args(key)
                      .Via(channel_)
                      .Start()
@@ -268,7 +273,7 @@ class KVBlockingStub {
   }
 
  private:
-  rpc::IChannelPtr channel_;
+  commute::rpc::IChannelPtr channel_;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -286,7 +291,8 @@ const std::string& ChooseRandomKey() {
 
   timber::Logger logger_{"Client", node::rt::LoggerBackend()};
 
-  KVBlockingStub kv_store{matrix::client::MakeRpcChannel(/*pool_name=*/"kv")};
+  KVBlockingStub kv_store{matrix::client::MakeRpcChannel(
+      /*pool_name=*/"kv", /*port=*/42)};
 
   for (size_t i = 1;; ++i) {
     Key key = ChooseRandomKey();
@@ -370,7 +376,7 @@ size_t RunSimulation(size_t seed) {
             << "keys = " << keys << std::endl;
 
   // Reset RPC ids
-  whirl::rpc::ResetIds();
+  commute::rpc::ResetIds();
 
   matrix::World world{seed};
 

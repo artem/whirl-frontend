@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/rpc/channel.hpp>
+#include <commute/rpc/channel.hpp>
 
 #include <whirl/node/random/service.hpp>
 
@@ -8,7 +8,8 @@
 
 namespace whirl::rpc {
 
-IChannelPtr MakeRandomChannel(std::vector<IChannelPtr>&& channels,
-                              node::IRandomService* random);
+commute::rpc::IChannelPtr MakeRandomChannel(
+    std::vector<commute::rpc::IChannelPtr>&& channels,
+    node::IRandomService* random);
 
 }  // namespace whirl::rpc

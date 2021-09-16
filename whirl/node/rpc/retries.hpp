@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/rpc/channel.hpp>
+#include <commute/rpc/channel.hpp>
 
 #include <whirl/node/time/time.hpp>
 
@@ -18,7 +18,10 @@ struct BackoffParams {
 
 //////////////////////////////////////////////////////////////////////
 
-IChannelPtr WithRetries(IChannelPtr channel, node::time::ITimeService* time,
-                        timber::ILogBackend* log, BackoffParams backoff_params);
+commute::rpc::IChannelPtr WithRetries(
+    commute::rpc::IChannelPtr channel,
+    node::time::ITimeService* time,
+    timber::ILogBackend* log,
+    BackoffParams backoff_params);
 
 }  // namespace whirl::rpc
