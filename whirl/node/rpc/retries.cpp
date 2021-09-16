@@ -14,12 +14,11 @@ using namespace await::futures;
 using await::context::StopToken;
 using await::executors::IExecutor;
 
+using commute::rpc::BytesValue;
+using commute::rpc::CallOptions;
 using commute::rpc::IChannel;
 using commute::rpc::IChannelPtr;
 using commute::rpc::Method;
-using commute::rpc::BytesValue;
-using commute::rpc::CallOptions;
-
 
 namespace whirl::rpc {
 

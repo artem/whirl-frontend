@@ -25,7 +25,8 @@ std::vector<std::string> Peer::ListPeers(bool with_me) const {
   }
 }
 
-const ::commute::rpc::IChannelPtr& Peer::Channel(const std::string& peer) const {
+const ::commute::rpc::IChannelPtr& Peer::Channel(
+    const std::string& peer) const {
   auto it = channels_.find(peer);
   return it->second;  // Or UB =(
 }
@@ -36,7 +37,7 @@ const ::commute::rpc::IChannelPtr& Peer::LoopBack() const {
 
 ::commute::rpc::IClientPtr Peer::MakeRpcClient() {
   return ::commute::rpc::MakeClient(rt::NetTransport(), rt::Executor(),
-                         rt::LoggerBackend());
+                                    rt::LoggerBackend());
 }
 
 void Peer::ConnectToPeers() {
@@ -64,8 +65,8 @@ static std::string PeerAddress(const std::string& host, uint16_t port) {
   return fmt::format("{}:{}", host, port);
 }
 
-::commute::rpc::IChannelPtr Peer::MakeRpcChannel(::commute::rpc::IClientPtr client,
-                                      const std::string& host, uint16_t port) {
+::commute::rpc::IChannelPtr Peer::MakeRpcChannel(
+    ::commute::rpc::IClientPtr client, const std::string& host, uint16_t port) {
   auto transport = client->Dial(PeerAddress(host, port));
   auto retries = rpc::WithRetries(std::move(transport), rt::TimeService(),
                                   rt::LoggerBackend(), RetriesBackoff());

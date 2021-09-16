@@ -53,8 +53,8 @@ class MonotonicTime {
   Jiffies jfs_;
 };
 
-inline Jiffies operator - (MonotonicTime end, MonotonicTime start) {
+inline Jiffies operator-(MonotonicTime end, MonotonicTime start) {
   return start.ToJiffies() - end.ToJiffies();
 }
 
-}  // whirl::node::time
+}  // namespace whirl::node::time

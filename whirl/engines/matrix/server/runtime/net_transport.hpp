@@ -101,8 +101,7 @@ class NetTransportServer : public transport::IServer,
 
 struct NetTransport : public transport::ITransport {
  public:
-  NetTransport(net::Transport& impl)
-      : impl_(impl) {
+  NetTransport(net::Transport& impl) : impl_(impl) {
   }
 
   const std::string& HostName() const override {
@@ -110,13 +109,13 @@ struct NetTransport : public transport::ITransport {
   }
 
   transport::IServerPtr Serve(const std::string& port,
-      transport::IHandlerPtr handler) override {
-    return std::make_shared<NetTransportServer>(impl_, ParsePort(port), handler);
+                              transport::IHandlerPtr handler) override {
+    return std::make_shared<NetTransportServer>(impl_, ParsePort(port),
+                                                handler);
   }
 
-  transport::ISocketPtr ConnectTo(
-      const std::string& address,
-      transport::IHandlerPtr handler) override {
+  transport::ISocketPtr ConnectTo(const std::string& address,
+                                  transport::IHandlerPtr handler) override {
     auto [host, port] = ParseAddress(address);
     return std::make_shared<NetTransportSocket>(impl_, host, port, handler);
   }
@@ -128,7 +127,8 @@ struct NetTransport : public transport::ITransport {
   }
 
   // "{hostname}:{port}"
-  static std::tuple<std::string, uint16_t> ParseAddress(const std::string& address) {
+  static std::tuple<std::string, uint16_t> ParseAddress(
+      const std::string& address) {
     auto pos = address.find(':');
 
     auto lhs = address.substr(0, pos);

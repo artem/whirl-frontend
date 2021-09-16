@@ -28,7 +28,8 @@ class Peer {
  private:
   commute::rpc::IClientPtr MakeRpcClient();
   commute::rpc::IChannelPtr MakeRpcChannel(commute::rpc::IClientPtr client,
-                                  const std::string& host, uint16_t port);
+                                           const std::string& host,
+                                           uint16_t port);
   void ConnectToPeers();
 
  private:

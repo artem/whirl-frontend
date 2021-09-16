@@ -20,15 +20,17 @@ static rpc::BackoffParams RetriesBackoff() {
 }
 
 static ::commute::rpc::IClientPtr MakeRpcClient() {
-  return ::commute::rpc::MakeClient(node::rt::NetTransport(), node::rt::Executor(),
-                         node::rt::LoggerBackend());
+  return ::commute::rpc::MakeClient(node::rt::NetTransport(),
+                                    node::rt::Executor(),
+                                    node::rt::LoggerBackend());
 }
 
 static std::string MakeAddress(const std::string& host, uint16_t port) {
   return fmt::format("{}:{}", host, port);
 }
 
-::commute::rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name, uint16_t port) {
+::commute::rpc::IChannelPtr MakeRpcChannel(const std::string& pool_name,
+                                           uint16_t port) {
   auto pool = node::rt::Discovery()->ListPool(pool_name);
 
   auto client = MakeRpcClient();
