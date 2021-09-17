@@ -1,7 +1,6 @@
 #pragma once
 
-#include <cstdlib>
-#include <memory>
+#include <cstdint>
 
 namespace whirl::node {
 

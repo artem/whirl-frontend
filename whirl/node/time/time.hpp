@@ -6,8 +6,6 @@
 
 #include <whirl/time.hpp>
 
-#include <memory>
-
 namespace whirl::node::time {
 
 struct ITimeService : public await::time::ITimerService {
