@@ -1,16 +1,16 @@
 #pragma once
 
+#include <await/time/timer_service.hpp>
+
 #include <whirl/node/time/time_point.hpp>
 
 #include <whirl/time.hpp>
-
-#include <await/futures/core/future.hpp>
 
 #include <memory>
 
 namespace whirl::node::time {
 
-struct ITimeService {
+struct ITimeService : public await::time::ITimerService {
   virtual ~ITimeService() = default;
 
   // Wall clock
@@ -20,7 +20,9 @@ struct ITimeService {
   virtual MonotonicTime MonotonicNow() = 0;
 
   // Timeouts and delays
-  virtual await::futures::Future<void> After(Jiffies d) = 0;
+  // Inherited from await::time::ITimerService
+  // virtual await::futures::Future<void> After(Jiffies d) = 0
+
 };
 
 }  // namespace whirl::node::time

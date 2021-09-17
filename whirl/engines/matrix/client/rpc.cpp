@@ -6,8 +6,9 @@
 
 #include <commute/rpc/client.hpp>
 
+#include <commute/rpc/retries.hpp>
+
 #include <whirl/node/rpc/random.hpp>
-#include <whirl/node/rpc/retries.hpp>
 
 #include <fmt/core.h>
 
@@ -15,7 +16,7 @@ namespace whirl::matrix::client {
 
 //////////////////////////////////////////////////////////////////////
 
-static rpc::BackoffParams RetriesBackoff() {
+static commute::rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
@@ -46,7 +47,7 @@ static std::string MakeAddress(const std::string& host, uint16_t port) {
   auto random =
       rpc::MakeRandomChannel(std::move(transports), node::rt::RandomService());
   auto history = MakeHistoryChannel(std::move(random));
-  auto retries = rpc::WithRetries(std::move(history), node::rt::TimeService(),
+  auto retries = commute::rpc::WithRetries(std::move(history), node::rt::TimeService(),
                                   node::rt::LoggerBackend(), RetriesBackoff());
 
   return retries;

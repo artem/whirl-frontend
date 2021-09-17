@@ -1,5 +1,7 @@
 #pragma once
 
+#include <await/time/jiffies.hpp>
+
 #include <cstdlib>
 
 namespace whirl {
@@ -12,7 +14,7 @@ namespace whirl {
 
 using TimePoint = size_t;
 
-using Jiffies = size_t;
+using Jiffies = uint64_t;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -28,3 +30,16 @@ inline Jiffies operator""_jfs(unsigned long long int d) {
 }
 
 }  // namespace whirl
+
+//////////////////////////////////////////////////////////////////////
+
+// await::time::Jiffies == whirl::Jiffies
+
+namespace await::time {
+
+template <>
+inline Jiffies ToJiffies(whirl::Jiffies jfs) {
+  return jfs;
+}
+
+}  // namespace await::time

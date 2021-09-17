@@ -2,7 +2,7 @@
 
 #include <whirl/node/runtime/methods.hpp>
 
-#include <whirl/node/rpc/retries.hpp>
+#include <commute/rpc/retries.hpp>
 
 #include <fmt/core.h>
 
@@ -57,7 +57,7 @@ void Peer::ConnectToPeers() {
   }
 }
 
-static rpc::BackoffParams RetriesBackoff() {
+static commute::rpc::BackoffParams RetriesBackoff() {
   return {50, 1000, 2};  // Magic
 }
 
@@ -68,7 +68,7 @@ static std::string PeerAddress(const std::string& host, uint16_t port) {
 ::commute::rpc::IChannelPtr Peer::MakeRpcChannel(
     ::commute::rpc::IClientPtr client, const std::string& host, uint16_t port) {
   auto transport = client->Dial(PeerAddress(host, port));
-  auto retries = rpc::WithRetries(std::move(transport), rt::TimeService(),
+  auto retries = commute::rpc::WithRetries(std::move(transport), rt::TimeService(),
                                   rt::LoggerBackend(), RetriesBackoff());
   return retries;
 }
