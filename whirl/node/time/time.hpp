@@ -21,7 +21,7 @@ struct ITimeService : public await::time::ITimerService {
 
   // Timeouts and delays
   // Inherited from await::time::ITimerService
-  // virtual await::futures::Future<void> After(Jiffies d) = 0
+  // virtual await::futures::Future<void> After(await::time::Jiffies d) = 0;
 
 };
 

@@ -9,7 +9,7 @@
 namespace whirl::node::time {
 
 // TrueTime from Spanner
-// Spanner: Google's Globally-Distributed Database"
+// Spanner: Google's Globally-Distributed Database
 // https://research.google/pubs/pub39966/
 
 // [earliest, latest]
