@@ -29,7 +29,7 @@ TimePoint Link::ChooseDeliveryTime(const Packet& packet) const {
     return GlobalNow() + 1;
   }
   const auto flight_time = GetTimeModel()->FlightTime(Start(), End(), packet);
-  return GlobalNow() + flight_time;
+  return GlobalNow() + flight_time.Count();
 }
 
 Packet Link::ExtractNextPacket() {

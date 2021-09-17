@@ -47,7 +47,7 @@ class TimeService : public node::time::ITimeService {
 
  private:
   TimePoint AfterGlobalTime(Jiffies d) const {
-    return GlobalNow() + monotonic_clock_.SleepOrTimeout(d);
+    return GlobalNow() + monotonic_clock_.SleepOrTimeout(d).Count();
   }
 
  private:

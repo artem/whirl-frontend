@@ -161,7 +161,7 @@ class Coordinator : public commute::rpc::ServiceBase<Coordinator>, public node::
   WriteTimestamp ChooseWriteTimestamp() const {
     // Local wall clock may be out of sync with other replicas
     // Use TrueTime service (node::rt::TrueTime())
-    return node::rt::WallTimeNow().ToJiffies();
+    return node::rt::WallTimeNow().ToJiffies().Count();
   }
 
   // Find value with the largest timestamp

@@ -21,7 +21,7 @@ class MonotonicClock {
   }
 
   node::time::MonotonicTime Now() const {
-    return {drift_.Elapsed(ElapsedSinceLastReset()) + init_};
+    return drift_.Elapsed(ElapsedSinceLastReset()) + init_;
   }
 
   // For timeouts and sleeps

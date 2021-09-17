@@ -3,6 +3,8 @@
 #include <await/time/jiffies.hpp>
 
 #include <cstdlib>
+#include <compare>
+#include <iostream>
 
 namespace whirl {
 
@@ -14,7 +16,46 @@ namespace whirl {
 
 using TimePoint = size_t;
 
-using Jiffies = uint64_t;
+
+class Jiffies {
+ public:
+  Jiffies(uint64_t count) : count_(count) {
+  }
+
+  uint64_t Count() const {
+    return count_;
+  }
+
+  auto operator<=>(const Jiffies& rhs) const = default;
+
+  Jiffies& operator += (Jiffies rhs) {
+    count_ += rhs.count_;
+    return *this;
+  }
+
+  Jiffies& operator -= (Jiffies rhs) {
+    count_ -= rhs.count_;
+    return *this;
+  }
+
+ private:
+  size_t count_;
+};
+
+inline Jiffies operator+(Jiffies lhs, Jiffies rhs) {
+  return {lhs.Count() + rhs.Count()};
+}
+
+inline Jiffies operator-(Jiffies lhs, Jiffies rhs) {
+  return {lhs.Count() - rhs.Count()};
+}
+
+//////////////////////////////////////////////////////////////////////
+
+inline std::ostream& operator << (std::ostream& out, Jiffies jfs) {
+  out << jfs.Count() << "_jiffies";
+  return out;
+}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -33,13 +74,14 @@ inline Jiffies operator""_jfs(unsigned long long int d) {
 
 //////////////////////////////////////////////////////////////////////
 
+// Integration with await
 // await::time::Jiffies == whirl::Jiffies
 
 namespace await::time {
 
 template <>
 inline Jiffies ToJiffies(whirl::Jiffies jfs) {
-  return jfs;
+  return jfs.Count();
 }
 
 }  // namespace await::time
