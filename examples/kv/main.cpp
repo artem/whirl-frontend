@@ -258,6 +258,7 @@ class KVBlockingStub {
     Await(commute::rpc::Call("KV.Set")  //
               .Args(key, value)
               .Via(channel_)
+              .TraceWith(GenerateTraceId("Set"))
               .Start()
               .As<void>())
         .ThrowIfError();
@@ -267,9 +268,15 @@ class KVBlockingStub {
     return Await(commute::rpc::Call("KV.Get")  //
                      .Args(key)
                      .Via(channel_)
+                     .TraceWith(GenerateTraceId("Get"))
                      .Start()
                      .As<Value>())
         .ValueOrThrow();
+  }
+
+ private:
+  std::string GenerateTraceId(std::string cmd) const {
+    return fmt::format("{}-{}", cmd, node::rt::GenerateGuid());
   }
 
  private:
