@@ -39,7 +39,7 @@ class Jiffies {
   }
 
  private:
-  size_t count_;
+  uint64_t count_;
 };
 
 inline Jiffies operator+(Jiffies lhs, Jiffies rhs) {
@@ -53,7 +53,7 @@ inline Jiffies operator-(Jiffies lhs, Jiffies rhs) {
 //////////////////////////////////////////////////////////////////////
 
 inline std::ostream& operator << (std::ostream& out, Jiffies jfs) {
-  out << jfs.Count() << "_jiffies";
+  out << jfs.Count() << "jfs";
   return out;
 }
 
