@@ -2,9 +2,8 @@
 
 #include <await/time/timer_service.hpp>
 
+#include <whirl/jiffies.hpp>
 #include <whirl/node/time/time_point.hpp>
-
-#include <whirl/time.hpp>
 
 namespace whirl::node::time {
 

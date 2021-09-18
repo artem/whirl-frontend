@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/time.hpp>
+#include <whirl/jiffies.hpp>
 
 #include <compare>
 
