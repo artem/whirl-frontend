@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/time/time.hpp>
+#include <whirl/node/time/time_service.hpp>
 
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
