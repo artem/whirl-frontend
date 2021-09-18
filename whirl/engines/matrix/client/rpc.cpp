@@ -47,8 +47,9 @@ static std::string MakeAddress(const std::string& host, uint16_t port) {
   auto random =
       rpc::MakeRandomChannel(std::move(transports), node::rt::RandomService());
   auto history = MakeHistoryChannel(std::move(random));
-  auto retries = commute::rpc::WithRetries(std::move(history), node::rt::TimeService(),
-                                  node::rt::LoggerBackend(), RetriesBackoff());
+  auto retries =
+      commute::rpc::WithRetries(std::move(history), node::rt::TimeService(),
+                                node::rt::LoggerBackend(), RetriesBackoff());
 
   return retries;
 }

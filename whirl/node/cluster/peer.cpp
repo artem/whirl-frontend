@@ -68,8 +68,9 @@ static std::string PeerAddress(const std::string& host, uint16_t port) {
 ::commute::rpc::IChannelPtr Peer::MakeRpcChannel(
     ::commute::rpc::IClientPtr client, const std::string& host, uint16_t port) {
   auto transport = client->Dial(PeerAddress(host, port));
-  auto retries = commute::rpc::WithRetries(std::move(transport), rt::TimeService(),
-                                  rt::LoggerBackend(), RetriesBackoff());
+  auto retries =
+      commute::rpc::WithRetries(std::move(transport), rt::TimeService(),
+                                rt::LoggerBackend(), RetriesBackoff());
   return retries;
 }
 

@@ -31,7 +31,7 @@ class HistoryChannel : public IChannel {
   }
 
   Future<Message> Call(const Method& method, const Message& input,
-                          CallOptions options) override {
+                       CallOptions options) override {
     auto cookie = GetHistoryRecorder().CallStarted(method.name, input);
 
     auto f = impl_->Call(method, input, std::move(options));
@@ -44,8 +44,7 @@ class HistoryChannel : public IChannel {
   }
 
  private:
-  static void RecordCallResult(Cookie cookie,
-                               const Result<Message>& result) {
+  static void RecordCallResult(Cookie cookie, const Result<Message>& result) {
     auto& recorder = GetHistoryRecorder();
 
     if (auto trace_id = TryGetCurrentTraceId()) {

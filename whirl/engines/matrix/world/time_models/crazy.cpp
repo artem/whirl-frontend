@@ -53,9 +53,8 @@ class CrazyTimeModel : public ITimeModel {
 
   // Network
 
-  Jiffies FlightTime(const net::IServer* /*start*/,
-                       const net::IServer* /*end*/,
-                       const net::Packet& packet) override {
+  Jiffies FlightTime(const net::IServer* /*start*/, const net::IServer* /*end*/,
+                     const net::Packet& packet) override {
     if (packet.header.type != net::Packet::Type::Data) {
       // Service packet, do not affect randomness
       return 50;

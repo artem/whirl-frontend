@@ -16,7 +16,6 @@ namespace whirl {
 
 using TimePoint = size_t;
 
-
 class Jiffies {
  public:
   Jiffies(uint64_t count) : count_(count) {
@@ -28,12 +27,12 @@ class Jiffies {
 
   auto operator<=>(const Jiffies& rhs) const = default;
 
-  Jiffies& operator += (Jiffies rhs) {
+  Jiffies& operator+=(Jiffies rhs) {
     count_ += rhs.count_;
     return *this;
   }
 
-  Jiffies& operator -= (Jiffies rhs) {
+  Jiffies& operator-=(Jiffies rhs) {
     count_ -= rhs.count_;
     return *this;
   }
@@ -52,7 +51,7 @@ inline Jiffies operator-(Jiffies lhs, Jiffies rhs) {
 
 //////////////////////////////////////////////////////////////////////
 
-inline std::ostream& operator << (std::ostream& out, Jiffies jfs) {
+inline std::ostream& operator<<(std::ostream& out, Jiffies jfs) {
   out << jfs.Count() << "jfs";
   return out;
 }

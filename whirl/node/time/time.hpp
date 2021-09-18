@@ -20,7 +20,6 @@ struct ITimeService : public await::time::ITimerService {
   // Timeouts and delays
   // Inherited from await::time::ITimerService
   // virtual await::futures::Future<void> After(await::time::Jiffies d) = 0;
-
 };
 
 }  // namespace whirl::node::time

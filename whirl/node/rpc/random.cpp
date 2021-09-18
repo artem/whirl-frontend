@@ -25,7 +25,7 @@ class RandomChannel : public IChannel {
   }
 
   Future<Message> Call(const Method& method, const Message& input,
-                          CallOptions options) override {
+                       CallOptions options) override {
     size_t index = SelectIndex();
     return channels_[index]->Call(method, input, std::move(options));
   }
