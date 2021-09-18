@@ -11,7 +11,7 @@ namespace whirl::matrix {
 
 // nullptr - global allocator
 void SetAllocator(IMemoryAllocator* allocator);
-IMemoryAllocator* GetAllocator();
+IMemoryAllocator* GetCurrentAllocator();
 
 //////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ IMemoryAllocator* GetAllocator();
 class AllocatorGuard {
  public:
   AllocatorGuard(IMemoryAllocator* a) {
-    saved_ = GetAllocator();
+    saved_ = GetCurrentAllocator();
     SetAllocator(a);
   }
 

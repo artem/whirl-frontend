@@ -18,7 +18,7 @@ void SetAllocator(IMemoryAllocator* a) {
   allocator = a;
 }
 
-IMemoryAllocator* GetAllocator() {
+IMemoryAllocator* GetCurrentAllocator() {
   return allocator;
 }
 
