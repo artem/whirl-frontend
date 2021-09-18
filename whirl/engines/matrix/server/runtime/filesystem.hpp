@@ -26,13 +26,13 @@ class FS : public node::fs::IFileSystem {
     return impl_->Exists(file_path);
   }
 
-  std::vector<std::string> ListFiles(std::string_view prefix) override {
+  node::fs::FileList ListFiles(std::string_view prefix) override {
     // All allocations are made in "userspace"
-    std::vector<std::string> listed;
+    node::fs::FileList listed;
 
     auto iter = impl_->ListAllFiles();
     while (iter.IsValid()) {
-      if ((*iter).starts_with(prefix)) {
+      if ((*iter).AsString().starts_with(prefix)) {
         listed.push_back(*iter);
       }
       ++iter;
