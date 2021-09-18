@@ -90,7 +90,7 @@ std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
 
 class Coordinator : public commute::rpc::ServiceBase<Coordinator>, public node::cluster::Peer {
  public:
-  Coordinator() : Peer(node::rt::PoolName(), /*port=*/42),
+  Coordinator() : Peer(node::rt::Config()),
     logger_("KVNode.Coordinator", node::rt::LoggerBackend()) {
   }
 
@@ -237,7 +237,8 @@ class Replica : public commute::rpc::ServiceBase<Replica> {
 void KVNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::rt::MakeRpcServer(/*port=*/42);
+  auto rpc_server = node::rt::MakeRpcServer(
+      node::rt::Config()->GetInt64("rpc.port"));
 
   rpc_server->RegisterService("KV", std::make_shared<Coordinator>());
   rpc_server->RegisterService("Replica", std::make_shared<Replica>());

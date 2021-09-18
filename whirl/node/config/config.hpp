@@ -1,24 +1,17 @@
 #pragma once
 
-#include <cstdlib>
-#include <optional>
+#include <cstdint>
 #include <string>
-#include <memory>
 
-namespace whirl::node {
-
-using NodeId = size_t;
+namespace whirl::node::cfg {
 
 struct IConfig {
   virtual ~IConfig() = default;
 
-  // Predefined
-  virtual NodeId Id() const = 0;
-  virtual const std::string& PoolName() const = 0;
-
-  virtual std::optional<std::string> Get(const std::string& key) = 0;
-
-  // TODO: attributes
+  virtual std::string GetString(std::string_view key) const = 0;
+  virtual int64_t GetInt64(std::string_view key) const = 0;
+  virtual bool GetBool(std::string_view key) const = 0;
 };
 
-}  // namespace whirl::node
+}  // namespace whirl::node::cfg
+

@@ -20,16 +20,8 @@ namespace whirl::node::rt {
 
 // Config
 
-inline IConfig* Config() {
+inline cfg::IConfig* Config() {
   return GetRuntime().Config();
-}
-
-inline NodeId Id() {
-  return Config()->Id();
-}
-
-inline std::string PoolName() {
-  return Config()->PoolName();
 }
 
 // Net

@@ -6,7 +6,8 @@
 #include <whirl/engines/matrix/world/actor.hpp>
 #include <whirl/engines/matrix/fault/server.hpp>
 
-#include <whirl/engines/matrix/server/config.hpp>
+#include <whirl/engines/matrix/config/server.hpp>
+
 #include <whirl/engines/matrix/server/stdout.hpp>
 
 #include <whirl/engines/matrix/clocks/monotonic.hpp>

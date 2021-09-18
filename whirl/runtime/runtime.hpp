@@ -68,7 +68,7 @@ struct IRuntime {
 
   // Configuration
 
-  virtual IConfig* Config() = 0;
+  virtual cfg::IConfig* Config() = 0;
 
   // Misc
 

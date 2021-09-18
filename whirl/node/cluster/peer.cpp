@@ -13,6 +13,10 @@ Peer::Peer(const std::string& pool_name, uint64_t port)
   ConnectToPeers();
 }
 
+Peer::Peer(cfg::IConfig* config)
+    : Peer(config->GetString("pool"), config->GetInt64("rpc.port")) {
+}
+
 size_t Peer::NodeCount() const {
   return pool_.size();
 }

@@ -13,8 +13,8 @@ void Prologue() {
 
   rt::PrintLine("Starting at T{}", rt::WallTimeNow().ToJiffies().Count());
 
-  // TODO: Read dir from config
-  rt::Database()->Open("/db");
+  rt::Database()->Open(
+      rt::Config()->GetString("db.path"));
 }
 
 void BlockForever() {

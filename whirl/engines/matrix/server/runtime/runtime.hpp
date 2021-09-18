@@ -13,12 +13,13 @@
 #include <whirl/engines/matrix/server/runtime/net_transport.hpp>
 #include <whirl/engines/matrix/server/runtime/database.hpp>
 #include <whirl/engines/matrix/server/runtime/discovery.hpp>
-#include <whirl/engines/matrix/server/runtime/config.hpp>
 #include <whirl/engines/matrix/server/runtime/terminal.hpp>
 
 #include <whirl/engines/matrix/process/fibers.hpp>
 
 #include <whirl/engines/matrix/world/global/log.hpp>
+
+#include <whirl/engines/matrix/config/config.hpp>
 
 #include <optional>
 
@@ -61,7 +62,7 @@ struct NodeRuntime : node::IRuntime {
   StaticObject<matrix::GuidGenerator> guids;
   StaticObject<matrix::TrueTimeService> true_time;
   StaticObject<matrix::DiscoveryService> discovery;
-  StaticObject<matrix::Config> config;
+  StaticObject<matrix::conf::NodeConfig> config;
   StaticObject<matrix::Terminal> terminal;
 
   // IRuntime
@@ -106,7 +107,7 @@ struct NodeRuntime : node::IRuntime {
     return GetLogBackend();
   }
 
-  node::IConfig* Config() override {
+  node::cfg::IConfig* Config() override {
     return config.Get();
   }
 

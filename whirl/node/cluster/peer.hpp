@@ -1,5 +1,7 @@
 #pragma once
 
+#include <whirl/node/config/config.hpp>
+
 #include <commute/rpc/client.hpp>
 #include <commute/rpc/channel.hpp>
 
@@ -13,6 +15,8 @@ namespace whirl::node::cluster {
 class Peer {
  public:
   Peer(const std::string& pool_name, uint64_t port);
+
+  Peer(cfg::IConfig* config);
 
   const std::string& PoolName() const {
     return pool_name_;
