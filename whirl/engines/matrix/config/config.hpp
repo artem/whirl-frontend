@@ -4,6 +4,8 @@
 
 #include <whirl/engines/matrix/config/server.hpp>
 
+#include <whirl/engines/matrix/world/global/time_model.hpp>
+
 namespace whirl::matrix::conf {
 
 class NodeConfig : public node::cfg::IConfig {
@@ -12,9 +14,14 @@ class NodeConfig : public node::cfg::IConfig {
   }
 
   std::string GetString(std::string_view key) const override {
+    // This server
+
     if (key == "pool") {
       return server_.pool;
     }
+
+    // Global constant
+
     if (key == "db.path") {
       return "/db";
     }
@@ -22,12 +29,31 @@ class NodeConfig : public node::cfg::IConfig {
   }
 
   int64_t GetInt64(std::string_view key) const override {
+    // This server
+
     if (key == "node.id") {
       return server_.id;
     }
+
+    // Global constant
+
     if (key == "rpc.port") {
       return 42;
     }
+
+    // Backoff params
+    // Defined by time model
+
+    if (key == "rpc.backoff.init") {
+      return GetTimeModel()->BackoffParams().init;
+    }
+    if (key == "rpc.backoff.max") {
+      return GetTimeModel()->BackoffParams().max;
+    }
+    if (key == "rpc.backoff.factor") {
+      return GetTimeModel()->BackoffParams().factor;
+    }
+
     KeyNotFound(key);
   }
 

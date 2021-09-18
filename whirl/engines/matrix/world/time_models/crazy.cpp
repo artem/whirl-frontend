@@ -66,6 +66,10 @@ class CrazyTimeModel : public ITimeModel {
     return GlobalRandomNumber(30, 60);
   }
 
+  commute::rpc::BackoffParams BackoffParams() override {
+    return {50, 1000, 2};
+  }
+
   // Threads
 
   Jiffies ThreadPause() override {

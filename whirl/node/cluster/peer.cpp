@@ -8,13 +8,10 @@
 
 namespace whirl::node::cluster {
 
-Peer::Peer(const std::string& pool_name, uint64_t port)
-    : pool_name_(pool_name), port_(port) {
-  ConnectToPeers();
-}
-
 Peer::Peer(cfg::IConfig* config)
-    : Peer(config->GetString("pool"), config->GetInt64("rpc.port")) {
+    : pool_name_(config->GetString("pool")),
+      port_(config->GetInt<uint16_t>("rpc.port")) {
+  ConnectToPeers(config);
 }
 
 size_t Peer::NodeCount() const {
@@ -44,7 +41,7 @@ const ::commute::rpc::IChannelPtr& Peer::LoopBack() const {
                                     rt::LoggerBackend());
 }
 
-void Peer::ConnectToPeers() {
+void Peer::ConnectToPeers(cfg::IConfig* cfg) {
   pool_ = rt::Discovery()->ListPool(pool_name_);
 
   auto client = MakeRpcClient();
@@ -57,12 +54,16 @@ void Peer::ConnectToPeers() {
   }
 
   for (const auto& host : pool_) {
-    channels_.emplace(host, MakeRpcChannel(client, host, port_));
+    channels_.emplace(host, MakeRpcChannel(client, host, cfg));
   }
 }
 
-static commute::rpc::BackoffParams RetriesBackoff() {
-  return {50, 1000, 2};  // Magic
+static commute::rpc::BackoffParams RetriesBackoff(cfg::IConfig* config) {
+  return {
+    config->GetInt<uint64_t>("rpc.backoff.init"),
+    config->GetInt<uint64_t>("rpc.backoff.max"),
+    config->GetInt<uint64_t>("rpc.backoff.factor")
+  };
 }
 
 static std::string PeerAddress(const std::string& host, uint16_t port) {
@@ -70,11 +71,12 @@ static std::string PeerAddress(const std::string& host, uint16_t port) {
 }
 
 ::commute::rpc::IChannelPtr Peer::MakeRpcChannel(
-    ::commute::rpc::IClientPtr client, const std::string& host, uint16_t port) {
+    ::commute::rpc::IClientPtr client, const std::string& host, cfg::IConfig* config) {
+  auto port = config->GetInt<uint16_t>("rpc.port");
   auto transport = client->Dial(PeerAddress(host, port));
   auto retries =
       commute::rpc::WithRetries(std::move(transport), rt::TimeService(),
-                                rt::LoggerBackend(), RetriesBackoff());
+                                rt::LoggerBackend(), RetriesBackoff(config));
   return retries;
 }
 

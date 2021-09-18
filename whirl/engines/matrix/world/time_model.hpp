@@ -5,6 +5,8 @@
 #include <whirl/engines/matrix/network/packet.hpp>
 #include <whirl/engines/matrix/network/server.hpp>
 
+#include <commute/rpc/retries.hpp>
+
 #include <memory>
 
 namespace whirl::matrix {
@@ -41,6 +43,8 @@ struct ITimeModel {
   // DPI =)
   virtual Jiffies FlightTime(const net::IServer* start, const net::IServer* end,
                              const net::Packet& packet) = 0;
+
+  virtual commute::rpc::BackoffParams BackoffParams() = 0;
 
   // Threads
 
