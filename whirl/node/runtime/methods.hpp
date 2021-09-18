@@ -2,8 +2,6 @@
 
 #include <whirl/runtime/access.hpp>
 
-#include <whirl/node/time/time_point.hpp>
-
 // RPC
 #include <commute/rpc/client.hpp>
 #include <commute/rpc/server.hpp>

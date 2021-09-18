@@ -3,7 +3,8 @@
 #include <await/time/timer_service.hpp>
 
 #include <whirl/jiffies.hpp>
-#include <whirl/node/time/time_point.hpp>
+#include <whirl/node/time/wall_time.hpp>
+#include <whirl/node/time/monotonic_time.hpp>
 
 namespace whirl::node::time {
 

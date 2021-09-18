@@ -12,9 +12,9 @@ struct IConfig {
 
   virtual int64_t GetInt64(std::string_view key) const = 0;
 
-  template <typename TInt>
-  TInt GetInt(std::string_view key) const {
-    return (TInt)GetInt64(key);
+  template <typename TInteger>
+  TInteger GetInt(std::string_view key) const {
+    return GetInt64(key);
   }
 
   virtual bool GetBool(std::string_view key) const = 0;

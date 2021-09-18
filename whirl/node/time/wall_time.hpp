@@ -29,32 +29,14 @@ class WallTime {
   Jiffies jfs_;
 };
 
+///////////////////////////////////////////////////////////////////////////
+
 inline WallTime operator+(WallTime t, Jiffies d) {
   return {t.ToJiffies() + d};
 }
 
 inline WallTime operator+(Jiffies d, WallTime t) {
   return t + d;
-}
-
-///////////////////////////////////////////////////////////////////////////
-
-class MonotonicTime {
- public:
-  MonotonicTime(Jiffies jfs) : jfs_(jfs) {
-  }
-
-  // Time elapsed since monotonic clock reset
-  Jiffies ToJiffies() const {
-    return jfs_;
-  }
-
- private:
-  Jiffies jfs_;
-};
-
-inline Jiffies operator-(MonotonicTime end, MonotonicTime start) {
-  return start.ToJiffies() - end.ToJiffies();
 }
 
 }  // namespace whirl::node::time

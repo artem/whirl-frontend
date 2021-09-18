@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/jiffies.hpp>
-#include <whirl/node/time/time_point.hpp>
+#include <whirl/node/time/wall_time.hpp>
 
 #include <memory>
 

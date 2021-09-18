@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/time/time_point.hpp>
+#include <whirl/node/time/monotonic_time.hpp>
 
 #include <whirl/engines/matrix/clocks/drift.hpp>
 
