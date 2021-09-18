@@ -18,10 +18,13 @@ namespace whirl {
 
 class Jiffies {
  public:
-  Jiffies(uint64_t count) : count_(count) {
+  using ValueType = uint64_t;
+
+ public:
+  Jiffies(ValueType count) : count_(count) {
   }
 
-  uint64_t Count() const {
+  ValueType Count() const {
     return count_;
   }
 
@@ -38,7 +41,7 @@ class Jiffies {
   }
 
  private:
-  uint64_t count_;
+  ValueType count_;
 };
 
 inline Jiffies operator+(Jiffies lhs, Jiffies rhs) {
