@@ -238,7 +238,7 @@ void KVNode() {
   node::main::Prologue();
 
   auto rpc_server = node::rt::MakeRpcServer(
-      node::rt::Config()->GetInt64("rpc.port"));
+      node::rt::Config()->GetInt<uint16_t>("rpc.port"));
 
   rpc_server->RegisterService("KV", std::make_shared<Coordinator>());
   rpc_server->RegisterService("Replica", std::make_shared<Replica>());
