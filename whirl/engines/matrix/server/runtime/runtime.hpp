@@ -62,7 +62,7 @@ struct NodeRuntime : node::IRuntime {
   StaticObject<matrix::GuidGenerator> guids;
   StaticObject<matrix::TrueTimeService> true_time;
   StaticObject<matrix::DiscoveryService> discovery;
-  StaticObject<matrix::conf::NodeConfig> config;
+  StaticObject<matrix::cfg::NodeConfig> config;
   StaticObject<matrix::Terminal> terminal;
 
   // IRuntime

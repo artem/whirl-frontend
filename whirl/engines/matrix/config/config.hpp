@@ -6,7 +6,7 @@
 
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
-namespace whirl::matrix::conf {
+namespace whirl::matrix::cfg {
 
 class NodeConfig : public node::cfg::IConfig {
  public:
@@ -70,4 +70,4 @@ class NodeConfig : public node::cfg::IConfig {
   ServerConfig server_;
 };
 
-}  // namespace whirl::matrix::conf
+}  // namespace whirl::matrix::cfg
