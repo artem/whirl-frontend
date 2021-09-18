@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <ostream>
+#include <functional>
 
 #include <fmt/ostream.h>
 
@@ -32,6 +33,10 @@ class Path {
     return repr_ < path.repr_;
   }
 
+  std::size_t ComputeHash() const noexcept {
+    return std::hash<std::string>()(repr_);
+  }
+
  private:
   std::string repr_;
 };
@@ -52,7 +57,7 @@ namespace std {
 template <>
 struct hash<whirl::node::fs::Path> {
   std::size_t operator()(const whirl::node::fs::Path& path) const noexcept {
-    return std::hash<std::string>()(path.AsString());
+    return path.ComputeHash();
   }
 };
 
