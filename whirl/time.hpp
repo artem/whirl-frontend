@@ -2,6 +2,8 @@
 
 #include <await/time/jiffies.hpp>
 
+#include <fmt/ostream.h>
+
 #include <cstdlib>
 #include <compare>
 #include <iostream>
