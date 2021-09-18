@@ -14,8 +14,6 @@ namespace whirl::node::cluster {
 
 class Peer {
  public:
-  Peer(const std::string& pool_name, uint64_t port);
-
   Peer(cfg::IConfig* config);
 
   const std::string& PoolName() const {
