@@ -1,7 +1,7 @@
 #include <whirl/engines/matrix/test/main.hpp>
 
 #include <whirl/engines/matrix/log/file.hpp>
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 #include <wheels/cmdline/argparse.hpp>
 

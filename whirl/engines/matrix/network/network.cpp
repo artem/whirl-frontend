@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/network/network.hpp>
 
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 #include <whirl/engines/matrix/world/global/random.hpp>
 
 #include <timber/log.hpp>

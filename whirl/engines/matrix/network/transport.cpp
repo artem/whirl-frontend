@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/network/network.hpp>
 
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 // IsThereAdversary
 #include <whirl/engines/matrix/world/global/global.hpp>

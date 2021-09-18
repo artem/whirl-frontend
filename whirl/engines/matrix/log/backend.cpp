@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/log/format.hpp>
 
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 #include <iostream>
 

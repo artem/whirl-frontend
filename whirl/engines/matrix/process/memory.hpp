@@ -1,7 +1,7 @@
 #pragma once
 
 #include <whirl/engines/matrix/memory/allocator.hpp>
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 namespace whirl::matrix::process {
 

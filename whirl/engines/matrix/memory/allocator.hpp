@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/allocator.hpp>
 
 #include <wheels/memory/mmap_allocation.hpp>
 

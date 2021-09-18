@@ -4,7 +4,7 @@
 
 #include <whirl/engines/matrix/helpers/priority_queue.hpp>
 
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 #include <whirl/engines/matrix/world/global/time.hpp>
 

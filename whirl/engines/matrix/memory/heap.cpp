@@ -2,9 +2,6 @@
 
 #include <wheels/support/assert.hpp>
 
-// TODO: remove
-#include <whirl/engines/matrix/memory/new.hpp>
-
 #include <cstring>
 #include <vector>
 

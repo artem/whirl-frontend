@@ -1,6 +1,6 @@
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
-#include <whirl/engines/matrix/memory/tracker.hpp>
+#include <whirl/engines/matrix/new/tracker.hpp>
 
 #include <wheels/support/panic.hpp>
 

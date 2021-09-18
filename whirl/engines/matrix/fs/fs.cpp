@@ -3,7 +3,7 @@
 #include <whirl/node/fs/error.hpp>
 
 #include <whirl/engines/matrix/helpers/digest.hpp>
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 #include <whirl/engines/matrix/world/global/log.hpp>
 

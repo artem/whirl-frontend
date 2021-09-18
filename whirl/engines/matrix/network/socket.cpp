@@ -3,7 +3,7 @@
 #include <whirl/engines/matrix/network/link.hpp>
 #include <whirl/engines/matrix/network/transport.hpp>
 
-#include <whirl/engines/matrix/memory/new.hpp>
+#include <whirl/engines/matrix/new/new.hpp>
 
 namespace whirl::matrix::net {
 
