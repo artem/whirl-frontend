@@ -11,6 +11,8 @@
 
 // Serialization
 #include <muesli/serializable.hpp>
+// Support std::string serialization
+#include <cereal/types/string.hpp>
 
 // Logging
 #include <timber/log.hpp>
@@ -39,13 +41,8 @@
 #include <whirl/history/checker/check.hpp>
 #include <whirl/history/models/kv.hpp>
 
-#include <await/fibers/core/id.hpp>
 #include <commute/rpc/id.hpp>
 
-// Support std::string serialization
-#include <cereal/types/string.hpp>
-
-#include <random>
 #include <algorithm>
 
 using await::futures::Future;
