@@ -53,6 +53,12 @@ class Path {
   std::string repr_;
 };
 
+// Usage: dir / "foo" / "bar"
+inline Path operator/(Path path, const std::string& name) {
+  path /= name;
+  return path;
+}
+
 inline std::ostream& operator<<(std::ostream& out, const Path& path) {
   out << path.Repr();
   return out;

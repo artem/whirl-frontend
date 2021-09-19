@@ -61,7 +61,10 @@ struct IFileSystem {
 
   // Paths
 
-  virtual std::string PathJoin(const std::string& base, const std::string& name) const = 0;
+  virtual Path RootPath() const = 0;
+
+  // Appends `name` component to path `base`
+  virtual std::string PathAppend(const std::string& base, const std::string& name) const = 0;
 };
 
 }  // namespace whirl::node::fs

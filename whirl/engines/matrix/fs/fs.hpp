@@ -78,7 +78,9 @@ class FileSystem {
 
   // Paths
 
-  std::string JoinPath(const std::string& base_path,
+  std::string RootPath() const;
+
+  std::string PathAppend(const std::string& base_path,
                        const std::string& name) const;
 
   // Simulation

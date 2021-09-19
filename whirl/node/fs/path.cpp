@@ -10,7 +10,7 @@ Path::Path(std::string repr)
 }
 
 Path& Path::operator/=(const std::string& name) {
-  repr_ = fs_->PathJoin(Repr(), name);
+  repr_ = fs_->PathAppend(Repr(), name);
   return *this;
 }
 

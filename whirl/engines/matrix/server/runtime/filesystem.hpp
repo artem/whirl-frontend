@@ -65,8 +65,12 @@ class FS : public node::fs::IFileSystem {
 
   // Paths
 
-  std::string PathJoin(const std::string& base, const std::string& name) const override {
-    return impl_->JoinPath(base, name);
+  node::fs::Path RootPath() const override {
+    return {this, impl_->RootPath()};
+  }
+
+  std::string PathAppend(const std::string& base, const std::string& name) const override {
+    return impl_->PathAppend(base, name);
   }
 
  private:

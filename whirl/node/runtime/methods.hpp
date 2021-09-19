@@ -38,6 +38,10 @@ inline fs::IFileSystem* FileSystem() {
   return GetRuntime().FileSystem();
 }
 
+inline fs::Path FsRootPath() {
+  return FileSystem()->RootPath();
+}
+
 // Randomness
 
 inline IRandomService* RandomService() {

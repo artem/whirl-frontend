@@ -100,7 +100,12 @@ FileSystem::DirIterator FileSystem::ListAllFiles() {
   return {files_};
 }
 
-std::string FileSystem::JoinPath(const std::string& base_path, const std::string& name) const {
+std::string FileSystem::RootPath() const {
+  // Allocate new string in userspace
+  return "/";
+}
+
+std::string FileSystem::PathAppend(const std::string& base_path, const std::string& name) const {
   // Allocate new string in userspace
 
   if (base_path.ends_with('/')) {
