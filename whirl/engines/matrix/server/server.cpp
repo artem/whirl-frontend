@@ -196,7 +196,7 @@ node::IRuntime* Server::MakeNodeRuntime() {
   runtime->transport.Init(transport_);
 
   runtime->random.Init();
-  runtime->guids.Init(config_.id);
+  runtime->guids.Init();
 
   runtime->true_time.Init();
 
