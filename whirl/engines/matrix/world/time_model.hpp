@@ -11,6 +11,9 @@
 
 namespace whirl::matrix {
 
+// NB: Time model is accessed from "userspace" => do not allocate memory
+// in method calls
+
 struct ITimeModel {
   virtual ~ITimeModel() = default;
 

@@ -30,7 +30,7 @@ TimePoint GlobalNow() {
 
 // Behaviour
 
-const ITimeModelPtr& GetTimeModel() {
+ITimeModel* GetTimeModel() {
   return ThisWorld()->TimeModel();
 }
 

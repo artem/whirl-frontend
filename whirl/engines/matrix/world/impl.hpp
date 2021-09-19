@@ -188,8 +188,8 @@ class WorldImpl {
     return random_source_.Next();
   }
 
-  const ITimeModelPtr& TimeModel() const {
-    return time_model_;
+  ITimeModel* TimeModel() const {
+    return time_model_.get();
   }
 
   IActor* CurrentActor() const {
