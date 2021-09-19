@@ -16,6 +16,9 @@ class Path {
   Path(std::string str) : repr_(std::move(str)) {
   }
 
+  Path(const char* str) : Path(std::string{str}) {
+  }
+
   const std::string& AsString() const {
     return repr_;
   }
