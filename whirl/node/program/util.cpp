@@ -11,7 +11,7 @@ namespace whirl::node::main {
 void Prologue() {
   await::fibers::self::SetName("main");
 
-  rt::PrintLine("Starting at T{}", rt::WallTimeNow().ToJiffies().Count());
+  rt::PrintLine("Starting at {}", rt::WallTimeNow());
 
   rt::Database()->Open(rt::Config()->GetString("db.path"));
 }

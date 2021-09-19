@@ -3,6 +3,7 @@
 #include <whirl/jiffies.hpp>
 
 #include <compare>
+#include <ostream>
 
 namespace whirl::node::time {
 
@@ -29,10 +30,15 @@ class WallTime {
   Jiffies jfs_;
 };
 
-///////////////////////////////////////////////////////////////////////////
-
 inline WallTime operator+(WallTime t, Jiffies d) {
   return {t.ToJiffies() + d};
+}
+
+///////////////////////////////////////////////////////////////////////////
+
+inline std::ostream& operator<<(std::ostream& out, const WallTime& t) {
+  out << 'T' << t.ToJiffies().Count();
+  return out;
 }
 
 }  // namespace whirl::node::time
