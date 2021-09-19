@@ -246,7 +246,7 @@ class WorldImpl {
   }
 
   void SetStartTime() {
-    time_.FastForwardTo(GetTimeModel()->GlobalStartTime());
+    time_.FastForwardTo(TimeModel()->GlobalStartTime());
   }
 
   ActorContext::ScopeGuard Scope(IActor& actor) {

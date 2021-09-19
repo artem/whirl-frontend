@@ -45,13 +45,13 @@ class NodeConfig : public node::cfg::IConfig {
     // Defined by time model
 
     if (key == "rpc.backoff.init") {
-      return GetTimeModel()->BackoffParams().init;
+      return TimeModel()->BackoffParams().init;
     }
     if (key == "rpc.backoff.max") {
-      return GetTimeModel()->BackoffParams().max;
+      return TimeModel()->BackoffParams().max;
     }
     if (key == "rpc.backoff.factor") {
-      return GetTimeModel()->BackoffParams().factor;
+      return TimeModel()->BackoffParams().factor;
     }
 
     KeyNotFound(key);

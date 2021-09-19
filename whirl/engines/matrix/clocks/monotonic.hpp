@@ -11,12 +11,12 @@ namespace whirl::matrix::clocks {
 
 class MonotonicClock {
  public:
-  MonotonicClock() : drift_(GetTimeModel()->InitClockDrift()) {
+  MonotonicClock() : drift_(TimeModel()->InitClockDrift()) {
     Reset();
   }
 
   void Reset() {
-    init_ = GetTimeModel()->ResetMonotonicClock();
+    init_ = TimeModel()->ResetMonotonicClock();
     last_reset_ = GlobalNow();
   }
 

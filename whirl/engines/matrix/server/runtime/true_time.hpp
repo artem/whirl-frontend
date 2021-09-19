@@ -15,7 +15,7 @@ class TrueTimeService : public node::time::ITrueTimeService {
     // Access world clock
     TimePoint now = GlobalNow();
 
-    auto u = GetTimeModel()->TrueTimeUncertainty();
+    auto u = TimeModel()->TrueTimeUncertainty();
 
     auto earliest = (now > u) ? now - u : 0;
     auto latest = now + u;

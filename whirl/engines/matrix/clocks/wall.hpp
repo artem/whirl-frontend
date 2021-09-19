@@ -24,7 +24,7 @@ class WallClock {
 
  private:
   static Jiffies InitLocalClockOffset() {
-    return GetTimeModel()->InitWallClockOffset();
+    return TimeModel()->InitWallClockOffset();
   }
 
  private:
