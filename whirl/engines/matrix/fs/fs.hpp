@@ -6,6 +6,8 @@
 
 #include <timber/logger.hpp>
 
+#include <wheels/result/result.hpp>
+
 #include <map>
 #include <string>
 #include <memory>
@@ -58,20 +60,20 @@ class FileSystem {
 
   // Metadata
 
-  bool Create(const node::fs::Path& file_path);
-  void Delete(const node::fs::Path& file_path);
+  wheels::Result<bool> Create(const node::fs::Path& file_path);
+  wheels::Status Delete(const node::fs::Path& file_path);
   bool Exists(const node::fs::Path& file_path) const;
 
   DirIterator ListAllFiles();
 
   // Data
 
-  node::fs::Fd Open(const node::fs::Path& file_path, node::fs::FileMode mode);
+  wheels::Result<node::fs::Fd> Open(const node::fs::Path& file_path, node::fs::FileMode mode);
 
-  size_t Read(node::fs::Fd fd, wheels::MutableMemView buffer);
-  void Append(node::fs::Fd fd, wheels::ConstMemView data);
+  wheels::Result<size_t> Read(node::fs::Fd fd, wheels::MutableMemView buffer);
+  wheels::Status Append(node::fs::Fd fd, wheels::ConstMemView data);
 
-  void Close(node::fs::Fd fd);
+  wheels::Status Close(node::fs::Fd fd);
 
   // Simulation
 

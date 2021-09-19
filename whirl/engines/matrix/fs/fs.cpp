@@ -9,9 +9,17 @@
 
 #include <timber/log.hpp>
 
+#include <wheels/result/result.hpp>
+#include <wheels/result/make.hpp>
+
 using whirl::node::fs::Fd;
 using whirl::node::fs::FileMode;
 using whirl::node::fs::Path;
+
+using wheels::Result;
+using wheels::Status;
+
+namespace result = wheels::make_result;
 
 namespace whirl::matrix::fs {
 
@@ -26,17 +34,17 @@ bool FileSystem::Exists(const Path& file_path) const {
   return files_.find(file_path) != files_.end();
 }
 
-Fd FileSystem::Open(const Path& file_path, FileMode mode) {
+Result<Fd> FileSystem::Open(const Path& file_path, FileMode mode) {
   GlobalAllocatorGuard g;
 
   auto file = FindOrCreateFile(file_path, mode);
   Fd fd = ++next_fd_;
   size_t offset = InitOffset(file, mode);
   opened_files_.emplace(fd, OpenedFile{fd, file_path, mode, offset, file});
-  return fd;
+  return result::Ok(fd);
 }
 
-size_t FileSystem::Read(Fd fd, wheels::MutableMemView buffer) {
+Result<size_t> FileSystem::Read(Fd fd, wheels::MutableMemView buffer) {
   GlobalAllocatorGuard g;
 
   OpenedFile& of = GetOpenedFile(fd);
@@ -45,46 +53,49 @@ size_t FileSystem::Read(Fd fd, wheels::MutableMemView buffer) {
   LOG_DEBUG("Read {} bytes from '{}'", buffer.Size(), of.path);
   size_t bytes_read = of.file->PRead(of.offset, buffer);
   of.offset += bytes_read;
-  return bytes_read;
+  return result::Ok(bytes_read);
 }
 
-void FileSystem::Append(Fd fd, wheels::ConstMemView data) {
+Status FileSystem::Append(Fd fd, wheels::ConstMemView data) {
   GlobalAllocatorGuard g;
 
   OpenedFile& of = GetOpenedFile(fd);
   CheckMode(of, FileMode::Append);
   LOG_DEBUG("Append {} bytes to '{}'", data.Size(), of.path);
   of.file->Append(data);
+  return result::Ok();
 }
 
-void FileSystem::Close(Fd fd) {
+Status FileSystem::Close(Fd fd) {
   GlobalAllocatorGuard g;
 
   auto it = opened_files_.find(fd);
   if (it != opened_files_.end()) {
     opened_files_.erase(it);
+    return result::Ok();
   } else {
     RaiseError("File not found by fd");
   }
 }
 
-bool FileSystem::Create(const Path& file_path) {
+Result<bool> FileSystem::Create(const Path& file_path) {
   GlobalAllocatorGuard g;
 
   if (files_.contains(file_path)) {
-    return false;
+    return result::Ok(false);
   }
 
   LOG_INFO("Create new file '{}'", file_path);
   auto f = CreateFile();
   files_.insert({file_path, f});
-  return true;
+  return result::Ok(true);
 }
 
-void FileSystem::Delete(const Path& file_path) {
+Status FileSystem::Delete(const Path& file_path) {
   GlobalAllocatorGuard g;
 
   files_.erase(file_path);
+  return result::Ok();
 }
 
 FileSystem::DirIterator FileSystem::ListAllFiles() {

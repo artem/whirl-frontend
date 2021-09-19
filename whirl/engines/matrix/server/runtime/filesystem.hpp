@@ -14,12 +14,12 @@ class FS : public node::fs::IFileSystem {
       : disk_(time_service), impl_(impl) {
   }
 
-  bool Create(const node::fs::Path& file_path) override {
+  wheels::Result<bool> Create(const node::fs::Path& file_path) override {
     return impl_->Create(file_path);
   }
 
-  void Delete(const node::fs::Path& file_path) override {
-    impl_->Delete(file_path);
+  wheels::Status Delete(const node::fs::Path& file_path) override {
+    return impl_->Delete(file_path);
   }
 
   bool Exists(const node::fs::Path& file_path) const override {
@@ -42,25 +42,25 @@ class FS : public node::fs::IFileSystem {
   }
 
   // FileMode::Append creates file if it does not exist
-  node::fs::Fd Open(const node::fs::Path& file_path,
+  wheels::Result<node::fs::Fd> Open(const node::fs::Path& file_path,
                     node::fs::FileMode mode) override {
     return impl_->Open(file_path, mode);
   }
 
   // Only for FileMode::Append
-  void Append(node::fs::Fd fd, wheels::ConstMemView data) override {
+  wheels::Status Append(node::fs::Fd fd, wheels::ConstMemView data) override {
     disk_.Write(data.Size());
-    impl_->Append(fd, data);
+    return impl_->Append(fd, data);
   }
 
   // Only for FileMode::Read
-  size_t Read(node::fs::Fd fd, wheels::MutableMemView buffer) override {
+  wheels::Result<size_t> Read(node::fs::Fd fd, wheels::MutableMemView buffer) override {
     disk_.Read(buffer.Size());  // Blocks
     return impl_->Read(fd, buffer);
   }
 
-  void Close(node::fs::Fd fd) override {
-    impl_->Close(fd);
+  wheels::Status Close(node::fs::Fd fd) override {
+    return impl_->Close(fd);
   }
 
  private:
