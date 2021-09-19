@@ -1,4 +1,4 @@
-#include <whirl/node/program/util.hpp>
+#include <whirl/node/program/prologue.hpp>
 
 #include <whirl/node/runtime/shortcuts.hpp>
 
@@ -6,7 +6,7 @@
 #include <await/fibers/core/await.hpp>
 #include <await/fibers/sync/future.hpp>
 
-namespace whirl::node::main {
+namespace whirl::node::program {
 
 void Prologue() {
   await::fibers::self::SetName("main");
@@ -16,4 +16,4 @@ void Prologue() {
   rt::Database()->Open(rt::Config()->GetString("db.path"));
 }
 
-}  // namespace whirl::node::main
+}  // namespace whirl::node::program

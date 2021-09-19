@@ -1,5 +1,5 @@
 // Node
-#include <whirl/node/program/util.hpp>
+#include <whirl/node/program/prologue.hpp>
 #include <whirl/node/runtime/shortcuts.hpp>
 #include <whirl/node/rpc/server.hpp>
 #include <whirl/node/cluster/peer.hpp>
@@ -251,7 +251,7 @@ class Replica : public commute::rpc::ServiceBase<Replica> {
 };
 
 void KVNode() {
-  node::main::Prologue();
+  node::program::Prologue();
 
   auto rpc_server = node::rpc::MakeServer(
       node::rt::Config()->GetInt<uint16_t>("rpc.port"));

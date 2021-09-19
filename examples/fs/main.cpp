@@ -1,4 +1,4 @@
-#include <whirl/node/program/util.hpp>
+#include <whirl/node/program/prologue.hpp>
 #include <whirl/node/db/kv.hpp>
 #include <whirl/node/fs/io.hpp>
 
@@ -18,7 +18,7 @@ using namespace whirl;
 //////////////////////////////////////////////////////////////////////
 
 void TestNode() {
-  node::main::Prologue();
+  node::program::Prologue();
 
   if (!node::rt::FileSystem()->Exists("/flag")) {
     node::fs::FileWriter file_writer("/file");

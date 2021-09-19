@@ -1,5 +1,5 @@
 // Node
-#include <whirl/node/program/util.hpp>
+#include <whirl/node/program/prologue.hpp>
 #include <whirl/node/runtime/shortcuts.hpp>
 #include <whirl/node/rpc/server.hpp>
 
@@ -84,7 +84,7 @@ class EchoService : public commute::rpc::ServiceBase<EchoService> {
 // Echo server node
 
 void EchoNode() {
-  node::main::Prologue();
+  node::program::Prologue();
 
   auto rpc_server = node::rpc::MakeServer(/*port=*/42);
 
