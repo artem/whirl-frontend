@@ -105,7 +105,8 @@ std::string FileSystem::RootPath() const {
   return "/";
 }
 
-std::string FileSystem::PathAppend(const std::string& base_path, const std::string& name) const {
+std::string FileSystem::PathAppend(const std::string& base_path,
+                                   const std::string& name) const {
   // Allocate new string in userspace
 
   if (base_path.ends_with('/')) {
@@ -115,8 +116,8 @@ std::string FileSystem::PathAppend(const std::string& base_path, const std::stri
   }
 }
 
-FileSystem::FileRef FileSystem::FindOrCreateFile(const node::fs::Path& file_path,
-                                                 FileMode open_mode) {
+FileSystem::FileRef FileSystem::FindOrCreateFile(
+    const node::fs::Path& file_path, FileMode open_mode) {
   auto it = files_.find(file_path.Repr());
 
   if (it != files_.end()) {

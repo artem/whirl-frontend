@@ -10,7 +10,7 @@ namespace whirl::matrix::cfg {
 
 class NodeConfig : public node::cfg::IConfig {
  public:
-  NodeConfig(ServerConfig server_config): server_(server_config) {
+  NodeConfig(ServerConfig server_config) : server_(server_config) {
   }
 
   std::string GetString(std::string_view key) const override {

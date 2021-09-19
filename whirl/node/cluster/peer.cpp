@@ -59,11 +59,9 @@ void Peer::ConnectToPeers(cfg::IConfig* cfg) {
 }
 
 static commute::rpc::BackoffParams RetriesBackoff(cfg::IConfig* config) {
-  return {
-    config->GetInt<uint64_t>("rpc.backoff.init"),
-    config->GetInt<uint64_t>("rpc.backoff.max"),
-    config->GetInt<uint64_t>("rpc.backoff.factor")
-  };
+  return {config->GetInt<uint64_t>("rpc.backoff.init"),
+          config->GetInt<uint64_t>("rpc.backoff.max"),
+          config->GetInt<uint64_t>("rpc.backoff.factor")};
 }
 
 static std::string PeerAddress(const std::string& host, uint16_t port) {
@@ -71,7 +69,8 @@ static std::string PeerAddress(const std::string& host, uint16_t port) {
 }
 
 ::commute::rpc::IChannelPtr Peer::MakeRpcChannel(
-    ::commute::rpc::IClientPtr client, const std::string& host, cfg::IConfig* config) {
+    ::commute::rpc::IClientPtr client, const std::string& host,
+    cfg::IConfig* config) {
   auto port = config->GetInt<uint16_t>("rpc.port");
   auto transport = client->Dial(PeerAddress(host, port));
   auto retries =

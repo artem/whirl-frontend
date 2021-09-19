@@ -5,8 +5,7 @@
 
 namespace whirl::node::fs {
 
-Path::Path(std::string repr)
-  : Path(GetRuntime().FileSystem(), repr) {
+Path::Path(std::string repr) : Path(GetRuntime().FileSystem(), repr) {
 }
 
 Path& Path::operator/=(const std::string& name) {

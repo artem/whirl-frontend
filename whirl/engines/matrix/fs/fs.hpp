@@ -69,7 +69,8 @@ class FileSystem {
 
   // Data
 
-  wheels::Result<node::fs::Fd> Open(const node::fs::Path& file_path, node::fs::FileMode mode);
+  wheels::Result<node::fs::Fd> Open(const node::fs::Path& file_path,
+                                    node::fs::FileMode mode);
 
   wheels::Result<size_t> Read(node::fs::Fd fd, wheels::MutableMemView buffer);
   wheels::Status Append(node::fs::Fd fd, wheels::ConstMemView data);
@@ -81,7 +82,7 @@ class FileSystem {
   std::string RootPath() const;
 
   std::string PathAppend(const std::string& base_path,
-                       const std::string& name) const;
+                         const std::string& name) const;
 
   // Simulation
 

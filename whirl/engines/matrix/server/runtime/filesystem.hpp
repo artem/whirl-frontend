@@ -43,7 +43,7 @@ class FS : public node::fs::IFileSystem {
 
   // FileMode::Append creates file if it does not exist
   wheels::Result<node::fs::Fd> Open(const node::fs::Path& file_path,
-                    node::fs::FileMode mode) override {
+                                    node::fs::FileMode mode) override {
     return impl_->Open(file_path, mode);
   }
 
@@ -54,7 +54,8 @@ class FS : public node::fs::IFileSystem {
   }
 
   // Only for FileMode::Read
-  wheels::Result<size_t> Read(node::fs::Fd fd, wheels::MutableMemView buffer) override {
+  wheels::Result<size_t> Read(node::fs::Fd fd,
+                              wheels::MutableMemView buffer) override {
     disk_.Read(buffer.Size());  // Blocks
     return impl_->Read(fd, buffer);
   }
@@ -69,7 +70,8 @@ class FS : public node::fs::IFileSystem {
     return {this, impl_->RootPath()};
   }
 
-  std::string PathAppend(const std::string& base, const std::string& name) const override {
+  std::string PathAppend(const std::string& base,
+                         const std::string& name) const override {
     return impl_->PathAppend(base, name);
   }
 
