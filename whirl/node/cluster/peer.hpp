@@ -13,10 +13,12 @@
 namespace whirl::node::cluster {
 
 class Peer {
+ public:
+  // List of hostnames
   using List = std::vector<std::string>;
 
  public:
-  Peer(cfg::IConfig* config);
+  explicit Peer(cfg::IConfig* config);
 
   const std::string& PoolName() const {
     return pool_name_;
