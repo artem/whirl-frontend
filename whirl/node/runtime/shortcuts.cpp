@@ -16,14 +16,4 @@ void Go(await::fibers::FiberRoutine routine) {
   f->Schedule();
 }
 
-commute::rpc::IServerPtr MakeRpcServer(uint16_t port) {
-  return std::make_shared<commute::rpc::ServerImpl>(
-      std::to_string(port), NetTransport(), Executor(), FiberManager(),
-      LoggerBackend());
-}
-
-commute::rpc::IClientPtr MakeRpcClient() {
-  return commute::rpc::MakeClient(NetTransport(), Executor(), LoggerBackend());
-}
-
 }  // namespace whirl::node::rt

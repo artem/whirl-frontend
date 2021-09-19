@@ -1,6 +1,7 @@
 // Node
 #include <whirl/node/program/util.hpp>
 #include <whirl/node/runtime/shortcuts.hpp>
+#include <whirl/node/rpc/server.hpp>
 #include <whirl/node/cluster/peer.hpp>
 #include <whirl/node/store/kv.hpp>
 
@@ -254,7 +255,7 @@ class Replica : public commute::rpc::ServiceBase<Replica> {
 void KVNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::rt::MakeRpcServer(
+  auto rpc_server = node::rpc::MakeServer(
       node::rt::Config()->GetInt<uint16_t>("rpc.port"));
 
   rpc_server->RegisterService("KV", std::make_shared<Coordinator>());

@@ -1,11 +1,16 @@
+// Node
 #include <whirl/node/program/util.hpp>
 #include <whirl/node/runtime/shortcuts.hpp>
+#include <whirl/node/rpc/server.hpp>
 
+// RPC
 #include <commute/rpc/service_base.hpp>
 #include <commute/rpc/call.hpp>
 
+// Logging
 #include <timber/log.hpp>
 
+// Serialization
 #include <muesli/serializable.hpp>
 #include <cereal/types/string.hpp>
 
@@ -79,7 +84,7 @@ class EchoService : public commute::rpc::ServiceBase<EchoService> {
 void EchoNode() {
   node::main::Prologue();
 
-  auto rpc_server = node::rt::MakeRpcServer(/*port=*/42);
+  auto rpc_server = node::rpc::MakeServer(/*port=*/42);
 
   rpc_server->RegisterService("Echo", std::make_shared<EchoService>());
 

@@ -146,10 +146,4 @@ inline timber::ILogBackend* LoggerBackend() {
   return GetRuntime().LoggerBackend();
 }
 
-// RPC
-
-commute::rpc::IServerPtr MakeRpcServer(uint16_t port);
-
-commute::rpc::IClientPtr MakeRpcClient();
-
 }  // namespace whirl::node::rt
