@@ -107,7 +107,7 @@ inline void SleepFor(Jiffies delay) {
   await::fibers::Await(After(delay)).ExpectOk();
 }
 
-// DNS
+// Discovery
 
 inline cluster::IDiscoveryService* Discovery() {
   return GetRuntime().DiscoveryService();
