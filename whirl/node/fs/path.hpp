@@ -19,7 +19,7 @@ class Path {
       : fs_(fs), repr_(std::move(repr)) {
   }
 
-  // Access IFileSystem via node runtime
+  // Access fs via node runtime
   Path(std::string str);
 
   Path(const char* str) : Path(std::string{str}) {

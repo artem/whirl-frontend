@@ -15,8 +15,8 @@ class FileReader : public wheels::io::IReader, private wheels::NonCopyable {
  public:
   FileReader(IFileSystem* fs, Path file_path);
 
-  // Access fs via runtime
-  FileReader(Path file_path);
+  // Access fs via node runtime
+  explicit FileReader(Path file_path);
 
   ~FileReader();
 
