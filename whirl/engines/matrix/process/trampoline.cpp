@@ -7,12 +7,12 @@
 
 namespace whirl::matrix::process {
 
-static void ServiceMain(node::ProgramMain user_main) {
+static void ServiceMain(node::program::Main user_main) {
   user_main();
   // TODO: Stop process
 }
 
-void MainTrampoline(node::ProgramMain main) {
+void MainTrampoline(node::program::Main main) {
   auto main_fiber = [main]() {
     ServiceMain(main);
   };

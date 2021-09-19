@@ -1,7 +1,7 @@
 #pragma once
 
-namespace whirl::node {
+namespace whirl::node::program {
 
-typedef void (*ProgramMain)(void);
+typedef void (*Main)(void);
 
-}  // namespace whirl::node
+}  // namespace whirl::node::program

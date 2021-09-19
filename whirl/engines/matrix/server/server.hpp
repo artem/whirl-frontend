@@ -38,7 +38,7 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
   };
 
  public:
-  Server(net::Network& network, ServerConfig config, node::ProgramMain program);
+  Server(net::Network& network, ServerConfig config, node::program::Main program);
 
   // Non-copyable
   Server(const Server&) = delete;
@@ -109,7 +109,7 @@ class Server : public IActor, public fault::IFaultyServer, public net::IServer {
   State state_{State::Initial};
 
   ServerConfig config_;
-  node::ProgramMain program_;
+  node::program::Main program_;
 
   // Hardware
   clocks::WallClock wall_clock_;

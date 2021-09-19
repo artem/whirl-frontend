@@ -21,7 +21,7 @@ class World;
 
 class PoolBuilder {
  public:
-  PoolBuilder(World* world, std::string pool_name, node::ProgramMain program)
+  PoolBuilder(World* world, std::string pool_name, node::program::Main program)
       : world_(world),
         pool_name_(pool_name),
         program_(program),
@@ -50,7 +50,7 @@ class PoolBuilder {
   World* world_;
 
   std::string pool_name_;
-  node::ProgramMain program_;
+  node::program::Main program_;
   size_t size_ = 1;
   std::string name_template_;
 };
@@ -70,18 +70,18 @@ class World {
 
   size_t Seed() const;
 
-  void AddServer(std::string hostname, node::ProgramMain program);
+  void AddServer(std::string hostname, node::program::Main program);
 
-  PoolBuilder MakePool(std::string pool_name, node::ProgramMain program) {
+  PoolBuilder MakePool(std::string pool_name, node::program::Main program) {
     return PoolBuilder{this, pool_name, program};
   }
 
-  void AddClient(node::ProgramMain program);
-  void AddClients(node::ProgramMain program, size_t count);
+  void AddClient(node::program::Main program);
+  void AddClients(node::program::Main program, size_t count);
 
   void SetTimeModel(ITimeModelPtr time_model);
 
-  void AddAdversary(node::ProgramMain program);
+  void AddAdversary(node::program::Main program);
 
   // Globals
 
@@ -128,7 +128,7 @@ class World {
   std::vector<std::string> GetStdout(const std::string& hostname) const;
 
  private:
-  void AddPool(std::string pool_name, node::ProgramMain program, size_t size,
+  void AddPool(std::string pool_name, node::program::Main program, size_t size,
                std::string server_name_template);
 
   void SetGlobalImpl(const std::string& key, std::any value);
