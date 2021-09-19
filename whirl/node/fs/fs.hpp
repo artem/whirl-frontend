@@ -58,6 +58,8 @@ struct IFileSystem {
 
   virtual wheels::Status Close(Fd fd) = 0;
 
+  // TODO: Fsync
+
   // Paths
 
   virtual Path RootPath() const = 0;
