@@ -12,9 +12,10 @@ struct IConfig {
 
   virtual int64_t GetInt64(std::string_view key) const = 0;
 
+  // Usage: Get<uint16_t>("port")
   template <typename TInteger>
   TInteger GetInt(std::string_view key) const {
-    return GetInt64(key);
+    return static_cast<TInteger>(GetInt64(key));
   }
 
   virtual bool GetBool(std::string_view key) const = 0;
