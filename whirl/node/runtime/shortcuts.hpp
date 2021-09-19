@@ -10,17 +10,12 @@
 #include <await/fibers/core/api.hpp>
 #include <await/fibers/sync/future.hpp>
 
+// Logging
 #include <timber/backend.hpp>
 
 #include <fmt/core.h>
 
 namespace whirl::node::rt {
-
-// Config
-
-inline cfg::IConfig* Config() {
-  return GetRuntime().Config();
-}
 
 // Net
 
@@ -32,7 +27,7 @@ inline const std::string& HostName() {
   return NetTransport()->HostName();
 }
 
-// File system
+// Filesystem
 
 inline fs::IFileSystem* FileSystem() {
   return GetRuntime().FileSystem();
@@ -126,6 +121,18 @@ inline Guid GenerateGuid() {
   return GetRuntime().GuidGenerator()->Generate();
 }
 
+// Config
+
+inline cfg::IConfig* Config() {
+  return GetRuntime().Config();
+}
+
+// Logging
+
+inline timber::ILogBackend* LoggerBackend() {
+  return GetRuntime().LoggerBackend();
+}
+
 // Terminal
 
 inline ITerminal* Terminal() {
@@ -138,12 +145,6 @@ inline void PrintLine(FormatString&& format_string, Args&&... args) {
       fmt::format(fmt::runtime(std::forward<FormatString>(format_string)),
                   std::forward<Args>(args)...);
   Terminal()->PrintLine(line);
-}
-
-// Logging
-
-inline timber::ILogBackend* LoggerBackend() {
-  return GetRuntime().LoggerBackend();
 }
 
 }  // namespace whirl::node::rt
