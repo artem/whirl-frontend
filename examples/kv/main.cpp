@@ -43,8 +43,6 @@
 // Support std::string serialization
 #include <cereal/types/string.hpp>
 
-#include <fmt/ostream.h>
-
 #include <random>
 #include <algorithm>
 

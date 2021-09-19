@@ -28,11 +28,11 @@ void TestNode() {
     node::rt::Database()->Put("Test-Delete", "...");
     node::rt::Database()->Delete("Test-Delete");
 
-    node::rt::FileSystem()->Create("/chunks/1");
-    node::rt::FileSystem()->Create("/chunks/2");
-    node::rt::FileSystem()->Create("/chunks/3");
+    node::rt::FileSystem()->Create("/chunks/1").ExpectOk();
+    node::rt::FileSystem()->Create("/chunks/2").ExpectOk();
+    node::rt::FileSystem()->Create("/chunks/3").ExpectOk();
 
-    node::rt::FileSystem()->Create("/flag");
+    node::rt::FileSystem()->Create("/flag").ExpectOk();
   }
 
   // Check database
