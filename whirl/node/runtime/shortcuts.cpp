@@ -1,4 +1,4 @@
-#include <whirl/node/runtime/methods.hpp>
+#include <whirl/node/runtime/shortcuts.hpp>
 
 #include <await/fibers/core/fiber.hpp>
 #include <await/fibers/static/services.hpp>

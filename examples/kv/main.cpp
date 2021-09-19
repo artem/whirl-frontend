@@ -1,6 +1,6 @@
 // Node
 #include <whirl/node/program/util.hpp>
-#include <whirl/node/runtime/methods.hpp>
+#include <whirl/node/runtime/shortcuts.hpp>
 #include <whirl/node/cluster/peer.hpp>
 #include <whirl/node/store/kv.hpp>
 

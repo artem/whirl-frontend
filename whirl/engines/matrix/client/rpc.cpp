@@ -2,7 +2,7 @@
 
 #include <whirl/engines/matrix/history/channel.hpp>
 
-#include <whirl/node/runtime/methods.hpp>
+#include <whirl/node/runtime/shortcuts.hpp>
 
 #include <commute/rpc/client.hpp>
 

@@ -1,5 +1,5 @@
 #include <whirl/node/program/util.hpp>
-#include <whirl/node/runtime/methods.hpp>
+#include <whirl/node/runtime/shortcuts.hpp>
 
 #include <commute/rpc/service_base.hpp>
 #include <commute/rpc/call.hpp>

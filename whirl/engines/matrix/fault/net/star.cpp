@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/fault/net/star.hpp>
 
-#include <whirl/node/runtime/methods.hpp>
+#include <whirl/node/runtime/shortcuts.hpp>
 
 #include <whirl/engines/matrix/fault/access.hpp>
 

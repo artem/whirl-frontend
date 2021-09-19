@@ -2,7 +2,7 @@
 #include <whirl/node/db/kv.hpp>
 #include <whirl/node/fs/io.hpp>
 
-#include <whirl/node/runtime/methods.hpp>
+#include <whirl/node/runtime/shortcuts.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
