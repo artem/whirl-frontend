@@ -35,8 +35,4 @@ inline WallTime operator+(WallTime t, Jiffies d) {
   return {t.ToJiffies() + d};
 }
 
-inline WallTime operator+(Jiffies d, WallTime t) {
-  return t + d;
-}
-
 }  // namespace whirl::node::time
