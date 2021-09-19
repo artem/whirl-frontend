@@ -15,11 +15,11 @@ FileReader::FileReader(Path file_path)
 }
 
 FileReader::~FileReader() {
-  fs_->Close(fd_).ExpectOk("Failed to close fd");
+  fs_->Close(fd_).ExpectOk("Failed to close file");
 }
 
 size_t FileReader::ReadSome(wheels::MutableMemView buffer) {
-  return fs_->Read(fd_, buffer).ExpectValueOr("Failed to close fd");
+  return fs_->Read(fd_, buffer).ExpectValueOr("Failed to read from file");
 }
 
 IFileSystem* FileReader::Fs() {
@@ -37,11 +37,11 @@ FileWriter::FileWriter(Path file_path)
 }
 
 FileWriter::~FileWriter() {
-  Fs()->Close(fd_).ExpectOk("Cannot close file");
+  Fs()->Close(fd_).ExpectOk("Failed to close file");
 }
 
 void FileWriter::Write(wheels::ConstMemView data) {
-  Fs()->Append(fd_, data).ExpectOk("Cannot append data to file");
+  Fs()->Append(fd_, data).ExpectOk("Failed to append data to file");
 }
 
 void FileWriter::Flush() {
