@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
-#include <string>
+#include <whirl/node/cluster/list.hpp>
+
 #include <memory>
 
 namespace whirl::node::cluster {
@@ -9,10 +9,8 @@ namespace whirl::node::cluster {
 struct IDiscoveryService {
   virtual ~IDiscoveryService() = default;
 
-  // List of hostnames
-  using PoolListing = std::vector<std::string>;
-
-  virtual PoolListing ListPool(const std::string& name) = 0;
+  // Pool name -> list of hostnames
+  virtual List ListPool(const std::string& name) = 0;
 };
 
 }  // namespace whirl::node::cluster

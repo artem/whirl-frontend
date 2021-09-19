@@ -8,7 +8,7 @@ namespace whirl::matrix {
 
 class DiscoveryService : public node::cluster::IDiscoveryService {
  public:
-  PoolListing ListPool(const std::string& name) override {
+  node::cluster::List ListPool(const std::string& name) override {
     return ::whirl::matrix::GetPool(name);
   }
 };

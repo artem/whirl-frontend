@@ -1,11 +1,12 @@
 #pragma once
 
+#include <whirl/node/cluster/list.hpp>
+
 #include <whirl/node/config/config.hpp>
 
 #include <commute/rpc/client.hpp>
 #include <commute/rpc/channel.hpp>
 
-#include <vector>
 #include <string>
 #include <map>
 #include <memory>
@@ -13,10 +14,6 @@
 namespace whirl::node::cluster {
 
 class Peer {
- public:
-  // List of hostnames
-  using List = std::vector<std::string>;
-
  public:
   explicit Peer(cfg::IConfig* config);
 
