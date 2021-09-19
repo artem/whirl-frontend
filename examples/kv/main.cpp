@@ -59,19 +59,38 @@ using Value = int32_t;
 
 //////////////////////////////////////////////////////////////////////
 
-// Replicas store versioned (stamped) values
+struct WriteTimestamp {
+  // Use sized types!
+  uint64_t value;
 
-using WriteTimestamp = size_t;
+  static WriteTimestamp Zero() {
+    return {0};
+  }
+
+  // Comparison
+  auto operator<=>(const WriteTimestamp& that) const = default;
+
+  // Serialization support (RPC, Database)
+  MUESLI_SERIALIZABLE(value)
+};
+
+// Logging
+std::ostream& operator<<(std::ostream& out, const WriteTimestamp& ts) {
+  out << ts.value;
+  return out;
+}
+
+//////////////////////////////////////////////////////////////////////
+
+// Replicas store versioned (stamped) values
 
 struct StampedValue {
   Value value;
   WriteTimestamp timestamp;
 
-  // Serialization support for local storage and RPC
   MUESLI_SERIALIZABLE(value, timestamp)
 };
 
-// For logging
 std::ostream& operator<<(std::ostream& out, const StampedValue& stamped_value) {
   out << "{" << stamped_value.value << ", ts: " << stamped_value.timestamp
       << "}";
@@ -159,7 +178,7 @@ class Coordinator : public commute::rpc::ServiceBase<Coordinator>, public node::
   WriteTimestamp ChooseWriteTimestamp() const {
     // Local wall clock may be out of sync with other replicas
     // Use TrueTime service (node::rt::TrueTime())
-    return node::rt::WallTimeNow().ToJiffies().Count();
+    return {node::rt::WallTimeNow().ToJiffies().Count()};
   }
 
   // Find value with the largest timestamp
@@ -212,7 +231,7 @@ class Replica : public commute::rpc::ServiceBase<Replica> {
   }
 
   StampedValue LocalRead(Key key) {
-    return kv_store_.GetOr(key, {0, 0});
+    return kv_store_.GetOr(key, {0, WriteTimestamp::Zero()});
   }
 
  private:
