@@ -11,15 +11,21 @@ namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
 
+struct IFileSystem;
+
 class Path {
  public:
-  Path(std::string str) : repr_(std::move(str)) {
+  Path(const IFileSystem* fs, std::string repr)
+      : fs_(fs), repr_(std::move(repr)) {
   }
+
+  // Access IFileSystem via node runtime
+  Path(std::string str);
 
   Path(const char* str) : Path(std::string{str}) {
   }
 
-  const std::string& AsString() const {
+  const std::string& Repr() const {
     return repr_;
   }
 
@@ -40,12 +46,15 @@ class Path {
     return std::hash<std::string>()(repr_);
   }
 
+  Path& operator/=(const std::string& name);
+
  private:
+  const IFileSystem* fs_;
   std::string repr_;
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Path& path) {
-  out << path.AsString();
+  out << path.Repr();
   return out;
 }
 

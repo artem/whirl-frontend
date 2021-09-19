@@ -3,6 +3,7 @@
 #include <whirl/node/fs/fs.hpp>
 
 #include <whirl/engines/matrix/fs/file.hpp>
+#include <whirl/engines/matrix/fs/path.hpp>
 
 #include <timber/logger.hpp>
 
@@ -28,14 +29,14 @@ class FileSystem {
     FileRef file;
   };
 
-  using Files = std::map<node::fs::Path, FileRef>;
+  using Files = std::map<Path, FileRef>;
 
   class DirIterator {
    public:
     DirIterator(Files& files) : it_(files.begin()), end_(files.end()) {
     }
 
-    const node::fs::Path& operator*() {
+    const Path& operator*() {
       return it_->first;
     }
 
@@ -74,6 +75,11 @@ class FileSystem {
   wheels::Status Append(node::fs::Fd fd, wheels::ConstMemView data);
 
   wheels::Status Close(node::fs::Fd fd);
+
+  // Paths
+
+  std::string JoinPath(const std::string& base_path,
+                       const std::string& name) const;
 
   // Simulation
 

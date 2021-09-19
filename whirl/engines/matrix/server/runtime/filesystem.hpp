@@ -32,8 +32,8 @@ class FS : public node::fs::IFileSystem {
 
     auto iter = impl_->ListAllFiles();
     while (iter.IsValid()) {
-      if ((*iter).AsString().starts_with(prefix)) {
-        listed.push_back(*iter);
+      if ((*iter).starts_with(prefix)) {
+        listed.push_back({this, *iter});
       }
       ++iter;
     }
@@ -61,6 +61,12 @@ class FS : public node::fs::IFileSystem {
 
   wheels::Status Close(node::fs::Fd fd) override {
     return impl_->Close(fd);
+  }
+
+  // Paths
+
+  std::string PathJoin(const std::string& base, const std::string& name) const override {
+    return impl_->JoinPath(base, name);
   }
 
  private:

@@ -58,6 +58,10 @@ struct IFileSystem {
       Fd fd, wheels::MutableMemView buffer) = 0;
 
   virtual wheels::Status Close(Fd fd) = 0;
+
+  // Paths
+
+  virtual std::string PathJoin(const std::string& base, const std::string& name) const = 0;
 };
 
 }  // namespace whirl::node::fs

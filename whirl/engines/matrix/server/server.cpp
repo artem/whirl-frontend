@@ -98,7 +98,7 @@ node::fs::FileList Server::ListFiles(std::string_view prefix) {
 
   auto iter = filesystem_.ListAllFiles();
   while (iter.IsValid()) {
-    if ((*iter).AsString().starts_with(prefix)) {
+    if ((*iter).starts_with(prefix)) {
       listed.push_back(*iter);
     }
   }

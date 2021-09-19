@@ -12,7 +12,6 @@
 
 using whirl::node::fs::Fd;
 using whirl::node::fs::FileMode;
-using whirl::node::fs::Path;
 
 using wheels::Result;
 using wheels::Status;
@@ -26,13 +25,13 @@ FileSystem::FileSystem() : logger_("Filesystem", GetLogBackend()) {
 
 // System calls
 
-bool FileSystem::Exists(const Path& file_path) const {
+bool FileSystem::Exists(const node::fs::Path& file_path) const {
   // No allocations here!
 
-  return files_.find(file_path) != files_.end();
+  return files_.find(file_path.Repr()) != files_.end();
 }
 
-Result<Fd> FileSystem::Open(const Path& file_path, FileMode mode) {
+Result<Fd> FileSystem::Open(const node::fs::Path& file_path, FileMode mode) {
   GlobalAllocatorGuard g;
 
   auto file = FindOrCreateFile(file_path, mode);
@@ -76,23 +75,23 @@ Status FileSystem::Close(Fd fd) {
   }
 }
 
-Result<bool> FileSystem::Create(const Path& file_path) {
+Result<bool> FileSystem::Create(const node::fs::Path& file_path) {
   GlobalAllocatorGuard g;
 
-  if (files_.contains(file_path)) {
+  if (files_.contains(file_path.Repr())) {
     return result::Ok(false);
   }
 
   LOG_INFO("Create new file '{}'", file_path);
   auto f = CreateFile();
-  files_.insert({file_path, f});
+  files_.insert({file_path.Repr(), f});
   return result::Ok(true);
 }
 
-Status FileSystem::Delete(const Path& file_path) {
+Status FileSystem::Delete(const node::fs::Path& file_path) {
   GlobalAllocatorGuard g;
 
-  files_.erase(file_path);
+  files_.erase(file_path.Repr());
   return result::Ok();
 }
 
@@ -101,9 +100,19 @@ FileSystem::DirIterator FileSystem::ListAllFiles() {
   return {files_};
 }
 
-FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path,
+std::string FileSystem::JoinPath(const std::string& base_path, const std::string& name) const {
+  // Allocate new string in userspace
+
+  if (base_path.ends_with('/')) {
+    return base_path + name;
+  } else {
+    return base_path + "/" + name;
+  }
+}
+
+FileSystem::FileRef FileSystem::FindOrCreateFile(const node::fs::Path& file_path,
                                                  FileMode open_mode) {
-  auto it = files_.find(file_path);
+  auto it = files_.find(file_path.Repr());
 
   if (it != files_.end()) {
     return it->second;
@@ -112,7 +121,7 @@ FileSystem::FileRef FileSystem::FindOrCreateFile(const Path& file_path,
     if (open_mode == FileMode::Append) {
       LOG_INFO("Create file '{}'", file_path);
       auto f = CreateFile();
-      files_.insert({file_path, f});
+      files_.insert({file_path.Repr(), f});
       return f;
     } else {
       RaiseError("File not found");
@@ -151,7 +160,7 @@ void FileSystem::RaiseError(const std::string& message) {
 
 // Simulation
 
-void FileSystem::Corrupt(const Path& file_path) {
+void FileSystem::Corrupt(const node::fs::Path& file_path) {
   WHEELS_UNUSED(file_path);
   // TODO
 }
