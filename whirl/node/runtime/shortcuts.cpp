@@ -3,9 +3,6 @@
 #include <await/fibers/core/fiber.hpp>
 #include <await/fibers/static/services.hpp>
 
-#include <commute/rpc/server_impl.hpp>
-#include <commute/rpc/client.hpp>
-
 namespace whirl::node::rt {
 
 void Go(await::fibers::FiberRoutine routine) {

@@ -7,6 +7,11 @@
 #include <commute/rpc/service_base.hpp>
 #include <commute/rpc/call.hpp>
 
+// Concurrency
+#include <await/fibers/core/api.hpp>
+#include <await/fibers/sync/future.hpp>
+#include <await/futures/util/never.hpp>
+
 // Logging
 #include <timber/log.hpp>
 
@@ -19,9 +24,6 @@
 #include <whirl/engines/matrix/client/main.hpp>
 #include <whirl/engines/matrix/client/rpc.hpp>
 #include <whirl/engines/matrix/test/event_log.hpp>
-
-#include <await/fibers/core/api.hpp>
-#include <await/fibers/sync/future.hpp>
 
 #include <chrono>
 #include <cstdlib>
@@ -90,7 +92,7 @@ void EchoNode() {
 
   rpc_server->Start();
 
-  node::main::BlockForever();
+  await::futures::BlockForever();
 }
 
 //////////////////////////////////////////////////////////////////////

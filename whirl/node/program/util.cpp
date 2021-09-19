@@ -16,9 +16,4 @@ void Prologue() {
   rt::Database()->Open(rt::Config()->GetString("db.path"));
 }
 
-void BlockForever() {
-  await::fibers::Await(await::futures::Never()).ExpectOk();
-  std::abort();
-}
-
 }  // namespace whirl::node::main

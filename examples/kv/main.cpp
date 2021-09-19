@@ -20,6 +20,7 @@
 #include <await/fibers/sync/future.hpp>
 #include <await/fibers/sync/mutex.hpp>
 #include <await/futures/combine/quorum.hpp>
+#include <await/futures/util/never.hpp>
 
 // Simulation
 #include <whirl/engines/matrix/world/world.hpp>
@@ -263,7 +264,7 @@ void KVNode() {
 
   rpc_server->Start();
 
-  node::main::BlockForever();
+  await::futures::BlockForever();
 }
 
 //////////////////////////////////////////////////////////////////////
