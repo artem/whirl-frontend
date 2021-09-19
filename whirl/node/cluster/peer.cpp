@@ -18,7 +18,7 @@ size_t Peer::NodeCount() const {
   return pool_.size();
 }
 
-std::vector<std::string> Peer::ListPeers(bool with_me) const {
+const Peer::List& Peer::ListPeers(bool with_me) const {
   if (with_me) {
     return pool_;
   } else {

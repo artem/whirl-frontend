@@ -13,6 +13,8 @@
 namespace whirl::node::cluster {
 
 class Peer {
+  using List = std::vector<std::string>;
+
  public:
   Peer(cfg::IConfig* config);
 
@@ -22,7 +24,7 @@ class Peer {
 
   size_t NodeCount() const;
 
-  std::vector<std::string> ListPeers(bool with_me = true) const;
+  const List& ListPeers(bool with_me = true) const;
 
   const commute::rpc::IChannelPtr& Channel(const std::string& peer) const;
   const commute::rpc::IChannelPtr& LoopBack() const;
@@ -39,8 +41,8 @@ class Peer {
   const std::string pool_name_;
   uint16_t port_;
 
-  std::vector<std::string> pool_;
-  std::vector<std::string> others_;  // pool without this node
+  List pool_;
+  List others_;  // pool without this node
 
   std::map<std::string, commute::rpc::IChannelPtr> channels_;
 };
