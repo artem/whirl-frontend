@@ -17,6 +17,8 @@
 
 namespace whirl::node::rt {
 
+// Shortcuts for runtime services
+
 // Net
 
 inline commute::transport::ITransport* NetTransport() {

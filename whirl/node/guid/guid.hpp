@@ -10,7 +10,7 @@ using Guid = std::string;
 
 //////////////////////////////////////////////////////////////////////
 
-// Generates globally unique identifiers
+// Generates globally unique strings
 
 struct IGuidGenerator {
   virtual ~IGuidGenerator() = default;

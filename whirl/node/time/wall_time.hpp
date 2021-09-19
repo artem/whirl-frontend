@@ -14,6 +14,7 @@ class WallTime {
   WallTime(Jiffies jfs) : jfs_(jfs) {
   }
 
+  // Comparison
   auto operator<=>(const WallTime& that) const = default;
 
   WallTime& operator+=(Jiffies d) {
