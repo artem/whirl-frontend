@@ -37,7 +37,7 @@ class FileWriter : public wheels::io::IWriter, private wheels::NonCopyable {
   FileWriter(IFileSystem* fs, Path file_path);
 
   // Access fs via runtime
-  FileWriter(Path file_path);
+  explicit FileWriter(Path file_path);
 
   ~FileWriter();
 
