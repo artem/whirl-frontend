@@ -75,9 +75,4 @@ struct IRuntime {
   virtual ITerminal* Terminal() = 0;
 };
 
-//////////////////////////////////////////////////////////////////////
-
-// Bridge connecting engine-agnostic node and concrete engine
-IRuntime& GetRuntime();
-
 }  // namespace whirl::node

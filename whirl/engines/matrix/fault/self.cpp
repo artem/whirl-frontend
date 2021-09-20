@@ -1,6 +1,6 @@
 #include <whirl/engines/matrix/fault/self.hpp>
 
-#include <whirl/runtime/runtime.hpp>
+#include <whirl/runtime/access.hpp>
 #include <whirl/engines/matrix/world/global/time_model.hpp>
 
 #include <await/fibers/core/api.hpp>
