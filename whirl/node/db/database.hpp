@@ -17,9 +17,9 @@ struct IDatabase {
 
   virtual void Open(const std::string& directory) = 0;
 
-  // All operations are blocking!
+  // All operations are synchronous!
 
-  // Single-key atomic ops
+  // Single-key operations
   virtual void Put(const Key& key, const Value& value) = 0;
   virtual std::optional<Value> TryGet(const Key& key) const = 0;
   virtual void Delete(const Key& key) = 0;
