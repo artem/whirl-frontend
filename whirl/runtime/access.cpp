@@ -1,19 +1,25 @@
 #include <whirl/runtime/access.hpp>
 
-#include <whirl/engines/reflect.hpp>
-
-// It is OK!
-#include <whirl/engines/matrix/server/server.hpp>
-
-#include <wheels/support/assert.hpp>
+#include <wheels/support/panic.hpp>
 
 namespace whirl::node {
 
-IRuntime& GetRuntime() {
-  if (IsMatrix()) {
-    return matrix::ThisServer().GetNodeRuntime();
+static EngineRuntime engine_runtime_;
+
+static struct Initializer {
+  Initializer() {
+    engine_runtime_ = []() -> IRuntime& {
+      WHEELS_PANIC("Runtime not set");
+    };
   }
-  WHEELS_PANIC("GetRuntime is not supported for current engine");
+} initializer;
+
+IRuntime& GetRuntime() {
+  return engine_runtime_();
+}
+
+void SetupRuntime(EngineRuntime getter) {
+  engine_runtime_ = getter;
 }
 
 }  // namespace whirl::node

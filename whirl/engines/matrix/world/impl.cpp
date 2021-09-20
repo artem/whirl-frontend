@@ -2,6 +2,8 @@
 
 #include <whirl/engines/matrix/world/time_models/crazy.hpp>
 
+#include <whirl/engines/matrix/runtime/setup.hpp>
+
 #include <timber/log.hpp>
 
 namespace whirl::matrix {
@@ -31,6 +33,8 @@ ITimeModelPtr WorldImpl::DefaultTimeModel() {
 
 void WorldImpl::Start() {
   WorldGuard g(this);
+
+  SetupMatrixRuntime();
 
   LOG_INFO("Seed: {}", seed_);
 
