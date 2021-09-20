@@ -41,7 +41,7 @@ inline fs::Path FsRootPath() {
 
 // Randomness
 
-inline IRandomService* RandomService() {
+inline random::IRandomService* RandomService() {
   return GetRuntime().RandomService();
 }
 

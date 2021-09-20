@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace whirl::node {
+namespace whirl::node::random {
 
 struct IRandomService {
   virtual ~IRandomService() = default;
@@ -11,4 +11,4 @@ struct IRandomService {
   virtual uint64_t GenerateNumber(uint64_t bound) = 0;
 };
 
-}  // namespace whirl::node
+}  // namespace whirl::node::random

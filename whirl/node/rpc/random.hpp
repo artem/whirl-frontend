@@ -10,6 +10,6 @@ namespace whirl::rpc {
 
 commute::rpc::IChannelPtr MakeRandomChannel(
     std::vector<commute::rpc::IChannelPtr>&& channels,
-    node::IRandomService* random);
+    node::random::IRandomService* random);
 
 }  // namespace whirl::rpc

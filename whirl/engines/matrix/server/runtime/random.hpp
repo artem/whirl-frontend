@@ -7,7 +7,7 @@
 
 namespace whirl::matrix {
 
-struct RandomGenerator : public node::IRandomService {
+struct RandomGenerator : node::random::IRandomService {
   uint64_t GenerateNumber(uint64_t bound) override {
     return GlobalRandomNumber() % bound;
   }

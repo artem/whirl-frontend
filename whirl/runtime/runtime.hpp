@@ -60,7 +60,7 @@ struct IRuntime {
 
   // Random
 
-  virtual IRandomService* RandomService() = 0;
+  virtual random::IRandomService* RandomService() = 0;
 
   // Guids
 

@@ -91,7 +91,7 @@ struct NodeRuntime : node::IRuntime {
     return guids.Get();
   }
 
-  node::IRandomService* RandomService() override {
+  node::random::IRandomService* RandomService() override {
     return random.Get();
   }
 
