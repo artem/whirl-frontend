@@ -2,9 +2,7 @@
 
 #include <whirl/node/runtime/shortcuts.hpp>
 
-#include <await/futures/util/never.hpp>
 #include <await/fibers/core/await.hpp>
-#include <await/fibers/sync/future.hpp>
 
 namespace whirl::node::program {
 
