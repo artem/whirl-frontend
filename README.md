@@ -2,6 +2,13 @@
 
 Framework for implementation of distributed algorithms
 
+## Engines
+
+| Engine | Status | Description |
+| --- | --- | --- |
+| [`matrix`](https://gitlab.com/Lipovsky/whirl-matrix) | ✓ | Deterministic simulator |
+| `process` | ✗ | Standalone node process |
+
 ## Frontend
 
 * Concurrency (via `await`)
@@ -65,13 +72,15 @@ Framework for implementation of distributed algorithms
 
 ## Build
 
+### Whirl-Matrix
+
 ```shell
-# Clone repo
-git clone https://gitlab.com/Lipovsky/whirl.git 
-cd whirl
+# Clone repo with matrix engine
+git clone https://gitlab.com/Lipovsky/whirl-matrix.git
+cd whirl-matrix
 # Generate build files
 mkdir build && cd build
-cmake -DWHIRL_EXAMPLES=ON ..
+cmake -DWHIRL_MATRIX_EXAMPLES=ON ..
 # Build kv example
 make whirl_example_kv
 # Run kv example
