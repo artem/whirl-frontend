@@ -16,7 +16,7 @@
 #include <whirl/node/cluster/discovery.hpp>
 
 #include <whirl/node/random/service.hpp>
-#include <whirl/node/guid/guid.hpp>
+#include <whirl/node/guids/service.hpp>
 #include <whirl/node/config/config.hpp>
 #include <whirl/node/misc/terminal.hpp>
 #include <whirl/node/misc/fault.hpp>
@@ -64,7 +64,7 @@ struct IRuntime {
 
   // Guids
 
-  virtual IGuidGenerator* GuidGenerator() = 0;
+  virtual guids::IGuidGenerator* GuidGenerator() = 0;
 
   // Configuration
 

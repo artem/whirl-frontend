@@ -115,11 +115,11 @@ inline cluster::IDiscoveryService* Discovery() {
 
 // Guids
 
-inline IGuidGenerator* GuidsGenerator() {
+inline guids::IGuidGenerator* GuidGenerator() {
   return GetRuntime().GuidGenerator();
 }
 
-inline Guid GenerateGuid() {
+inline std::string GenerateGuid() {
   return GetRuntime().GuidGenerator()->Generate();
 }
 
