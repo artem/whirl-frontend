@@ -12,21 +12,21 @@ struct IConfig {
 
   // Strings
 
-  virtual std::string GetString(std::string_view key) const = 0;
+  virtual std::string GetString(Key key) const = 0;
 
   // Integers
 
-  virtual int64_t GetInt64(std::string_view key) const = 0;
+  virtual int64_t GetInt64(Key key) const = 0;
 
   // Usage: Get<uint16_t>("port")
   template <typename TInteger>
-  TInteger GetInt(std::string_view key) const {
+  TInteger GetInt(Key key) const {
     return static_cast<TInteger>(GetInt64(key));
   }
 
   // Booleans
 
-  virtual bool GetBool(std::string_view key) const = 0;
+  virtual bool GetBool(Key key) const = 0;
 };
 
 }  // namespace whirl::node::cfg
