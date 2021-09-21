@@ -1,33 +1,16 @@
 # Whirl
 
-Distributed system deterministic simulator
+Framework for implementation of distributed algorithms
 
-## Example
+## Frontend
 
-[KV](/examples/kv/main.cpp) – simple replicated KV store
-
-- Quorum reads/writes
-- Last-write-wins via wall clock
-- Persistent local storage
-
-Note: Implementation _intentionally_ violates [linearizability](https://jepsen.io/consistency/models/linearizable)!
-
-Use Attiya, Bar-Noy, Dolev (ABD) algorithm for linearizable behaviour:
-- [Original paper](https://groups.csail.mit.edu/tds/papers/Attiya/TM-423.pdf)
-- [Notes on Theory of Distributed Systems](https://www.cs.yale.edu/homes/aspnes/classes/465/notes.pdf) – Chapter 16 – _Distributed Shared Memory_
-
-## Features
-
-* Rich set of concurrency primitives
-* Communication via RPC
-* Deterministic execution, deterministic randomness
-* Time compression
-* Linearizability checker
-* Persistent storage and node restarts
-* Local clock skew and drift
-* Google TrueTime simulation
-* Pluggable asynchrony and fault injection strategy
-* Logging, RPC tracing
+* Concurrency (via `await`)
+* RPC (via `commute`)
+* Filesystem
+* Persistent KV storage
+* Wall / monotonic time
+* Randomness
+* Logging (via `timber`)
 
 ## Inspiration
 
