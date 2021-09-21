@@ -64,11 +64,11 @@ Framework for implementation of distributed algorithms
 
 ## Dependencies
 
-- [await](https://gitlab.com/Lipovsky/await) – concurrency: fibers + futures with customizable runtime
-- [commute](https://gitlab.com/Lipovsky/commute) – net transport + RPC
-- [timber](https://gitlab.com/Lipovsky/timber) – logging frontend (via [fmtlib](https://github.com/fmtlib/fmt))
-- [muesli](https://gitlab.com/Lipovsky/muesli) – serialization (via [cereal](https://github.com/USCiLab/cereal))
-- [wheels](https://gitlab.com/Lipovsky/wheels) - core utilities
+- [Await](https://gitlab.com/Lipovsky/await) – concurrency: fibers + futures with customizable runtime
+- [Commute](https://gitlab.com/Lipovsky/commute) – net transport + RPC
+- [Timber](https://gitlab.com/Lipovsky/timber) – logging frontend (via [fmtlib](https://github.com/fmtlib/fmt))
+- [Muesli](https://gitlab.com/Lipovsky/muesli) – serialization (via [cereal](https://github.com/USCiLab/cereal))
+- [Wheels](https://gitlab.com/Lipovsky/wheels) - core utilities
 
 ## Build
 
