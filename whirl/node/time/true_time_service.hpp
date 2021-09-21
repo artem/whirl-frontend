@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/jiffies.hpp>
+#include <whirl/node/time/jiffies.hpp>
 #include <whirl/node/time/wall_time.hpp>
 
 #include <memory>

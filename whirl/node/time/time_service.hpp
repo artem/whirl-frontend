@@ -2,7 +2,7 @@
 
 #include <await/time/timer_service.hpp>
 
-#include <whirl/jiffies.hpp>
+#include <whirl/node/time/jiffies.hpp>
 #include <whirl/node/time/wall_time.hpp>
 #include <whirl/node/time/monotonic_time.hpp>
 
