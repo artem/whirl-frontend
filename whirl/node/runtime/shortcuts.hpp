@@ -50,13 +50,13 @@ inline size_t RandomNumber(size_t bound) {
   return RandomService()->GenerateNumber(bound);
 }
 
-// [lo, hi)
+// [lo, hi]
 inline size_t RandomNumber(size_t lo, size_t hi) {
-  return lo + RandomNumber(hi - lo);
+  return lo + RandomNumber(hi - lo + 1);
 }
 
 inline size_t RandomIndex(size_t size) {
-  return RandomNumber(size);
+  return RandomNumber(/*bound=*/size);
 }
 
 // Clocks
