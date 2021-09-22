@@ -10,7 +10,7 @@
 #include <whirl/node/time/time_service.hpp>
 #include <whirl/node/time/true_time_service.hpp>
 
-#include <whirl/node/fs/filesystem.hpp>
+#include <whirl/node/fs/fs.hpp>
 #include <whirl/node/db/database.hpp>
 
 #include <whirl/node/cluster/discovery.hpp>

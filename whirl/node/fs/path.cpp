@@ -1,5 +1,5 @@
 #include <whirl/node/fs/path.hpp>
-#include <whirl/node/fs/filesystem.hpp>
+#include <whirl/node/fs/fs.hpp>
 
 #include <whirl/runtime/access.hpp>
 
