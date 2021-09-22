@@ -45,7 +45,7 @@ class Peer {
 
   size_t NodeCount() const;
 
-  Lister ListPeers() {
+  Lister ListPeers() const {
     return Lister{this};
   }
 
