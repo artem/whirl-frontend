@@ -1,6 +1,6 @@
 #pragma once
 
-#include <whirl/node/fs/fs.hpp>
+#include <whirl/node/fs/filesystem.hpp>
 
 #include <wheels/io/reader.hpp>
 #include <wheels/io/writer.hpp>

@@ -1,13 +1,6 @@
 # Whirl
 
-Framework for implementation of distributed algorithms
-
-## Engines
-
-| Engine | Status | Description |
-| --- | --- | --- |
-| [`matrix`](https://gitlab.com/Lipovsky/whirl-matrix) | ✓ | Deterministic simulator |
-| `process` | ✗ | Standalone node process |
+Framework for implementing & testing tiny distributed systems
 
 ## Frontend
 
@@ -17,7 +10,14 @@ Framework for implementation of distributed algorithms
 * Persistent KV storage
 * Wall / monotonic time
 * Randomness
-* Logging (via `timber`)
+* Logging (via `timber` and `fmtlib`)
+
+## Engines
+
+| Engine | Status | Description |
+| --- | --- | --- |
+| [`matrix`](https://gitlab.com/Lipovsky/whirl-matrix) | ✓ | Deterministic simulator |
+| `process` | ✗ | Standalone node process |
 
 ## Inspiration
 
