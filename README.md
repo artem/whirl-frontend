@@ -16,7 +16,7 @@ Framework for implementing & testing tiny distributed systems
 
 | Engine | Status | Description |
 | --- | --- | --- |
-| [`matrix`](https://gitlab.com/Lipovsky/whirl-matrix) | ✓ | Deterministic simulator |
+| [`matrix`](https://gitlab.com/whirl-framework/whirl-matrix) | ✓ | Deterministic simulator |
 | `process` | ✗ | Standalone node process |
 
 ## Inspiration
@@ -65,9 +65,9 @@ Framework for implementing & testing tiny distributed systems
 ## Dependencies
 
 - [Await](https://gitlab.com/Lipovsky/await) – concurrency: fibers + futures with customizable runtime
-- [Commute](https://gitlab.com/Lipovsky/commute) – net transport + RPC
-- [Timber](https://gitlab.com/Lipovsky/timber) – logging frontend (via [fmtlib](https://github.com/fmtlib/fmt))
-- [Muesli](https://gitlab.com/Lipovsky/muesli) – serialization (via [cereal](https://github.com/USCiLab/cereal))
+- [Commute](https://gitlab.com/whirl-framework/commute) – net transport + RPC
+- [Timber](https://gitlab.com/whirl-framework/timber) – logging frontend (via [fmtlib](https://github.com/fmtlib/fmt))
+- [Muesli](https://gitlab.com/whirl-framework/muesli) – serialization (via [cereal](https://github.com/USCiLab/cereal))
 - [Wheels](https://gitlab.com/Lipovsky/wheels) - core utilities
 
 ## Build
@@ -76,7 +76,7 @@ Framework for implementing & testing tiny distributed systems
 
 ```shell
 # Clone repo with matrix engine
-git clone https://gitlab.com/Lipovsky/whirl-matrix.git
+git clone https://gitlab.com/whirl-framework/whirl-matrix.git
 cd whirl-matrix
 # Generate build files
 mkdir build && cd build
