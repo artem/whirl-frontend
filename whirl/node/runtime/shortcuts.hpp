@@ -51,13 +51,10 @@ inline size_t RandomNumber(size_t bound) {
 }
 
 // [lo, hi]
-inline size_t RandomNumber(size_t lo, size_t hi) {
-  return lo + RandomNumber(hi - lo + 1);
-}
+uint64_t RandomNumber(uint64_t lo, uint64_t hi);
 
-inline size_t RandomIndex(size_t size) {
-  return RandomNumber(/*bound=*/size);
-}
+// [0, size)
+size_t RandomIndex(size_t size);
 
 // Clocks
 
