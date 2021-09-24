@@ -5,7 +5,6 @@
 #include <fmt/ostream.h>
 
 #include <cstdlib>
-#include <compare>
 #include <iostream>
 
 namespace whirl {
@@ -28,8 +27,6 @@ class Jiffies {
     return count_;
   }
 
-  auto operator<=>(const Jiffies& rhs) const = default;
-
   Jiffies& operator+=(Jiffies rhs) {
     count_ += rhs.count_;
     return *this;
@@ -50,6 +47,34 @@ inline Jiffies operator+(Jiffies lhs, Jiffies rhs) {
 
 inline Jiffies operator-(Jiffies lhs, Jiffies rhs) {
   return {lhs.Count() - rhs.Count()};
+}
+
+//////////////////////////////////////////////////////////////////////
+
+// Comparison
+
+inline bool operator==(Jiffies lhs, Jiffies rhs) {
+  return lhs.Count() == rhs.Count();
+}
+
+inline bool operator!=(Jiffies lhs, Jiffies rhs) {
+  return !(lhs == rhs);
+}
+
+inline bool operator<(Jiffies lhs, Jiffies rhs) {
+  return lhs.Count() < rhs.Count();
+}
+
+inline bool operator>(Jiffies lhs, Jiffies rhs) {
+  return lhs.Count() > rhs.Count();
+}
+
+inline bool operator<=(Jiffies lhs, Jiffies rhs) {
+  return lhs.Count() <= rhs.Count();
+}
+
+inline bool operator>=(Jiffies lhs, Jiffies rhs) {
+  return lhs.Count() >= rhs.Count();
 }
 
 //////////////////////////////////////////////////////////////////////

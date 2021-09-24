@@ -2,7 +2,6 @@
 
 #include <whirl/node/time/jiffies.hpp>
 
-#include <compare>
 #include <ostream>
 
 namespace whirl::node::time {
@@ -13,9 +12,6 @@ class WallTime {
  public:
   WallTime(Jiffies jfs) : jfs_(jfs) {
   }
-
-  // Comparison
-  auto operator<=>(const WallTime& that) const = default;
 
   WallTime& operator+=(Jiffies d) {
     jfs_ += d;
@@ -33,6 +29,22 @@ class WallTime {
 
 inline WallTime operator+(WallTime t, Jiffies d) {
   return {t.ToJiffies() + d};
+}
+
+inline bool operator==(WallTime lhs, WallTime rhs) {
+  return lhs.ToJiffies() == rhs.ToJiffies();
+}
+
+inline bool operator!=(WallTime lhs, WallTime rhs) {
+  return !(lhs == rhs);
+}
+
+inline bool operator<(WallTime lhs, WallTime rhs) {
+  return lhs.ToJiffies() < rhs.ToJiffies();
+}
+
+inline bool operator>(WallTime lhs, WallTime rhs) {
+  return lhs.ToJiffies() > rhs.ToJiffies();
 }
 
 ///////////////////////////////////////////////////////////////////////////
