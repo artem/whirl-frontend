@@ -31,6 +31,10 @@ inline WallTime operator+(WallTime t, Jiffies d) {
   return {t.ToJiffies() + d};
 }
 
+inline Jiffies operator-(WallTime lhs, WallTime rhs) {
+  return lhs.ToJiffies() - rhs.ToJiffies();
+}
+
 inline bool operator==(WallTime lhs, WallTime rhs) {
   return lhs.ToJiffies() == rhs.ToJiffies();
 }
