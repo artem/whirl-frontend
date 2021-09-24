@@ -64,6 +64,8 @@ struct IFileSystem {
 
   virtual Path RootPath() const = 0;
 
+  virtual Path TmpPath() const = 0;
+
   // Appends `name` component to path `base`
   virtual std::string PathAppend(const std::string& base,
                                  const std::string& name) const = 0;
