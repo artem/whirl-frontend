@@ -9,7 +9,7 @@
 namespace whirl::node::cluster {
 
 Peer::Peer(cfg::IConfig* config)
-    : pool_name_(config->GetString("pool")),
+    : pool_name_(config->GetString("pool.name")),
       port_(config->GetInt<uint16_t>("rpc.port")) {
   ConnectToPeers(config);
 }
