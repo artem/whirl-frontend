@@ -6,8 +6,12 @@
 
 namespace whirl::node::db {
 
+// Immutable stable snapshot
+
 struct ISnapshot {
   virtual ~ISnapshot() = default;
+
+  virtual std::optional<Value> TryGet(const Key& key) const = 0;
 
   virtual IIteratorPtr MakeIterator() = 0;
 };

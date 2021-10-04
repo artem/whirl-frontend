@@ -11,7 +11,7 @@ struct IIterator {
 
   virtual bool Valid() const = 0;
 
-  virtual db::Key Key() const = 0;
+  virtual db::KeyView Key() const = 0;
   virtual db::ValueView Value() const = 0;
 
   // Position at the first key that is at or past `target`
