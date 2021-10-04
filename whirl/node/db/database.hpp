@@ -2,6 +2,7 @@
 
 #include <whirl/node/db/kv.hpp>
 #include <whirl/node/db/write_batch.hpp>
+#include <whirl/node/db/snapshot.hpp>
 
 #include <optional>
 
@@ -26,6 +27,9 @@ struct IDatabase {
 
   // Multi-key atomic write
   virtual void Write(WriteBatch batch) = 0;
+
+  // Snapshots, iteration
+  virtual ISnapshotPtr MakeSnapshot() = 0;
 };
 
 }  // namespace whirl::node::db
