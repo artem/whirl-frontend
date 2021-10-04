@@ -62,7 +62,7 @@ struct IFileSystem {
 
   // Paths
 
-  virtual Path MakePath(const std::string repr) = 0;
+  virtual Path MakePath(std::string_view repr) const = 0;
 
   // Well-known paths
 
