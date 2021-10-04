@@ -3,6 +3,7 @@
 #include <whirl/node/db/iterator.hpp>
 
 #include <memory>
+#include <optional>
 
 namespace whirl::node::db {
 
