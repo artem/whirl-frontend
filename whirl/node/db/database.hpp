@@ -11,8 +11,6 @@ namespace whirl::node::db {
 // ~ LevelDB (https://github.com/google/leveldb)
 // Ordered mapping from string keys to string values.
 
-// TODO: Iterators
-
 struct IDatabase {
   virtual ~IDatabase() = default;
 
@@ -28,7 +26,7 @@ struct IDatabase {
   // Multi-key atomic write
   virtual void Write(WriteBatch batch) = 0;
 
-  // Snapshots, iteration
+  // Immutable snapshots, iteration
   virtual ISnapshotPtr MakeSnapshot() = 0;
 };
 

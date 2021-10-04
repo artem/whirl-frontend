@@ -15,7 +15,8 @@ struct IIterator {
   virtual db::ValueView Value() const = 0;
 
   // Position at the first key that is at or past `target`
-  virtual void Seek(db::Key target) = 0;
+  // ~ lower_bound
+  virtual void Seek(const db::Key& target) = 0;
 
   virtual void SeekToLast() = 0;
   virtual void SeekToFirst() = 0;
