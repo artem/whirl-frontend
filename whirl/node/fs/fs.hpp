@@ -64,15 +64,16 @@ struct IFileSystem {
 
   virtual Path MakePath(std::string_view repr) const = 0;
 
+  // Appends `name` component to path `base`
+  // Do not use directly, use path / "name" operator
+  virtual std::string PathAppend(const std::string& base,
+                                 const std::string& name) const = 0;
+
   // Well-known paths
 
   virtual Path RootPath() const = 0;
 
   virtual Path TmpPath() const = 0;
-
-  // Appends `name` component to path `base`
-  virtual std::string PathAppend(const std::string& base,
-                                 const std::string& name) const = 0;
 };
 
 }  // namespace whirl::node::fs
