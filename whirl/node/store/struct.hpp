@@ -23,8 +23,8 @@ class StructStore {
   }
 
   // Non-copyable
-  StructStore(const Store&) = delete;
-  StructStore& operator=(const Store&) = delete;
+  StructStore(const StructStore&) = delete;
+  StructStore& operator=(const StructStore&) = delete;
 
   template <typename U>
   void Store(const std::string& key, const U& object) {
