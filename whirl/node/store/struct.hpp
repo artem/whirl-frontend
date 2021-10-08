@@ -1,8 +1,8 @@
 #pragma once
 
-#include <whirl/db/database.hpp>
+#include <whirl/node/db/database.hpp>
 
-#include <whirl/cereal/bytes.hpp>
+#include <muesli/bytes.hpp>
 
 #include <fmt/core.h>
 
