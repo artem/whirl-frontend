@@ -2,7 +2,7 @@
 
 #include <whirl/node/db/database.hpp>
 
-#include <muesli/bytes.hpp>
+#include <muesli/serialize.hpp>
 
 #include <fmt/core.h>
 
@@ -16,32 +16,32 @@ namespace whirl::node::store {
 // * store.Store<int>("epoch", 42)
 // * store.Load<int>("epoch");
 
-class Store {
+class StructStore {
  public:
-  Store(db::IDatabase* db, const std::string& name = "default")
+  StructStore(db::IDatabase* db, const std::string& name = "default")
       : db_(db), namespace_(MakeNamespace(name)) {
   }
 
   // Non-copyable
-  Store(const Store&) = delete;
-  Store& operator=(const Store&) = delete;
+  StructStore(const Store&) = delete;
+  StructStore& operator=(const Store&) = delete;
 
   template <typename U>
-  void Store(const std::string& key, const U& data) {
-    auto data_bytes = Bytes::Serialize(data);
-    db_->Put(WithNamespace(key), data_bytes);
+  void Store(const std::string& key, const U& object) {
+    auto bytes = muesli::Serialize(object);
+    db_->Put(WithNamespace(key), bytes);
   }
 
   bool Has(const std::string& key) const {
-    std::optional<Bytes> data_bytes = db_->TryGet(WithNamespace(key));
-    return data_bytes.has_value();
+    std::optional<std::string> bytes = db_->TryGet(WithNamespace(key));
+    return bytes.has_value();
   }
 
   template <typename U>
   std::optional<U> TryLoad(const std::string& key) const {
-    std::optional<Bytes> data_bytes = db_->TryGet(WithNamespace(key));
-    if (data_bytes.has_value()) {
-      return data_bytes->As<U>();
+    std::optional<std::string> bytes = db_->TryGet(WithNamespace(key));
+    if (bytes.has_value()) {
+      return muesli::Deserialize<U>(*bytes);
     } else {
       return std::nullopt;
     }
