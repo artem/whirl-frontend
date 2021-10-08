@@ -37,6 +37,11 @@ class Jiffies {
     return *this;
   }
 
+  Jiffies& operator*=(uint64_t k) {
+    count_ *= k;
+    return *this;
+  }
+
  private:
   ValueType count_;
 };
@@ -47,6 +52,10 @@ inline Jiffies operator+(Jiffies lhs, Jiffies rhs) {
 
 inline Jiffies operator-(Jiffies lhs, Jiffies rhs) {
   return {lhs.Count() - rhs.Count()};
+}
+
+inline Jiffies operator*(Jiffies jfs, uint64_t k) {
+  return {jfs.Count() * k};
 }
 
 //////////////////////////////////////////////////////////////////////
