@@ -20,7 +20,7 @@ class FileReader : public wheels::io::IReader, private wheels::NonCopyable {
 
   ~FileReader();
 
-  size_t ReadSome(wheels::MutableMemView buffer) override;
+  wheels::Result<size_t> ReadSome(wheels::MutableMemView buffer) override;
 
  private:
   IFileSystem* Fs();
@@ -41,9 +41,9 @@ class FileWriter : public wheels::io::IWriter, private wheels::NonCopyable {
 
   ~FileWriter();
 
-  void Write(wheels::ConstMemView data) override;
+  wheels::Status Write(wheels::ConstMemView data) override;
 
-  void Flush() override;
+  wheels::Status Flush() override;
 
  private:
   IFileSystem* Fs();

@@ -2,6 +2,8 @@
 
 #include <whirl/runtime/access.hpp>
 
+#include <wheels/result/make.hpp>
+
 namespace whirl::node::fs {
 
 //////////////////////////////////////////////////////////////////////
@@ -18,8 +20,8 @@ FileReader::~FileReader() {
   fs_->Close(fd_).ExpectOk("Failed to close file");
 }
 
-size_t FileReader::ReadSome(wheels::MutableMemView buffer) {
-  return fs_->Read(fd_, buffer).ExpectValueOr("Failed to read from file");
+wheels::Result<size_t> FileReader::ReadSome(wheels::MutableMemView buffer) {
+  return fs_->Read(fd_, buffer);
 }
 
 IFileSystem* FileReader::Fs() {
@@ -40,12 +42,13 @@ FileWriter::~FileWriter() {
   Fs()->Close(fd_).ExpectOk("Failed to close file");
 }
 
-void FileWriter::Write(wheels::ConstMemView data) {
-  Fs()->Append(fd_, data).ExpectOk("Failed to append data to file");
+wheels::Status FileWriter::Write(wheels::ConstMemView data) {
+  return Fs()->Append(fd_, data);
 }
 
-void FileWriter::Flush() {
+wheels::Status FileWriter::Flush() {
   // Nothing to do
+  return wheels::make_result::Ok();
 }
 
 IFileSystem* FileWriter::Fs() {

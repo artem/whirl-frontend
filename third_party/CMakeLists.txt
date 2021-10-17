@@ -8,6 +8,17 @@ include(FetchContent)
 
 # --------------------------------------------------------------------
 
+message(STATUS "FetchContent: wheels")
+
+FetchContent_Declare(
+        wheels
+        GIT_REPOSITORY https://gitlab.com/Lipovsky/wheels.git
+        GIT_TAG io_result
+)
+FetchContent_MakeAvailable(wheels)
+
+# --------------------------------------------------------------------
+
 message(STATUS "FetchContent: await")
 
 FetchContent_Declare(
@@ -16,17 +27,6 @@ FetchContent_Declare(
         GIT_TAG master
 )
 FetchContent_MakeAvailable(await)
-
-# --------------------------------------------------------------------
-
-message(STATUS "FetchContent: wheels")
-
-FetchContent_Declare(
-        wheels
-        GIT_REPOSITORY https://gitlab.com/Lipovsky/wheels.git
-        GIT_TAG master
-)
-FetchContent_MakeAvailable(wheels)
 
 # --------------------------------------------------------------------
 
