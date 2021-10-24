@@ -35,8 +35,16 @@ inline persist::fs::IFileSystem* FileSystem() {
   return GetRuntime().FileSystem();
 }
 
+inline persist::fs::Path MakeFsPath(const std::string& repr) {
+  return FileSystem()->MakePath(repr);
+}
+
 inline persist::fs::Path FsRootPath() {
   return FileSystem()->RootPath();
+}
+
+inline persist::fs::Path FsTmpPath() {
+  return FileSystem()->TmpPath();
 }
 
 // Randomness
