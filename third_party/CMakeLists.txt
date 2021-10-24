@@ -13,7 +13,7 @@ message(STATUS "FetchContent: wheels")
 FetchContent_Declare(
         wheels
         GIT_REPOSITORY https://gitlab.com/Lipovsky/wheels.git
-        GIT_TAG io_result
+        GIT_TAG master
 )
 FetchContent_MakeAvailable(wheels)
 
@@ -60,6 +60,17 @@ FetchContent_Declare(
         GIT_TAG master
 )
 FetchContent_MakeAvailable(commute)
+
+# --------------------------------------------------------------------
+
+message(STATUS "FetchContent: persist")
+
+FetchContent_Declare(
+        persist
+        GIT_REPOSITORY https://gitlab.com/whirl-framework/persist.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(persist)
 
 # --------------------------------------------------------------------
 

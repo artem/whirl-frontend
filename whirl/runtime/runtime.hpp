@@ -7,10 +7,11 @@
 
 #include <commute/transport/transport.hpp>
 
+#include <persist/fs/fs.hpp>
+
 #include <whirl/node/time/time_service.hpp>
 #include <whirl/node/time/true_time_service.hpp>
 
-#include <whirl/node/fs/fs.hpp>
 #include <whirl/node/db/database.hpp>
 
 #include <whirl/node/cluster/discovery.hpp>
@@ -42,7 +43,7 @@ struct IRuntime {
 
   // Persistence
 
-  virtual fs::IFileSystem* FileSystem() = 0;
+  virtual persist::fs::IFileSystem* FileSystem() = 0;
 
   virtual db::IDatabase* Database() = 0;
 

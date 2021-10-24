@@ -31,11 +31,11 @@ inline const std::string& HostName() {
 
 // Filesystem
 
-inline fs::IFileSystem* FileSystem() {
+inline persist::fs::IFileSystem* FileSystem() {
   return GetRuntime().FileSystem();
 }
 
-inline fs::Path FsRootPath() {
+inline persist::fs::Path FsRootPath() {
   return FileSystem()->RootPath();
 }
 

@@ -15,7 +15,7 @@ target_include_directories(${LIB_TARGET} PUBLIC ${LIB_INCLUDE_PATH})
 
 # Dependencies
 
-target_link_libraries(${LIB_TARGET} PUBLIC wheels await timber fmt muesli commute)
+target_link_libraries(${LIB_TARGET} PUBLIC wheels await timber fmt muesli commute persist)
 
 # Be silent, cereal
 # target_include_directories(whirl PUBLIC ${cereal_INCLUDE_DIR})
