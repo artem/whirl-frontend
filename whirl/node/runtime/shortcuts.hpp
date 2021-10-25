@@ -35,6 +35,10 @@ inline persist::fs::IFileSystem* FileSystem() {
   return GetRuntime().FileSystem();
 }
 
+inline persist::fs::IFileSystem* Fs() {
+  return FileSystem();
+}
+
 inline persist::fs::Path MakeFsPath(const std::string& repr) {
   return FileSystem()->MakePath(repr);
 }
@@ -124,6 +128,7 @@ inline guids::IGuidGenerator* GuidGenerator() {
   return GetRuntime().GuidGenerator();
 }
 
+// Generate new globally unique string
 inline std::string GenerateGuid() {
   return GetRuntime().GuidGenerator()->Generate();
 }
