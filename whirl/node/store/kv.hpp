@@ -2,7 +2,7 @@
 
 #include <whirl/node/db/database.hpp>
 
-#include <muesli/bytes.hpp>
+#include <muesli/serialize.hpp>
 
 #include <fmt/core.h>
 
@@ -34,9 +34,9 @@ class KVStore {
   }
 
   std::optional<V> TryGet(const std::string& key) const {
-    std::optional<muesli::Bytes> value_bytes = db_->TryGet(WithNamespace(key));
+    std::optional<std::string> value_bytes = db_->TryGet(WithNamespace(key));
     if (value_bytes.has_value()) {
-      return value_bytes->As<V>();
+      return muesli::Deserialize<V>(*values_bytes);
     } else {
       return std::nullopt;
     }
