@@ -36,7 +36,7 @@ class KVStore {
   std::optional<V> TryGet(const std::string& key) const {
     std::optional<std::string> value_bytes = db_->TryGet(WithNamespace(key));
     if (value_bytes.has_value()) {
-      return muesli::Deserialize<V>(*values_bytes);
+      return muesli::Deserialize<V>(*value_bytes);
     } else {
       return std::nullopt;
     }
