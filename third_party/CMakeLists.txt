@@ -68,7 +68,7 @@ message(STATUS "FetchContent: persist")
 FetchContent_Declare(
         persist
         GIT_REPOSITORY https://gitlab.com/whirl-framework/persist.git
-        GIT_TAG rsm
+        GIT_TAG master
 )
 FetchContent_MakeAvailable(persist)
 
