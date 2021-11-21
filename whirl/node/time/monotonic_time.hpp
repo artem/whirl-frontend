@@ -22,8 +22,8 @@ class MonotonicTime {
 
 ///////////////////////////////////////////////////////////////////////////
 
-inline Jiffies operator-(MonotonicTime end, MonotonicTime start) {
-  return start.ToJiffies() - end.ToJiffies();
+inline Jiffies operator-(MonotonicTime lhs, MonotonicTime rhs) {
+  return lhs.ToJiffies() - rhs.ToJiffies();
 }
 
 }  // namespace whirl::node::time
