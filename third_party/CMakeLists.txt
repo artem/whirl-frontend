@@ -81,4 +81,4 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
         GIT_TAG master
 )
-FetchContent_MakeAvailable(fmtlib)
+FetchContent_MakeAvailable(fmt)
