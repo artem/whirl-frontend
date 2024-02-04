@@ -35,7 +35,7 @@ message(STATUS "FetchContent: timber")
 FetchContent_Declare(
         timber
         GIT_REPOSITORY https://gitlab.com/whirl-framework/timber.git
-        GIT_TAG main
+        GIT_TAG master
 )
 FetchContent_MakeAvailable(timber)
 
