@@ -74,7 +74,7 @@ FetchContent_MakeAvailable(persist)
 
 # --------------------------------------------------------------------
 
-message(STATUS "FetchContent: fmtlib")
+message(STATUS "FetchContent: fmt")
 
 FetchContent_Declare(
         fmt
