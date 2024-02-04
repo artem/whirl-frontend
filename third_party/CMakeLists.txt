@@ -74,10 +74,10 @@ FetchContent_MakeAvailable(persist)
 
 # --------------------------------------------------------------------
 
-message(STATUS "FetchContent: fmtlib")
+message(STATUS "FetchContent: fmt")
 
 FetchContent_Declare(
-        fmtlib
+        fmt
         GIT_REPOSITORY https://github.com/fmtlib/fmt.git
         GIT_TAG master
 )
