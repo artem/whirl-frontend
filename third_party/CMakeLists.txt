@@ -45,7 +45,7 @@ message(STATUS "FetchContent: muesli")
 
 FetchContent_Declare(
         muesli
-        GIT_REPOSITORY https://gitlab.com/whirl-framework/muesli.git
+        GIT_REPOSITORY https://github.com/artem/muesli.git
         GIT_TAG master
 )
 FetchContent_MakeAvailable(muesli)
